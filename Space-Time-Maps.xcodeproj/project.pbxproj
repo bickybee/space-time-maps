@@ -7,21 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B6186A4322C7DD2100FD4170 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6186A4222C7DD2100FD4170 /* Keys.plist */; };
+		B62AFCB222E4C44500B7D2CD /* PlannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */; };
+		B64B992822E10018007793BA /* PlaceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992722E10018007793BA /* PlaceListViewController.swift */; };
+		B64B992B22E10439007793BA /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992A22E10439007793BA /* PlaceCell.swift */; };
+		B64B992D22E15D4A007793BA /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992C22E15D4A007793BA /* Place.swift */; };
+		B64B992F22E25215007793BA /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992E22E25215007793BA /* Itinerary.swift */; };
+		B64B993822E2585C007793BA /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B993722E2585C007793BA /* Route.swift */; };
+		B64B993C22E27B93007793BA /* PlaceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B993B22E27B93007793BA /* PlaceInfo.swift */; };
+		B64B993E22E34CF7007793BA /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B993D22E34CF7007793BA /* MyNavigationController.swift */; };
+		B6A625E422D7CFB40099D65C /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = B6A625E322D7CFB40099D65C /* style.json */; };
+		B6A625E622DE4B520099D65C /* PlaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625E522DE4B520099D65C /* PlaceManager.swift */; };
+		B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625E922DF6CBD0099D65C /* QueryService.swift */; };
+		B6A625EC22DF93F20099D65C /* GMSRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625EB22DF93F10099D65C /* GMSRoute.swift */; };
 		B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */; };
-		B6B5A5B122C7CB3200CE4301 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5A5B022C7CB3200CE4301 /* ViewController.swift */; };
+		B6B5A5B122C7CB3200CE4301 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5A5B022C7CB3200CE4301 /* MapViewController.swift */; };
 		B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B222C7CB3200CE4301 /* Main.storyboard */; };
 		B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */; };
 		B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B722C7CB3200CE4301 /* LaunchScreen.storyboard */; };
+		F69F7DD02504E3B472C7D600 /* Pods_Space_Time_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
+		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
+		B6186A4222C7DD2100FD4170 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
+		B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerViewController.swift; sourceTree = "<group>"; };
+		B64B992722E10018007793BA /* PlaceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListViewController.swift; sourceTree = "<group>"; };
+		B64B992A22E10439007793BA /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
+		B64B992C22E15D4A007793BA /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		B64B992E22E25215007793BA /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
+		B64B993722E2585C007793BA /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		B64B993B22E27B93007793BA /* PlaceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceInfo.swift; sourceTree = "<group>"; };
+		B64B993D22E34CF7007793BA /* MyNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
+		B6A625E322D7CFB40099D65C /* style.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
+		B6A625E522DE4B520099D65C /* PlaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceManager.swift; sourceTree = "<group>"; };
+		B6A625E922DF6CBD0099D65C /* QueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
+		B6A625EB22DF93F10099D65C /* GMSRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSRoute.swift; sourceTree = "<group>"; };
 		B6B5A5AB22C7CB3200CE4301 /* Space-Time-Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Space-Time-Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B6B5A5B022C7CB3200CE4301 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B6B5A5B022C7CB3200CE4301 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B6B5A5B322C7CB3200CE4301 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6B5A5B822C7CB3200CE4301 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6B5A5BA22C7CB3200CE4301 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Space_Time_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +60,77 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F69F7DD02504E3B472C7D600 /* Pods_Space_Time_Maps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		74535FECB825AF9AB1FE4B63 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AFD388B64024ED9215659E5A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */,
+				5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B64B992422E0FB49007793BA /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B6B5A5B022C7CB3200CE4301 /* MapViewController.swift */,
+				B64B992722E10018007793BA /* PlaceListViewController.swift */,
+				B64B993D22E34CF7007793BA /* MyNavigationController.swift */,
+				B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		B64B992622E0FB6D007793BA /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B6A625EB22DF93F10099D65C /* GMSRoute.swift */,
+				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B64B993222E25615007793BA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B64B992E22E25215007793BA /* Itinerary.swift */,
+				B64B992C22E15D4A007793BA /* Place.swift */,
+				B6A625E522DE4B520099D65C /* PlaceManager.swift */,
+				B64B993722E2585C007793BA /* Route.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B64B993322E25670007793BA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B64B992A22E10439007793BA /* PlaceCell.swift */,
+				B64B993B22E27B93007793BA /* PlaceInfo.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		B6B5A5A222C7CB3100CE4301 = {
 			isa = PBXGroup;
 			children = (
 				B6B5A5AD22C7CB3200CE4301 /* Space-Time-Maps */,
 				B6B5A5AC22C7CB3200CE4301 /* Products */,
+				AFD388B64024ED9215659E5A /* Pods */,
+				74535FECB825AF9AB1FE4B63 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,12 +145,18 @@
 		B6B5A5AD22C7CB3200CE4301 /* Space-Time-Maps */ = {
 			isa = PBXGroup;
 			children = (
+				B64B992422E0FB49007793BA /* Controller */,
+				B64B993322E25670007793BA /* View */,
+				B64B993222E25615007793BA /* Model */,
+				B64B992622E0FB6D007793BA /* Helpers */,
 				B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */,
-				B6B5A5B022C7CB3200CE4301 /* ViewController.swift */,
 				B6B5A5B222C7CB3200CE4301 /* Main.storyboard */,
 				B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */,
 				B6B5A5B722C7CB3200CE4301 /* LaunchScreen.storyboard */,
 				B6B5A5BA22C7CB3200CE4301 /* Info.plist */,
+				B6186A4222C7DD2100FD4170 /* Keys.plist */,
+				B6A625E322D7CFB40099D65C /* style.json */,
+				B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */,
 			);
 			path = "Space-Time-Maps";
 			sourceTree = "<group>";
@@ -71,9 +168,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6B5A5BD22C7CB3200CE4301 /* Build configuration list for PBXNativeTarget "Space-Time-Maps" */;
 			buildPhases = (
+				CEDFE4A72972DEC19548ECFF /* [CP] Check Pods Manifest.lock */,
 				B6B5A5A722C7CB3200CE4301 /* Sources */,
 				B6B5A5A822C7CB3200CE4301 /* Frameworks */,
 				B6B5A5A922C7CB3200CE4301 /* Resources */,
+				908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -123,21 +222,75 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6186A4322C7DD2100FD4170 /* Keys.plist in Resources */,
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
+				B6A625E422D7CFB40099D65C /* style.json in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CEDFE4A72972DEC19548ECFF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Space-Time-Maps-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B6B5A5A722C7CB3200CE4301 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6B5A5B122C7CB3200CE4301 /* ViewController.swift in Sources */,
+				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
+				B64B992F22E25215007793BA /* Itinerary.swift in Sources */,
+				B64B993822E2585C007793BA /* Route.swift in Sources */,
+				B64B993C22E27B93007793BA /* PlaceInfo.swift in Sources */,
+				B64B992822E10018007793BA /* PlaceListViewController.swift in Sources */,
+				B6B5A5B122C7CB3200CE4301 /* MapViewController.swift in Sources */,
+				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
+				B64B992B22E10439007793BA /* PlaceCell.swift in Sources */,
+				B64B993E22E34CF7007793BA /* MyNavigationController.swift in Sources */,
+				B6A625E622DE4B520099D65C /* PlaceManager.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
+				B62AFCB222E4C44500B7D2CD /* PlannerViewController.swift in Sources */,
+				B6A625EC22DF93F20099D65C /* GMSRoute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,11 +425,13 @@
 		};
 		B6B5A5BE22C7CB3200CE4301 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M72S49Y7HC;
 				INFOPLIST_FILE = "Space-Time-Maps/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vicky.Space-Time-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -287,11 +442,13 @@
 		};
 		B6B5A5BF22C7CB3200CE4301 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M72S49Y7HC;
 				INFOPLIST_FILE = "Space-Time-Maps/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vicky.Space-Time-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";
