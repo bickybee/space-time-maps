@@ -9,34 +9,29 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import CoreLocation
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
+    var locationService: LocationService?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        // Set up custom services
+        locationService = LocationService()
+        let placeManager = PlaceManager(withStarterPlaces: true)
+        let queryService = QueryService()
         
-        // WITHOUT STORYBOARD
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.makeKeyAndVisible()
-//
-//        // Set up root view controller
-//        let rootController = MapViewController()
-//        rootController.placeManager = PlaceManager()
-//        rootController.queryService = QueryService()
-//
-//        // Set up navigation view controller
-//        window?.rootViewController = MyNavigationController(rootViewController: rootController)
-        
-        // WITH STORYBOARD
-        let mapViewController = self.window?.rootViewController?.childViewControllers.first as? MapViewController
-        if let mapViewController = mapViewController {
-            mapViewController.placeManager = PlaceManager(withStarterPlaces: true)
-            mapViewController.queryService = QueryService()
+        // Inject into root view
+        let homeViewController = self.window?.rootViewController?.childViewControllers.first as? HomeViewController
+        if let homeViewController = homeViewController {
+            homeViewController.placeManager = placeManager
+            homeViewController.queryService = queryService
         }
 
-        // Set up API key
+        // Set up GMaps API w/ key
         var keys: NSDictionary?
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
             keys = NSDictionary(contentsOfFile: path)
@@ -46,11 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let mapsKey = dict["mapsKey"] as? String
             GMSServices.provideAPIKey(mapsKey!)
             GMSPlacesClient.provideAPIKey(mapsKey!)
-            mapViewController?.queryService.apiKey = mapsKey!
+            homeViewController?.queryService.apiKey = mapsKey!
         }
         
         return true
     }
-
+    
 }
 

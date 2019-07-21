@@ -9,7 +9,7 @@ import UIKit
 import GooglePlaces
 import GoogleMaps
 
-class MapViewController: UIViewController {
+class HomeViewController: UIViewController {
     
     // GMS location search autocomplete
     var resultsViewController: GMSAutocompleteResultsViewController?
@@ -19,8 +19,6 @@ class MapViewController: UIViewController {
     // Google Maps stuff
     var placesClient: GMSPlacesClient!
     var mapView : GMSMapView!
-    var locationManager = CLLocationManager()
-    var currentLocation: CLLocation?
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
     
@@ -46,14 +44,6 @@ class MapViewController: UIViewController {
         // Initialize Places client
         self.placesClient = GMSPlacesClient.shared()
         
-        // Initialize the location manager.
-        locationManager = CLLocationManager()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.distanceFilter = 50
-        locationManager.startUpdatingLocation()
-        locationManager.delegate = self
-        
         // Create a map.
         let camera = GMSCameraPosition.camera(withLatitude: defaultLocation.coordinate.latitude,
                                               longitude: defaultLocation.coordinate.longitude,
@@ -75,11 +65,11 @@ class MapViewController: UIViewController {
         
         // Add the map to the view
         view.addSubview(mapView)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
         
         // Hide info view initially
         placeInfoView.isHidden = true
         placeInfoView.deleteButton.addTarget(self, action: #selector(removePlace), for: .touchUpInside)
-        
         
         // Make buttons
         makeSearchButton()
@@ -98,12 +88,29 @@ class MapViewController: UIViewController {
         if let savedPlacesVC = segue.destination as? PlaceListViewController {
             savedPlacesVC.placeManager = self.placeManager
         }
-//        else if let plannerVC = segue.destination as? PlaceListViewController {
-//            plannerVC.placeManager = self.placeManager
-//        }
+        else if let plannerVC = segue.destination as? PlannerViewController {
+            plannerVC.placeManager = self.placeManager
+        }
     }
     
     // MARK: - Custom functions for clicks & place/route data
+    
+    @objc func onDidUpdateLocation(_ notification: Notification) {
+        if let location = notification.userInfo?["location"] as? CLLocation {
+            let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
+                                                  longitude: location.coordinate.longitude,
+                                                  zoom: defaultZoom)
+            
+            if mapView.isHidden {
+                mapView.isHidden = false
+                mapView.camera = camera
+            } else {
+                mapView.animate(to: camera)
+            }
+        } else {
+            print("Could not unwrap notification")
+        }
+    }
     
     func refreshMapMarkup() {
         self.mapView.clear()
@@ -287,7 +294,7 @@ class MapViewController: UIViewController {
 
 // MARK: - Delegates for MapView
 
-extension MapViewController: GMSMapViewDelegate {
+extension HomeViewController: GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         if let place = self.placeManager.placeAtCoordinate(Coordinate(latitude: marker.layer.latitude, longitude: marker.layer.longitude)) {
@@ -307,7 +314,7 @@ extension MapViewController: GMSMapViewDelegate {
 
 // MARK: - Delegates for GMS Autocomplete
 
-extension MapViewController: GMSAutocompleteViewControllerDelegate {
+extension HomeViewController: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
@@ -336,48 +343,4 @@ extension MapViewController: GMSAutocompleteViewControllerDelegate {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
     
-}
-
-// MARK: - Delegates for Location Manager
-extension MapViewController: CLLocationManagerDelegate {
-    
-    // Handle incoming location events.
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location: CLLocation = locations.last!
-        print("Location: \(location)")
-        
-        let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
-                                              longitude: location.coordinate.longitude,
-                                              zoom: defaultZoom)
-        
-        if mapView.isHidden {
-            mapView.isHidden = false
-            mapView.camera = camera
-        } else {
-            mapView.animate(to: camera)
-        }
-    }
-    
-    // Handle authorization for the location manager.
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .restricted:
-            print("Location access was restricted.")
-        case .denied:
-            print("User denied access to location.")
-            // Display the map using the default location.
-            mapView.isHidden = false
-        case .notDetermined:
-            print("Location status not determined.")
-        case .authorizedAlways: fallthrough
-        case .authorizedWhenInUse:
-            print("Location status is OK.")
-        }
-    }
-    
-    // Handle location manager errors.
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        locationManager.stopUpdatingLocation()
-        print("Error: \(error)")
-    }
 }
