@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		B6186A4322C7DD2100FD4170 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6186A4222C7DD2100FD4170 /* Keys.plist */; };
-		B62AFCB222E4C44500B7D2CD /* PlannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */; };
 		B62AFCB422E4D0CC00B7D2CD /* MapHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB322E4D0CC00B7D2CD /* MapHelpers.swift */; };
 		B62AFCB622E4D16400B7D2CD /* GMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* GMapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
+		B62AFCBA22E504CF00B7D2CD /* ItineraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB922E504CF00B7D2CD /* ItineraryViewController.swift */; };
+		B62AFCBD22E5051400B7D2CD /* PlannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* PlannerViewController.swift */; };
+		B62AFCBF22E50E1700B7D2CD /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */; };
+		B62AFCC122E5225700B7D2CD /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCC022E5225700B7D2CD /* TimelineViewController.swift */; };
+		B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */; };
 		B64B992822E10018007793BA /* PlaceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992722E10018007793BA /* PlaceListViewController.swift */; };
 		B64B992B22E10439007793BA /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992A22E10439007793BA /* PlaceCell.swift */; };
 		B64B992D22E15D4A007793BA /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992C22E15D4A007793BA /* Place.swift */; };
@@ -36,10 +40,14 @@
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		B6186A4222C7DD2100FD4170 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
-		B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerViewController.swift; sourceTree = "<group>"; };
 		B62AFCB322E4D0CC00B7D2CD /* MapHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapHelpers.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* GMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		B62AFCB922E504CF00B7D2CD /* ItineraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryViewController.swift; sourceTree = "<group>"; };
+		B62AFCBC22E5051400B7D2CD /* PlannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerViewController.swift; sourceTree = "<group>"; };
+		B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
+		B62AFCC022E5225700B7D2CD /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
+		B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePaletteViewController.swift; sourceTree = "<group>"; };
 		B64B992722E10018007793BA /* PlaceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListViewController.swift; sourceTree = "<group>"; };
 		B64B992A22E10439007793BA /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
 		B64B992C22E15D4A007793BA /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
@@ -96,8 +104,11 @@
 				B6B5A5B022C7CB3200CE4301 /* HomeViewController.swift */,
 				B64B992722E10018007793BA /* PlaceListViewController.swift */,
 				B64B993D22E34CF7007793BA /* MyNavigationController.swift */,
-				B62AFCB122E4C44400B7D2CD /* PlannerViewController.swift */,
 				B62AFCB522E4D16400B7D2CD /* GMapViewController.swift */,
+				B62AFCB922E504CF00B7D2CD /* ItineraryViewController.swift */,
+				B62AFCBC22E5051400B7D2CD /* PlannerViewController.swift */,
+				B62AFCC022E5225700B7D2CD /* TimelineViewController.swift */,
+				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -129,6 +140,7 @@
 			children = (
 				B64B992A22E10439007793BA /* PlaceCell.swift */,
 				B64B993B22E27B93007793BA /* PlaceInfo.swift */,
+				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -292,14 +304,18 @@
 				B64B993822E2585C007793BA /* Route.swift in Sources */,
 				B64B993C22E27B93007793BA /* PlaceInfo.swift in Sources */,
 				B64B992822E10018007793BA /* PlaceListViewController.swift in Sources */,
+				B62AFCBA22E504CF00B7D2CD /* ItineraryViewController.swift in Sources */,
+				B62AFCBF22E50E1700B7D2CD /* LocationCell.swift in Sources */,
+				B62AFCC122E5225700B7D2CD /* TimelineViewController.swift in Sources */,
+				B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */,
 				B6B5A5B122C7CB3200CE4301 /* HomeViewController.swift in Sources */,
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
 				B64B992B22E10439007793BA /* PlaceCell.swift in Sources */,
+				B62AFCBD22E5051400B7D2CD /* PlannerViewController.swift in Sources */,
 				B64B993E22E34CF7007793BA /* MyNavigationController.swift in Sources */,
 				B6A625E622DE4B520099D65C /* PlaceManager.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
-				B62AFCB222E4C44500B7D2CD /* PlannerViewController.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* GMapViewController.swift in Sources */,
 				B62AFCB422E4D0CC00B7D2CD /* MapHelpers.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* GMSRoute.swift in Sources */,

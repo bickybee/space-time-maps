@@ -14,56 +14,83 @@ class GMapViewController: UIViewController {
     
     var placeManager: PlaceManager!
     
-    // Google Maps stuff
-    var placesClient: GMSPlacesClient!
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
+    
+    // Map mark-up
+    var polylines: [String] = []
+    var markers: [GMSMarker] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Create a map.
+        let camera = GMSCameraPosition.camera(withLatitude: defaultLocation.coordinate.latitude,
+                                              longitude: defaultLocation.coordinate.longitude,
+                                              zoom: defaultZoom)
+        mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
+        mapView.settings.myLocationButton = true
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.isMyLocationEnabled = true
+        
+        //Style map w/ json file
+        do {
+            if let styleURL = Bundle.main.url(forResource: "style", withExtension: "json") {
+                mapView.mapStyle = try GMSMapStyle(contentsOfFileURL: styleURL)
+            }
+        } catch {
+            NSLog("Failed to load style.")
+        }
+        
+        // Subscribe to location updates
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
+        
+        // Set our view to be the map
+        view = mapView
+        
     }
-//    
-//    @objc func onDidUpdateLocation(_ notification: Notification) {
-//        if let location = notification.userInfo?["location"] as? CLLocation {
-//            let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
-//                                                  longitude: location.coordinate.longitude,
-//                                                  zoom: defaultZoom)
-//            
-//            if mapView.isHidden {
-//                mapView.isHidden = false
-//                mapView.camera = camera
-//            } else {
-//                mapView.animate(to: camera)
-//            }
-//        } else {
-//            print("Could not unwrap notification")
-//        }
-//    }
-//    
-//    func refreshMapMarkup() {
-//        self.mapView.clear()
-//        displayPlaces()
-//        displayRoutes()
-//    }
-//    
-//    func displayPlaces() {
-//        for place in self.placeManager.getPlaces() {
-//            let marker = GMSMarker()
-//            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
-//            marker.title = place.name
-//            marker.map = self.mapView
-//        }
-//    }
-//    
-//    func displayRoutes() {
-//        for line in self.polylines {
-//            let path = GMSPath(fromEncodedPath: line)
-//            let polyline = GMSPolyline(path: path)
-//            polyline.map = self.mapView
-//        }
-//    }
+    
+    override func didMove(toParentViewController parent: UIViewController?) {
+        self.mapView.delegate = parent as? GMSMapViewDelegate
+    }
 
+    func clearMap() {
+        self.mapView.clear()
+    }
+
+    func displayPlaces(_ places: [Place]) {
+        for place in places {
+            let marker = GMSMarker()
+            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
+            marker.title = place.name
+            marker.map = self.mapView
+        }
+    }
+
+    func displayRoutes(_ routes: [String]) {
+        for line in routes {
+            let path = GMSPath(fromEncodedPath: line)
+            let polyline = GMSPolyline(path: path)
+            polyline.map = self.mapView
+        }
+    }
+    
+    @objc func onDidUpdateLocation(_ notification: Notification) {
+        if let location = notification.userInfo?["location"] as? CLLocation {
+            let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
+                                                  longitude: location.coordinate.longitude,
+                                                  zoom: defaultZoom)
+            
+            if mapView.isHidden {
+                mapView.isHidden = false
+                mapView.camera = camera
+            } else {
+                mapView.animate(to: camera)
+            }
+        } else {
+            print("Could not unwrap notification")
+        }
+    }
 
 }

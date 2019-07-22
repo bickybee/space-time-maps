@@ -48,7 +48,11 @@ class PlaceListViewController: UICollectionViewController {
     }
     
     func insertPlace(_ place: Place, at indexPath: IndexPath) {
-        self.placeManager.insert(place, at: indexPath.item)
+        var index = indexPath.item
+        if (indexPath.item == self.placeManager.numPlaces()) {
+            index = index - 1
+        }
+        self.placeManager.insert(place, at: index)
     }
     
     func updateCellsWithAnimation() {
@@ -133,15 +137,23 @@ extension PlaceListViewController: UICollectionViewDropDelegate {
             
             collectionView.performBatchUpdates({
                 let place = self.place(for: sourceIndexPath)
+                var insertAtIndexPath = destinationIndexPath
+                let numItemsRemaining = collectionView.numberOfItems(inSection: 0)
+                if (destinationIndexPath.item >= numItemsRemaining) {
+                    let lastIndex = IndexPath(item: numItemsRemaining, section: 0)
+                    insertAtIndexPath = lastIndex
+                }
                 removePlace(at: sourceIndexPath)
-                insertPlace(place!, at: destinationIndexPath)
+                insertPlace(place!, at: insertAtIndexPath)
                 collectionView.deleteItems(at: [sourceIndexPath])
-                collectionView.insertItems(at: [destinationIndexPath])
+                collectionView.insertItems(at: [insertAtIndexPath])
             }, completion: { _ in
                 coordinator.drop(dropItem.dragItem,
                                  toItemAt: destinationIndexPath)
             })
         }
+        
+        updateCellsWithAnimation()
     }
     
     func collectionView(

@@ -30,6 +30,7 @@ class HomeViewController: UIViewController {
     var queryService: QueryService!
     
     // Map mark-up
+    var mapViewController : GMapViewController!
     var polylines: [String] = []
     var markers: [GMSMarker] = []
     
@@ -44,28 +45,11 @@ class HomeViewController: UIViewController {
         // Initialize Places client
         self.placesClient = GMSPlacesClient.shared()
         
-        // Create a map.
-        let camera = GMSCameraPosition.camera(withLatitude: defaultLocation.coordinate.latitude,
-                                              longitude: defaultLocation.coordinate.longitude,
-                                              zoom: defaultZoom)
-        mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
-        mapView.settings.myLocationButton = true
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.isMyLocationEnabled = true
-        mapView.delegate = self
-        
-        //Style map w/ json file
-        do {
-            if let styleURL = Bundle.main.url(forResource: "style", withExtension: "json") {
-                mapView.mapStyle = try GMSMapStyle(contentsOfFileURL: styleURL)
-            }
-        } catch {
-            NSLog("Failed to load style.")
-        }
-        
-        // Add the map to the view
-        view.addSubview(mapView)
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
+        // Initializze map
+        mapViewController = GMapViewController()
+        self.addChildViewController(mapViewController)
+        mapViewController.view.frame = self.view.bounds
+        self.view.addSubview(mapViewController.view)
         
         // Hide info view initially
         placeInfoView.isHidden = true
@@ -74,14 +58,13 @@ class HomeViewController: UIViewController {
         // Make buttons
         makeSearchButton()
         makeRouteButton()
-//        makeWaypointButton()
         makeListButton()
         makePlanButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         // Load any existing locations or routes
-        refreshMapMarkup()
+         refreshMapMarkup()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -95,44 +78,10 @@ class HomeViewController: UIViewController {
     
     // MARK: - Custom functions for clicks & place/route data
     
-    @objc func onDidUpdateLocation(_ notification: Notification) {
-        if let location = notification.userInfo?["location"] as? CLLocation {
-            let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
-                                                  longitude: location.coordinate.longitude,
-                                                  zoom: defaultZoom)
-            
-            if mapView.isHidden {
-                mapView.isHidden = false
-                mapView.camera = camera
-            } else {
-                mapView.animate(to: camera)
-            }
-        } else {
-            print("Could not unwrap notification")
-        }
-    }
-    
     func refreshMapMarkup() {
-        self.mapView.clear()
-        displayPlaces()
-        displayRoutes()
-    }
-    
-    func displayPlaces() {
-        for place in self.placeManager.getPlaces() {
-            let marker = GMSMarker()
-            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
-            marker.title = place.name
-            marker.map = self.mapView
-        }
-    }
-
-    func displayRoutes() {
-        for line in self.polylines {
-            let path = GMSPath(fromEncodedPath: line)
-            let polyline = GMSPolyline(path: path)
-            polyline.map = self.mapView
-        }
+        self.mapViewController.clearMap()
+        self.mapViewController.displayPlaces(placeManager.getPlaces())
+        self.mapViewController.displayRoutes(self.polylines)
     }
 
     @objc func removePlace(_ sender: Any) {
@@ -149,7 +98,7 @@ class HomeViewController: UIViewController {
         autocompleteController.delegate = self
         
         // Filter autocomplete results to bias within current map region
-        let visibleRegion = self.mapView.projection.visibleRegion()
+        let visibleRegion = mapViewController.mapView.projection.visibleRegion()
         let bounds = GMSCoordinateBounds(coordinate: visibleRegion.farLeft, coordinate: visibleRegion.nearRight)
         autocompleteController.autocompleteBounds = bounds
         autocompleteController.autocompleteBoundsMode = .bias
@@ -204,7 +153,7 @@ class HomeViewController: UIViewController {
     }
     
     @objc func showPlanner(_sender: UIButton) {
-//        performSegue(withIdentifier: "planner", sender: _sender)
+        performSegue(withIdentifier: "planner", sender: _sender)
     }
     
     func showPlaceInfoView() {

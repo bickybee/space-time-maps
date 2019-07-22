@@ -49,4 +49,8 @@ class PlaceManager {
     func getPlaces() -> [Place] {
         return self.places
     }
+    
+    func numPlaces() -> Int {
+        return self.places.count
+    }
 }
