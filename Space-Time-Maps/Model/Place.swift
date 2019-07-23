@@ -10,11 +10,25 @@ import Foundation
 import GoogleMaps
 import MobileCoreServices
 
-struct Coordinate : Codable {
-    let latitude, longitude: Double
+class Coordinate : NSObject, Codable {
+    var lat, lon: Double!
+    
+    init(_ latitude: Double, _ longitude: Double) {
+        super.init()
+        self.lat = latitude
+        self.lon = longitude
+    }
     
     static func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
-        return (lhs.latitude == rhs.latitude) && (lhs.longitude == rhs.longitude)
+        return (lhs.lat == rhs.lat) && (lhs.lon == rhs.lon)
+    }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        if let other = object as? Coordinate {
+            return self == other
+        } else {
+            return false
+        }
     }
 }
 
@@ -32,15 +46,26 @@ final class Place : NSObject, Codable {
     init(_ name: String, _ placeID: String, _ latitude: Double, _ longitude: Double) {
         self.name = name
         self.placeID = placeID
-        self.coordinate = Coordinate(latitude: latitude, longitude: longitude)
+        self.coordinate = Coordinate(latitude, longitude)
     }
     
     init(_ name: String, _ placeID: String, _ coordinate: CLLocationCoordinate2D) {
         self.name = name
         self.placeID = placeID
-        self.coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        self.coordinate = Coordinate(coordinate.latitude, coordinate.longitude)
     }
     
+    static func == (lhs: Place, rhs: Place) -> Bool {
+        return (lhs.name == rhs.name) && (lhs.placeID == rhs.placeID) && (lhs.coordinate == rhs.coordinate)
+    }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        if let other = object as? Place {
+            return self == other
+        } else {
+            return false
+        }
+    }
 }
 
 // MARK - For Drag and Drop functionality

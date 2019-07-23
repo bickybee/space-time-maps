@@ -24,13 +24,13 @@ class HomeViewController: UIViewController {
     
     // User-saved stuff
     var placeManager : PlaceManager!
-    var itinerary : Itinerary!
+    var itineraryManager : ItineraryManager!
     
     // Query service for making API calls
     var queryService: QueryService!
     
     // Map mark-up
-    var mapViewController : GMapViewController!
+    var mapViewController : MapViewController!
     var polylines: [String] = []
     var markers: [GMSMarker] = []
     
@@ -46,7 +46,7 @@ class HomeViewController: UIViewController {
         self.placesClient = GMSPlacesClient.shared()
         
         // Initializze map
-        mapViewController = GMapViewController()
+        mapViewController = MapViewController()
         self.addChildViewController(mapViewController)
         mapViewController.view.frame = self.view.bounds
         self.view.addSubview(mapViewController.view)
@@ -73,6 +73,7 @@ class HomeViewController: UIViewController {
         }
         else if let plannerVC = segue.destination as? PlannerViewController {
             plannerVC.placeManager = self.placeManager
+            plannerVC.itineraryManager = self.itineraryManager
         }
     }
     
@@ -246,7 +247,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController: GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        if let place = self.placeManager.placeAtCoordinate(Coordinate(latitude: marker.layer.latitude, longitude: marker.layer.longitude)) {
+        if let place = self.placeManager.placeAtCoordinate(Coordinate(marker.layer.latitude, marker.layer.longitude)) {
             self.currentPlaceInfo = place
             showPlaceInfoView()
             return true
@@ -268,7 +269,7 @@ extension HomeViewController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let newPlace = Place(place.name!, place.placeID!, place.coordinate)
-        self.placeManager?.add(place: newPlace)
+        self.placeManager?.add(newPlace)
         refreshMapMarkup()
         print(newPlace)
     }

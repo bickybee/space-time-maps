@@ -21,13 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
         // Set up custom services
         locationService = LocationService()
-        let placeManager = PlaceManager(withStarterPlaces: true)
         let queryService = QueryService()
+        let placeManager = PlaceManager(withStarterPlaces: true)
+        let itineraryManager = ItineraryManager(queryService)
         
         // Inject into root view
         let homeViewController = self.window?.rootViewController?.childViewControllers.first as? HomeViewController
         if let homeViewController = homeViewController {
             homeViewController.placeManager = placeManager
+            homeViewController.itineraryManager = itineraryManager
             homeViewController.queryService = queryService
         }
 

@@ -15,7 +15,7 @@ class PlacePaletteViewController: UICollectionViewController {
     var placeManager : PlaceManager!
     
     private let cellHeight : CGFloat = 100.0
-    private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
+    private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +61,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = collectionView.bounds.size
+        var size = view.frame.size
         size.width -= (sectionInsets.left + sectionInsets.right)
         return CGSize(width:size.width, height:self.cellHeight)
     }

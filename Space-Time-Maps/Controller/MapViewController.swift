@@ -10,10 +10,8 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class GMapViewController: UIViewController {
-    
-    var placeManager: PlaceManager!
-    
+class MapViewController: UIViewController {
+
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
@@ -58,21 +56,30 @@ class GMapViewController: UIViewController {
     func clearMap() {
         self.mapView.clear()
     }
-
+    
     func displayPlaces(_ places: [Place]) {
+        displayPlaces(places, color: .gray)
+    }
+
+    func displayPlaces(_ places: [Place], color: UIColor) {
         for place in places {
             let marker = GMSMarker()
-            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
+            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
             marker.title = place.name
+            marker.icon = GMSMarker.markerImage(with: color)
             marker.map = self.mapView
         }
+    }
+    
+    func displayRoute(_ route: String) {
+        let path = GMSPath(fromEncodedPath: route)
+        let polyline = GMSPolyline(path: path)
+        polyline.map = self.mapView
     }
 
     func displayRoutes(_ routes: [String]) {
         for line in routes {
-            let path = GMSPath(fromEncodedPath: line)
-            let polyline = GMSPolyline(path: path)
-            polyline.map = self.mapView
+            displayRoute(line)
         }
     }
     

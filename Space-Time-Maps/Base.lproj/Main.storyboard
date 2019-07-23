@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -110,8 +111,9 @@
                         <constraints>
                             <constraint firstItem="lXj-Tg-eL1" firstAttribute="top" secondItem="pDu-qP-g8W" secondAttribute="top" id="3hK-hA-Xhq"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="top" secondItem="lXj-Tg-eL1" secondAttribute="bottom" id="G29-a4-VaU"/>
-                            <constraint firstItem="R0v-a2-Sla" firstAttribute="width" secondItem="lXj-Tg-eL1" secondAttribute="width" id="Hxy-E8-Wg8"/>
                             <constraint firstItem="R0v-a2-Sla" firstAttribute="leading" secondItem="pDu-qP-g8W" secondAttribute="leading" id="QUU-fP-HAh"/>
+                            <constraint firstItem="lXj-Tg-eL1" firstAttribute="width" secondItem="9oo-Zw-Aem" secondAttribute="width" multiplier="0.5" id="bBj-rX-Zkb"/>
+                            <constraint firstItem="R0v-a2-Sla" firstAttribute="width" secondItem="9oo-Zw-Aem" secondAttribute="width" multiplier="0.5" id="bN7-fn-3dK"/>
                             <constraint firstItem="lXj-Tg-eL1" firstAttribute="leading" secondItem="R0v-a2-Sla" secondAttribute="trailing" id="bqC-Tf-aAC"/>
                             <constraint firstItem="R0v-a2-Sla" firstAttribute="top" secondItem="pDu-qP-g8W" secondAttribute="top" id="cFV-Pc-TWx"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="bottom" secondItem="pDu-qP-g8W" secondAttribute="bottom" id="hSk-n7-jbK"/>
@@ -212,7 +214,7 @@
         <!--Map View Controller-->
         <scene sceneID="Xlp-al-1ER">
             <objects>
-                <viewController id="ww7-Vp-gll" customClass="GMapViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ww7-Vp-gll" customClass="MapViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NBt-nG-tlI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -224,10 +226,10 @@
             </objects>
             <point key="canvasLocation" x="1908" y="1167"/>
         </scene>
-        <!--Itinerary View Controller-->
+        <!--Old Itinerary View Controller-->
         <scene sceneID="eGr-y2-Blz">
             <objects>
-                <viewController id="fJc-z6-fPz" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="fJc-z6-fPz" customClass="OldItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x4F-aH-DXS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -295,10 +297,10 @@
             </objects>
             <point key="canvasLocation" x="2618" y="663"/>
         </scene>
-        <!--Timeline View Controller-->
+        <!--Itinerary View Controller-->
         <scene sceneID="aMn-0x-YDd">
             <objects>
-                <viewController id="q2t-3V-v5v" customClass="TimelineViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="q2t-3V-v5v" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="iNK-cF-NT9">
                         <rect key="frame" x="0.0" y="0.0" width="187.5" height="353"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
