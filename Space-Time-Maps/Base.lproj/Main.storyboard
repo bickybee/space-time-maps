@@ -86,13 +86,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0v-a2-Sla">
-                                <rect key="frame" x="0.0" y="64" width="187.5" height="353"/>
+                                <rect key="frame" x="0.0" y="129" width="187" height="288"/>
                                 <connections>
                                     <segue destination="q2t-3V-v5v" kind="embed" id="iCH-Ie-O3q"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXj-Tg-eL1">
-                                <rect key="frame" x="187.5" y="64" width="187.5" height="353"/>
+                                <rect key="frame" x="187" y="129" width="188" height="288"/>
                                 <connections>
                                     <segue destination="0gj-fn-l7y" kind="embed" id="me2-TH-vZj"/>
                                 </connections>
@@ -106,24 +106,69 @@
                                     <segue destination="ww7-Vp-gll" kind="embed" id="spY-gK-A7k"/>
                                 </connections>
                             </containerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wbw-O3-WyC">
+                                <rect key="frame" x="0.0" y="64" width="375" height="65"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QZK-UO-X47">
+                                        <rect key="frame" x="8" y="18" width="215" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="215" id="iVw-vh-mEZ"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Car"/>
+                                            <segment title="Walk"/>
+                                            <segment title="Bike"/>
+                                            <segment title="Transit"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="transportModeChanged:" destination="kWF-JP-3wc" eventType="valueChanged" id="2W0-xw-FNf"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 hr 40 minutes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7v-eX-cwa">
+                                        <rect key="frame" x="236" y="22" width="131" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="m7v-eX-cwa" firstAttribute="leading" secondItem="QZK-UO-X47" secondAttribute="trailing" constant="13" id="71n-kP-WKl"/>
+                                    <constraint firstItem="QZK-UO-X47" firstAttribute="leading" secondItem="Wbw-O3-WyC" secondAttribute="leading" constant="8" id="7Tx-qH-a5N"/>
+                                    <constraint firstAttribute="bottom" secondItem="m7v-eX-cwa" secondAttribute="bottom" constant="22" id="NtK-UE-1Mi"/>
+                                    <constraint firstItem="m7v-eX-cwa" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="22" id="TuD-xg-kMw"/>
+                                    <constraint firstAttribute="bottom" secondItem="QZK-UO-X47" secondAttribute="bottom" constant="18" id="fGi-MQ-jat"/>
+                                    <constraint firstItem="QZK-UO-X47" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="18" id="o0A-h3-Xsz"/>
+                                    <constraint firstAttribute="trailing" secondItem="m7v-eX-cwa" secondAttribute="trailing" constant="8" id="oUY-wC-vCY"/>
+                                    <constraint firstAttribute="height" constant="65" id="op7-nj-MOj"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="lXj-Tg-eL1" firstAttribute="top" secondItem="pDu-qP-g8W" secondAttribute="top" id="3hK-hA-Xhq"/>
+                            <constraint firstItem="Wbw-O3-WyC" firstAttribute="top" secondItem="pDu-qP-g8W" secondAttribute="top" id="Dhx-f3-Bf0"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="top" secondItem="lXj-Tg-eL1" secondAttribute="bottom" id="G29-a4-VaU"/>
+                            <constraint firstItem="R0v-a2-Sla" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="bottom" id="GCG-df-ncm"/>
+                            <constraint firstItem="lXj-Tg-eL1" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="bottom" id="JNe-WN-0Eg"/>
+                            <constraint firstItem="Wbw-O3-WyC" firstAttribute="leading" secondItem="pDu-qP-g8W" secondAttribute="leading" id="QTC-KT-tlJ"/>
                             <constraint firstItem="R0v-a2-Sla" firstAttribute="leading" secondItem="pDu-qP-g8W" secondAttribute="leading" id="QUU-fP-HAh"/>
                             <constraint firstItem="lXj-Tg-eL1" firstAttribute="width" secondItem="9oo-Zw-Aem" secondAttribute="width" multiplier="0.5" id="bBj-rX-Zkb"/>
                             <constraint firstItem="R0v-a2-Sla" firstAttribute="width" secondItem="9oo-Zw-Aem" secondAttribute="width" multiplier="0.5" id="bN7-fn-3dK"/>
                             <constraint firstItem="lXj-Tg-eL1" firstAttribute="leading" secondItem="R0v-a2-Sla" secondAttribute="trailing" id="bqC-Tf-aAC"/>
-                            <constraint firstItem="R0v-a2-Sla" firstAttribute="top" secondItem="pDu-qP-g8W" secondAttribute="top" id="cFV-Pc-TWx"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="bottom" secondItem="pDu-qP-g8W" secondAttribute="bottom" id="hSk-n7-jbK"/>
                             <constraint firstItem="lXj-Tg-eL1" firstAttribute="trailing" secondItem="pDu-qP-g8W" secondAttribute="trailing" id="mKU-rt-E4C"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="top" secondItem="R0v-a2-Sla" secondAttribute="bottom" id="mco-dJ-EA7"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="leading" secondItem="pDu-qP-g8W" secondAttribute="leading" id="mr8-bh-Atq"/>
                             <constraint firstItem="5Bk-6M-Rcq" firstAttribute="trailing" secondItem="pDu-qP-g8W" secondAttribute="trailing" id="nGA-1V-CbY"/>
+                            <constraint firstItem="Wbw-O3-WyC" firstAttribute="trailing" secondItem="pDu-qP-g8W" secondAttribute="trailing" id="z0v-o9-yH3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pDu-qP-g8W"/>
                     </view>
+                    <navigationItem key="navigationItem" id="D3w-2M-fXw"/>
+                    <connections>
+                        <outlet property="transportModePicker" destination="QZK-UO-X47" id="6WF-2G-MeE"/>
+                        <outlet property="transportTimeLabel" destination="m7v-eX-cwa" id="F4P-Ky-jRM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mtd-2F-eLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -204,7 +249,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="m1i-Xw-qM6"/>
+                        <segue destination="kWF-JP-3wc" kind="relationship" relationship="rootViewController" id="zlu-y2-dwb"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eGO-aQ-tk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -302,7 +347,7 @@
             <objects>
                 <viewController id="q2t-3V-v5v" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="iNK-cF-NT9">
-                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="353"/>
+                        <rect key="frame" x="0.0" y="0.0" width="187" height="288"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4wE-8u-rNZ">
@@ -332,7 +377,7 @@
             <objects>
                 <viewController id="0gj-fn-l7y" customClass="PlacePaletteViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="qcX-01-rOn">
-                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="353"/>
+                        <rect key="frame" x="0.0" y="0.0" width="188" height="288"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fOi-jx-owT">
@@ -358,4 +403,7 @@
             <point key="canvasLocation" x="1940" y="814"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="zlu-y2-dwb"/>
+    </inferredMetricsTieBreakers>
 </document>

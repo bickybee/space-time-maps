@@ -14,7 +14,7 @@ class ItineraryViewController: UICollectionViewController {
     
     var itineraryManager: ItineraryManager!
     
-    private let cellHeight : CGFloat = 100.0
+    private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +94,7 @@ extension ItineraryViewController: UICollectionViewDropDelegate {
                         }
                         self.itineraryManager.insertPlace(place, at: destinationIndexPath.item)
                         collectionView.insertItems(at: [destinationIndexPath])
+                        self.itineraryManager.calculateItineraryUpdates() // Only call update after both insert and delete complete!
                         coordinator.drop(dropItem.dragItem,
                                          toItemAt: destinationIndexPath)
                         UIView.performWithoutAnimation {
@@ -131,9 +132,5 @@ extension ItineraryViewController: UICollectionViewDragDelegate {
         }
         return []
         
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
-        print(session)
     }
 }

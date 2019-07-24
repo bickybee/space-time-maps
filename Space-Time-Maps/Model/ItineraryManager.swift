@@ -8,6 +8,10 @@
 
 import Foundation
 
+enum TravelMode : String {
+    case driving, walking, bicycling, transit
+}
+
 // Itinerary = ordered list of places (place manager), route
 // Manager => also handles queries and notifies observers of updates
 class ItineraryManager : NSObject {
@@ -15,6 +19,7 @@ class ItineraryManager : NSObject {
     private var placeManager = PlaceManager(withStarterPlaces: false)
     private var route : String?
     private let queryService : QueryService
+    private var travelMode = TravelMode.driving
     
     init(_ qs : QueryService) {
         queryService = qs
@@ -22,17 +27,14 @@ class ItineraryManager : NSObject {
     
     func addPlace(_ newPlace: Place) {
         placeManager.add(newPlace)
-        updateRoute()
     }
     
     func insertPlace(_ newPlace: Place, at index: Int) {
         placeManager.insert(newPlace, at: index)
-        updateRoute()
     }
     
     func removePlace(at index: Int) {
         placeManager.remove(at: index)
-        updateRoute()
     }
     
     func getPlace(at index: Int) -> Place? {
@@ -79,7 +81,7 @@ class ItineraryManager : NSObject {
     func setRoute(_ newRoute: String?) {
         if let theRoute = newRoute {
             route = theRoute
-            NotificationCenter.default.post(name: .didUpdateRoute, object: self)
+            NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
         }
     }
     
@@ -91,13 +93,24 @@ class ItineraryManager : NSObject {
         return placeManager.numPlaces()
     }
     
+    func setTravelMode(_ mode: TravelMode) {
+        self.travelMode = mode
+    }
+    
     // Calculate new route via query
-    func updateRoute() {
-        if let startingID = getStartingPlace()?.placeID, let endingID = getEndingPlace()?.placeID {
-            if let enrouteIDs = getEnroutePlaces()?.map ({$0.placeID}) {
-                self.queryService.getWaypointRoute(startingID, endingID, enrouteIDs, self.setRoute)
+    func calculateItineraryUpdates() {
+        if let startingID = getStartingPlace()?.placeID {
+            if let endingID = getEndingPlace()?.placeID {
+                if let enrouteIDs = getEnroutePlaces()?.map ({$0.placeID}) {
+                    // Route with waypoints
+                    self.queryService.getWaypointRoute(startingID, endingID, enrouteIDs, travelMode, self.setRoute)
+                } else {
+                    // Route with only start and dest
+                    self.queryService.getRoute(startingID, endingID, travelMode, self.setRoute)
+                }
             } else {
-                self.queryService.getRoute(startingID, endingID, self.setRoute)
+                // Just one place!
+                NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
             }
         }
     }
@@ -105,6 +118,6 @@ class ItineraryManager : NSObject {
 }
 
 extension Notification.Name {
-    static let didUpdateRoute = Notification.Name("didUpdateRoute")
+    static let didUpdateItinerary = Notification.Name("didUpdateItinerary")
 }
 

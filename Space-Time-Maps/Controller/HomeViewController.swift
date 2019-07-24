@@ -81,8 +81,8 @@ class HomeViewController: UIViewController {
     
     func refreshMapMarkup() {
         self.mapViewController.clearMap()
-        self.mapViewController.displayPlaces(placeManager.getPlaces())
-        self.mapViewController.displayRoutes(self.polylines)
+//        self.mapViewController.displayPlaces(placeManager.getPlaces())
+//        self.mapViewController.displayRoutes(self.polylines)
     }
 
     @objc func removePlace(_ sender: Any) {
@@ -130,7 +130,7 @@ class HomeViewController: UIViewController {
                 for i in 0...(places.count - 2) {
                     let fromPlaceID = places[i].placeID
                     let toPlaceID = places[i+1].placeID
-                    self.queryService?.getRoute(fromPlaceID, toPlaceID, self.addPath)
+                    self.queryService?.getRoute(fromPlaceID, toPlaceID, TravelMode.driving, self.addPath)
                 }
             }
         }
@@ -144,7 +144,7 @@ class HomeViewController: UIViewController {
                 let toPlaceID = places[places.count - 1].placeID
                 let waypoints = places[1...places.count - 2]
                 let waypointIDs = waypoints.map { $0.placeID }
-                self.queryService?.getWaypointRoute(fromPlaceID, toPlaceID, Array(waypointIDs), self.addPath)
+                self.queryService?.getWaypointRoute(fromPlaceID, toPlaceID, Array(waypointIDs), TravelMode.driving, self.addPath)
             }
         }
     }

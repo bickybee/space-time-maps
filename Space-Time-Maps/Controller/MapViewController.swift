@@ -10,15 +10,24 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
+struct PlaceVisual {
+    let place : Place
+    let color : UIColor
+}
+
+struct RouteVisual {
+    let route : String
+    let color : UIColor
+}
+
 class MapViewController: UIViewController {
 
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
     
-    // Map mark-up
-    var polylines: [String] = []
-    var markers: [GMSMarker] = []
+    var placeVisuals = [PlaceVisual]()
+    var routeVisuals = [RouteVisual]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,23 +55,36 @@ class MapViewController: UIViewController {
         
         // Set our view to be the map
         view = mapView
+        refreshMarkup()
         
     }
     
     override func didMove(toParentViewController parent: UIViewController?) {
         self.mapView.delegate = parent as? GMSMapViewDelegate
     }
+    
+    func refreshMarkup() {
+        clearMap()
+        displayRoutes()
+        displayPlaces()
+    }
 
     func clearMap() {
         self.mapView.clear()
     }
     
-    func displayPlaces(_ places: [Place]) {
-        displayPlaces(places, color: .gray)
+    func setPlaces(_ places: [PlaceVisual]) {
+        placeVisuals = places
+    }
+    
+    func setRoutes(_ routes: [RouteVisual]) {
+        routeVisuals = routes
     }
 
-    func displayPlaces(_ places: [Place], color: UIColor) {
-        for place in places {
+    func displayPlaces() {
+        for placeVisual in placeVisuals {
+            let place = placeVisual.place
+            let color = placeVisual.color
             let marker = GMSMarker()
             marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
             marker.title = place.name
@@ -71,15 +93,14 @@ class MapViewController: UIViewController {
         }
     }
     
-    func displayRoute(_ route: String) {
-        let path = GMSPath(fromEncodedPath: route)
-        let polyline = GMSPolyline(path: path)
-        polyline.map = self.mapView
-    }
-
-    func displayRoutes(_ routes: [String]) {
-        for line in routes {
-            displayRoute(line)
+    func displayRoutes() {
+        for routeVisual in routeVisuals {
+            let route = routeVisual.route
+            let color = routeVisual.color
+            let path = GMSPath(fromEncodedPath: route)
+            let polyline = GMSPolyline(path: path)
+            polyline.strokeColor = color
+            polyline.map = self.mapView
         }
     }
     

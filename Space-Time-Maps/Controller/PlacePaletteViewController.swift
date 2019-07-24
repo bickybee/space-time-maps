@@ -14,7 +14,7 @@ class PlacePaletteViewController: UICollectionViewController {
     
     var placeManager : PlaceManager!
     
-    private let cellHeight : CGFloat = 100.0
+    private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
 
     override func viewDidLoad() {
@@ -36,7 +36,7 @@ class PlacePaletteViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         let index = indexPath.item
-        cell.backgroundColor = .yellow
+        cell.backgroundColor = .gray
         cell.nameLabel.text = self.placeName(for: indexPath)
         cell.nameLabel.backgroundColor = .white
         cell.nameLabel.sizeToFit()
@@ -69,6 +69,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
 
 // MARK: - UICollectionViewDragDelegate
 extension PlacePaletteViewController: UICollectionViewDragDelegate {
+    
     func collectionView(_ collectionView: UICollectionView,
                         itemsForBeginning session: UIDragSession,
                         at indexPath: IndexPath) -> [UIDragItem] {
@@ -80,4 +81,9 @@ extension PlacePaletteViewController: UICollectionViewDragDelegate {
             return []
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        
+    }
+    
 }

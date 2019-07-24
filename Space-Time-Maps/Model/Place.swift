@@ -37,6 +37,7 @@ final class Place : NSObject, Codable {
     let name: String
     let coordinate: Coordinate
     let placeID: String
+    var inItinerary = false
     //    let address: String
     
     override var description: String {
@@ -53,6 +54,14 @@ final class Place : NSObject, Codable {
         self.name = name
         self.placeID = placeID
         self.coordinate = Coordinate(coordinate.latitude, coordinate.longitude)
+    }
+    
+    func setInItinerary(_ status : Bool) {
+        inItinerary = status
+    }
+    
+    func isInItinrary() -> Bool {
+        return inItinerary
     }
     
     static func == (lhs: Place, rhs: Place) -> Bool {
