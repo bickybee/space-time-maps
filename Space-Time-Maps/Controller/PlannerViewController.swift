@@ -22,6 +22,7 @@ class PlannerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateItinerary), name: .didUpdateItinerary, object: nil)
     }
     
@@ -94,11 +95,25 @@ class PlannerViewController: UIViewController {
         }
     }
     
+    func updateTransportTimeLabel() {
+        if let duration = itineraryManager.getDuration() {
+            let formatter = DateComponentsFormatter()
+            formatter.allowedUnits = [.hour, .minute]
+            formatter.unitsStyle = .full
+            
+            let formattedString = formatter.string(from: TimeInterval(duration))!
+            transportTimeLabel.text = formattedString
+        } else {
+            transportTimeLabel.text = "no route yet"
+        }
+    }
+    
     // Should also do this for just adding places
     // Should /also/ visualize non-itinerary places on map
     @objc func onDidUpdateItinerary(_ notification: Notification) {
         markItineraryPlaces()
         updateMap()
+        updateTransportTimeLabel()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

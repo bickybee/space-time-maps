@@ -117,9 +117,9 @@ class HomeViewController: UIViewController {
     }
     
     // Add path
-    func addPath(_ encodedPath: String?) {
-        if let path = encodedPath{
-            self.polylines.append(path)
+    func addPath(_ route: Route?) {
+        if let route = route{
+            self.polylines.append(route.polyline)
         }
     }
     
@@ -130,21 +130,8 @@ class HomeViewController: UIViewController {
                 for i in 0...(places.count - 2) {
                     let fromPlaceID = places[i].placeID
                     let toPlaceID = places[i+1].placeID
-                    self.queryService?.getRoute(fromPlaceID, toPlaceID, TravelMode.driving, self.addPath)
+                    self.queryService?.getRoute(fromPlaceID, toPlaceID, nil, TravelMode.driving, self.addPath)
                 }
-            }
-        }
-    }
-    
-    // Get polyline for route with start, end, and waypoints (in any order)
-    @objc func waypointsClicked(_sender: UIButton) {
-        if let places = self.placeManager?.getPlaces() {
-            if places.count >= 2 {
-                let fromPlaceID = places[0].placeID
-                let toPlaceID = places[places.count - 1].placeID
-                let waypoints = places[1...places.count - 2]
-                let waypointIDs = waypoints.map { $0.placeID }
-                self.queryService?.getWaypointRoute(fromPlaceID, toPlaceID, Array(waypointIDs), TravelMode.driving, self.addPath)
             }
         }
     }
@@ -213,14 +200,6 @@ class HomeViewController: UIViewController {
         btnLaunchAc.backgroundColor = .red
         btnLaunchAc.setTitle("GO", for: .normal)
         btnLaunchAc.addTarget(self, action: #selector(routeClicked), for: .touchUpInside)
-        self.view.addSubview(btnLaunchAc)
-    }
-    
-    func makeWaypointButton() {
-        let btnLaunchAc = UIButton(frame: CGRect(x: 0, y: 170, width: 85, height: 85))
-        btnLaunchAc.backgroundColor = .green
-        btnLaunchAc.setTitle("WAY", for: .normal)
-        btnLaunchAc.addTarget(self, action: #selector(waypointsClicked), for: .touchUpInside)
         self.view.addSubview(btnLaunchAc)
     }
     

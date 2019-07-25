@@ -99,7 +99,6 @@
 		B62AFCC622E77BD800B7D2CD /* Scraps */ = {
 			isa = PBXGroup;
 			children = (
-				B64B993722E2585C007793BA /* Route.swift */,
 				B62AFCB922E504CF00B7D2CD /* OldItineraryViewController.swift */,
 			);
 			path = Scraps;
@@ -132,6 +131,7 @@
 		B64B993222E25615007793BA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B64B993722E2585C007793BA /* Route.swift */,
 				B64B992C22E15D4A007793BA /* Place.swift */,
 				B6A625E522DE4B520099D65C /* PlaceManager.swift */,
 				B62AFCC422E7647F00B7D2CD /* ItineraryManager.swift */,

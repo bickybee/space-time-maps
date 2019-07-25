@@ -8,13 +8,9 @@
 
 import Foundation
 
-class Route {
+struct Route {
     
     var polyline : String
-    // var timings???
-    
-    init(_ polyline: String) {
-        self.polyline = polyline
-    }
+    var duration : Int // seconds
     
 }

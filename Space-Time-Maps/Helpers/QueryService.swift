@@ -11,13 +11,12 @@ import Foundation
 
 class QueryService {
     
-    typealias QueryResultHandler = (String?) -> ()
+    typealias RouteQueryResultHandler = (Route?) -> ()
     
     let session = URLSession(configuration: .default)
     var apiKey: String?
-    
-    // Returns polyline
-    func getRoute(_ fromPlaceID: String, _ toPlaceID: String, _ travelMode: TravelMode, _ callback: @escaping QueryResultHandler ) {
+
+    func getRoute(_ fromPlaceID: String, _ toPlaceID: String, _ waypointIDs: [String]?, _ travelMode: TravelMode, _ callback: @escaping RouteQueryResultHandler) {
         
         if var urlComponents = URLComponents(string: "https://maps.googleapis.com/maps/api/directions/json") {
             
@@ -28,44 +27,15 @@ class QueryService {
                 URLQueryItem(name:"key", value:"\(self.apiKey!)")
             ]
             
-            guard let url = urlComponents.url else { return }
-            
-            let dataTask = session.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    print("ERROR")
-                    print(error.localizedDescription)
-                } else if let data = data {
-                    print("SUCCESS")
-                    let decoder = JSONDecoder()
-                    let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data)
-                    let aRoute = routeResponseObject?.routes[0]
-                    let aLine = aRoute?.overviewPolyline.points
-                    DispatchQueue.main.async {
-                        callback(aLine)
-                    }
+            if let waypointIDs = waypointIDs {
+                var waypointString = ""
+                for placeID in waypointIDs {
+                    waypointString += "|place_id:" + placeID
                 }
+                urlComponents.queryItems?.append(
+                    URLQueryItem(name:"waypoints", value:"optimize:true\(waypointString)")
+                )
             }
-            dataTask.resume()
-        }
-    }
-    
-    func getWaypointRoute(_ fromPlaceID: String, _ toPlaceID: String, _ waypointIDs: [String], _ travelMode: TravelMode, _ callback: @escaping QueryResultHandler) {
-        
-        if var urlComponents = URLComponents(string: "https://maps.googleapis.com/maps/api/directions/json") {
-            
-            var hits = 0
-            var waypointString = ""
-            for placeID in waypointIDs {
-                waypointString += "|place_id:" + placeID
-            }
-            print(waypointString)
-            urlComponents.queryItems = [
-                URLQueryItem(name:"origin", value:"place_id:\(fromPlaceID)"),
-                URLQueryItem(name:"destination", value:"place_id:\(toPlaceID)"),
-                URLQueryItem(name:"waypoints", value:"optimize:true\(waypointString)"),
-                URLQueryItem(name:"mode", value: travelMode.rawValue),
-                URLQueryItem(name:"key", value:"\(self.apiKey!)")
-            ]
             
             guard let url = urlComponents.url else { return }
             print(urlComponents.url!)
@@ -75,15 +45,21 @@ class QueryService {
                     print("ERROR")
                     print(error.localizedDescription)
                 } else if let data = data {
-                    hits += 1
-                    print("SUCCESS \(hits)")
+                    print("SUCCESS")
                     let decoder = JSONDecoder()
-                    let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data)
-                    let aRoute = routeResponseObject?.routes[0]
-                    let aLine = aRoute?.overviewPolyline.points
-                    print("RESPONSE ?")
-                    DispatchQueue.main.async {
-                        callback(aLine)
+                    if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
+                        let firstRoute = routeResponseObject.routes[0]
+                        let line = firstRoute.overviewPolyline.points
+                        let legs = firstRoute.legs
+                        var durationInSeconds = 0
+                        for leg in legs {
+                            durationInSeconds += leg.duration.value
+                        }
+                        let route = Route(polyline: line, duration: durationInSeconds)
+                        print("RESPONSE ?")
+                        DispatchQueue.main.async {
+                            callback(route)
+                        }
                     }
                 }
             }

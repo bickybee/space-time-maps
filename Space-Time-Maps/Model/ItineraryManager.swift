@@ -18,6 +18,7 @@ class ItineraryManager : NSObject {
     
     private var placeManager = PlaceManager(withStarterPlaces: false)
     private var route : String?
+    private var duration : Int?
     private let queryService : QueryService
     private var travelMode = TravelMode.driving
     
@@ -78,15 +79,20 @@ class ItineraryManager : NSObject {
         return nil
     }
     
-    func setRoute(_ newRoute: String?) {
+    func setRoute(_ newRoute: Route?) {
         if let theRoute = newRoute {
-            route = theRoute
+            route = theRoute.polyline
+            duration = theRoute.duration
             NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
         }
     }
     
     func getRoute() -> String? {
         return route
+    }
+    
+    func getDuration() -> Int? {
+        return duration
     }
     
     func numPlaces() -> Int {
@@ -103,10 +109,10 @@ class ItineraryManager : NSObject {
             if let endingID = getEndingPlace()?.placeID {
                 if let enrouteIDs = getEnroutePlaces()?.map ({$0.placeID}) {
                     // Route with waypoints
-                    self.queryService.getWaypointRoute(startingID, endingID, enrouteIDs, travelMode, self.setRoute)
+                    self.queryService.getRoute(startingID, endingID, enrouteIDs, travelMode, self.setRoute)
                 } else {
                     // Route with only start and dest
-                    self.queryService.getRoute(startingID, endingID, travelMode, self.setRoute)
+                    self.queryService.getRoute(startingID, endingID, nil, travelMode, self.setRoute)
                 }
             } else {
                 // Just one place!
