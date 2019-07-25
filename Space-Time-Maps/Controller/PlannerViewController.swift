@@ -50,9 +50,9 @@ class PlannerViewController: UIViewController {
     // can be optimized lol
     func markItineraryPlaces() {
         let savedPlaces = placeManager.getPlaces()
+        savedPlaces.forEach{ $0.setInItinerary(false)}
         let itineraryPlaces = itineraryManager.getPlaces()
         for savedPlace in savedPlaces {
-            savedPlace.setInItinerary(false)
             for itineraryPlace in itineraryPlaces {
                 if savedPlace == itineraryPlace {
                     savedPlace.setInItinerary(true)
@@ -67,7 +67,7 @@ class PlannerViewController: UIViewController {
             // Set up to send to map
             var placeVisuals = [PlaceVisual]()
             var routeVisuals = [RouteVisual]()
-            let nonItineraryPlaces = placeManager.getPlaces().filter { !$0.isInItinrary() }
+            let nonItineraryPlaces = placeManager.getPlaces().filter { !$0.isInItinerary() }
             if nonItineraryPlaces.count > 0 {
                 let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: .gray) }
                 placeVisuals.append(contentsOf: nonItineraryVisuals)
@@ -114,6 +114,7 @@ class PlannerViewController: UIViewController {
         markItineraryPlaces()
         updateMap()
         updateTransportTimeLabel()
+        placePaletteViewController?.collectionView?.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

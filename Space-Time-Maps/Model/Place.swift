@@ -60,7 +60,7 @@ final class Place : NSObject, Codable {
         inItinerary = status
     }
     
-    func isInItinrary() -> Bool {
+    func isInItinerary() -> Bool {
         return inItinerary
     }
     

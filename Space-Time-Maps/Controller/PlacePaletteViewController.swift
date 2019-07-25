@@ -35,12 +35,16 @@ class PlacePaletteViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
-        let index = indexPath.item
-        cell.backgroundColor = .gray
-        cell.nameLabel.text = self.placeName(for: indexPath)
-        cell.nameLabel.backgroundColor = .white
-        cell.nameLabel.sizeToFit()
-        cell.nameLabel.center = cell.contentView.center
+        if let place = self.place(for: indexPath) {
+            if place.isInItinerary() {
+                cell.nameLabel.textColor = .gray
+            }
+            cell.backgroundColor = .gray
+            cell.nameLabel.text = place.name
+            cell.nameLabel.backgroundColor = .white
+            cell.nameLabel.sizeToFit()
+            cell.nameLabel.center = cell.contentView.center
+        }
         return cell
     }
     
