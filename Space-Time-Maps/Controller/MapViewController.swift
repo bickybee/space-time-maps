@@ -5,6 +5,7 @@
 //  Created by vicky on 2019-07-21.
 //  Copyright © 2019 vicky. All rights reserved.
 //
+//  MapViewController: responsible for rendering Google Maps and overlays to the map.
 
 import UIKit
 import GoogleMaps
@@ -21,7 +22,7 @@ struct RouteVisual {
 }
 
 class MapViewController: UIViewController {
-
+cd ../
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
@@ -59,28 +60,34 @@ class MapViewController: UIViewController {
         
     }
     
-    override func didMove(toParentViewController parent: UIViewController?) {
+    // Parent should respond to user input, eventually trickle down only what should be rendered
+    override func didMove(toParent parent: UIViewController?) {
         self.mapView.delegate = parent as? GMSMapViewDelegate
     }
     
+    // Refresh all map markup
     func refreshMarkup() {
         clearMap()
         displayRoutes()
         displayPlaces()
     }
 
+    // Clear all map markup
     func clearMap() {
         self.mapView.clear()
     }
     
+    // Pass in data needed to create place marker overlays
     func setPlaces(_ places: [PlaceVisual]) {
         placeVisuals = places
     }
     
+    // Pass in data needed to visualize routes
     func setRoutes(_ routes: [RouteVisual]) {
         routeVisuals = routes
     }
 
+    // Render place markers
     func displayPlaces() {
         for placeVisual in placeVisuals {
             let place = placeVisual.place
@@ -93,6 +100,7 @@ class MapViewController: UIViewController {
         }
     }
     
+    // Render route polylines
     func displayRoutes() {
         for routeVisual in routeVisuals {
             let route = routeVisual.route
@@ -104,6 +112,7 @@ class MapViewController: UIViewController {
         }
     }
     
+    // Respond to notification updates by displaying current location on the map
     @objc func onDidUpdateLocation(_ notification: Notification) {
         if let location = notification.userInfo?["location"] as? CLLocation {
             let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,

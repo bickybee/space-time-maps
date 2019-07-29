@@ -47,7 +47,7 @@ class HomeViewController: UIViewController {
         
         // Initializze map
         mapViewController = MapViewController()
-        self.addChildViewController(mapViewController)
+        self.addChild(mapViewController)
         mapViewController.view.frame = self.view.bounds
         self.view.addSubview(mapViewController.view)
         
@@ -149,7 +149,7 @@ class HomeViewController: UIViewController {
         if let currentPlace = self.currentPlaceInfo {
             // Set place info view data to match tapped marker
             self.placeInfoView.nameLabel.text = currentPlace.name
-            self.view.bringSubview(toFront: self.placeInfoView)
+            self.view.bringSubviewToFront(self.placeInfoView)
             
             // Display place info view if not already displayed
             if self.placeInfoView.isHidden {

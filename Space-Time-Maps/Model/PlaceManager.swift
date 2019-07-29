@@ -40,7 +40,7 @@ class PlaceManager : NSObject {
     }
     
     func remove(name: String) {
-        if let index = self.places.index(where: { $0.name == name}) {
+        if let index = self.places.firstIndex(where: { $0.name == name}) {
             self.places.remove(at: index)
         }
     }

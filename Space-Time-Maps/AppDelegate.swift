@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var window: UIWindow?
     var locationService: LocationService?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // Set up custom services
         locationService = LocationService()
@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         // Inject into root view
 //        let homeViewController = self.window?.rootViewController?.childViewControllers.first as? HomeViewController
-        let homeViewController = self.window?.rootViewController?.childViewControllers.first as? PlannerViewController
+        let homeViewController = self.window?.rootViewController?.children.first as? PlannerViewController
         if let homeViewController = homeViewController {
             homeViewController.placeManager = placeManager
             homeViewController.itineraryManager = itineraryManager
