@@ -38,17 +38,39 @@ class ItineraryViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         let index = indexPath.item
-        if index == 0 {
-            cell.backgroundColor = .green
-        } else if index == self.itineraryManager.numPlaces() - 1 {
-            cell.backgroundColor = .red
-        } else {
-            cell.backgroundColor = .yellow
+        
+        
+        if let place = itineraryManager.getPlace(at: index) {
+            var text = ""
+            
+            // If there's an existing route and the cell is odd, return a route cell
+            if let route = itineraryManager.getRoute() {
+                let legs = route.getLegs()
+                if index > 0 && index <= legs.count {
+                    let timeInSeconds = route.getLeg(at: index - 1).duration
+                    let formatter = DateComponentsFormatter()
+                    formatter.allowedUnits = [.hour, .minute]
+                    formatter.unitsStyle = .full
+                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds))!
+                    text += formattedString + " -> "
+                }
+            }
+            
+            // Else, return a location cell
+            if index == 0 {
+                cell.backgroundColor = .green
+            } else if index == self.itineraryManager.numPlaces() - 1 {
+                cell.backgroundColor = .red
+            } else {
+                cell.backgroundColor = .yellow
+            }
+            text += place.name
+            cell.nameLabel.text = text
+            cell.nameLabel.backgroundColor = .white
+            cell.nameLabel.sizeToFit()
+            cell.nameLabel.center = cell.contentView.center
         }
-        cell.nameLabel.text = itineraryManager.getPlace(at: indexPath.item)?.name
-        cell.nameLabel.backgroundColor = .white
-        cell.nameLabel.sizeToFit()
-        cell.nameLabel.center = cell.contentView.center
+        
         return cell
     }
 
@@ -94,9 +116,10 @@ extension ItineraryViewController: UICollectionViewDropDelegate {
                         }
                         self.itineraryManager.insertPlace(place, at: destinationIndexPath.item)
                         collectionView.insertItems(at: [destinationIndexPath])
-                        self.itineraryManager.calculateItineraryUpdates() // Only call update after both insert and delete complete!
+                         self.itineraryManager.calculateItineraryUpdates()
                         coordinator.drop(dropItem.dragItem,
                                          toItemAt: destinationIndexPath)
+                        // Only call update after both insert and delete complete!
                         UIView.performWithoutAnimation {
                             collectionView.reloadSections(IndexSet([0]))
                         }

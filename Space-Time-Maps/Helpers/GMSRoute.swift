@@ -33,7 +33,7 @@ struct GeocodedWaypoint: Codable {
 struct GRoute: Codable {
     let bounds: Bounds
     let copyrights: String
-    let legs: [Leg]
+    let legs: [GLeg]
     let overviewPolyline: Polyline
     let summary: String
     let warnings, waypointOrder: [JSONAny]
@@ -56,8 +56,8 @@ struct Northeast: Codable {
     let lat, lng: Double
 }
 
-// MARK: - Leg
-struct Leg: Codable {
+// MARK: - GLeg
+struct GLeg: Codable {
     let distance, duration: Distance
     let endAddress: String
     let endLocation: Northeast

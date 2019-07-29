@@ -50,12 +50,12 @@ class QueryService {
                     if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
                         let firstRoute = routeResponseObject.routes[0]
                         let line = firstRoute.overviewPolyline.points
-                        let legs = firstRoute.legs
-                        var durationInSeconds = 0
+                        let legs = firstRoute.legs.map { Leg(duration: $0.duration.value) }
+                        var totalDuration = 0
                         for leg in legs {
-                            durationInSeconds += leg.duration.value
+                            totalDuration += leg.duration
                         }
-                        let route = Route(polyline: line, duration: durationInSeconds)
+                        let route = Route(polyline: line, duration: totalDuration, legs: legs)
                         print("RESPONSE ?")
                         DispatchQueue.main.async {
                             callback(route)

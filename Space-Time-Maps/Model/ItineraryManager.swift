@@ -17,8 +17,7 @@ enum TravelMode : String {
 class ItineraryManager : NSObject {
     
     private var placeManager = PlaceManager(withStarterPlaces: false)
-    private var route : String?
-    private var duration : Int?
+    private var route : Route?
     private let queryService : QueryService
     private var travelMode = TravelMode.driving
     
@@ -81,18 +80,17 @@ class ItineraryManager : NSObject {
     
     func setRoute(_ newRoute: Route?) {
         if let theRoute = newRoute {
-            route = theRoute.polyline
-            duration = theRoute.duration
+            route = theRoute
             NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
         }
     }
     
-    func getRoute() -> String? {
-        return route
+    func getRoutePolyline() -> String? {
+        return route?.polyline
     }
     
-    func getDuration() -> Int? {
-        return duration
+    func getRoute() -> Route? {
+        return route
     }
     
     func numPlaces() -> Int {

@@ -82,8 +82,8 @@ class PlannerViewController: UIViewController {
                 let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: .yellow) }
                 placeVisuals.append(contentsOf: enrouteVisuals)
             }
-            if let route = itineraryManager.getRoute() {
-                routeVisuals.append( RouteVisual(route: route, color: .blue) )
+            if let routePolyline = itineraryManager.getRoutePolyline() {
+                routeVisuals.append( RouteVisual(route: routePolyline, color: .blue) )
             }
             // Send and call a refresh!
             mapViewController.setPlaces(placeVisuals)
@@ -96,7 +96,7 @@ class PlannerViewController: UIViewController {
     }
     
     func updateTransportTimeLabel() {
-        if let duration = itineraryManager.getDuration() {
+        if let duration = itineraryManager.getRoute()?.getDuration() {
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.hour, .minute]
             formatter.unitsStyle = .full
@@ -114,6 +114,7 @@ class PlannerViewController: UIViewController {
         markItineraryPlaces()
         updateMap()
         updateTransportTimeLabel()
+        itineraryViewController?.collectionView?.reloadData()
         placePaletteViewController?.collectionView?.reloadData()
     }
     

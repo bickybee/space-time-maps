@@ -19,7 +19,7 @@ class PlaceManager : NSObject {
             print("Filling with default starter data")
             self.add(Place("Bahen Centre", "ChIJV8llUcc0K4gRe7a0R0E4WWQ", 43.659642599999991, -79.397667599999991))
             self.add(Place("Casa Loma", "ChIJs6Elz500K4gRT1jWAsHIfGE", 43.67803709999999, -79.409443899999999))
-            self.add(Place("Christie Pits Park", "ChIJ8f_In4s0K4gRRK-KutieqXA", 43.664588799999997, -79.420680899999994))
+            self.add(Place("Christie Pits", "ChIJ8f_In4s0K4gRRK-KutieqXA", 43.664588799999997, -79.420680899999994))
         }
     }
     

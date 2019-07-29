@@ -118,13 +118,12 @@
                                             <segment title="Car"/>
                                             <segment title="Walk"/>
                                             <segment title="Bike"/>
-                                            <segment title="Transit"/>
                                         </segments>
                                         <connections>
                                             <action selector="transportModeChanged:" destination="kWF-JP-3wc" eventType="valueChanged" id="2W0-xw-FNf"/>
                                         </connections>
                                     </segmentedControl>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no route yet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7v-eX-cwa">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no route yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7v-eX-cwa">
                                         <rect key="frame" x="236" y="22" width="131" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
