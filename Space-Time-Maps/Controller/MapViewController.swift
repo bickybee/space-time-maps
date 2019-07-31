@@ -22,7 +22,7 @@ struct RouteVisual {
 }
 
 class MapViewController: UIViewController {
-cd ../
+
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0

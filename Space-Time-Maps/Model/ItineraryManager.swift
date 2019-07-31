@@ -18,64 +18,12 @@ class ItineraryManager : NSObject {
     
     private var placeManager = PlaceManager(withStarterPlaces: false)
     private var route : Route?
+    private var potentialRoutes = [Route?]()
     private let queryService : QueryService
     private var travelMode = TravelMode.driving
     
     init(_ qs : QueryService) {
         queryService = qs
-    }
-    
-    func addPlace(_ newPlace: Place) {
-        placeManager.add(newPlace)
-    }
-    
-    func insertPlace(_ newPlace: Place, at index: Int) {
-        placeManager.insert(newPlace, at: index)
-    }
-    
-    func removePlace(at index: Int) {
-        placeManager.remove(at: index)
-    }
-    
-    func getPlace(at index: Int) -> Place? {
-        return placeManager.getPlace(at: index)
-    }
-    
-    func getPlaces() -> [Place] {
-        return placeManager.getPlaces()
-    }
-    
-    func hasStartingPlace() -> Bool {
-        return placeManager.numPlaces() >= 1
-    }
-    
-    func hasEndingPlace() -> Bool {
-        return placeManager.numPlaces() >= 2
-    }
-    
-    func hasEnroutePlaces() -> Bool {
-        return placeManager.numPlaces() >= 3
-    }
-    
-    func getStartingPlace() -> Place? {
-        if hasStartingPlace() {
-            return placeManager.getPlaces().first
-        }
-        return nil
-    }
-    
-    func getEndingPlace() -> Place? {
-        if hasEndingPlace() {
-            return placeManager.getPlaces().last
-        }
-        return nil
-    }
-    
-    func getEnroutePlaces() -> [Place]? {
-        if hasEnroutePlaces() {
-            return Array(placeManager.getPlaces()[1...placeManager.numPlaces()-2])
-        }
-        return nil
     }
     
     func setRoute(_ newRoute: Route?) {
@@ -85,38 +33,68 @@ class ItineraryManager : NSObject {
         }
     }
     
-    func getRoutePolyline() -> String? {
-        return route?.polyline
-    }
-    
     func getRoute() -> Route? {
         return route
     }
     
-    func numPlaces() -> Int {
-        return placeManager.numPlaces()
+    func getRoutePolyline() -> String? {
+        return route?.polyline
+    }
+    
+    func getPlaceManager() -> PlaceManager {
+        return placeManager
     }
     
     func setTravelMode(_ mode: TravelMode) {
         self.travelMode = mode
     }
     
-    // Calculate new route via query
+    // Calculate new route with updated places
     func calculateItineraryUpdates() {
-        if let startingID = getStartingPlace()?.placeID {
-            if let endingID = getEndingPlace()?.placeID {
-                if let enrouteIDs = getEnroutePlaces()?.map ({$0.placeID}) {
-                    // Route with waypoints
-                    self.queryService.getRoute(startingID, endingID, enrouteIDs, travelMode, self.setRoute)
-                } else {
-                    // Route with only start and dest
-                    self.queryService.getRoute(startingID, endingID, nil, travelMode, self.setRoute)
-                }
-            } else {
-                // Just one place!
-                NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
-            }
+        let numPlaces = placeManager.numPlaces()
+        if numPlaces < 2 {
+            // No route, but still an update to the itinerary
+            NotificationCenter.default.post(name: .didUpdateItinerary, object: self)
+        } else {
+            // Send route query with callback
+            self.queryService.sendRouteQuery(places: placeManager.getPlaces(), travelMode: travelMode, callback: self.setRoute)
         }
+    }
+    
+    func setPotentialRoute(_ route: Route, at index: Int) {
+        print("setting a route permutation at \(index)")
+        potentialRoutes[index] = route
+    }
+    
+    func sendPotentialRoutesReadyNotification() {
+        print("Got all route permutations")
+    }
+    
+    // CURRENTLY ONLY FOR INSERTING NEW PLACE INTO ITINERARY
+    // (need alternative func for moving a place that is already in the itinerary)
+    func calculatePotentialRoutePermutations(for insertingPlace: Place) {
+        
+        // Place can be inserted at each existing index, or at end, or not at all
+        let numPermutations = placeManager.numPlaces() + 2
+        let numInsertionPermutations = numPermutations - 1
+        
+        potentialRoutes = [Route?](repeating: nil, count: numPermutations)
+        var placePermutations = [[Place]]()
+        
+        // Generate all permutatiosn for inserting place
+        for i in 0...numInsertionPermutations - 1 {
+            var permutation = placeManager.getPlacesCopy()
+            permutation.insert(insertingPlace, at: i)
+            placePermutations.append(permutation)
+        }
+        
+        // Add "permutation" for /not/ inserting the place to the end
+        placePermutations.append(placeManager.getPlacesCopy())
+        print("num permutations: \(placePermutations.count)")
+        
+        // Send off requests
+        queryService.sendRoutePermutationQueries(placePermutations: placePermutations, travelMode: travelMode, perRouteCallback: setPotentialRoute(_:at:), batchCallback: sendPotentialRoutesReadyNotification)
+        
     }
     
 }

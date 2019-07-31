@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     let defaultZoom: Float = 13.0
     
     // User-saved stuff
-    var placeManager : PlaceManager!
+    var savedPlaces : PlaceManager!
     var itineraryManager : ItineraryManager!
     
     // Query service for making API calls
@@ -69,10 +69,10 @@ class HomeViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let savedPlacesVC = segue.destination as? PlaceListViewController {
-            savedPlacesVC.placeManager = self.placeManager
+            savedPlacesVC.savedPlaces = self.savedPlaces
         }
         else if let plannerVC = segue.destination as? PlannerViewController {
-            plannerVC.placeManager = self.placeManager
+            plannerVC.savedPlaces = self.savedPlaces
             plannerVC.itineraryManager = self.itineraryManager
         }
     }
@@ -81,14 +81,14 @@ class HomeViewController: UIViewController {
     
     func refreshMapMarkup() {
         self.mapViewController.clearMap()
-//        self.mapViewController.displayPlaces(placeManager.getPlaces())
+//        self.mapViewController.displayPlaces(savedPlaces.getPlaces())
 //        self.mapViewController.displayRoutes(self.polylines)
     }
 
     @objc func removePlace(_ sender: Any) {
         dismissPlaceInfoView()
         if let currentPlace = self.currentPlaceInfo {
-            self.placeManager.remove(name: currentPlace.name)
+            self.savedPlaces.remove(name: currentPlace.name)
             refreshMapMarkup()
         }
     }
@@ -125,7 +125,7 @@ class HomeViewController: UIViewController {
     
     // Get polyline for route between given places in given order
     @objc func routeClicked(_sender: UIButton) {
-        if let places = self.placeManager?.getPlaces() {
+        if let places = self.savedPlaces?.getPlaces() {
             if places.count >= 2 {
                 for i in 0...(places.count - 2) {
                     let fromPlaceID = places[i].placeID
@@ -226,7 +226,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController: GMSMapViewDelegate {
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        if let place = self.placeManager.placeAtCoordinate(Coordinate(marker.layer.latitude, marker.layer.longitude)) {
+        if let place = self.savedPlaces.placeAtCoordinate(Coordinate(marker.layer.latitude, marker.layer.longitude)) {
             self.currentPlaceInfo = place
             showPlaceInfoView()
             return true
@@ -248,7 +248,7 @@ extension HomeViewController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let newPlace = Place(place.name!, place.placeID!, place.coordinate)
-        self.placeManager?.add(newPlace)
+        self.savedPlaces?.add(newPlace)
         refreshMapMarkup()
         print(newPlace)
     }

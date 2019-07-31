@@ -17,7 +17,7 @@ class OldItineraryViewController: UIViewController, UICollectionViewDataSource {
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     private let reuseIdentifier = "locationCell"
     
-    var placeManager : PlaceManager!
+    var savedPlaces : PlaceManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class OldItineraryViewController: UIViewController, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.placeManager.getPlaces().count
+        return self.savedPlaces.getPlaces().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -48,7 +48,7 @@ class OldItineraryViewController: UIViewController, UICollectionViewDataSource {
     }
     
     func place(for indexPath: IndexPath) -> Place? {
-        let allPlaces = placeManager.getPlaces()
+        let allPlaces = savedPlaces.getPlaces()
         let index = indexPath.item
         return allPlaces.indices.contains(index) ? allPlaces[index] : nil
     }

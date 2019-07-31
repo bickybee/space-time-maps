@@ -12,7 +12,8 @@ private let reuseIdentifier = "locationCell"
 
 class PlacePaletteViewController: UICollectionViewController {
     
-    var placeManager : PlaceManager!
+    var savedPlaces : PlaceManager!
+    var didBeginDrag : ((_ place: Place) -> Void)?
     
     private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
@@ -30,7 +31,7 @@ class PlacePaletteViewController: UICollectionViewController {
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return placeManager.numPlaces()
+        return savedPlaces.numPlaces()
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -49,7 +50,7 @@ class PlacePaletteViewController: UICollectionViewController {
     }
     
     func place(for indexPath: IndexPath) -> Place? {
-        let allPlaces = placeManager.getPlaces()
+        let allPlaces = savedPlaces.getPlaces()
         let index = indexPath.item
         return allPlaces.indices.contains(index) ? allPlaces[index] : nil
     }
@@ -78,16 +79,13 @@ extension PlacePaletteViewController: UICollectionViewDragDelegate {
                         itemsForBeginning session: UIDragSession,
                         at indexPath: IndexPath) -> [UIDragItem] {
         if let place = self.place(for: indexPath) {
+            didBeginDrag?(place)
             let item = NSItemProvider(object: place as NSItemProviderWriting)
             let dragItem = UIDragItem(itemProvider: item)
             return [dragItem]
         } else {
             return []
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
-        
     }
     
 }

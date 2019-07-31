@@ -10,7 +10,7 @@ import UIKit
 
 class PlannerViewController: UIViewController {
     
-    var placeManager : PlaceManager!
+    var savedPlaces : PlaceManager!
     var itineraryManager : ItineraryManager!
     
     var placePaletteViewController : PlacePaletteViewController?
@@ -49,9 +49,9 @@ class PlannerViewController: UIViewController {
     
     // can be optimized lol
     func markItineraryPlaces() {
-        let savedPlaces = placeManager.getPlaces()
+        let savedPlaces = self.savedPlaces.getPlaces()
         savedPlaces.forEach{ $0.setInItinerary(false)}
-        let itineraryPlaces = itineraryManager.getPlaces()
+        let itineraryPlaces = itineraryManager.getPlaceManager().getPlaces()
         for savedPlace in savedPlaces {
             for itineraryPlace in itineraryPlaces {
                 if savedPlace == itineraryPlace {
@@ -67,18 +67,21 @@ class PlannerViewController: UIViewController {
             // Set up to send to map
             var placeVisuals = [PlaceVisual]()
             var routeVisuals = [RouteVisual]()
-            let nonItineraryPlaces = placeManager.getPlaces().filter { !$0.isInItinerary() }
+            let nonItineraryPlaces = savedPlaces.getPlaces().filter { !$0.isInItinerary() }
             if nonItineraryPlaces.count > 0 {
                 let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: .gray) }
                 placeVisuals.append(contentsOf: nonItineraryVisuals)
             }
-            if let startingPlace = itineraryManager.getStartingPlace() {
-                placeVisuals.append(PlaceVisual(place: startingPlace, color: .green))
+            let numPlaces = itineraryManager.getPlaceManager().numPlaces()
+            let places = itineraryManager.getPlaceManager().getPlaces()
+            if numPlaces >= 1 {
+                placeVisuals.append(PlaceVisual(place: places.first!, color: .green))
             }
-            if let endingPlace = itineraryManager.getEndingPlace() {
-                placeVisuals.append(PlaceVisual(place: endingPlace, color: .red))
+            if numPlaces >= 2 {
+                placeVisuals.append(PlaceVisual(place: places.last!, color: .red))
             }
-            if let enroutePlaces = itineraryManager.getEnroutePlaces() {
+            if numPlaces >= 3 {
+                let enroutePlaces = Array(places[1 ... places.count - 2])
                 let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: .yellow) }
                 placeVisuals.append(contentsOf: enrouteVisuals)
             }
@@ -118,10 +121,15 @@ class PlannerViewController: UIViewController {
         placePaletteViewController?.collectionView?.reloadData()
     }
     
+    func beginPotentialInsertionOf(place: Place) {
+        itineraryManager.calculatePotentialRoutePermutations(for: place)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let placePaletteVC = segue.destination as? PlacePaletteViewController {
-            placePaletteVC.placeManager = self.placeManager
+            placePaletteVC.savedPlaces = self.savedPlaces
             placePaletteVC.collectionView?.frame.size.width = self.view.frame.size.width / 2 // HACKY?
+            placePaletteVC.didBeginDrag = self.beginPotentialInsertionOf(place:)
             self.placePaletteViewController = placePaletteVC
         }
         else if let itineraryVC = segue.destination as? ItineraryViewController {

@@ -64,6 +64,10 @@ final class Place : NSObject, Codable {
         return inItinerary
     }
     
+    func copy() -> Place {
+        return Place(name, placeID, coordinate.lat, coordinate.lon)
+    }
+    
     static func == (lhs: Place, rhs: Place) -> Bool {
         return (lhs.name == rhs.name) && (lhs.placeID == rhs.placeID) && (lhs.coordinate == rhs.coordinate)
     }
@@ -75,6 +79,7 @@ final class Place : NSObject, Codable {
             return false
         }
     }
+    
 }
 
 // MARK - For Drag and Drop functionality

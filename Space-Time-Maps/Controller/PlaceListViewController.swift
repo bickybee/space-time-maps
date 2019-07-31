@@ -15,7 +15,7 @@ class PlaceListViewController: UICollectionViewController {
     private let cellHeight : CGFloat = 200.0
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     
-    var placeManager : PlaceManager!
+    var savedPlaces : PlaceManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,7 @@ class PlaceListViewController: UICollectionViewController {
     // MARK: Helper Functions
     
     func place(for indexPath: IndexPath) -> Place? {
-        let allPlaces = placeManager.getPlaces()
+        let allPlaces = savedPlaces.getPlaces()
         let index = indexPath.item
         return allPlaces.indices.contains(index) ? allPlaces[index] : nil
     }
@@ -44,15 +44,15 @@ class PlaceListViewController: UICollectionViewController {
     }
     
     func removePlace(at indexPath: IndexPath) {
-        self.placeManager.remove(at: indexPath.item)
+        self.savedPlaces.remove(at: indexPath.item)
     }
     
     func insertPlace(_ place: Place, at indexPath: IndexPath) {
         var index = indexPath.item
-        if (indexPath.item == self.placeManager.numPlaces()) {
+        if (indexPath.item == self.savedPlaces.numPlaces()) {
             index = index - 1
         }
-        self.placeManager.insert(place, at: index)
+        self.savedPlaces.insert(place, at: index)
     }
     
     func updateCellsWithAnimation() {
@@ -64,7 +64,7 @@ class PlaceListViewController: UICollectionViewController {
     
     @objc func deletePlace(sender: UIButton) {
         let index = sender.tag
-        self.placeManager.remove(at: index)
+        self.savedPlaces.remove(at: index)
         self.updateCellsWithAnimation()
     }
 
@@ -75,7 +75,7 @@ class PlaceListViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.placeManager.getPlaces().count
+        return self.savedPlaces.getPlaces().count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

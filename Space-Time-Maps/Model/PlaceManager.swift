@@ -60,6 +60,10 @@ class PlaceManager : NSObject {
         return self.places
     }
     
+    func getPlacesCopy() -> [Place] {
+        return self.places.map( { $0.copy() } )
+    }
+    
     func numPlaces() -> Int {
         return self.places.count
     }

@@ -32,7 +32,7 @@ class ItineraryViewController: UICollectionViewController {
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itineraryManager.numPlaces()
+        return itineraryManager.getPlaceManager().numPlaces()
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -40,7 +40,7 @@ class ItineraryViewController: UICollectionViewController {
         let index = indexPath.item
         
         
-        if let place = itineraryManager.getPlace(at: index) {
+        if let place = itineraryManager.getPlaceManager().getPlace(at: index) {
             var text = ""
             
             // If there's an existing route and the cell is odd, return a route cell
@@ -59,7 +59,7 @@ class ItineraryViewController: UICollectionViewController {
             // Else, return a location cell
             if index == 0 {
                 cell.backgroundColor = .green
-            } else if index == self.itineraryManager.numPlaces() - 1 {
+            } else if index == self.itineraryManager.getPlaceManager().numPlaces() - 1 {
                 cell.backgroundColor = .red
             } else {
                 cell.backgroundColor = .yellow
@@ -111,10 +111,10 @@ extension ItineraryViewController: UICollectionViewDropDelegate {
                 DispatchQueue.main.sync {
                     if let place = newPlace as? Place {
                         if let sourceIndexPath = dropItem.sourceIndexPath {
-                            self.itineraryManager.removePlace(at: sourceIndexPath.item)
+                            self.itineraryManager.getPlaceManager().remove(at: sourceIndexPath.item)
                             collectionView.deleteItems(at: [sourceIndexPath])
                         }
-                        self.itineraryManager.insertPlace(place, at: destinationIndexPath.item)
+                        self.itineraryManager.getPlaceManager().insert(place, at: destinationIndexPath.item)
                         collectionView.insertItems(at: [destinationIndexPath])
                          self.itineraryManager.calculateItineraryUpdates()
                         coordinator.drop(dropItem.dragItem,
@@ -148,7 +148,7 @@ extension ItineraryViewController: UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         itemsForBeginning session: UIDragSession,
                         at indexPath: IndexPath) -> [UIDragItem] {
-        if let place = self.itineraryManager.getPlace(at: indexPath.item) {
+        if let place = self.itineraryManager.getPlaceManager().getPlace(at: indexPath.item) {
             let item = NSItemProvider(object: place as NSItemProviderWriting)
             let dragItem = UIDragItem(itemProvider: item)
             return [dragItem]
