@@ -136,9 +136,8 @@ extension ItineraryViewController: UICollectionViewDropDelegate {
         dropSessionDidUpdate session: UIDropSession,
         withDestinationIndexPath destinationIndexPath: IndexPath?)
         -> UICollectionViewDropProposal {
-            return UICollectionViewDropProposal(
-                operation: .move,
-                intent: .insertAtDestinationIndexPath)
+//            print("drop?")
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
     }
     
 }

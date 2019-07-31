@@ -1,98 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="GtU-qv-17n">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kWF-JP-3wc">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Home View Controller-->
-        <scene sceneID="tne-QT-ifu">
-            <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oNG-a1-LVT" customClass="PlaceInfo" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="530" width="375" height="137"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rjk-RI-Vzi">
-                                        <rect key="frame" x="24" y="36" width="327" height="66"/>
-                                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q4s-aG-aTl">
-                                        <rect key="frame" x="321" y="45" width="30" height="48"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="ZEQ-zJ-N3f"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                        <state key="normal" title="X">
-                                            <color key="titleColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Q4s-aG-aTl" secondAttribute="bottom" constant="44" id="3og-iT-LYR"/>
-                                    <constraint firstAttribute="trailing" secondItem="Q4s-aG-aTl" secondAttribute="trailing" constant="24" id="5F7-Rj-3Me"/>
-                                    <constraint firstAttribute="bottom" secondItem="Rjk-RI-Vzi" secondAttribute="bottom" constant="35" id="9KL-s5-eXu"/>
-                                    <constraint firstItem="Rjk-RI-Vzi" firstAttribute="leading" secondItem="oNG-a1-LVT" secondAttribute="leading" constant="24" id="E3q-qD-GXk"/>
-                                    <constraint firstItem="Rjk-RI-Vzi" firstAttribute="top" secondItem="oNG-a1-LVT" secondAttribute="top" constant="36" id="HyF-r4-h62"/>
-                                    <constraint firstItem="Q4s-aG-aTl" firstAttribute="top" secondItem="oNG-a1-LVT" secondAttribute="top" constant="45" id="YgC-C2-na0"/>
-                                    <constraint firstAttribute="height" constant="137" id="hPE-K4-l0N"/>
-                                    <constraint firstAttribute="trailing" secondItem="Rjk-RI-Vzi" secondAttribute="trailing" constant="24" id="vqp-Or-XdO"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="deleteButton" destination="Q4s-aG-aTl" id="RRP-zQ-1wh"/>
-                                    <outlet property="nameLabel" destination="Rjk-RI-Vzi" id="2J2-CV-A8G"/>
-                                </connections>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="oNG-a1-LVT" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="a1x-dx-q6F"/>
-                            <constraint firstItem="oNG-a1-LVT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aYW-Ed-xbc"/>
-                            <constraint firstItem="oNG-a1-LVT" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="pL7-Q6-5fd"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="vFr-ej-OLf"/>
-                    <connections>
-                        <outlet property="placeInfoView" destination="oNG-a1-LVT" id="8Oo-nB-lzY"/>
-                        <segue destination="Moo-j2-69g" kind="show" identifier="savedPlacesList" id="oU8-sl-39n"/>
-                        <segue destination="kWF-JP-3wc" kind="show" identifier="planner" id="fb4-kl-2Ae"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="928.79999999999995" y="132.68365817091455"/>
-        </scene>
-        <!--Planner View Controller-->
+        <!--Parent View Controller-->
         <scene sceneID="EMK-IC-kGK">
             <objects>
-                <viewController id="kWF-JP-3wc" customClass="PlannerViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="kWF-JP-3wc" customClass="ParentViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9oo-Zw-Aem">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0v-a2-Sla">
-                                <rect key="frame" x="0.0" y="129" width="187" height="288"/>
+                                <rect key="frame" x="0.0" y="85" width="187.5" height="332"/>
                                 <connections>
                                     <segue destination="q2t-3V-v5v" kind="embed" id="iCH-Ie-O3q"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXj-Tg-eL1">
-                                <rect key="frame" x="187" y="129" width="188" height="288"/>
+                                <rect key="frame" x="187.5" y="85" width="187.5" height="332"/>
                                 <connections>
                                     <segue destination="0gj-fn-l7y" kind="embed" id="me2-TH-vZj"/>
                                 </connections>
@@ -107,7 +40,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wbw-O3-WyC">
-                                <rect key="frame" x="0.0" y="64" width="375" height="65"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="65"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QZK-UO-X47">
                                         <rect key="frame" x="8" y="18" width="215" height="30"/>
@@ -173,88 +106,6 @@
             </objects>
             <point key="canvasLocation" x="927.20000000000005" y="992.65367316341838"/>
         </scene>
-        <!--Place List View Controller-->
-        <scene sceneID="mb3-WZ-z3D">
-            <objects>
-                <collectionViewController id="Moo-j2-69g" customClass="PlaceListViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="oXD-jb-M8q">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dby-yQ-Amj">
-                            <size key="itemSize" width="300" height="97"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="placeCell" id="1nt-1T-1v1" customClass="PlaceCell" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="37.5" y="0.0" width="300" height="97"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="97"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VKj-NW-nPy">
-                                            <rect key="frame" x="20" y="20" width="232" height="57"/>
-                                            <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bmt-k3-XZM">
-                                            <rect key="frame" x="240" y="29" width="40" height="39"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                            <state key="normal" title="X">
-                                                <color key="titleColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </state>
-                                        </button>
-                                    </subviews>
-                                </view>
-                                <constraints>
-                                    <constraint firstAttribute="bottomMargin" secondItem="VKj-NW-nPy" secondAttribute="bottom" constant="12" id="JsS-Kf-AWO"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="Bmt-k3-XZM" secondAttribute="trailing" constant="12" id="dky-Nc-Rgx"/>
-                                    <constraint firstItem="VKj-NW-nPy" firstAttribute="leading" secondItem="1nt-1T-1v1" secondAttribute="leadingMargin" constant="12" id="eJh-AO-3oP"/>
-                                    <constraint firstItem="VKj-NW-nPy" firstAttribute="top" secondItem="1nt-1T-1v1" secondAttribute="topMargin" constant="12" id="ebk-jq-iTX"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="Bmt-k3-XZM" secondAttribute="bottom" constant="21" id="itL-dq-8zQ"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="VKj-NW-nPy" secondAttribute="trailing" constant="40" id="khG-Sb-ZqW"/>
-                                    <constraint firstItem="Bmt-k3-XZM" firstAttribute="leading" secondItem="1nt-1T-1v1" secondAttribute="leadingMargin" constant="232" id="rpC-Vv-cjX"/>
-                                    <constraint firstItem="Bmt-k3-XZM" firstAttribute="top" secondItem="1nt-1T-1v1" secondAttribute="topMargin" constant="21" id="xou-Qw-Ief"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="deleteButton" destination="Bmt-k3-XZM" id="jKF-bW-Ugl"/>
-                                    <outlet property="nameLabel" destination="VKj-NW-nPy" id="Pgn-R3-zL6"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="Moo-j2-69g" id="IbF-Iq-1B4"/>
-                            <outlet property="delegate" destination="Moo-j2-69g" id="264-B1-TOP"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bRU-PJ-CM5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1716" y="130.88455772113943"/>
-        </scene>
-        <!--My Navigation Controller-->
-        <scene sceneID="Aen-6V-bJ1">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GtU-qv-17n" customClass="MyNavigationController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ng2-dY-ZhG">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="kWF-JP-3wc" kind="relationship" relationship="rootViewController" id="zlu-y2-dwb"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eGO-aQ-tk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="136" y="133.13343328335833"/>
-        </scene>
         <!--Map View Controller-->
         <scene sceneID="Xlp-al-1ER">
             <objects>
@@ -270,83 +121,12 @@
             </objects>
             <point key="canvasLocation" x="1908" y="1167"/>
         </scene>
-        <!--Old Itinerary View Controller-->
-        <scene sceneID="eGr-y2-Blz">
-            <objects>
-                <viewController id="fJc-z6-fPz" customClass="OldItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="x4F-aH-DXS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4JF-m7-QX2">
-                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="667"/>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="YP7-06-GVs">
-                                    <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="7Ee-ix-xI4" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wtI-ED-lyk">
-                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="667"/>
-                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="6sc-Rp-XrV">
-                                    <size key="itemSize" width="55" height="59"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="bnt-2q-Fxl" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="55" height="59"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="55" height="59"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="4JF-m7-QX2" secondAttribute="trailing" id="0MF-tW-CjE"/>
-                            <constraint firstItem="wtI-ED-lyk" firstAttribute="top" secondItem="x4F-aH-DXS" secondAttribute="top" id="6ft-Ns-ave"/>
-                            <constraint firstAttribute="bottom" secondItem="wtI-ED-lyk" secondAttribute="bottom" id="98f-t1-EFd"/>
-                            <constraint firstItem="wtI-ED-lyk" firstAttribute="width" secondItem="4JF-m7-QX2" secondAttribute="width" id="Hhx-KD-VCa"/>
-                            <constraint firstItem="wtI-ED-lyk" firstAttribute="leading" secondItem="x4F-aH-DXS" secondAttribute="leading" id="Nma-My-2TT"/>
-                            <constraint firstItem="4JF-m7-QX2" firstAttribute="top" secondItem="x4F-aH-DXS" secondAttribute="top" id="Uj1-tj-VSU"/>
-                            <constraint firstAttribute="bottom" secondItem="4JF-m7-QX2" secondAttribute="bottom" id="qBF-3G-1Cw"/>
-                            <constraint firstItem="4JF-m7-QX2" firstAttribute="leading" secondItem="wtI-ED-lyk" secondAttribute="trailing" id="yLs-8q-lgt"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="lSv-Tp-ab5"/>
-                    </view>
-                    <connections>
-                        <outlet property="listCollectionView" destination="4JF-m7-QX2" id="qmX-eg-gDU"/>
-                        <outlet property="timelineCollectionView" destination="wtI-ED-lyk" id="Yzj-Mw-xfY"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8Bs-cU-wyc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2618" y="663"/>
-        </scene>
         <!--Itinerary View Controller-->
         <scene sceneID="aMn-0x-YDd">
             <objects>
                 <viewController id="q2t-3V-v5v" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="iNK-cF-NT9">
-                        <rect key="frame" x="0.0" y="0.0" width="187" height="288"/>
+                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4wE-8u-rNZ">
@@ -356,7 +136,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Bbc-Hb-Ni3" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="Bbc-Hb-Ni3" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -376,7 +156,7 @@
             <objects>
                 <viewController id="0gj-fn-l7y" customClass="PlacePaletteViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="qcX-01-rOn">
-                        <rect key="frame" x="0.0" y="0.0" width="188" height="288"/>
+                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fOi-jx-owT">
@@ -402,7 +182,4 @@
             <point key="canvasLocation" x="1940" y="814"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="zlu-y2-dwb"/>
-    </inferredMetricsTieBreakers>
 </document>

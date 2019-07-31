@@ -71,7 +71,7 @@ class HomeViewController: UIViewController {
         if let savedPlacesVC = segue.destination as? PlaceListViewController {
             savedPlacesVC.savedPlaces = self.savedPlaces
         }
-        else if let plannerVC = segue.destination as? PlannerViewController {
+        else if let plannerVC = segue.destination as? ParentViewController {
             plannerVC.savedPlaces = self.savedPlaces
             plannerVC.itineraryManager = self.itineraryManager
         }

@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import GooglePlaces
 
-class PlannerViewController: UIViewController {
+class ParentViewController: UIViewController {
     
     var savedPlaces : PlaceManager!
     var itineraryManager : ItineraryManager!
@@ -23,9 +24,13 @@ class PlannerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Observe itinerary updates
         NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateItinerary), name: .didUpdateItinerary, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidAddSavedPlace), name: .didAddSavedPlace, object: nil)
+
     }
     
+    // Change the mode of transport for the route calculations
     @IBAction func transportModeChanged(_ sender: Any) {
         if let control = sender as? UISegmentedControl {
             let selection = control.selectedSegmentIndex
@@ -47,7 +52,7 @@ class PlannerViewController: UIViewController {
         }
     }
     
-    // can be optimized lol
+    // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces() {
         let savedPlaces = self.savedPlaces.getPlaces()
         savedPlaces.forEach{ $0.setInItinerary(false)}
@@ -61,6 +66,7 @@ class PlannerViewController: UIViewController {
         }
     }
     
+    // Package itinerary and place data to send to map for rendering
     func updateMap() {
         if let mapViewController = mapViewController {
             // Determine place colors based on data
@@ -121,6 +127,14 @@ class PlannerViewController: UIViewController {
         placePaletteViewController?.collectionView?.reloadData()
     }
     
+    @objc func onDidAddSavedPlace(_ notification: Notification) {
+        updateMap()
+        let newPlace = savedPlaces.getPlaces().last!
+        mapViewController?.moveCameraTo(latitude: newPlace.coordinate.lat, longitude: newPlace.coordinate.lon)
+        placePaletteViewController?.collectionView?.reloadData()
+    }
+    
+    // Begin drag...
     func beginPotentialInsertionOf(place: Place) {
         itineraryManager.calculatePotentialRoutePermutations(for: place)
     }
@@ -140,15 +154,5 @@ class PlannerViewController: UIViewController {
             self.mapViewController = mapVC
             updateMap()
         }
-    }
-    
-    
-}
-
-extension Array where Element: Hashable {
-    func difference(from other: [Element]) -> [Element] {
-        let thisSet = Set(self)
-        let otherSet = Set(other)
-        return Array(thisSet.symmetricDifference(otherSet))
     }
 }

@@ -112,19 +112,23 @@ class MapViewController: UIViewController {
         }
     }
     
+    func moveCameraTo(latitude: Double, longitude: Double) {
+        let camera = GMSCameraPosition.camera(withLatitude: latitude,
+                                              longitude: longitude,
+                                              zoom: defaultZoom)
+        
+        if mapView.isHidden {
+            mapView.isHidden = false
+            mapView.camera = camera
+        } else {
+            mapView.animate(to: camera)
+        }
+    }
+    
     // Respond to notification updates by displaying current location on the map
     @objc func onDidUpdateLocation(_ notification: Notification) {
         if let location = notification.userInfo?["location"] as? CLLocation {
-            let camera = GMSCameraPosition.camera(withLatitude: location.coordinate.latitude,
-                                                  longitude: location.coordinate.longitude,
-                                                  zoom: defaultZoom)
-            
-            if mapView.isHidden {
-                mapView.isHidden = false
-                mapView.camera = camera
-            } else {
-                mapView.animate(to: camera)
-            }
+            moveCameraTo(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         } else {
             print("Could not unwrap notification")
         }
