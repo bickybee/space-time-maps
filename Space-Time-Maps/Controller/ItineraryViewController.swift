@@ -19,9 +19,6 @@ class ItineraryViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView?.dragInteractionEnabled = true
-        self.collectionView?.dropDelegate = self
-        self.collectionView?.dragDelegate = self
     }
 
     // MARK: UICollectionViewDataSource
@@ -83,76 +80,5 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout {
         var size = view.frame.size
         size.width -= (sectionInsets.left + sectionInsets.right)
         return CGSize(width:size.width, height:self.cellHeight)
-    }
-}
-
-// MARK: - UICollectionViewDropDelegate
-extension ItineraryViewController: UICollectionViewDropDelegate {
-    
-    // Enable dropping
-    func collectionView(_ collectionView: UICollectionView,
-                        canHandle session: UIDropSession) -> Bool {
-        return true
-    }
-    
-    // What to do when a drop is performed?
-    func collectionView(_ collectionView: UICollectionView,
-                        performDropWith coordinator: UICollectionViewDropCoordinator) {
-        
-        var destinationIndexPath : IndexPath
-        if let givenIndexPath = coordinator.destinationIndexPath {
-            destinationIndexPath = givenIndexPath
-        } else {
-            destinationIndexPath = IndexPath(item: 0, section: 0)
-        }
-    
-        coordinator.items.forEach { dropItem in
-            dropItem.dragItem.itemProvider.loadObject(ofClass: Place.self, completionHandler: {(newPlace, error) in
-                DispatchQueue.main.sync {
-                    if let place = newPlace as? Place {
-                        if let sourceIndexPath = dropItem.sourceIndexPath {
-                            self.itineraryManager.getPlaceManager().remove(at: sourceIndexPath.item)
-                            collectionView.deleteItems(at: [sourceIndexPath])
-                        }
-                        self.itineraryManager.getPlaceManager().insert(place, at: destinationIndexPath.item)
-                        collectionView.insertItems(at: [destinationIndexPath])
-                         self.itineraryManager.calculateItineraryUpdates()
-                        coordinator.drop(dropItem.dragItem,
-                                         toItemAt: destinationIndexPath)
-                        // Only call update after both insert and delete complete!
-                        UIView.performWithoutAnimation {
-                            collectionView.reloadSections(IndexSet([0]))
-                        }
-
-                    }
-                }
-            })
-        }
-
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        dropSessionDidUpdate session: UIDropSession,
-        withDestinationIndexPath destinationIndexPath: IndexPath?)
-        -> UICollectionViewDropProposal {
-//            print("drop?")
-            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-    }
-    
-}
-
-// MARK: - UICollectionViewDragDelegate
-extension ItineraryViewController: UICollectionViewDragDelegate {
-    func collectionView(_ collectionView: UICollectionView,
-                        itemsForBeginning session: UIDragSession,
-                        at indexPath: IndexPath) -> [UIDragItem] {
-        if let place = self.itineraryManager.getPlaceManager().getPlace(at: indexPath.item) {
-            let item = NSItemProvider(object: place as NSItemProviderWriting)
-            let dragItem = UIDragItem(itemProvider: item)
-            return [dragItem]
-        }
-        return []
-        
     }
 }

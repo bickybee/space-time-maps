@@ -23,8 +23,6 @@ class PlacePaletteViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView?.dragInteractionEnabled = true
-        self.collectionView?.dragDelegate = self
         
         makeSearchButton()
     }
@@ -112,24 +110,6 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
         size.width -= (sectionInsets.left + sectionInsets.right)
         return CGSize(width:size.width, height:self.cellHeight)
     }
-}
-
-// MARK: - UICollectionViewDragDelegate
-extension PlacePaletteViewController: UICollectionViewDragDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        itemsForBeginning session: UIDragSession,
-                        at indexPath: IndexPath) -> [UIDragItem] {
-        if let place = self.place(for: indexPath) {
-            didBeginDrag?(place)
-            let item = NSItemProvider(object: place as NSItemProviderWriting)
-            let dragItem = UIDragItem(itemProvider: item)
-            return [dragItem]
-        } else {
-            return []
-        }
-    }
-    
 }
 
 // MARK: - Delegates for GMS Autocomplete

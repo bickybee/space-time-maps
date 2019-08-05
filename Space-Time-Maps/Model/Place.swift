@@ -10,7 +10,7 @@ import Foundation
 import GoogleMaps
 import MobileCoreServices
 
-class Coordinate : NSObject, Codable {
+class Coordinate : NSObject {
     var lat, lon: Double!
     
     init(_ latitude: Double, _ longitude: Double) {
@@ -32,7 +32,7 @@ class Coordinate : NSObject, Codable {
     }
 }
 
-final class Place : NSObject, Codable {
+final class Place : NSObject {
     
     let name: String
     let coordinate: Coordinate
@@ -79,43 +79,5 @@ final class Place : NSObject, Codable {
             return false
         }
     }
-    
-}
-
-// MARK - For Drag and Drop functionality
-
-extension Place: NSItemProviderWriting, NSItemProviderReading {
-    
-    static var writableTypeIdentifiersForItemProvider: [String]{
-        return [(kUTTypeData as String)]
-    }
-    
-    static var readableTypeIdentifiersForItemProvider: [String]{
-        return [(kUTTypeData as String)]
-    }
-    
-    func loadData(withTypeIdentifier typeIdentifier: String, forItemProviderCompletionHandler completionHandler: @escaping (Data?, Error?) -> Void) -> Progress? {
-        let progress = Progress(totalUnitCount: 100)
-        do {
-            let data = try JSONEncoder().encode(self)
-            progress.completedUnitCount = 100
-            completionHandler(data,nil)
-        }
-        catch {
-            completionHandler(nil,error)
-        }
-        return progress
-    }
-    
-    static func object(withItemProviderData data: Data, typeIdentifier: String) throws -> Place {
-        do {
-            let subject = try JSONDecoder().decode(Place.self, from: data)
-            return subject
-        }
-        catch{
-            fatalError("\(error.localizedDescription)")
-        }
-    }
-
     
 }
