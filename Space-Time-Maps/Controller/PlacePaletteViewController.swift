@@ -12,21 +12,70 @@ import GooglePlaces
 private let reuseIdentifier = "locationCell"
 
 class PlacePaletteViewController: UICollectionViewController {
-    
-    var savedPlaces : PlaceManager!
-    var didBeginDrag : ((_ place: Place) -> Void)? // Passed in from parent
+
     var geographicSearchBounds : GMSCoordinateBounds?
+    var longPressedPlace : Place?
+    var placeholderDraggingPlaceCell : UIView?
+    
+    weak var delegate : PlacePaletteViewControllerDelegate?
+    var places = [Place]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView?.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(gesture:)))
+        collectionView.addGestureRecognizer(longPressRecognizer)
         makeSearchButton()
     }
     
+    @objc func didLongPress(gesture: UILongPressGestureRecognizer) {
+        
+        let location = gesture.location(in: view)
+        switch gesture.state {
+        case .began:
+            if let indexPath = collectionView.indexPathForItem(at: location) {
+                if let place = places[safe: indexPath.item] {
+                    longPressedPlace = place
+                    print(place)
+                    let cell = collectionView(collectionView, cellForItemAt: indexPath) as UIView
+                    if let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) {
+                        placeholderDraggingPlaceCell = cellSnapshot
+                        placeholderDraggingPlaceCell!.center = location
+                        view.addSubview(placeholderDraggingPlaceCell!)
+                    }
+                    delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+                }
+            }
+        case .changed:
+            if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace {
+                placeholderCell.center = location
+                delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+            }
+            
+        case .ended,
+            .cancelled:
+            if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace{
+                placeholderCell.removeFromSuperview()
+                delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+            }
+            placeholderDraggingPlaceCell = nil
+            longPressedPlace = nil
+        default:
+            break
+        }
+        
+        
+    }
+    
+    // Search button for location autocomplete
     func makeSearchButton() {
         let sideLength : CGFloat = 65
         let x = self.view.bounds.size.width/2 - sideLength
@@ -61,22 +110,24 @@ class PlacePaletteViewController: UICollectionViewController {
         present(autocompleteController, animated: true, completion: nil)
     }
 
-    // MARK: - UICollectionViewDelegate
+}
+
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
-
+    
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return savedPlaces.numPlaces()
+        return places.count
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
-        if let place = self.place(for: indexPath) {
-            if place.isInItinerary() {
-                cell.nameLabel.textColor = .gray
-            }
+        if let place = places[safe: indexPath.item] {
             cell.backgroundColor = .gray
             cell.nameLabel.text = place.name
             cell.nameLabel.backgroundColor = .white
@@ -86,23 +137,6 @@ class PlacePaletteViewController: UICollectionViewController {
         return cell
     }
     
-    // MARK - Helpers
-    func place(for indexPath: IndexPath) -> Place? {
-        let allPlaces = savedPlaces.getPlaces()
-        let index = indexPath.item
-        return allPlaces.indices.contains(index) ? allPlaces[index] : nil
-    }
-    
-    func placeName(for indexPath: IndexPath) -> String? {
-        let place = self.place(for: indexPath)
-        return place?.name
-    }
-
-}
-
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -118,9 +152,10 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        let newPlace = Place(place.name!, place.placeID!, place.coordinate)
-        self.savedPlaces?.add(newPlace)
-        NotificationCenter.default.post(name: .didAddSavedPlace, object: self)
+        let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
+        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, isInItinerary: false)
+        places.append(newPlace)
+        delegate?.placePaletteViewController(self, didUpdatePlaces: places)
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
@@ -144,6 +179,9 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     
 }
 
-extension Notification.Name {
-    static let didAddSavedPlace = Notification.Name("didAddSavedPlace")
+protocol PlacePaletteViewControllerDelegate : AnyObject {
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place)
+    
 }

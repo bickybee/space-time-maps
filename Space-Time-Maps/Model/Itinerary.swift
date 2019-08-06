@@ -8,6 +8,14 @@
 
 import UIKit
 
-class Itinerary: NSObject {
+enum TravelMode : String {
+    case driving, walking, bicycling, transit
+}
+
+struct Itinerary {
+    
+    var places = [Place]()
+    var route : Route?
+    var travelMode : TravelMode
     
 }

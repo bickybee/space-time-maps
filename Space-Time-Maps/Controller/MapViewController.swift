@@ -11,21 +11,13 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-struct PlaceVisual {
-    let place : Place
-    let color : UIColor
-}
-
-struct RouteVisual {
-    let route : String
-    let color : UIColor
-}
-
 class MapViewController: UIViewController {
 
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
+    
+    weak var delegate : MapViewControllerDelegate?
     
     var placeVisuals = [PlaceVisual]()
     var routeVisuals = [RouteVisual]()
@@ -134,4 +126,10 @@ class MapViewController: UIViewController {
         }
     }
 
+}
+
+protocol MapViewControllerDelegate : AnyObject {
+    
+    func mapViewController(_ mapViewController: MapViewController, didUpdateBounds bounds: GMSCoordinateBounds)
+    
 }

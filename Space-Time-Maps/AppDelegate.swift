@@ -21,15 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
         // Set up custom services
         locationService = LocationService()
-        let queryService = QueryService()
-        let savedPlaces = PlaceManager(withStarterPlaces: true)
-        let itineraryManager = ItineraryManager(queryService)
-        
-        // Inject into root view
-        if let homeViewController = self.window?.rootViewController as? ParentViewController {
-            homeViewController.savedPlaces = savedPlaces
-            homeViewController.itineraryManager = itineraryManager
-        }
 
         // Set up GMaps API w/ key
         var keys: NSDictionary?
@@ -41,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let mapsKey = dict["mapsKey"] as? String
             GMSServices.provideAPIKey(mapsKey!)
             GMSPlacesClient.provideAPIKey(mapsKey!)
-            queryService.apiKey = mapsKey!
         }
         
         return true

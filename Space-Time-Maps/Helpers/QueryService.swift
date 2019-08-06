@@ -16,7 +16,21 @@ class QueryService {
     let session = URLSession(configuration: .default)
     let dispatchGroup = DispatchGroup()
     let gmapsDirectionsURLString = "https://maps.googleapis.com/maps/api/directions/json"
-    var apiKey: String?
+    var apiKey: String
+    
+    init() {
+        var keys: NSDictionary?
+        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        
+        if let dict = keys {
+            let mapsKey = dict["mapsKey"] as? String
+            apiKey = mapsKey!
+        } else {
+            apiKey = ""
+        }
+    }
     
     // Send REST API query given an (ordered) list of places and a travel mode, callback with Route
     func sendRouteQuery(places: [Place], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
@@ -110,7 +124,7 @@ class QueryService {
             URLQueryItem(name:"origin", value:"place_id:\(startingID)"),
             URLQueryItem(name:"destination", value:"place_id:\(endingID)"),
             URLQueryItem(name:"mode", value: travelMode.rawValue),
-            URLQueryItem(name:"key", value:"\(self.apiKey!)")
+            URLQueryItem(name:"key", value:"\(self.apiKey)")
         ]
         
         if let enrouteIDs = enrouteIDs {
@@ -135,7 +149,7 @@ class QueryService {
                 URLQueryItem(name:"origin", value:"place_id:\(fromPlaceID)"),
                 URLQueryItem(name:"destination", value:"place_id:\(toPlaceID)"),
                 URLQueryItem(name:"mode", value: travelMode.rawValue),
-                URLQueryItem(name:"key", value:"\(self.apiKey!)")
+                URLQueryItem(name:"key", value:"\(self.apiKey)")
             ]
             
             if let waypointIDs = waypointIDs {
