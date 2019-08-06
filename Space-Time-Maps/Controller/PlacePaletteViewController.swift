@@ -72,7 +72,6 @@ class PlacePaletteViewController: UICollectionViewController {
             break
         }
         
-        
     }
     
     // Search button for location autocomplete

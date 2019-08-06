@@ -123,12 +123,18 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place) {
-        print("longpressed place")
         if gesture.state == .ended {
             let location = gesture.location(in: view)
-            if let droppedInItinerary = itineraryController?.collectionView?.bounds.contains(location) {
+            if let droppedInItinerary = itineraryController?.collectionView.bounds.contains(location) {
                 if droppedInItinerary {
-                    itineraryController?.itinerary.places.append(place)
+                    let itineraryLocation = gesture.location(in: itineraryController?.collectionView!)
+                    if let indexPath = itineraryController?.collectionView.indexPathForItem(at: itineraryLocation) {
+                        print("inserting")
+                        itineraryController?.itinerary.places.insert(place, at: indexPath.item)
+                    } else {
+                        print("appending")
+                        itineraryController?.itinerary.places.append(place)
+                    }
                     itineraryController?.updateItinerary()
                 }
             }
