@@ -49,6 +49,7 @@ class PlacePaletteViewController: UICollectionViewController {
                     if let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) {
                         placeholderDraggingPlaceCell = cellSnapshot
                         placeholderDraggingPlaceCell!.center = location
+                        placeholderDraggingPlaceCell!.alpha = 0.5
                         view.addSubview(placeholderDraggingPlaceCell!)
                     }
                     delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
@@ -182,5 +183,19 @@ protocol PlacePaletteViewControllerDelegate : AnyObject {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place)
+    
+}
+
+protocol PlaceCollectionDragDelegate : AnyObject {
+    
+    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didBeginDrag gesture: UIGestureRecognizer, place: Place)
+    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didContinueDrag gesture: UIGestureRecognizer, place: Place)
+    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didEndDrag gesture: UIGestureRecognizer, place: Place)
+    
+}
+
+protocol PlaceCollectionDropDelegate : AnyObject {
+    
+    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didDrop gesture: UIGestureRecognizer, place: Place)
     
 }

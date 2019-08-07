@@ -17,6 +17,8 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController?
     var mapController : MapViewController?
     
+    var placesBeforeDragging: [Place]?
+    
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var transportTimeLabel: UILabel!
     
@@ -123,21 +125,36 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place) {
-        if gesture.state == .ended {
+        switch gesture.state {
+        case .began:
+            placesBeforeDragging = itineraryController!.itinerary.places
+        case .ended,
+             .changed:
             let location = gesture.location(in: view)
             if let droppedInItinerary = itineraryController?.collectionView.bounds.contains(location) {
                 if droppedInItinerary {
                     let itineraryLocation = gesture.location(in: itineraryController?.collectionView!)
-                    if let indexPath = itineraryController?.collectionView.indexPathForItem(at: itineraryLocation) {
-                        print("inserting")
-                        itineraryController?.itinerary.places.insert(place, at: indexPath.item)
+                    if let index = itineraryController?.collectionView.indexPathForItem(at: itineraryLocation)?.item {
+                        if placesBeforeDragging!.indices.contains(index) && !(placesBeforeDragging![index] == place) {
+                            print("inserting")
+                            var newPlaces = placesBeforeDragging!
+                            newPlaces.insert(place, at: index)
+                            itineraryController?.itinerary.places = newPlaces
+                            itineraryController?.updateItinerary()
+                        }
                     } else {
-                        print("appending")
-                        itineraryController?.itinerary.places.append(place)
+                        if !(placesBeforeDragging!.last == place) {
+                            print("appending")
+                            var newPlaces = placesBeforeDragging!
+                            newPlaces.append(place)
+                            itineraryController?.itinerary.places = newPlaces
+                            itineraryController?.updateItinerary()
+                        }
                     }
-                    itineraryController?.updateItinerary()
                 }
             }
+        default:
+            break
         }
     }
     
