@@ -11,14 +11,23 @@ import UIKit
 class LocationCell: UICollectionViewCell {
     
     var nameLabel : UILabel!
+    var dragHandle : UIView!
+    let padding : CGFloat = 5
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         nameLabel = UILabel()
-        nameLabel.textAlignment = .center
+        nameLabel.textAlignment = .left
         nameLabel.textColor = UIColor.black
-        nameLabel.sizeToFit()
+        nameLabel.font = UIFont.systemFont(ofSize: 10.0)
         contentView.addSubview(nameLabel)
+        
+        let sideLength : CGFloat = 25.0
+        let x = contentView.bounds.size.width - sideLength - 5
+        let y = (contentView.bounds.size.height - sideLength)/2
+        dragHandle = UIView(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
+        dragHandle.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
+        contentView.addSubview(dragHandle)
     }
     
     required init?(coder aDecoder: NSCoder) {

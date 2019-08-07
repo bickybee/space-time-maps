@@ -13,9 +13,9 @@ class ParentViewController: UIViewController {
     
     var dataManager : DataManager!
     
-    var placePaletteController : PlacePaletteViewController?
-    var itineraryController : ItineraryViewController?
-    var mapController : MapViewController?
+    var placePaletteController : PlacePaletteViewController!
+    var itineraryController : ItineraryViewController!
+    var mapController : MapViewController!
     
     var placesBeforeDragging: [Place]?
     
@@ -30,65 +30,64 @@ class ParentViewController: UIViewController {
     // Change the mode of transport for the route calculations
     // FOR NOW just passing this to itineraryController, maybe should be part of that to begin with
     @IBAction func transportModeChanged(_ sender: Any) {
-        itineraryController?.transportModeChanged(sender)
+        itineraryController.transportModeChanged(sender)
     }
     
     // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces() {
-        if let savedPlaces = placePaletteController?.places, let itineraryPlaces = itineraryController?.itinerary.places
-        {
-            savedPlaces.forEach{ $0.isInItinerary = false}
-            for savedPlace in savedPlaces {
-                for itineraryPlace in itineraryPlaces {
-                    if savedPlace == itineraryPlace {
-                        savedPlace.isInItinerary = true
-                    }
+        let savedPlaces = placePaletteController.places
+        let itineraryPlaces = itineraryController.itinerary.places
+        savedPlaces.forEach{ $0.isInItinerary = false}
+        for savedPlace in savedPlaces {
+            for itineraryPlace in itineraryPlaces {
+                if savedPlace == itineraryPlace {
+                    savedPlace.isInItinerary = true
                 }
             }
-            placePaletteController?.places = savedPlaces
         }
+        placePaletteController.places = savedPlaces
     }
     
     // Package itinerary and place data to send to map for rendering
     func updateMap() {
-        if let mapController = mapController, let itinerary = itineraryController?.itinerary, let places = placePaletteController?.places {
-            // Determine place colors based on data
-            // Set up to send to map
-            var placeVisuals = [PlaceVisual]()
-            var routeVisuals = [RouteVisual]()
-            let nonItineraryPlaces = places.filter { !$0.isInItinerary }
-            if nonItineraryPlaces.count > 0 {
-                let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: UIColor.gray) }
-                placeVisuals.append(contentsOf: nonItineraryVisuals)
-            }
-            let numPlaces = itinerary.places.count
-            let places = itinerary.places
-            if numPlaces >= 1 {
-                placeVisuals.append(PlaceVisual(place: places.first!, color: UIColor.green))
-            }
-            if numPlaces >= 2 {
-                placeVisuals.append(PlaceVisual(place: places.last!, color: UIColor.red))
-            }
-            if numPlaces >= 3 {
-                let enroutePlaces = Array(places[1 ... places.count - 2])
-                let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: UIColor.yellow) }
-                placeVisuals.append(contentsOf: enrouteVisuals)
-            }
-            if let routePolyline = itinerary.route?.polyline {
-                routeVisuals.append( RouteVisual(route: routePolyline, color: UIColor.blue) )
-            }
-            // Send and call a refresh!
-            mapController.setPlaces(placeVisuals)
-            mapController.setRoutes(routeVisuals)
-            // Only actually refresh map if the view has loaded
-            if mapController.viewIfLoaded != nil {
-                mapController.refreshMarkup()
-            }
+        let itinerary = itineraryController.itinerary
+        let palettePlaces = placePaletteController.places
+        // Determine place colors based on data
+        // Set up to send to map
+        var placeVisuals = [PlaceVisual]()
+        var routeVisuals = [RouteVisual]()
+        let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
+        if nonItineraryPlaces.count > 0 {
+            let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: UIColor.gray) }
+            placeVisuals.append(contentsOf: nonItineraryVisuals)
+        }
+        let numPlaces = itinerary.places.count
+        let places = itinerary.places
+        if numPlaces >= 1 {
+            placeVisuals.append(PlaceVisual(place: places.first!, color: UIColor.green))
+        }
+        if numPlaces >= 2 {
+            placeVisuals.append(PlaceVisual(place: places.last!, color: UIColor.red))
+        }
+        if numPlaces >= 3 {
+            let enroutePlaces = Array(places[1 ... places.count - 2])
+            let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: UIColor.yellow) }
+            placeVisuals.append(contentsOf: enrouteVisuals)
+        }
+        if let routePolyline = itinerary.route?.polyline {
+            routeVisuals.append( RouteVisual(route: routePolyline, color: UIColor.blue) )
+        }
+        // Send and call a refresh!
+        mapController.setPlaces(placeVisuals)
+        mapController.setRoutes(routeVisuals)
+        // Only actually refresh map if the view has loaded
+        if mapController.viewIfLoaded != nil {
+            mapController.refreshMarkup()
         }
     }
     
     func updateTransportTimeLabel() {
-        if let duration = itineraryController?.itinerary.route?.duration {
+        if let duration = itineraryController.itinerary.route?.duration {
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.hour, .minute]
             formatter.unitsStyle = .full
@@ -102,12 +101,12 @@ class ParentViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let placePaletteVC = segue.destination as? PlacePaletteViewController {
-            placePaletteVC.collectionView?.frame.size.width = self.view.frame.size.width / 2 // HACKY?
+            placePaletteVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY?
             placePaletteVC.delegate = self
             placePaletteController = placePaletteVC
         }
         else if let itineraryVC = segue.destination as? ItineraryViewController {
-            itineraryVC.collectionView?.frame.size.width = self.view.frame.size.width / 2 // HACKY?
+            itineraryVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY?
             itineraryVC.delegate = self
             itineraryController = itineraryVC
         } else if let mapVC = segue.destination as? MapViewController {
@@ -124,7 +123,8 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
         updateMap()
     }
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place) {
+    // TODO: pass in the dragging view itself, test if (touch - view-dimensions) intersects the itineraryview (not just the touch)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPress gesture: UIGestureRecognizer, onPlace place: Place) {
         switch gesture.state {
         case .began:
             placesBeforeDragging = itineraryController!.itinerary.places

@@ -15,6 +15,7 @@ class PlacePaletteViewController: UICollectionViewController {
 
     var geographicSearchBounds : GMSCoordinateBounds?
     var longPressedPlace : Place?
+    var pressOffset : CGPoint?
     var placeholderDraggingPlaceCell : UIView?
     
     weak var delegate : PlacePaletteViewControllerDelegate?
@@ -31,12 +32,10 @@ class PlacePaletteViewController: UICollectionViewController {
         super.viewDidLoad()
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(gesture:)))
-        collectionView.addGestureRecognizer(longPressRecognizer)
         makeSearchButton()
     }
     
-    @objc func didLongPress(gesture: UILongPressGestureRecognizer) {
+    @objc func didPress(gesture: UIGestureRecognizer) {
         
         let location = gesture.location(in: view)
         switch gesture.state {
@@ -47,25 +46,25 @@ class PlacePaletteViewController: UICollectionViewController {
                     print(place)
                     let cell = collectionView(collectionView, cellForItemAt: indexPath) as UIView
                     if let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) {
+                        pressOffset = CGPoint(x:location.x - cellSnapshot.center.x ,y:location.y - cellSnapshot.center.y)
                         placeholderDraggingPlaceCell = cellSnapshot
-                        placeholderDraggingPlaceCell!.center = location
                         placeholderDraggingPlaceCell!.alpha = 0.5
                         view.addSubview(placeholderDraggingPlaceCell!)
                     }
-                    delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+                    delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
                 }
             }
         case .changed:
             if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace {
-                placeholderCell.center = location
-                delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+                placeholderCell.center = CGPoint(x:location.x - pressOffset!.x, y:location.y - pressOffset!.y)
+                delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
             }
             
         case .ended,
             .cancelled:
             if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace{
                 placeholderCell.removeFromSuperview()
-                delegate?.placePaletteViewController(self, didLongPress: gesture, onPlace: place)
+                delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
             }
             placeholderDraggingPlaceCell = nil
             longPressedPlace = nil
@@ -80,11 +79,11 @@ class PlacePaletteViewController: UICollectionViewController {
         let sideLength : CGFloat = 65
         let x = self.view.bounds.size.width/2 - sideLength
         let y = self.view.bounds.size.height/2 - sideLength
-        let btnLaunchAc = UIButton(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
-        btnLaunchAc.backgroundColor = .blue
-        btnLaunchAc.setTitle("search", for: .normal)
-        btnLaunchAc.addTarget(self, action: #selector(searchClicked), for: .touchUpInside)
-        self.view.addSubview(btnLaunchAc)
+        let btn = UIButton(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
+        btn.backgroundColor = .blue
+        btn.setTitle("search", for: .normal)
+        btn.addTarget(self, action: #selector(searchClicked), for: .touchUpInside)
+        self.view.addSubview(btn)
     }
     
     // Present the Autocomplete view controller when button is pressed.
@@ -134,6 +133,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
             cell.nameLabel.sizeToFit()
             cell.nameLabel.center = cell.contentView.center
         }
+        cell.dragHandle.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(didPress)))
         return cell
     }
     
@@ -182,7 +182,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place])
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didLongPress gesture: UILongPressGestureRecognizer, onPlace place: Place)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPress gesture: UIGestureRecognizer, onPlace place: Place)
     
 }
 
