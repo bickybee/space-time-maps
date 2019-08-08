@@ -42,36 +42,37 @@ class PlacePaletteViewController: UICollectionViewController {
     @objc func didPress(gesture: UIGestureRecognizer) {
         
         let location = gesture.location(in: view)
-        print(location)
+
         switch gesture.state {
         case .began:
-            if let indexPath = collectionView.indexPathForItem(at: location) {
-                if let place = places[safe: indexPath.item] {
-                    longPressedPlace = place
-                    print(place)
-                    let cell = collectionView(collectionView, cellForItemAt: indexPath) as UIView
-                    if let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) {
-                        pressOffset = CGPoint(x:location.x - cellSnapshot.center.x ,y:location.y - cellSnapshot.center.y)
-                        placeholderDraggingPlaceCell = cellSnapshot
-                        placeholderDraggingPlaceCell!.frame = cell.frame
-                        placeholderDraggingPlaceCell!.alpha = 0.5
-                        view.addSubview(placeholderDraggingPlaceCell!)
-                        dragDelegate?.placePaletteViewController(self, didBeginDraggingPlace: longPressedPlace!, withPlaceholderView: placeholderDraggingPlaceCell!)
-                    }
-                }
-            }
+            // Is this gesture intersecting a place in our collection?
+            guard let indexPath = collectionView.indexPathForItem(at: location) else { return }
+            guard let place = places[safe: indexPath.item] else { return }
+            longPressedPlace = place
+            
+            // Begin dragging session by creating a placeholder cell for the dragging session
+            let cell = collectionView(collectionView, cellForItemAt: indexPath) as! LocationCell
+            guard let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) else { return }
+            pressOffset = cell.dragOffset
+            placeholderDraggingPlaceCell = cellSnapshot
+            placeholderDraggingPlaceCell!.frame = cell.frame
+            placeholderDraggingPlaceCell!.alpha = 0.5
+            view.addSubview(placeholderDraggingPlaceCell!)
+            
+            dragDelegate?.placePaletteViewController(self, didBeginDraggingPlace: longPressedPlace!, withPlaceholderView: placeholderDraggingPlaceCell!)
+
         case .changed:
-            if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace {
-                placeholderCell.center = CGPoint(x:location.x, y:location.y)
-                dragDelegate?.placePaletteViewController(self, didContinueDraggingPlace: place, withPlaceholderView: placeholderCell)
-            }
+            guard let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace else { return }
+            // Translate placeholder cell
+            placeholderCell.center = CGPoint(x:location.x - pressOffset!.x, y:location.y - pressOffset!.y)
+            dragDelegate?.placePaletteViewController(self, didContinueDraggingPlace: place, withPlaceholderView: placeholderCell)
             
         case .ended,
             .cancelled:
-            if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace{
-                placeholderCell.removeFromSuperview()
-                dragDelegate?.placePaletteViewController(self, didEndDraggingPlace: place, withPlaceholderView: placeholderCell)
-            }
+            guard let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace else { return }
+            // Clean up drag session
+            placeholderCell.removeFromSuperview()
+            dragDelegate?.placePaletteViewController(self, didEndDraggingPlace: place, withPlaceholderView: placeholderCell)
             placeholderDraggingPlaceCell = nil
             longPressedPlace = nil
         default:

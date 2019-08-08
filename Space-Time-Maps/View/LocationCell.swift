@@ -12,6 +12,7 @@ class LocationCell: UICollectionViewCell {
     
     var nameLabel : UILabel!
     var dragHandle : UIView!
+    var dragOffset : CGPoint!
     let padding : CGFloat = 5
     
     override init(frame: CGRect) {
@@ -28,6 +29,8 @@ class LocationCell: UICollectionViewCell {
         dragHandle = UIView(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
         dragHandle.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
         contentView.addSubview(dragHandle)
+        
+        dragOffset = CGPoint(x: dragHandle.center.x - contentView.center.x, y: dragHandle.center.y - contentView.center.y)
     }
     
     required init?(coder aDecoder: NSCoder) {
