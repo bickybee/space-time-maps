@@ -125,31 +125,58 @@
         <scene sceneID="aMn-0x-YDd">
             <objects>
                 <viewController id="q2t-3V-v5v" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="iNK-cF-NT9">
+                    <view key="view" contentMode="scaleToFill" id="xA4-oa-yz8">
                         <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEC-kQ-YlV" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="30" height="332"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="aDh-Lt-Ymy"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
+                                <rect key="frame" x="30" y="0.0" width="157.5" height="332"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AWf-6Z-AF0">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="placeCell" id="JK3-qD-mDh" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4wE-8u-rNZ">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="Bbc-Hb-Ni3" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </view>
-                            </collectionViewCell>
-                        </cells>
-                    </collectionView>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="zWw-aK-nXc" secondAttribute="trailing" id="07G-Pt-1RA"/>
+                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="leading" secondItem="cFr-st-Pin" secondAttribute="leading" id="8da-8s-H4b"/>
+                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="FgW-Ei-fNS"/>
+                            <constraint firstItem="zWw-aK-nXc" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="HG7-kp-odL"/>
+                            <constraint firstItem="zWw-aK-nXc" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="tmb-kT-pCZ"/>
+                            <constraint firstItem="zWw-aK-nXc" firstAttribute="leading" secondItem="nEC-kQ-YlV" secondAttribute="trailing" id="twj-1C-t8I"/>
+                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="vXt-MI-G4D"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cFr-st-Pin"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="zWw-aK-nXc" id="v04-7E-0aQ"/>
+                        <outlet property="timelineView" destination="nEC-kQ-YlV" id="zHO-fR-qJq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9cj-wp-vvJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1500.8" y="662.51874062968523"/>
+            <point key="canvasLocation" x="1500.8" y="662.06896551724139"/>
         </scene>
         <!--Place Palette View Controller-->
         <scene sceneID="knU-dA-27b">
@@ -166,7 +193,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="oSL-KD-MHR" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="oSL-KD-MHR" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">

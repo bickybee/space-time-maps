@@ -8,15 +8,18 @@
 
 import UIKit
 
-private let reuseIdentifier = "locationCell"
+class ItineraryViewController: UIViewController {
 
-class ItineraryViewController: UICollectionViewController {
-    
+    private let reuseIdentifier = "placeCell"
     private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     private let queryService = QueryService()
     
     weak var delegate : ItineraryViewControllerDelegate?
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var timelineView: UIView!
+    
     
     var itineraryBeforeModifications : Itinerary?
     
@@ -30,6 +33,8 @@ class ItineraryViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
     
     @objc func setRoute(route: Route) {
@@ -110,7 +115,8 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     
 }
 
-extension ItineraryViewController : UICollectionViewDelegateFlowLayout {
+extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -119,16 +125,16 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout {
         return CGSize(width:size.width, height:cellHeight)
     }
     
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return itinerary.places.count
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         let index = indexPath.item
         

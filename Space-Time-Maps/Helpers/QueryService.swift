@@ -100,9 +100,7 @@ class QueryService {
     func routeQueryURLFrom(places: [Place], travelMode: TravelMode) -> URL? {
         
         // Zero or one places: no route to be created
-        if places.count < 2 {
-            return nil
-        }
+        guard places.count >= 2 else { return nil }
         
         // 2 or more places, we can make a route query
         let startingID = places.first!.placeID

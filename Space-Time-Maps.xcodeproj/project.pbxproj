@@ -12,6 +12,8 @@
 		989AF2AF22F8E0E3002CCFDD /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2AE22F8E0E3002CCFDD /* DataManager.swift */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		989AF2B422F9BF17002CCFDD /* MapVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B322F9BF17002CCFDD /* MapVisuals.swift */; };
+		98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */; };
+		98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -40,6 +42,8 @@
 		989AF2AE22F8E0E3002CCFDD /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		989AF2B322F9BF17002CCFDD /* MapVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVisuals.swift; sourceTree = "<group>"; };
+		98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraints.swift; sourceTree = "<group>"; };
+		98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				B64B992C22E15D4A007793BA /* Place.swift */,
 				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
 				989AF2B322F9BF17002CCFDD /* MapVisuals.swift */,
+				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 				B64B992A22E10439007793BA /* PlaceCell.swift */,
 				B64B993B22E27B93007793BA /* PlaceInfo.swift */,
 				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
+				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -311,6 +317,8 @@
 				B64B992B22E10439007793BA /* PlaceCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
+				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
+				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* RouteResponse.swift in Sources */,

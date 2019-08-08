@@ -114,7 +114,7 @@ class ParentViewController: UIViewController {
                 placePaletteController.dragDelegate = itineraryVC as PlacePaletteViewControllerDragDelegate
             }
             itineraryVC.delegate = self
-            itineraryVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY!
+            itineraryVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             itineraryController = itineraryVC
         } else if let mapVC = segue.destination as? MapViewController {
             mapVC.delegate = self
