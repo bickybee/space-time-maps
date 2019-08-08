@@ -14,12 +14,17 @@ struct Coordinate {
     var lat, lon: Double
 }
 
+// Is a class not a struct to utilize by-reference passing instead by-value passing
 class Place : NSObject {
     
     let name: String
     let coordinate: Coordinate
     let placeID: String
     var isInItinerary = false
+    
+    override var description : String {
+        return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\", isInItinerary: \(isInItinerary))"
+    }
     
     init(name: String, coordinate: Coordinate, placeID: String, isInItinerary: Bool) {
         self.name = name

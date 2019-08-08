@@ -33,7 +33,6 @@ class ItineraryViewController: UICollectionViewController {
     }
     
     @objc func setRoute(route: Route) {
-        print("set route")
         itinerary.route = route
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
@@ -85,7 +84,6 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
         
         // INSERT!
         var modifiedPlaces = initialPlaces
-        print(index)
         modifiedPlaces.insert(place, at: index)
         itinerary.places = modifiedPlaces
         updateItinerary()
@@ -97,15 +95,16 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didContinueDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        // Convert view to local coordinates
+        // First convert view from parent coordinates to local coordinates
         let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
         previewInsert(place: place, withViewFrame: viewFrame)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didEndDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        // Convert view to local coordinates
+        // First convert view from parent coordinates to local coordinates
         let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
         previewInsert(place: place, withViewFrame: viewFrame)
+        // End drag session
         itineraryBeforeModifications = nil
     }
     
