@@ -17,6 +17,10 @@ class ItineraryViewController: UICollectionViewController {
     private let queryService = QueryService()
     
     weak var delegate : ItineraryViewControllerDelegate?
+    
+    var itineraryBeforeModifications : Itinerary?
+    
+    // Data source!
     var itinerary = Itinerary(places: [Place](), route: nil, travelMode: .driving) {
         didSet {
             collectionView.reloadData()
@@ -58,7 +62,53 @@ class ItineraryViewController: UICollectionViewController {
             updateItinerary()
         }
     }
+}
 
+extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
+    
+    func previewInsert(place: Place, withViewFrame viewFrame: CGRect) {
+        
+        // Need the initial itinerary to compare our modifications to
+        guard let initialPlaces = itineraryBeforeModifications?.places else { return }
+        
+        // Does the dragging view intersect our collection view?
+        let intersection = collectionView.frame.intersection(viewFrame)
+        guard !intersection.isNull else { return }
+
+        // What cell does this intersection correspond to?
+        let center = CGPoint(x: viewFrame.minX + (intersection.maxX - intersection.minX)/2, y: viewFrame.minY + (intersection.maxY - intersection.minY)/2)
+        let index = collectionView.indexPathForItem(at: center)?.item ?? initialPlaces.endIndex
+        
+        // Is the initial value of this cell different from what we're trying to insert there?
+        let initialPlace = initialPlaces[safe: index] ?? initialPlaces.last
+        guard initialPlace != place else { return }
+        
+        // INSERT!
+        var modifiedPlaces = initialPlaces
+        print(index)
+        modifiedPlaces.insert(place, at: index)
+        itinerary.places = modifiedPlaces
+        updateItinerary()
+        
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didBeginDraggingPlace place: Place, withPlaceholderView view: UIView) {
+        itineraryBeforeModifications = itinerary
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didContinueDraggingPlace place: Place, withPlaceholderView view: UIView) {
+        // Convert view to local coordinates
+        let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
+        previewInsert(place: place, withViewFrame: viewFrame)
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didEndDraggingPlace place: Place, withPlaceholderView view: UIView) {
+        // Convert view to local coordinates
+        let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
+        previewInsert(place: place, withViewFrame: viewFrame)
+        itineraryBeforeModifications = nil
+    }
+    
 }
 
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout {

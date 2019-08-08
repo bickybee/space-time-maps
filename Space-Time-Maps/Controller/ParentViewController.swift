@@ -11,20 +11,21 @@ import GooglePlaces
 
 class ParentViewController: UIViewController {
     
-    var dataManager : DataManager!
-    
+    // Child view controllers
     var placePaletteController : PlacePaletteViewController!
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
+    // Support for dragging between the controllers
     var placesBeforeDragging: [Place]?
     
+    // UI outlets
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var transportTimeLabel: UILabel!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     // Change the mode of transport for the route calculations
@@ -101,13 +102,19 @@ class ParentViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let placePaletteVC = segue.destination as? PlacePaletteViewController {
-            placePaletteVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY?
+            if let itineraryController = itineraryController {
+                placePaletteVC.dragDelegate = itineraryController as PlacePaletteViewControllerDragDelegate
+            }
             placePaletteVC.delegate = self
+            placePaletteVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             placePaletteController = placePaletteVC
         }
         else if let itineraryVC = segue.destination as? ItineraryViewController {
-            itineraryVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY?
+            if let placePaletteController = placePaletteController {
+                placePaletteController.dragDelegate = itineraryVC as PlacePaletteViewControllerDragDelegate
+            }
             itineraryVC.delegate = self
+            itineraryVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             itineraryController = itineraryVC
         } else if let mapVC = segue.destination as? MapViewController {
             mapVC.delegate = self
@@ -121,41 +128,6 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place]) {
         updateMap()
-    }
-    
-    // TODO: pass in the dragging view itself, test if (touch - view-dimensions) intersects the itineraryview (not just the touch)
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPress gesture: UIGestureRecognizer, onPlace place: Place) {
-        switch gesture.state {
-        case .began:
-            placesBeforeDragging = itineraryController!.itinerary.places
-        case .ended,
-             .changed:
-            let location = gesture.location(in: view)
-            if let droppedInItinerary = itineraryController?.collectionView.bounds.contains(location) {
-                if droppedInItinerary {
-                    let itineraryLocation = gesture.location(in: itineraryController?.collectionView!)
-                    if let index = itineraryController?.collectionView.indexPathForItem(at: itineraryLocation)?.item {
-                        if placesBeforeDragging!.indices.contains(index) && !(placesBeforeDragging![index] == place) {
-                            print("inserting")
-                            var newPlaces = placesBeforeDragging!
-                            newPlaces.insert(place, at: index)
-                            itineraryController?.itinerary.places = newPlaces
-                            itineraryController?.updateItinerary()
-                        }
-                    } else {
-                        if !(placesBeforeDragging!.last == place) {
-                            print("appending")
-                            var newPlaces = placesBeforeDragging!
-                            newPlaces.append(place)
-                            itineraryController?.itinerary.places = newPlaces
-                            itineraryController?.updateItinerary()
-                        }
-                    }
-                }
-            }
-        default:
-            break
-        }
     }
     
 }

@@ -19,6 +19,9 @@ class PlacePaletteViewController: UICollectionViewController {
     var placeholderDraggingPlaceCell : UIView?
     
     weak var delegate : PlacePaletteViewControllerDelegate?
+    weak var dragDelegate : PlacePaletteViewControllerDragDelegate?
+    
+    //Data source!
     var places = [Place]() {
         didSet {
             collectionView.reloadData()
@@ -35,9 +38,11 @@ class PlacePaletteViewController: UICollectionViewController {
         makeSearchButton()
     }
     
+    // TODO: fix offset btwn mouse and center
     @objc func didPress(gesture: UIGestureRecognizer) {
         
         let location = gesture.location(in: view)
+        print(location)
         switch gesture.state {
         case .began:
             if let indexPath = collectionView.indexPathForItem(at: location) {
@@ -48,23 +53,24 @@ class PlacePaletteViewController: UICollectionViewController {
                     if let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) {
                         pressOffset = CGPoint(x:location.x - cellSnapshot.center.x ,y:location.y - cellSnapshot.center.y)
                         placeholderDraggingPlaceCell = cellSnapshot
+                        placeholderDraggingPlaceCell!.frame = cell.frame
                         placeholderDraggingPlaceCell!.alpha = 0.5
                         view.addSubview(placeholderDraggingPlaceCell!)
+                        dragDelegate?.placePaletteViewController(self, didBeginDraggingPlace: longPressedPlace!, withPlaceholderView: placeholderDraggingPlaceCell!)
                     }
-                    delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
                 }
             }
         case .changed:
             if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace {
-                placeholderCell.center = CGPoint(x:location.x - pressOffset!.x, y:location.y - pressOffset!.y)
-                delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
+                placeholderCell.center = CGPoint(x:location.x, y:location.y)
+                dragDelegate?.placePaletteViewController(self, didContinueDraggingPlace: place, withPlaceholderView: placeholderCell)
             }
             
         case .ended,
             .cancelled:
             if let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace{
                 placeholderCell.removeFromSuperview()
-                delegate?.placePaletteViewController(self, didPress: gesture, onPlace: place)
+                dragDelegate?.placePaletteViewController(self, didEndDraggingPlace: place, withPlaceholderView: placeholderCell)
             }
             placeholderDraggingPlaceCell = nil
             longPressedPlace = nil
@@ -182,20 +188,13 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place])
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPress gesture: UIGestureRecognizer, onPlace place: Place)
     
 }
 
-protocol PlaceCollectionDragDelegate : AnyObject {
+protocol PlacePaletteViewControllerDragDelegate : AnyObject {
     
-    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didBeginDrag gesture: UIGestureRecognizer, place: Place)
-    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didContinueDrag gesture: UIGestureRecognizer, place: Place)
-    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didEndDrag gesture: UIGestureRecognizer, place: Place)
-    
-}
-
-protocol PlaceCollectionDropDelegate : AnyObject {
-    
-    func placeCollectionViewController(_ collectionviewController: UICollectionViewController, didDrop gesture: UIGestureRecognizer, place: Place)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didBeginDraggingPlace place: Place, withPlaceholderView view: UIView)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didContinueDraggingPlace place: Place, withPlaceholderView view: UIView)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didEndDraggingPlace place: Place, withPlaceholderView view: UIView)
     
 }
