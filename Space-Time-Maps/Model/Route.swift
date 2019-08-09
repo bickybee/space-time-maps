@@ -9,6 +9,7 @@
 import Foundation
 
 struct Leg {
+    var polyline : String
     var duration : Int
 }
 

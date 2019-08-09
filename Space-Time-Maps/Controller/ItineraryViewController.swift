@@ -49,6 +49,9 @@ class ItineraryViewController: UIViewController {
     
     func updateItinerary() {
         //queryService.sendRouteQuery(places: itinerary.places, travelMode: itinerary.travelMode, callback: setRoute)
+        queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
+            print("got route")
+        }
     }
     
     func transportModeChanged(_ sender: Any) {
@@ -87,10 +90,10 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
         // What time does this intersection correspond to?
         let y = intersection.minY
         let hourHeight = view.frame.height / CGFloat(numHours)
-        let hour = floor(y / hourHeight)
+        let hour = Int(floor(y / hourHeight))
         //set hour of destination
         
-        let newDestination = Destination(place: place, startTime: Int(hour))
+        let newDestination = Destination(place: place, startTime: hour)
         
         // INSERT!
         var modifiedDestinations = initialDestinations
@@ -148,17 +151,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             var text = ""
             
             // If there's an existing route and the cell is odd, return a route cell
-            if let route = itinerary.route {
-                let legs = route.legs
-                if index > 0 && index <= legs.count {
-                    let timeInSeconds = route.legs[index-1].duration
-                    let formatter = DateComponentsFormatter()
-                    formatter.allowedUnits = [.hour, .minute]
-                    formatter.unitsStyle = .full
-                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds))!
-                    text += formattedString + " -> "
-                }
-            }
+//            if let route = itinerary.route {
+//                let legs = route.legs
+//                if index > 0 && index <= legs.count {
+//                    let timeInSeconds = route.legs[index-1].duration
+//                    let formatter = DateComponentsFormatter()
+//                    formatter.allowedUnits = [.hour, .minute]
+//                    formatter.unitsStyle = .full
+//                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds))!
+//                    text += formattedString + " -> "
+//                }
+//            }
             
             // Else, return a location cell
             if index == 0 {

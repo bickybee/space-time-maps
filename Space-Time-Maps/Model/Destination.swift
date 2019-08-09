@@ -13,16 +13,26 @@ import UIKit
 
 class Destination: NSObject {
     
+    private static let calendar = Calendar.current
+    private static let todayComponents = calendar.dateComponents([.day, .month, .year], from: Date())
+    private static let todayDate = calendar.date(from: todayComponents)
+    
     // Details about the place itself
-    var place : Place
+    public var place : Place
     
     // Timing details about this destination, to be rendered accordingly
-    var startTime : Int // point at which to render cell
-    var duration : Int // height of cell
+    // Relative to today, for simplicity, since we only provide 1-day views
+    public var startTime : Int // point at which to render cell
+    public var duration : Int // height of cell
+    
+    // For API calls...
+    public var absoluteStartTime : Date {
+        let todayAtHour = Destination.calendar.date(bySetting: .hour, value: startTime, of: Destination.todayDate!)
+        return todayAtHour!
+    }
     
     // Timing constraints provided by the user, which influence the calculated timing details
     //var timeConstraints = TimeConstraints()
-    
     
     init(place: Place, startTime: Int) {
         self.place = place

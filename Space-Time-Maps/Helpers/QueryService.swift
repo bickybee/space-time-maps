@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import GoogleMaps.GMSMutablePath
 
 class QueryService {
     
@@ -42,19 +42,88 @@ class QueryService {
         }
     }
     
-    func sendRoutePermutationQueries(placePermutations: [[Place]], travelMode: TravelMode, perRouteCallback: @escaping (Route, Int) -> (), batchCallback: @escaping () -> ()) {
-        // Send a route query for each permutation
-        for (index, permutation) in placePermutations.enumerated() {
-            dispatchGroup.enter()
-            sendRouteQuery(places: permutation, travelMode: travelMode) { route in
-                perRouteCallback(route, index)
-            }
-        }
-        // After all routes have been gathered
+    func getRouteFor(destinations: [Destination], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
+        
+        let orderedDestinations = destinations.sorted(by: { $0.startTime < $1.startTime })
+        var legs = [Leg]()
+        
+        let dispatchGroup = DispatchGroup()
         dispatchGroup.notify(queue: .main) {
-            batchCallback()
+            let route = Route(polyline: "", duration: 0, legs: legs)
+            callback(route)
+        }
+        
+        for i in 0 ..< orderedDestinations.count - 1 {
+            dispatchGroup.enter()
+            
+            let start = orderedDestinations[i]
+            let end = orderedDestinations[i+1]
+            getLegFor(start: start, end: end, travelMode: travelMode) {leg in
+                legs.append(leg)
+                dispatchGroup.leave()
+            }
+    
+        }
+        
+        
+    }
+    
+    func getLegFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (Leg) -> ()) {
+        
+        guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
+        runQuery(url: url) {data in
+            guard let leg = self.dataToLeg(data) else { return }
+            callback(leg)
+        }
+        
+    }
+    
+    // Unwrap JSON data to Route object
+    func dataToLeg(_ data: Data) -> Leg? {
+        
+        // Attempt to decode JSON object into RouteResponseObject
+        let decoder = JSONDecoder()
+        guard let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) else { return nil }
+        
+        // Parse out data into Route object
+        let firstRouteOption = routeResponseObject.routes[0]
+        let polyline = firstRouteOption.overviewPolyline.points
+        let duration = firstRouteOption.legs[0].duration.value
+        let leg = Leg(polyline: polyline, duration: duration)
+        
+        return leg
+        
+    }
+    
+    func queryURLFor(start: Destination, end: Destination, travelMode: TravelMode) -> URL? {
+        
+        guard var urlComponents = URLComponents(string: gmapsDirectionsURLString) else { return nil }
+        
+        let startingID = start.place.placeID
+        let endingID = end.place.placeID
+        let departureTime = start.absoluteStartTime.timeIntervalSince1970
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name:"origin", value:"place_id:\(startingID)"),
+            URLQueryItem(name:"destination", value:"place_id:\(endingID)"),
+            URLQueryItem(name:"mode", value: travelMode.rawValue),
+            URLQueryItem(name: "departure_time", value: "\(departureTime)"),
+            URLQueryItem(name:"key", value:"\(self.apiKey)")
+        ]
+        
+        return urlComponents.url
+        
+    }
+    
+    func sendRouteQuery(destinations: [Destination], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
+        
+        guard let url = routeQueryURLFrom(destinations: destinations, travelMode: travelMode) else { return }
+        runQuery(url: url) {data in
+            guard let route = self.dataToRoute(data) else { return }
+            callback(route)
         }
     }
+    
     
     // Unwrap JSON data to Route object
     func dataToRoute(_ data: Data) -> Route? {
@@ -66,7 +135,7 @@ class QueryService {
         // Parse out data into Route object
         let firstRoute = routeResponseObject.routes[0]
         let line = firstRoute.overviewPolyline.points
-        let legs = firstRoute.legs.map { Leg(duration: $0.duration.value) }
+        let legs = firstRoute.legs.map { Leg(polyline: "", duration: $0.duration.value) }
         var totalDuration = 0
         for leg in legs {
             totalDuration += leg.duration
@@ -94,6 +163,14 @@ class QueryService {
         
         // Run data task
         dataTask.resume()
+    }
+    
+    // Returns directions query URL given a list of destinations
+    func routeQueryURLFrom(destinations: [Destination], travelMode: TravelMode) -> URL? {
+        
+        
+        
+        return nil
     }
     
     // Returns directions query URL given a list of places
@@ -173,7 +250,7 @@ class QueryService {
                     if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
                         let firstRoute = routeResponseObject.routes[0]
                         let line = firstRoute.overviewPolyline.points
-                        let legs = firstRoute.legs.map { Leg(duration: $0.duration.value) }
+                        let legs = firstRoute.legs.map { Leg(polyline: "", duration: $0.duration.value) }
                         var totalDuration = 0
                         for leg in legs {
                             totalDuration += leg.duration
@@ -191,9 +268,6 @@ class QueryService {
         
     }
     
-    func getPotentialRoute(_ routeIndex: Int, _ fromPlaceID: String, _ toPlaceID: String, _ waypointIDs: [String]?, _ travelMode: TravelMode, _ callback: @escaping RouteQueryResultHandler) {
-        
-    }
 
     
 }
