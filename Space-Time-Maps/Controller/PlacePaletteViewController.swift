@@ -60,7 +60,7 @@ class PlacePaletteViewController: UICollectionViewController {
             guard let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) else { return }
             pressOffset = cell.dragOffset
             placeholderDraggingPlaceCell = cellSnapshot
-            placeholderDraggingPlaceCell!.frame = cell.frame
+            placeholderDraggingPlaceCell!.frame = cell.frame.insetBy(dx: 30, dy: 8)
             placeholderDraggingPlaceCell!.alpha = 0.5
             view.addSubview(placeholderDraggingPlaceCell!)
             

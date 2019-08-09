@@ -14,7 +14,7 @@ enum TravelMode : String {
 
 struct Itinerary {
     
-    var places = [Place]()
+    var destinations = [Destination]()
     var route : Route?
     var travelMode : TravelMode
     

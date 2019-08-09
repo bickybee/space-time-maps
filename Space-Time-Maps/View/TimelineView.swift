@@ -10,7 +10,7 @@ import UIKit
 
 class TimelineView: UIView {
     
-    private let numTicks : Int = 12
+    var numTicks : Int = 12
     private let lineWidth : CGFloat = 2
     private let stringAttributes = [
         NSAttributedString.Key.paragraphStyle: NSParagraphStyle(),

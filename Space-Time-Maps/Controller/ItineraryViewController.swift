@@ -16,15 +16,15 @@ class ItineraryViewController: UIViewController {
     private let queryService = QueryService()
     
     weak var delegate : ItineraryViewControllerDelegate?
+    let numHours = 12
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var timelineView: UIView!
     
-    
     var itineraryBeforeModifications : Itinerary?
     
     // Data source!
-    var itinerary = Itinerary(places: [Place](), route: nil, travelMode: .driving) {
+    var itinerary = Itinerary(destinations: [Destination](), route: nil, travelMode: .driving) {
         didSet {
             collectionView.reloadData()
         }
@@ -32,6 +32,11 @@ class ItineraryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
+            print("set layout")
+            layout.delegate = self
+        }
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -43,7 +48,7 @@ class ItineraryViewController: UIViewController {
     }
     
     func updateItinerary() {
-        queryService.sendRouteQuery(places: itinerary.places, travelMode: itinerary.travelMode, callback: setRoute)
+        //queryService.sendRouteQuery(places: itinerary.places, travelMode: itinerary.travelMode, callback: setRoute)
     }
     
     func transportModeChanged(_ sender: Any) {
@@ -73,24 +78,24 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     func previewInsert(place: Place, withViewFrame viewFrame: CGRect) {
         
         // Need the initial itinerary to compare our modifications to
-        guard let initialPlaces = itineraryBeforeModifications?.places else { return }
+        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
         
         // Does the dragging view intersect our collection view?
         let intersection = collectionView.frame.intersection(viewFrame)
         guard !intersection.isNull else { return }
 
-        // What cell does this intersection correspond to?
-        let center = CGPoint(x: viewFrame.minX + (intersection.maxX - intersection.minX)/2, y: viewFrame.minY + (intersection.maxY - intersection.minY)/2)
-        let index = collectionView.indexPathForItem(at: center)?.item ?? initialPlaces.endIndex
+        // What time does this intersection correspond to?
+        let y = intersection.minY
+        let hourHeight = view.frame.height / CGFloat(numHours)
+        let hour = floor(y / hourHeight)
+        //set hour of destination
         
-        // Is the initial value of this cell different from what we're trying to insert there?
-        let initialPlace = initialPlaces[safe: index] ?? initialPlaces.last
-        guard initialPlace != place else { return }
+        let newDestination = Destination(place: place, startTime: Int(hour))
         
         // INSERT!
-        var modifiedPlaces = initialPlaces
-        modifiedPlaces.insert(place, at: index)
-        itinerary.places = modifiedPlaces
+        var modifiedDestinations = initialDestinations
+        modifiedDestinations.append(newDestination)
+        itinerary.destinations = modifiedDestinations
         updateItinerary()
         
     }
@@ -116,7 +121,7 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
 }
 
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
-    
+        
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -131,7 +136,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itinerary.places.count
+        return itinerary.destinations.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -139,7 +144,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let index = indexPath.item
         
         
-        if let place = itinerary.places[safe: index] {
+        if let destination = itinerary.destinations[safe: index] {
             var text = ""
             
             // If there's an existing route and the cell is odd, return a route cell
@@ -158,12 +163,12 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             // Else, return a location cell
             if index == 0 {
                 cell.backgroundColor = .green
-            } else if index == itinerary.places.count - 1 {
+            } else if index == itinerary.destinations.count - 1 {
                 cell.backgroundColor = .red
             } else {
                 cell.backgroundColor = .yellow
             }
-            text += place.name
+            text += destination.place.name
             cell.nameLabel.text = text
             cell.nameLabel.backgroundColor = .white
             cell.nameLabel.sizeToFit()
@@ -172,6 +177,22 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         return cell
     }
+}
+
+extension ItineraryViewController : ItineraryLayoutDelegate {
+    
+    func numberOfHours(of collectionView: UICollectionView) -> Int {
+        return 12
+    }
+    
+    func hourHeight(of collectionView: UICollectionView) -> CGFloat {
+        return timelineView.frame.height / CGFloat(numHours)
+    }
+    
+    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> Int {
+        return itinerary.destinations[indexPath.item].startTime
+    }
+    
 }
 
 protocol ItineraryViewControllerDelegate : AnyObject {

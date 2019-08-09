@@ -37,11 +37,11 @@ class ParentViewController: UIViewController {
     // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces() {
         let savedPlaces = placePaletteController.places
-        let itineraryPlaces = itineraryController.itinerary.places
+        let itineraryDestinations = itineraryController.itinerary.destinations
         savedPlaces.forEach{ $0.isInItinerary = false}
         for savedPlace in savedPlaces {
-            for itineraryPlace in itineraryPlaces {
-                if savedPlace == itineraryPlace {
+            for destination in itineraryDestinations {
+                if savedPlace == destination.place {
                     savedPlace.isInItinerary = true
                 }
             }
@@ -62,8 +62,8 @@ class ParentViewController: UIViewController {
             let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: UIColor.gray) }
             placeVisuals.append(contentsOf: nonItineraryVisuals)
         }
-        let numPlaces = itinerary.places.count
-        let places = itinerary.places
+        let numPlaces = itinerary.destinations.count
+        let places = itinerary.destinations.map{ $0.place }
         if numPlaces >= 1 {
             placeVisuals.append(PlaceVisual(place: places.first!, color: UIColor.green))
         }

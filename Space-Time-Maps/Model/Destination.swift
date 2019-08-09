@@ -17,14 +17,14 @@ class Destination: NSObject {
     var place : Place
     
     // Timing details about this destination, to be rendered accordingly
-    var startTime : Date // point at which to render cell
+    var startTime : Int // point at which to render cell
     var duration : Int // height of cell
     
     // Timing constraints provided by the user, which influence the calculated timing details
     //var timeConstraints = TimeConstraints()
     
     
-    init(place: Place, startTime: Date) {
+    init(place: Place, startTime: Int) {
         self.place = place
         self.startTime = startTime
         self.duration = 1
