@@ -8,9 +8,9 @@
 
 import UIKit
 
-private let SECONDS_PER_MINUTE : Double = 60
-private let MINUTES_PER_HOUR : Double = 60
-private let HOURS_PER_DAY : Double = 24
+let SECONDS_PER_MINUTE : Double = 60
+let MINUTES_PER_HOUR : Double = 60
+let HOURS_PER_DAY : Double = 24
 
 class TimeConstraints: NSObject {
     
