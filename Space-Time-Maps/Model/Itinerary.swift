@@ -14,7 +14,11 @@ enum TravelMode : String {
 
 struct Itinerary {
     
-    var destinations = [Destination]()
+    var destinations = [Destination]() {
+        didSet {
+            destinations.sort(by: { $0.startTime < $1.startTime })
+        }
+    }
     var route : Route?
     var travelMode : TravelMode
     

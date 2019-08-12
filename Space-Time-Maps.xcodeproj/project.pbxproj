@@ -28,7 +28,7 @@
 		B64B993C22E27B93007793BA /* PlaceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B993B22E27B93007793BA /* PlaceInfo.swift */; };
 		B6A625E422D7CFB40099D65C /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = B6A625E322D7CFB40099D65C /* style.json */; };
 		B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625E922DF6CBD0099D65C /* QueryService.swift */; };
-		B6A625EC22DF93F20099D65C /* RouteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625EB22DF93F10099D65C /* RouteResponse.swift */; };
+		B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A625EB22DF93F10099D65C /* APIResponses.swift */; };
 		B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */; };
 		B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B222C7CB3200CE4301 /* Main.storyboard */; };
 		B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */; };
@@ -61,7 +61,7 @@
 		B64B993B22E27B93007793BA /* PlaceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceInfo.swift; sourceTree = "<group>"; };
 		B6A625E322D7CFB40099D65C /* style.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
 		B6A625E922DF6CBD0099D65C /* QueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
-		B6A625EB22DF93F10099D65C /* RouteResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteResponse.swift; sourceTree = "<group>"; };
+		B6A625EB22DF93F10099D65C /* APIResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponses.swift; sourceTree = "<group>"; };
 		B6B5A5AB22C7CB3200CE4301 /* Space-Time-Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Space-Time-Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6B5A5B322C7CB3200CE4301 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		B64B992622E0FB6D007793BA /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B6A625EB22DF93F10099D65C /* RouteResponse.swift */,
+				B6A625EB22DF93F10099D65C /* APIResponses.swift */,
 				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
 				B62AFCB722E4DA4100B7D2CD /* LocationService.swift */,
 				989AF2AE22F8E0E3002CCFDD /* DataManager.swift */,
@@ -337,7 +337,7 @@
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
-				B6A625EC22DF93F20099D65C /* RouteResponse.swift in Sources */,
+				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

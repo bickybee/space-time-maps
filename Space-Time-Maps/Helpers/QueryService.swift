@@ -44,35 +44,40 @@ class QueryService {
     
     func getRouteFor(destinations: [Destination], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
         
-        let orderedDestinations = destinations.sorted(by: { $0.startTime < $1.startTime })
         var legs = [Leg]()
         
         let dispatchGroup = DispatchGroup()
-        dispatchGroup.notify(queue: .main) {
-            let route = Route(polyline: "", duration: 0, legs: legs)
-            callback(route)
-        }
         
-        for i in 0 ..< orderedDestinations.count - 1 {
+        for i in 0 ..< destinations.count - 1 {
             dispatchGroup.enter()
             
-            let start = orderedDestinations[i]
-            let end = orderedDestinations[i+1]
+            let start = destinations[i]
+            let end = destinations[i+1]
             getLegFor(start: start, end: end, travelMode: travelMode) {leg in
-                legs.append(leg)
+                if let leg = leg {
+                    legs.append(leg)
+                }
                 dispatchGroup.leave()
             }
     
         }
         
+        dispatchGroup.wait()
+//
+        //TODO: debug :-)
+        DispatchQueue.main.async {
+            let route = Route(polyline: "", duration: 0, legs: legs)
+            callback(route)
+        }
+        
         
     }
     
-    func getLegFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (Leg) -> ()) {
+    func getLegFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (Leg?) -> ()) {
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
-            guard let leg = self.dataToLeg(data) else { return }
+            let leg = self.dataToLeg(data)
             callback(leg)
         }
         
@@ -83,14 +88,17 @@ class QueryService {
         
         // Attempt to decode JSON object into RouteResponseObject
         let decoder = JSONDecoder()
-        guard let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) else { return nil }
-        
-        // Parse out data into Route object
-        let firstRouteOption = routeResponseObject.routes[0]
-        let polyline = firstRouteOption.overviewPolyline.points
-        let duration = firstRouteOption.legs[0].duration.value
-        let leg = Leg(polyline: polyline, duration: duration)
-        
+        var leg : Leg?
+        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
+            print(errorResponseObject.errorMessage)
+            leg = nil
+        } else if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
+            // Parse out data into Route object
+            let firstRouteOption = routeResponseObject.routes[0]
+            let polyline = firstRouteOption.overviewPolyline.points
+            let duration = firstRouteOption.legs[0].duration.value
+            leg = Leg(polyline: polyline, duration: duration)
+        }
         return leg
         
     }
@@ -101,7 +109,9 @@ class QueryService {
         
         let startingID = start.place.placeID
         let endingID = end.place.placeID
-        let departureTime = start.absoluteStartTime.timeIntervalSince1970
+        let departureTime = Int(start.absoluteStartTime.timeIntervalSince1970)
+        
+        print(departureTime)
         
         urlComponents.queryItems = [
             URLQueryItem(name:"origin", value:"place_id:\(startingID)"),
@@ -154,10 +164,8 @@ class QueryService {
                 print("ERROR")
                 print(error.localizedDescription)
             } else if let data = data {
-                print("SUCCESS")
-                DispatchQueue.main.sync { // sync or async?
-                    callback(data)
-                }
+                print("SUCCESS running query with response:")
+                callback(data)
             }
         }
         
@@ -245,7 +253,6 @@ class QueryService {
                     print("ERROR")
                     print(error.localizedDescription)
                 } else if let data = data {
-                    print("SUCCESS")
                     let decoder = JSONDecoder()
                     if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
                         let firstRoute = routeResponseObject.routes[0]

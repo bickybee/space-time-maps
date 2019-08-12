@@ -22,6 +22,7 @@ class ItineraryViewController: UIViewController {
     @IBOutlet weak var timelineView: UIView!
     
     var itineraryBeforeModifications : Itinerary?
+    var previousTouchHour : Int?
     
     // Data source!
     var itinerary = Itinerary(destinations: [Destination](), route: nil, travelMode: .driving) {
@@ -50,7 +51,7 @@ class ItineraryViewController: UIViewController {
     func updateItinerary() {
         //queryService.sendRouteQuery(places: itinerary.places, travelMode: itinerary.travelMode, callback: setRoute)
         queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
-            print("got route")
+            self.itinerary.route = route
         }
     }
     
@@ -78,24 +79,26 @@ class ItineraryViewController: UIViewController {
 
 extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     
-    func previewInsert(place: Place, withViewFrame viewFrame: CGRect) {
-        
-        // Need the initial itinerary to compare our modifications to
-        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
-        
+    func timelineLocation(of viewFrame: CGRect) -> Int? {
         // Does the dragging view intersect our collection view?
         let intersection = collectionView.frame.intersection(viewFrame)
-        guard !intersection.isNull else { return }
-
-        // What time does this intersection correspond to?
+        guard !intersection.isNull else { return nil }
+        
+        // What time does this intersection correspond to? (Using top of view)
         let y = intersection.minY
         let hourHeight = view.frame.height / CGFloat(numHours)
         let hour = Int(floor(y / hourHeight))
         //set hour of destination
         
-        let newDestination = Destination(place: place, startTime: hour)
+        return hour
+    }
+    
+    func previewInsert(place: Place, at time: Int) {
         
-        // INSERT!
+        // Need the initial itinerary to compare our modifications to
+        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
+        
+        let newDestination = Destination(place: place, startTime: time)
         var modifiedDestinations = initialDestinations
         modifiedDestinations.append(newDestination)
         itinerary.destinations = modifiedDestinations
@@ -104,21 +107,29 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didBeginDraggingPlace place: Place, withPlaceholderView view: UIView) {
+        // Start drag session
         itineraryBeforeModifications = itinerary
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didContinueDraggingPlace place: Place, withPlaceholderView view: UIView) {
+        
         // First convert view from parent coordinates to local coordinates
         let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
-        previewInsert(place: place, withViewFrame: viewFrame)
+        
+        // What time does this correspond to?
+        guard let hour = timelineLocation(of: viewFrame) else { return }
+        guard hour != previousTouchHour else { return }
+
+        // If the time has changed, preview changes
+        previewInsert(place: place, at: hour)
+        previousTouchHour = hour
+        
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didEndDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        // First convert view from parent coordinates to local coordinates
-        let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
-        previewInsert(place: place, withViewFrame: viewFrame)
         // End drag session
         itineraryBeforeModifications = nil
+        previousTouchHour = nil
     }
     
 }
@@ -151,17 +162,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             var text = ""
             
             // If there's an existing route and the cell is odd, return a route cell
-//            if let route = itinerary.route {
-//                let legs = route.legs
-//                if index > 0 && index <= legs.count {
-//                    let timeInSeconds = route.legs[index-1].duration
-//                    let formatter = DateComponentsFormatter()
-//                    formatter.allowedUnits = [.hour, .minute]
-//                    formatter.unitsStyle = .full
-//                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds))!
-//                    text += formattedString + " -> "
-//                }
-//            }
+            if let route = itinerary.route {
+                let legs = route.legs
+                if index > 0 && index <= legs.count {
+                    let timeInSeconds = route.legs[index-1].duration
+                    let formatter = DateComponentsFormatter()
+                    formatter.allowedUnits = [.hour, .minute]
+                    formatter.unitsStyle = .full
+                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds))!
+                    text += formattedString + " -> "
+                }
+            }
             
             // Else, return a location cell
             if index == 0 {

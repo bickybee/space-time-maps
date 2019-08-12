@@ -5,7 +5,17 @@
 
 import Foundation
 
-// MARK: - Welcome
+struct ErrorResponseObject: Codable {
+    let errorMessage: String
+    let routes: [JSONAny]
+    let status: String
+    
+    enum CodingKeys: String, CodingKey {
+        case errorMessage = "error_message"
+        case routes, status
+    }
+}
+
 struct RouteResponseObject: Codable {
     let geocodedWaypoints: [GeocodedWaypoint]
     let routes: [GRoute]
