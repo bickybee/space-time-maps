@@ -31,13 +31,15 @@ class ItineraryLayout: UICollectionViewLayout {
         
         for item in 0 ..< collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: item, section:0)
+            let startTime = delegate.startTime(of: collectionView)
             let startHour = delegate.collectionView(collectionView, startTimeForDestinationAtIndexPath: indexPath)
             let hourHeight = delegate.hourHeight(of: collectionView)
+            let startOffset = delegate.startOffset(of: collectionView)
             
-            let y = CGFloat(startHour) * hourHeight
+            let y = CGFloat(startHour - startTime) * hourHeight - startOffset
             let x: CGFloat = 0
             let width = contentWidth
-            let height = 2 * hourHeight
+            let height = hourHeight
             let frame = CGRect(x: x, y: y, width: width, height: height)
             
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
@@ -69,7 +71,8 @@ class ItineraryLayout: UICollectionViewLayout {
 }
 
 protocol ItineraryLayoutDelegate: AnyObject {
-    func numberOfHours(of collectionView: UICollectionView) -> Int // Will give dateInterval later
+    func startOffset(of collectionView: UICollectionView) -> CGFloat
+    func startTime(of collectionView: UICollectionView) -> Int// hour!
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> Int
 }

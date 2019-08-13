@@ -28,7 +28,7 @@ class Destination: NSObject {
     // For API calls...
     public var absoluteStartTime : Date {
         
-        let todayAtHour = Destination.calendar.date(bySetting: .hour, value: startTime + 12 + 4, of: Destination.todayDate!)
+        let todayAtHour = Destination.calendar.date(bySetting: .hour, value: startTime + 4, of: Destination.todayDate!)
         return todayAtHour!
     }
     

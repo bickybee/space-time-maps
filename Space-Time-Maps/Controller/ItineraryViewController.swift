@@ -16,13 +16,14 @@ class ItineraryViewController: UIViewController {
     private let queryService = QueryService()
     
     weak var delegate : ItineraryViewControllerDelegate?
-    let numHours = 12
+    var timer: Timer?
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var timelineView: UIView!
+    @IBOutlet weak var timelineView: TimelineView!
     
     var itineraryBeforeModifications : Itinerary?
     var previousTouchHour : Int?
+    var previousPanLocation : CGPoint?
     
     // Data source!
     var itinerary = Itinerary(destinations: [Destination](), route: nil, travelMode: .driving) {
@@ -41,7 +42,42 @@ class ItineraryViewController: UIViewController {
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.isScrollEnabled = false
+        
+        setTime()
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(setTime), userInfo: nil, repeats: true)
+        
+        view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panTime)))
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchTime)))
     }
+    
+    @objc func panTime(gesture: UIPanGestureRecognizer) {
+        let location = gesture.location(in: view)
+        
+        switch gesture.state {
+        case .began:
+            previousPanLocation = location
+        case .changed:
+            let dy = location.y - previousPanLocation!.y
+            timelineView.startTime -= Double(dy/70)
+            collectionView.reloadData()
+            previousPanLocation = location
+        case .ended,
+             .cancelled:
+            previousPanLocation = nil
+            
+        default:
+            break
+        }
+    }
+    
+    @objc func pinchTime(_ gestureRecognizer : UIPinchGestureRecognizer) {
+        
+        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+            timelineView.hourHeight *= gestureRecognizer.scale
+            collectionView.reloadData()
+            gestureRecognizer.scale = 1.0
+        }}
     
     @objc func setRoute(route: Route) {
         itinerary.route = route
@@ -77,6 +113,16 @@ class ItineraryViewController: UIViewController {
     }
 }
 
+// "TimelineViewController"
+extension ItineraryViewController {
+    @objc func setTime() {
+        let calendar = Calendar.current
+        let currentComponents = calendar.dateComponents([.hour, .minute], from: Date())
+        let currentTime = Double(currentComponents.hour!) + (Double(currentComponents.minute!) / 60.0)
+        timelineView.startTime = currentTime
+    }
+}
+
 extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
     
     func timelineLocation(of viewFrame: CGRect) -> Int? {
@@ -86,11 +132,13 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
         
         // What time does this intersection correspond to? (Using top of view)
         let y = intersection.minY
-        let hourHeight = view.frame.height / CGFloat(numHours)
-        let hour = Int(floor(y / hourHeight))
+        let startTime = timelineView.startTime
+        let hourHeight = timelineView.hourHeight
+        let startOffset = CGFloat(startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
+        let hour = Int(floor((y + startOffset) / hourHeight))
         //set hour of destination
         
-        return hour
+        return hour + Int(floor(timelineView.startTime))
     }
     
     func previewInsert(place: Place, at time: Int) {
@@ -119,6 +167,8 @@ extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
         // What time does this correspond to?
         guard let hour = timelineLocation(of: viewFrame) else { return }
         guard hour != previousTouchHour else { return }
+        
+        print(hour)
 
         // If the time has changed, preview changes
         previewInsert(place: place, at: hour)
@@ -195,12 +245,16 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 
 extension ItineraryViewController : ItineraryLayoutDelegate {
     
-    func numberOfHours(of collectionView: UICollectionView) -> Int {
-        return 12
+    func startTime(of collectionView: UICollectionView) -> Int {
+        return Int(floor(timelineView.startTime))
+    }
+    
+    func startOffset(of collectionView: UICollectionView) -> CGFloat {
+        return CGFloat(timelineView.startTime.truncatingRemainder(dividingBy: 1)) * timelineView.hourHeight
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
-        return timelineView.frame.height / CGFloat(numHours)
+        return timelineView.hourHeight
     }
     
     func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> Int {

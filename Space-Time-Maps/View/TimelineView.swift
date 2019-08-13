@@ -10,7 +10,28 @@ import UIKit
 
 class TimelineView: UIView {
     
-    var numTicks : Int = 12
+    var startTime : Double = 0.25 {
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
+    var hourHeight : CGFloat = 50 {
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
+    
+    var startOffset : CGFloat {
+        return CGFloat(1 - startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
+    }
+    
+    var numHourTicks : Int {
+        let heightMinusOffset = self.frame.height - startOffset
+        // How many full hours fit into the remaining time?
+        let fullHours = floor(heightMinusOffset / hourHeight)
+        return Int(fullHours + 1)
+    }
+    
     private let lineWidth : CGFloat = 2
     private let stringAttributes = [
         NSAttributedString.Key.paragraphStyle: NSParagraphStyle(),
@@ -37,8 +58,8 @@ class TimelineView: UIView {
         let tickPath = UIBezierPath()
         tickPath.lineWidth = lineWidth
         
-        for tickNum in 0...numTicks {
-            let y = CGFloat(tickNum + 1) * spacing - (lineWidth / 2)
+        for tickNum in 0...numHourTicks {
+            let y = CGFloat(tickNum) * spacing + startOffset
             let startTickAt = CGPoint(x: 0, y: y)
             let endTickAt = CGPoint(x: width, y: y)
             tickPath.move(to: startTickAt)
@@ -52,20 +73,19 @@ class TimelineView: UIView {
     }
     
     func drawNumbers(spacing: CGFloat) {
-        for num in 0...numTicks {
-            let str = NSAttributedString(string: (num + 1).description + ":00", attributes: stringAttributes)
+        let firstHour = Int(ceil(startTime))
+        for num in 0...numHourTicks {
+            let str = NSAttributedString(string: (firstHour + num).description + ":00", attributes: stringAttributes)
             let x : CGFloat = 0
-            let y = CGFloat(num + 1) * spacing - (spacing / 3)
+            let y = CGFloat(num) * spacing - (spacing / 4) + startOffset
             let point = CGPoint(x: x, y: y)
             str.draw(at: point)
         }
     }
 
     override func draw(_ rect: CGRect) {
-        let tickSpacing = rect.height / CGFloat(numTicks)
-        
-        drawTicks(spacing: tickSpacing, width: rect.width)
-        drawNumbers(spacing: tickSpacing)
+        drawTicks(spacing: hourHeight, width: rect.width)
+        drawNumbers(spacing: hourHeight)
     }
 
 }
