@@ -105,15 +105,15 @@ class ParentViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let placePaletteVC = segue.destination as? PlacePaletteViewController {
             if let itineraryController = itineraryController {
-                placePaletteVC.dragDelegate = itineraryController as PlacePaletteViewControllerDragDelegate
+                placePaletteVC.dragDelegate = itineraryController as? DragDelegate
             }
             placePaletteVC.delegate = self
-            placePaletteVC.collectionView.frame.size.width = self.view.frame.size.width / 2 // HACKY!
+            placePaletteVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             placePaletteController = placePaletteVC
         }
         else if let itineraryVC = segue.destination as? ItineraryViewController {
             if let placePaletteController = placePaletteController {
-                placePaletteController.dragDelegate = itineraryVC as PlacePaletteViewControllerDragDelegate
+                placePaletteController.dragDelegate = itineraryVC as? DragDelegate
             }
             itineraryVC.delegate = self
             itineraryVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!

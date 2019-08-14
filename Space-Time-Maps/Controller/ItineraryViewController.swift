@@ -8,10 +8,10 @@
 
 import UIKit
 
-class ItineraryViewController: UIViewController {
+class ItineraryViewController: DraggableCellViewController {
 
     // CollectionView Cell constants
-    private let reuseIdentifier = "placeCell"
+    private let reuseIdentifier = "locationCell"
     private let cellHeight : CGFloat = 50.0
     private let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
@@ -46,6 +46,10 @@ class ItineraryViewController: UIViewController {
     // MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.dragDelegate = self as? DragDelegate
+        self.dragDataDelegate = self as? DragDataDelegate
+        
         setupCollectionView()
         setupTimelineView()
     }
@@ -186,56 +190,6 @@ extension ItineraryViewController {
     }
 }
 
-// MARK: - PlacePalette Drag Delegate
-// Coordinates dragging/dropping from the place palette to the itinerary
-extension ItineraryViewController : PlacePaletteViewControllerDragDelegate {
-    
-    func timelineLocation(of viewFrame: CGRect) -> Int? {
-        // Does the dragging view intersect our collection view?
-        let intersection = collectionView.frame.intersection(viewFrame)
-        guard !intersection.isNull else { return nil }
-        
-        // What time does this intersection correspond to? (Using top of view)
-        let y = intersection.minY
-        let startOffset = CGFloat(startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
-        let hour = Int(floor((y + startOffset) / hourHeight))
-        //set hour of destination
-        
-        return hour + Int(floor(timelineView.startTime))
-    }
-    
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didBeginDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        // Start drag session
-        itineraryBeforeModifications = itinerary
-    }
-    
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didContinueDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        
-        // First convert view from parent coordinates to local coordinates
-        let viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
-        
-        // What time does this correspond to?
-        guard let hour = timelineLocation(of: viewFrame) else { return }
-        guard hour != previousTouchHour else { return }
-        
-        print(hour)
-
-        // If the time has changed, preview changes
-        previewInsert(place: place, at: hour)
-        previousTouchHour = hour
-        
-    }
-    
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didEndDraggingPlace place: Place, withPlaceholderView view: UIView) {
-        // End drag session
-        itineraryBeforeModifications = nil
-        previousTouchHour = nil
-    }
-    
-}
-
-
-
 // MARK: - CollectionView delegate methods
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
         
@@ -269,11 +223,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                 let legs = route.legs
                 if index > 0 && index <= legs.count {
                     let timeInSeconds = route.legs[index-1].duration
-                    let formatter = DateComponentsFormatter()
-                    formatter.allowedUnits = [.hour, .minute]
-                    formatter.unitsStyle = .full
-                    let formattedString = formatter.string(from: TimeInterval(timeInSeconds)) ?? "error"
-                    text += formattedString + " -> "
+                    let timeString = Utils.secondsToString(seconds: timeInSeconds)
+                    text += timeString + " -> "
                 }
             }
             
@@ -288,11 +239,84 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             text += destination.place.name
             cell.nameLabel.text = text
             
-            cell.dragHandle.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panDestination)))
+            addDragRecognizerTo(cell: cell)
         }
         
         return cell
     }
+}
+
+// MARK: - PlacePalette Drag Delegate
+// Coordinates dragging/dropping from the place palette to the itinerary
+extension ItineraryViewController : DragDelegate {
+    
+    func timelineLocation(of viewFrame: CGRect) -> Int? {
+        // Does the dragging view intersect our collection view?
+        let intersection = collectionView.frame.intersection(viewFrame)
+        guard !intersection.isNull else { return nil }
+        
+        // What time does this intersection correspond to? (Using top of view)
+        let y = intersection.minY
+        let startOffset = CGFloat(startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
+        let hour = Int(floor((y + startOffset) / hourHeight))
+        //set hour of destination
+        
+        return hour + Int(floor(timelineView.startTime))
+    }
+    
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
+        // Start drag session
+        itineraryBeforeModifications = itinerary
+        if let _ = draggableCellViewController as? ItineraryViewController {
+            var destinations = itinerary.destinations
+            destinations.remove(at: index)
+            itineraryBeforeModifications!.destinations = destinations
+        }
+    }
+    
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withView view: UIView) {
+        
+        // First convert view from parent coordinates to local coordinates
+        let viewFrame : CGRect
+        if let placePaletteViewController = draggableCellViewController as? PlacePaletteViewController {
+            viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
+        } else if let itineraryViewController = draggableCellViewController as? ItineraryViewController {
+            viewFrame = itineraryViewController.collectionView.convert(view.frame, to: collectionView)
+        } else {
+            return
+        }
+        
+        // Get place for corresponding time of touch
+        guard let hour = timelineLocation(of: viewFrame), hour != previousTouchHour,
+              let place = object as? Place else { return }
+        
+        // If the time has changed, preview changes
+        previewInsert(place: place, at: hour)
+        previousTouchHour = hour
+    }
+    
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withView view: UIView) {
+        // End drag session
+        itineraryBeforeModifications = nil
+        previousTouchHour = nil
+    }
+    
+}
+
+extension ItineraryViewController: DragDataDelegate {
+    
+    func objectFor(draggableCell: DraggableCell) -> AnyObject? {
+        guard let indexPath = collectionView.indexPath(for: draggableCell),
+              let destination = itinerary.destinations[safe: indexPath.item] else { return nil }
+        
+        return destination.place
+    }
+    
+    func indexFor(draggableCell: DraggableCell) -> Int? {
+        guard let indexPath = collectionView.indexPath(for: draggableCell) else { return nil}
+        return indexPath.item
+    }
+    
 }
 
 

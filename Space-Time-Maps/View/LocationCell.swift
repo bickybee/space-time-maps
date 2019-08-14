@@ -8,19 +8,15 @@
 
 import UIKit
 
-class LocationCell: UICollectionViewCell {
+class LocationCell: DraggableCell {
     
     var nameLabel : UILabel!
-    var dragHandle : UIView!
-    var dragOffset : CGPoint!
     let padding : CGFloat = 5
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupLabel()
-        setupHandle()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,19 +34,6 @@ class LocationCell: UICollectionViewCell {
         nameLabel.frame = contentView.frame.inset(by: cellInsets)
         
         contentView.addSubview(nameLabel)
-    }
-    
-    func setupHandle() {
-        let sideLength : CGFloat = 25.0
-        let x = contentView.bounds.size.width - sideLength - 5
-        let y = (contentView.bounds.size.height - sideLength)/2
-        dragHandle = UIView(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
-        dragHandle.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
-        dragHandle.layer.borderColor = UIColor.black.cgColor
-        dragHandle.layer.borderWidth = 1
-        contentView.addSubview(dragHandle)
-        
-        dragOffset = CGPoint(x: dragHandle.center.x - contentView.center.x, y: dragHandle.center.y - contentView.center.y)
     }
     
 }

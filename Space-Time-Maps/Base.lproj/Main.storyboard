@@ -141,7 +141,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewLayout key="collectionViewLayout" id="2fr-Po-gLr" customClass="ItineraryLayout" customModule="Space_Time_Maps" customModuleProvider="target"/>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="placeCell" id="JK3-qD-mDh" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="JK3-qD-mDh" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -177,31 +177,65 @@
         <scene sceneID="knU-dA-27b">
             <objects>
                 <viewController id="0gj-fn-l7y" customClass="PlacePaletteViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="qcX-01-rOn">
+                    <view key="view" contentMode="scaleToFill" id="Gxd-Fg-ezX">
                         <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vyY-Li-GSm">
+                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="voH-lY-QXh">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="hBC-iy-RZw" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyw-DJ-Da2">
+                                <rect key="frame" x="137.5" y="282" width="50" height="50"/>
+                                <color key="backgroundColor" red="0.40853619873677793" green="0.60005020136815612" blue="1" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="cIE-LH-cPe"/>
+                                    <constraint firstAttribute="height" constant="50" id="quC-VP-oq8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="search">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="searchClicked:" destination="0gj-fn-l7y" eventType="touchUpInside" id="wam-aG-gr1"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fOi-jx-owT">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="oSL-KD-MHR" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </view>
-                            </collectionViewCell>
-                        </cells>
-                    </collectionView>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="vyY-Li-GSm" secondAttribute="trailing" id="Jxs-NP-GKY"/>
+                            <constraint firstItem="Fyw-DJ-Da2" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="LiD-GT-oHH"/>
+                            <constraint firstItem="CD5-gs-1lf" firstAttribute="trailing" secondItem="Fyw-DJ-Da2" secondAttribute="trailing" id="PUR-oA-2O2"/>
+                            <constraint firstItem="vyY-Li-GSm" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="Tje-CX-kMT"/>
+                            <constraint firstItem="vyY-Li-GSm" firstAttribute="leading" secondItem="CD5-gs-1lf" secondAttribute="leading" id="Wxv-Bs-81b"/>
+                            <constraint firstItem="vyY-Li-GSm" firstAttribute="top" secondItem="CD5-gs-1lf" secondAttribute="top" id="uBn-HZ-T7b"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="CD5-gs-1lf"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="vyY-Li-GSm" id="Soo-PG-Dd2"/>
+                        <outlet property="searchButton" destination="Fyw-DJ-Da2" id="fbP-na-GCv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a1d-eX-IsH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1940" y="814"/>
+            <point key="canvasLocation" x="1939.2" y="813.19340329835086"/>
         </scene>
     </scenes>
 </document>
