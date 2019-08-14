@@ -12,22 +12,27 @@ import GooglePlaces
 private let reuseIdentifier = "locationCell"
 
 class PlacePaletteViewController: UICollectionViewController {
-
-    var geographicSearchBounds : GMSCoordinateBounds?
-    var longPressedPlace : Place?
-    var pressOffset : CGPoint?
-    var placeholderDraggingPlaceCell : UIView?
     
+    // Place Panning
+    var draggingPlace : Place?
+    var placeholderDraggingPlaceCell : UIView?
+    var touchOffset : CGPoint?
+    
+    // Delegates
     weak var delegate : PlacePaletteViewControllerDelegate?
     weak var dragDelegate : PlacePaletteViewControllerDragDelegate?
     
-    //Data source!
+    // For autocomplete search
+    var geographicSearchBounds : GMSCoordinateBounds?
+    
+    // Data source
     var places = [Place]() {
         didSet {
             collectionView.reloadData()
         }
     }
     
+    // CollectionView cell
     private let cellHeight : CGFloat = 50.0
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
 
@@ -36,55 +41,15 @@ class PlacePaletteViewController: UICollectionViewController {
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         makeSearchButton()
+        fillWithDefaultPlaces()
         
+    }
+    
+    func fillWithDefaultPlaces() {
         // DEFAULT PLACES
         places.append(Place(name: "Bahen Centre", coordinate: Coordinate(lat: 43.65964259999999, lon: -79.39766759999999), placeID: "ChIJV8llUcc0K4gRe7a0R0E4WWQ", isInItinerary: false))
         places.append(Place(name: "Art Gallery of Ontario", coordinate: Coordinate(lat: 43.6536066, lon: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", isInItinerary: false))
         places.append(Place(name: "Casa Loma", coordinate: Coordinate(lat: 43.67803709999999, lon: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE", isInItinerary: false))
-    }
-    
-    // TODO: fix offset btwn mouse and center
-    @objc func didPress(gesture: UIGestureRecognizer) {
-        
-        let location = gesture.location(in: view)
-
-        switch gesture.state {
-        case .began:
-            // Is this gesture intersecting a place in our collection?
-            guard let indexPath = collectionView.indexPathForItem(at: location) else { return }
-            guard let place = places[safe: indexPath.item] else { return }
-            longPressedPlace = place
-            
-            // Begin dragging session by creating a placeholder cell for the dragging session
-            let cell = collectionView(collectionView, cellForItemAt: indexPath) as! LocationCell
-            guard let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) else { return }
-            pressOffset = cell.dragOffset
-            placeholderDraggingPlaceCell = cellSnapshot
-            placeholderDraggingPlaceCell!.frame = cell.frame.insetBy(dx: 30, dy: 8)
-            placeholderDraggingPlaceCell!.alpha = 0.5
-            view.addSubview(placeholderDraggingPlaceCell!)
-            
-            dragDelegate?.placePaletteViewController(self, didBeginDraggingPlace: longPressedPlace!, withPlaceholderView: placeholderDraggingPlaceCell!)
-
-        case .changed:
-            guard let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace else { return }
-            // Translate placeholder cell
-            placeholderCell.center = CGPoint(x:location.x - pressOffset!.x, y:location.y - pressOffset!.y)
-            dragDelegate?.placePaletteViewController(self, didContinueDraggingPlace: place, withPlaceholderView: placeholderCell)
-            
-        case .ended,
-            .cancelled:
-            guard let placeholderCell = placeholderDraggingPlaceCell, let place = longPressedPlace else { return }
-            // Clean up drag session
-            placeholderCell.removeFromSuperview()
-            dragDelegate?.placePaletteViewController(self, didEndDraggingPlace: place, withPlaceholderView: placeholderCell)
-            placeholderDraggingPlaceCell = nil
-            longPressedPlace = nil
-            
-        default:
-            break
-        }
-        
     }
     
     // Search button for location autocomplete
@@ -99,6 +64,13 @@ class PlacePaletteViewController: UICollectionViewController {
         self.view.addSubview(btn)
     }
     
+}
+
+
+// MARK: - Interactivity
+// Place panning & button clicking
+extension PlacePaletteViewController {
+    
     // Present the Autocomplete view controller when button is pressed.
     @objc func searchClicked(_ sender: UIButton) {
         let autocompleteController = GMSAutocompleteViewController()
@@ -109,7 +81,7 @@ class PlacePaletteViewController: UICollectionViewController {
             autocompleteController.autocompleteBounds = bounds
             autocompleteController.autocompleteBoundsMode = .bias
         }
-
+        
         // Specify the place data types to return.
         let fields: GMSPlaceField = GMSPlaceField(rawValue:
             UInt(GMSPlaceField.coordinate.rawValue)
@@ -121,7 +93,65 @@ class PlacePaletteViewController: UICollectionViewController {
         // Display the autocomplete view controller.
         present(autocompleteController, animated: true, completion: nil)
     }
-
+    
+    // TODO: fix offset btwn mouse and center
+    @objc func panPlace(gesture: UIGestureRecognizer) {
+        
+        let location = gesture.location(in: view)
+        
+        switch gesture.state {
+        case .began:
+            placePanDidBegin(at: location)
+            
+        case .changed:
+            placePanDidChange(to: location)
+            
+        case .ended,
+             .cancelled:
+            placePanDidEnd(at: location)
+            
+        default:
+            break
+        }
+        
+    }
+    
+    func placePanDidBegin(at location: CGPoint) {
+        
+        // Is this gesture intersecting a place in our collection?
+        guard let indexPath = collectionView.indexPathForItem(at: location) else { return }
+        guard let place = places[safe: indexPath.item] else { return }
+        draggingPlace = place
+        
+        // Begin dragging session by creating a placeholder cell for the dragging session
+        let cell = collectionView(collectionView, cellForItemAt: indexPath) as! LocationCell
+        guard let cellSnapshot = cell.snapshotView(afterScreenUpdates: true) else { return }
+        
+        touchOffset = cell.dragOffset
+        placeholderDraggingPlaceCell = cellSnapshot
+        placeholderDraggingPlaceCell!.frame = cell.frame.insetBy(dx: 30, dy: 8)
+        placeholderDraggingPlaceCell!.alpha = 0.5
+        view.addSubview(placeholderDraggingPlaceCell!)
+        
+        dragDelegate?.placePaletteViewController(self, didBeginDraggingPlace: draggingPlace!, withPlaceholderView: placeholderDraggingPlaceCell!)
+    }
+    
+    func placePanDidChange(to location: CGPoint) {
+        guard let placeholderCell = placeholderDraggingPlaceCell, let place = draggingPlace else { return }
+        // Translate placeholder cell
+        placeholderCell.center = CGPoint(x:location.x - touchOffset!.x, y:location.y - touchOffset!.y)
+        dragDelegate?.placePaletteViewController(self, didContinueDraggingPlace: place, withPlaceholderView: placeholderCell)
+    }
+    
+    func placePanDidEnd(at location: CGPoint) {
+        guard let placeholderCell = placeholderDraggingPlaceCell, let place = draggingPlace else { return }
+        // Clean up drag session
+        placeholderCell.removeFromSuperview()
+        dragDelegate?.placePaletteViewController(self, didEndDraggingPlace: place, withPlaceholderView: placeholderCell)
+        placeholderDraggingPlaceCell = nil
+        draggingPlace = nil
+    }
+    
 }
 
 
@@ -142,11 +172,8 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout {
         if let place = places[safe: indexPath.item] {
             cell.backgroundColor = .gray
             cell.nameLabel.text = place.name
-            cell.nameLabel.backgroundColor = .white
-            cell.nameLabel.sizeToFit()
-            cell.nameLabel.center = cell.contentView.center
         }
-        cell.dragHandle.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(didPress)))
+        cell.dragHandle.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panPlace)))
         return cell
     }
     

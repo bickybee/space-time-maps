@@ -15,14 +15,15 @@ struct Leg {
 
 class Route : NSObject {
     
-    var polyline : String
     var duration : Int // seconds
     var legs: [Leg]
     
-    init(polyline: String, duration: Int, legs: [Leg]) {
-        self.polyline = polyline
-        self.duration = duration
+    init(legs: [Leg]) {
         self.legs = legs
+        self.duration = 0
+        for leg in legs {
+            self.duration += leg.duration
+        }
     }
     
 }

@@ -25,13 +25,6 @@ class Destination: NSObject {
     public var startTime : Int // point at which to render cell
     public var duration : Int // height of cell
     
-    // For API calls...
-    public var absoluteStartTime : Date {
-        
-        let todayAtHour = Destination.calendar.date(bySetting: .hour, value: startTime + 4, of: Destination.todayDate!)
-        return todayAtHour!
-    }
-    
     // Timing constraints provided by the user, which influence the calculated timing details
     //var timeConstraints = TimeConstraints()
     

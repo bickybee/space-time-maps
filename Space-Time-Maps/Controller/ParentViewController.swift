@@ -75,8 +75,10 @@ class ParentViewController: UIViewController {
             let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: UIColor.yellow) }
             placeVisuals.append(contentsOf: enrouteVisuals)
         }
-        if let routePolyline = itinerary.route?.polyline {
-            routeVisuals.append( RouteVisual(route: routePolyline, color: UIColor.blue) )
+        if let route = itinerary.route {
+            for leg in route.legs {
+                routeVisuals.append( RouteVisual(route: leg.polyline, color: UIColor.blue) )
+            }
         }
         // Send and call a refresh!
         mapController.setPlaces(placeVisuals)

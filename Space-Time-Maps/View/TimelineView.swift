@@ -10,16 +10,8 @@ import UIKit
 
 class TimelineView: UIView {
     
-    var startTime : Double = 0.25 {
-        didSet {
-            self.setNeedsDisplay()
-        }
-    }
-    var hourHeight : CGFloat = 50 {
-        didSet {
-            self.setNeedsDisplay()
-        }
-    }
+    var startTime : Double = 0.25
+    var hourHeight : CGFloat = 50
     
     var startOffset : CGFloat {
         return CGFloat(1 - startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
