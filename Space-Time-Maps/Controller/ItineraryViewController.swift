@@ -261,7 +261,6 @@ extension ItineraryViewController : DragDelegate {
             previousTouchHour = hour
         }
         
-        
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withView view: UIView) {

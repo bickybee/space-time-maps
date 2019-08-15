@@ -13,10 +13,6 @@ import UIKit
 
 class Destination: NSObject {
     
-    private static let calendar = Calendar.current
-    private static let todayComponents = calendar.dateComponents([.day, .month, .year], from: Date())
-    private static let todayDate = calendar.date(from: todayComponents)
-    
     // Details about the place itself
     public var place : Place
     

@@ -82,13 +82,13 @@ class QueryService {
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
-            let leg = self.dataToLeg(data)
+            let leg = self.dataToLeg(data, with: start.startTime)
             callback(leg)
         }
         
     }
     
-    func dataToLeg(_ data: Data) -> Leg? {
+    func dataToLeg(_ data: Data, with startTime: Int) -> Leg? {
         
         // Attempt to decode JSON object into RouteResponseObject
         let decoder = JSONDecoder()
@@ -101,7 +101,7 @@ class QueryService {
             let firstRouteOption = routeResponseObject.routes[0]
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = firstRouteOption.legs[0].duration.value
-            leg = Leg(polyline: polyline, duration: duration)
+            leg = Leg(polyline: polyline, duration: duration, startTime: startTime)
         }
         return leg
         
