@@ -81,15 +81,18 @@ class MapViewController: UIViewController {
 
     // Render place markers
     func displayPlaces() {
+        var markers = [GMSMarker]()
         for placeVisual in placeVisuals {
             let place = placeVisual.place
             let color = placeVisual.color
             let marker = GMSMarker()
+            markers.append(marker)
             marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
             marker.title = place.name
             marker.icon = GMSMarker.markerImage(with: color)
             marker.map = self.mapView
         }
+        wrapBoundsTo(markers: markers)
     }
     
     // Render route polylines
@@ -102,6 +105,15 @@ class MapViewController: UIViewController {
             polyline.strokeColor = color
             polyline.map = self.mapView
         }
+    }
+    
+    func wrapBoundsTo(markers: [GMSMarker]) {
+        var bounds = GMSCoordinateBounds()
+        for marker in markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        let update = GMSCameraUpdate.fit(bounds, withPadding: 60)
+        mapView.animate(with: update)
     }
     
     func moveCameraTo(latitude: Double, longitude: Double) {
