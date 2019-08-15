@@ -27,6 +27,9 @@ class ItineraryLayout: UICollectionViewLayout {
     }
     
     override func prepare() {
+        super.prepare()
+        cache.removeAll()
+        
         guard let collectionView = collectionView else { return }
         
         for item in 0 ..< collectionView.numberOfItems(inSection: 0) {

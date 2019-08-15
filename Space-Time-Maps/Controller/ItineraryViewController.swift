@@ -87,10 +87,25 @@ extension ItineraryViewController {
         
     }
     
+    func previewRemove(place: Place, from time: Int) {
+        
+    }
+    
+    func revertToInitialItinerary() {
+        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
+        itinerary.destinations = initialDestinations
+        computeRoute()
+    }
+    
     func computeRoute() {
-        queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
-            self.itinerary.route = route
-            self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+        if itinerary.destinations.count == 0 {
+            self.itinerary.route = nil
+            delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+        } else {
+            queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
+                self.itinerary.route = route
+                self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+            }
         }
     }
     
@@ -234,12 +249,19 @@ extension ItineraryViewController : DragDelegate {
         }
         
         // Get place for corresponding time of touch
-        guard let hour = timelineLocation(of: viewFrame), hour != previousTouchHour,
-              let place = object as? Place else { return }
+        guard let place = object as? Place else { return }
         
-        // If the time has changed, preview changes
-        previewInsert(place: place, at: hour)
-        previousTouchHour = hour
+        let hour = timelineLocation(of: viewFrame)
+        if hour != previousTouchHour {
+            if let hour = hour {
+                previewInsert(place: place, at: hour)
+            } else {
+                revertToInitialItinerary()
+            }
+            previousTouchHour = hour
+        }
+        
+        
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withView view: UIView) {
