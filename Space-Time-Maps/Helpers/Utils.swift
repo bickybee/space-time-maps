@@ -11,14 +11,28 @@ import Foundation
 class Utils {
     
     static func secondsToString(seconds: Int) -> String {
-        let str = ""
         let formatter = DateComponentsFormatter()
         
         formatter.allowedUnits = [.hour, .minute]
         formatter.unitsStyle = .full
         let formattedString = formatter.string(from: TimeInterval(seconds)) ?? "error"
         
-        return str
+        return formattedString
+    }
+    
+    static func currentTime() -> Double? {
+        
+        // Get current time
+        let calendar = Calendar.current
+        let currentComponents = calendar.dateComponents([.hour, .minute], from: Date())
+        
+        // Get components of time
+        guard let currentHour = currentComponents.hour else { return nil }
+        guard let currentMinute = currentComponents.minute else { return nil }
+        let currentTime = Double(currentHour) + (Double(currentMinute + 1) / 60.0) // 1 min in future :-)
+        
+        return currentTime
+        
     }
     
     static func defaultPlaces() -> [Place] {

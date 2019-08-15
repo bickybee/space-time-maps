@@ -31,7 +31,24 @@ class ParentViewController: UIViewController {
     // Change the mode of transport for the route calculations
     // FOR NOW just passing this to itineraryController, maybe should be part of that to begin with
     @IBAction func transportModeChanged(_ sender: Any) {
-        itineraryController.transportModeChanged(sender)
+        if let control = sender as? UISegmentedControl {
+            let selection = control.selectedSegmentIndex
+            var travelMode : TravelMode
+            switch selection {
+            case 0:
+                travelMode = .driving
+            case 1:
+                travelMode = .walking
+            case 2:
+                travelMode = .bicycling
+            case 3:
+                travelMode = .transit
+            default:
+                travelMode = .driving
+            }
+            itineraryController.itinerary.travelMode = travelMode
+            itineraryController.computeRoute()
+        }
     }
     
     // Compare itinerary places and saved places, mark which saved places are in the itinerary

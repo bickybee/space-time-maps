@@ -12,9 +12,6 @@ class ItineraryViewController: DraggableCellViewController {
 
     // CollectionView Cell constants
     private let reuseIdentifier = "locationCell"
-    private let cellHeight : CGFloat = 50.0
-    private let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-    private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
@@ -47,8 +44,8 @@ class ItineraryViewController: DraggableCellViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.dragDelegate = self as? DragDelegate
-        self.dragDataDelegate = self as? DragDataDelegate
+        self.dragDelegate = self as DragDelegate
+        self.dragDataDelegate = self as DragDataDelegate
         
         setupCollectionView()
         setupTimelineView()
@@ -91,44 +88,12 @@ extension ItineraryViewController {
     }
     
     func computeRoute() {
-        //queryService.sendRouteQuery(places: itinerary.places, travelMode: itinerary.travelMode, callback: setRoute)
         queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
             self.itinerary.route = route
             self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
         }
     }
     
-    // FIXME: - legh how this is accessed from outside
-    func transportModeChanged(_ sender: Any) {
-        if let control = sender as? UISegmentedControl {
-            let selection = control.selectedSegmentIndex
-            var travelMode : TravelMode
-            switch selection {
-            case 0:
-                travelMode = .driving
-            case 1:
-                travelMode = .walking
-            case 2:
-                travelMode = .bicycling
-            case 3:
-                travelMode = .transit
-            default:
-                travelMode = .driving
-            }
-            itinerary.travelMode = travelMode
-            computeRoute()
-        }
-    }
-    
-    @objc func panDestination(_ gesture: UIPanGestureRecognizer) {
-        print("pan")
-        
-        guard let originatingCell = gesture.view?.superview?.superview as? LocationCell else { return } // lmao
-        guard let indexPath = collectionView.indexPath(for: originatingCell) else { return }
-        guard let destination = itinerary.destinations[safe: indexPath.item] else { return }
-        
-        print(destination.place.name)
-    }
 }
 
 // MARK: - Timeline related
@@ -142,16 +107,7 @@ extension ItineraryViewController {
     }
     
     @objc func setCurrentTime() {
-        // Get current time
-        let calendar = Calendar.current
-        let currentComponents = calendar.dateComponents([.hour, .minute], from: Date())
-        
-        // Get components of time
-        guard let currentHour = currentComponents.hour else { return }
-        guard let currentMinute = currentComponents.minute else { return }
-        let currentTime = Double(currentHour) + (Double(currentMinute + 1) / 60.0) // 1 min in future :-)
-        
-        // Set time
+        guard let currentTime = Utils.currentTime() else { return }
         startTime = currentTime
         reloadTimelineRelatedViews()
     }
@@ -192,19 +148,10 @@ extension ItineraryViewController {
 
 // MARK: - CollectionView delegate methods
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
-        
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var size = view.frame.size
-        size.width -= (sectionInsets.left + sectionInsets.right)
-        return CGSize(width:size.width, height:cellHeight)
-    }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return itinerary.destinations.count
