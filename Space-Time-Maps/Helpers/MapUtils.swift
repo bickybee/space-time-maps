@@ -34,6 +34,7 @@ class MapUtils {
     
     public static func markersForDestinationPlaces(_ places : [Place]) -> [GMSMarker] {
         
+        guard places.count > 0 else { return [] }
         var markers = [GMSMarker]()
         let maxIndex = places.count - 1
         
