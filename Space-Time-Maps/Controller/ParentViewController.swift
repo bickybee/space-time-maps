@@ -16,13 +16,9 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
-    // Support for dragging between the controllers
-    var placesBeforeDragging: [Place]?
-    
     // UI outlets
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var transportTimeLabel: UILabel!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,42 +64,19 @@ class ParentViewController: UIViewController {
     
     // Package itinerary and place data to send to map for rendering
     func updateMap() {
+        guard mapController.viewIfLoaded != nil else { return }
+        
+        // Package relevant data
         let itinerary = itineraryController.itinerary
         let palettePlaces = placePaletteController.places
-        // Determine place colors based on data
-        // Set up to send to map
-        var placeVisuals = [PlaceVisual]()
-        var routeVisuals = [RouteVisual]()
+        
         let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
-        if nonItineraryPlaces.count > 0 {
-            let nonItineraryVisuals = nonItineraryPlaces.map { PlaceVisual(place: $0, color: UIColor.gray) }
-            placeVisuals.append(contentsOf: nonItineraryVisuals)
-        }
-        let numPlaces = itinerary.destinations.count
-        let places = itinerary.destinations.map{ $0.place }
-        if numPlaces >= 1 {
-            placeVisuals.append(PlaceVisual(place: places.first!, color: UIColor.green))
-        }
-        if numPlaces >= 2 {
-            placeVisuals.append(PlaceVisual(place: places.last!, color: UIColor.red))
-        }
-        if numPlaces >= 3 {
-            let enroutePlaces = Array(places[1 ... places.count - 2])
-            let enrouteVisuals = enroutePlaces.map { PlaceVisual(place: $0, color: UIColor.yellow) }
-            placeVisuals.append(contentsOf: enrouteVisuals)
-        }
-        if let route = itinerary.route {
-            for leg in route.legs {
-                routeVisuals.append( RouteVisual(route: leg.polyline, color: UIColor.blue) )
-            }
-        }
-        // Send and call a refresh!
-        mapController.setPlaces(placeVisuals)
-        mapController.setRoutes(routeVisuals)
-        // Only actually refresh map if the view has loaded
-        if mapController.viewIfLoaded != nil {
-            mapController.refreshMarkup()
-        }
+        let itineraryPlaces = itinerary.destinations.map { $0.place }
+        let itineraryLegs = itinerary.route?.legs
+        
+        // Send data to map
+        mapController.refreshMarkup(destinationPlaces: itineraryPlaces, nonDestinationPlaces: nonItineraryPlaces, routeLegs: itineraryLegs)
+
     }
     
     func updateTransportTimeLabel() {
@@ -121,24 +94,30 @@ class ParentViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let placePaletteVC = segue.destination as? PlacePaletteViewController {
+            
             if let itineraryController = itineraryController {
-                placePaletteVC.dragDelegate = itineraryController as? DragDelegate
+                placePaletteVC.dragDelegate = itineraryController as DragDelegate
             }
             placePaletteVC.delegate = self
             placePaletteVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             placePaletteController = placePaletteVC
+            
         }
         else if let itineraryVC = segue.destination as? ItineraryViewController {
+            
             if let placePaletteController = placePaletteController {
-                placePaletteController.dragDelegate = itineraryVC as? DragDelegate
+                placePaletteController.dragDelegate = itineraryVC as DragDelegate
             }
             itineraryVC.delegate = self
             itineraryVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             itineraryController = itineraryVC
+            
         } else if let mapVC = segue.destination as? MapViewController {
+            
             mapVC.delegate = self
             mapController = mapVC
             updateMap()
+            
         }
     }
 }

@@ -18,9 +18,6 @@ class MapViewController: UIViewController {
     let defaultZoom: Float = 13.0
     
     weak var delegate : MapViewControllerDelegate?
-    
-    var placeVisuals = [PlaceVisual]()
-    var routeVisuals = [RouteVisual]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +45,7 @@ class MapViewController: UIViewController {
         
         // Set our view to be the map
         view = mapView
-        refreshMarkup()
+        //refreshMarkup()
         
     }
     
@@ -58,81 +55,36 @@ class MapViewController: UIViewController {
     }
     
     // Refresh all map markup
-    func refreshMarkup() {
-        clearMap()
-        displayRoutes()
-        displayPlaces()
-    }
-
-    // Clear all map markup
-    func clearMap() {
-        self.mapView.clear()
-    }
-    
-    // Pass in data needed to create place marker overlays
-    func setPlaces(_ places: [PlaceVisual]) {
-        placeVisuals = places
-    }
-    
-    // Pass in data needed to visualize routes
-    func setRoutes(_ routes: [RouteVisual]) {
-        routeVisuals = routes
-    }
-
-    // Render place markers
-    func displayPlaces() {
-        var markers = [GMSMarker]()
-        for placeVisual in placeVisuals {
-            let place = placeVisual.place
-            let color = placeVisual.color
-            let marker = GMSMarker()
-            markers.append(marker)
-            marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
-            marker.title = place.name
-            marker.icon = GMSMarker.markerImage(with: color)
-            marker.map = self.mapView
-        }
-        wrapBoundsTo(markers: markers)
-    }
-    
-    // Render route polylines
-    func displayRoutes() {
-        for routeVisual in routeVisuals {
-            let route = routeVisual.route
-            let color = routeVisual.color
-            let path = GMSPath(fromEncodedPath: route)
-            let polyline = GMSPolyline(path: path)
-            polyline.strokeColor = color
-            polyline.map = self.mapView
-        }
-    }
-    
-    func wrapBoundsTo(markers: [GMSMarker]) {
-        var bounds = GMSCoordinateBounds()
-        for marker in markers {
-            bounds = bounds.includingCoordinate(marker.position)
-        }
-        let update = GMSCameraUpdate.fit(bounds, withPadding: 60)
-        mapView.animate(with: update)
-    }
-    
-    func moveCameraTo(latitude: Double, longitude: Double) {
-        let camera = GMSCameraPosition.camera(withLatitude: latitude,
-                                              longitude: longitude,
-                                              zoom: defaultZoom)
+    func refreshMarkup(destinationPlaces: [Place], nonDestinationPlaces: [Place], routeLegs: [Leg]?) {
         
-        if mapView.isHidden {
-            mapView.isHidden = false
-            mapView.camera = camera
+        // Setup fresh map
+        mapView.clear()
+        var allOverlays : [GMSOverlay]
+        
+        // Get markers for places
+        let nonDestinationMarkers = MapUtils.markersForNonDestinationPlaces(nonDestinationPlaces)
+        let destinationMarkers = MapUtils.markersForDestinationPlaces(destinationPlaces)
+        
+        // Wrap map to markers
+        let allMarkers = nonDestinationMarkers + destinationMarkers
+        mapView.wrapBoundsTo(markers: allMarkers)
+        
+        // Get polylines for route legs
+        if let legs = routeLegs {
+            let polylines = MapUtils.polylinesForRouteLegs(legs)
+            allOverlays = allMarkers + polylines
         } else {
-            mapView.animate(to: camera)
+            allOverlays = allMarkers
         }
+        
+        // Add all overlays to map
+        mapView.add(overlays: allOverlays)
     }
     
     // Respond to notification updates by displaying current location on the map
     @objc func onDidUpdateLocation(_ notification: Notification) {
         if let location = notification.userInfo?["location"] as? CLLocation {
-            moveCameraTo(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            mapView.moveCameraTo(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         } else {
             print("Could not unwrap notification")
         }

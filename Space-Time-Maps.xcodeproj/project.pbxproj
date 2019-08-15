@@ -10,7 +10,6 @@
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
-		989AF2B422F9BF17002CCFDD /* MapVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B322F9BF17002CCFDD /* MapVisuals.swift */; };
 		98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */; };
 		98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */; };
 		98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A622FCC243003DE1CB /* Destination.swift */; };
@@ -18,6 +17,8 @@
 		98DEF0B423039788003DE1CB /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0B323039788003DE1CB /* Utils.swift */; };
 		98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */; };
 		98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BA2304676B003DE1CB /* DraggableCell.swift */; };
+		98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */; };
+		98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -42,7 +43,6 @@
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
-		989AF2B322F9BF17002CCFDD /* MapVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVisuals.swift; sourceTree = "<group>"; };
 		98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraints.swift; sourceTree = "<group>"; };
 		98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		98DEF0A622FCC243003DE1CB /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Destination.swift; path = "/Users/vicky/Documents/code/space-time-maps/Space-Time-Maps/Model/Destination.swift"; sourceTree = "<absolute>"; };
@@ -50,6 +50,8 @@
 		98DEF0B323039788003DE1CB /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCollectionViewController.swift; sourceTree = "<group>"; };
 		98DEF0BA2304676B003DE1CB /* DraggableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCell.swift; sourceTree = "<group>"; };
+		98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUtils.swift; sourceTree = "<group>"; };
+		98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSMapViewExtensions.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */,
+				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -119,10 +122,10 @@
 		B64B992422E0FB49007793BA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
-				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
+				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
+				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
 				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
 			);
 			path = Controller;
@@ -131,6 +134,7 @@
 		B64B992622E0FB6D007793BA /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */,
 				98DEF0B323039788003DE1CB /* Utils.swift */,
 				B62AFCB722E4DA4100B7D2CD /* LocationService.swift */,
 				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
@@ -142,24 +146,23 @@
 		B64B993222E25615007793BA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				98DEF0A622FCC243003DE1CB /* Destination.swift */,
-				B64B993722E2585C007793BA /* Route.swift */,
-				B64B992C22E15D4A007793BA /* Place.swift */,
 				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
-				989AF2B322F9BF17002CCFDD /* MapVisuals.swift */,
+				B64B992C22E15D4A007793BA /* Place.swift */,
+				B64B993722E2585C007793BA /* Route.swift */,
+				98DEF0A622FCC243003DE1CB /* Destination.swift */,
 				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		B64B993322E25670007793BA /* View */ = {
+		B64B993322E25670007793BA /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
-				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
 				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
+				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		B6B5A5A222C7CB3100CE4301 = {
@@ -185,8 +188,8 @@
 			children = (
 				98DEF0AA22FDE444003DE1CB /* Layouts */,
 				989AF2B022F9BB54002CCFDD /* Extensions */,
+				B64B993322E25670007793BA /* Views */,
 				B64B992422E0FB49007793BA /* Controller */,
-				B64B993322E25670007793BA /* View */,
 				B64B993222E25615007793BA /* Model */,
 				B64B992622E0FB6D007793BA /* Helpers */,
 				B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */,
@@ -318,7 +321,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				989AF2B422F9BF17002CCFDD /* MapVisuals.swift in Sources */,
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */,
@@ -334,6 +336,8 @@
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
+				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
+				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
