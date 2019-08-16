@@ -10,11 +10,12 @@ import UIKit
 
 class TimelineView: UIView {
     
-    var startTime : Double = 0.25
+    var startTime : TimeInterval = TimeInterval.from(minutes: 15.0)
     var hourHeight : CGFloat = 50
     
     var startOffset : CGFloat {
-        return CGFloat(1 - startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
+        let timeInHours = startTime.inHours()
+        return CGFloat(1 - timeInHours.truncatingRemainder(dividingBy: 1)) * hourHeight
     }
     
     var numHourTicks : Int {
@@ -51,7 +52,7 @@ class TimelineView: UIView {
         tickPath.lineWidth = lineWidth
         
         for tickNum in 0...numHourTicks {
-            let y = CGFloat(tickNum) * spacing + startOffset
+            let y = CGFloat(tickNum) * spacing + startOffset + lineWidth
             let startTickAt = CGPoint(x: 0, y: y)
             let endTickAt = CGPoint(x: width, y: y)
             tickPath.move(to: startTickAt)
@@ -65,7 +66,7 @@ class TimelineView: UIView {
     }
     
     func drawNumbers(spacing: CGFloat) {
-        let firstHour = Int(ceil(startTime))
+        let firstHour = Int(ceil(startTime.inHours()))
         for num in 0...numHourTicks {
             let str = NSAttributedString(string: (firstHour + num).description + ":00", attributes: stringAttributes)
             let x : CGFloat = 0

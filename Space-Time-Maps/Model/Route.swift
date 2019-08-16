@@ -8,10 +8,11 @@
 
 import Foundation
 
-struct Leg {
+struct Leg : Schedulable {
     var polyline : String
     var duration : Int
-    var startTime : Int
+    var startTime : Double
+    var dateInterval : DateInterval
 }
 
 class Route : NSObject {

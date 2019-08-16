@@ -18,7 +18,6 @@ class PlacePaletteViewController: DraggableCellViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchButton: UIButton!
     
-    
     // For autocomplete search
     var geographicSearchBounds : GMSCoordinateBounds?
     

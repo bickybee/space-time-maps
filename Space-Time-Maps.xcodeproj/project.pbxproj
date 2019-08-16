@@ -19,6 +19,8 @@
 		98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BA2304676B003DE1CB /* DraggableCell.swift */; };
 		98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */; };
 		98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */; };
+		98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0CE23061A35003DE1CB /* Schedulable.swift */; };
+		98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -52,6 +54,8 @@
 		98DEF0BA2304676B003DE1CB /* DraggableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCell.swift; sourceTree = "<group>"; };
 		98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUtils.swift; sourceTree = "<group>"; };
 		98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSMapViewExtensions.swift; sourceTree = "<group>"; };
+		98DEF0CE23061A35003DE1CB /* Schedulable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedulable.swift; sourceTree = "<group>"; };
+		98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensions.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -98,6 +102,7 @@
 			children = (
 				989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */,
 				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
+				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -122,11 +127,11 @@
 		B64B992422E0FB49007793BA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
+				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
+				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
 				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
-				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
-				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
+				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 				B64B993722E2585C007793BA /* Route.swift */,
 				98DEF0A622FCC243003DE1CB /* Destination.swift */,
 				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
+				98DEF0CE23061A35003DE1CB /* Schedulable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -329,6 +335,7 @@
 				B62AFCBF22E50E1700B7D2CD /* LocationCell.swift in Sources */,
 				B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */,
 				B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */,
+				98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */,
 				9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */,
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
@@ -339,6 +346,7 @@
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
+				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,

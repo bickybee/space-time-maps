@@ -22,12 +22,12 @@ class ItineraryViewController: DraggableCellViewController {
     
     // Interacting with itinerary
     var itineraryBeforeModifications : Itinerary?
-    var previousTouchHour : Int?
+    var previousTouchHour : Double?
     
     // Interacting with timeline
     var timer: Timer?
     var previousPanLocation : CGPoint?
-    var startTime: Double = 12 // in hours
+    var startTime: TimeInterval = TimeInterval.from(hours: 12.0)
     var hourHeight: CGFloat = 50
     
     // Delegate (subscribes to itinerary updates)
@@ -74,7 +74,7 @@ class ItineraryViewController: DraggableCellViewController {
 // MARK: - Itinerary related
 extension ItineraryViewController {
     
-    func previewInsert(place: Place, at time: Int) {
+    func previewInsert(place: Place, at time: TimeInterval) {
         
         // Need the initial itinerary to compare our modifications to
         guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
@@ -84,10 +84,6 @@ extension ItineraryViewController {
         modifiedDestinations.append(newDestination)
         itinerary.destinations = modifiedDestinations
         computeRoute()
-        
-    }
-    
-    func previewRemove(place: Place, from time: Int) {
         
     }
     
@@ -136,7 +132,7 @@ extension ItineraryViewController {
         case .changed:
             guard let previousY = previousPanLocation?.y else { return }
             let dy = location.y - previousY
-            startTime -= Double(dy/70)
+            startTime -= Double(dy*100)
             previousPanLocation = location
             
             reloadTimelineRelatedViews()
@@ -212,18 +208,27 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func timelineLocation(of viewFrame: CGRect) -> Int? {
+    func hourInTimeline(for viewFrame: CGRect) -> Double? {
         // Does the dragging view intersect our collection view?
         let intersection = collectionView.frame.intersection(viewFrame)
         guard !intersection.isNull else { return nil }
         
         // What time does this intersection correspond to? (Using top of view)
-        let y = intersection.minY
-        let startOffset = CGFloat(startTime.truncatingRemainder(dividingBy: 1)) * hourHeight
-        let hour = Int(floor((y + startOffset) / hourHeight))
-        //set hour of destination
+        let y = Double(intersection.minY)
+        //let startOffset = startTime.inHours().truncatingRemainder(dividingBy: 1) * Double(hourHeight)
+        let relativeHour = y / Double(hourHeight)
+        let absoluteHour = relativeHour + startTime.inHours()        //set hour of destination
         
-        return hour + Int(floor(timelineView.startTime))
+        return absoluteHour
+    }
+    
+    func roundedHourInTimeline(for viewFrame: CGRect) -> Double? {
+        // Does the dragging view intersect our collection view?
+        guard let hour = hourInTimeline(for: viewFrame) else { return nil }
+        let decimal = hour.truncatingRemainder(dividingBy: 1.0)
+        let roundedHour = floor(hour) + floor(decimal / 0.25) * 0.25
+        
+        return roundedHour
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
@@ -251,10 +256,10 @@ extension ItineraryViewController : DragDelegate {
         // Get place for corresponding time of touch
         guard let place = object as? Place else { return }
         
-        let hour = timelineLocation(of: viewFrame)
+        let hour = roundedHourInTimeline(for: viewFrame)
         if hour != previousTouchHour {
             if let hour = hour {
-                previewInsert(place: place, at: hour)
+                previewInsert(place: place, at: TimeInterval.from(hours: hour))
             } else {
                 revertToInitialItinerary()
             }
@@ -291,19 +296,15 @@ extension ItineraryViewController: DragDataDelegate {
 // MARK: - Custom CollectionView Layout delegate methods
 extension ItineraryViewController : ItineraryLayoutDelegate {
     
-    func startTime(of collectionView: UICollectionView) -> Int {
-        return Int(floor(startTime))
-    }
-    
-    func startOffset(of collectionView: UICollectionView) -> CGFloat {
-        return CGFloat(startTime.truncatingRemainder(dividingBy: 1)) * timelineView.hourHeight
+    func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval {
+        return startTime
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
         return hourHeight
     }
     
-    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> Int {
+    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> TimeInterval {
         return itinerary.destinations[indexPath.item].startTime
     }
     

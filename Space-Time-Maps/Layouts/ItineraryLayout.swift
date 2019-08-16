@@ -34,12 +34,13 @@ class ItineraryLayout: UICollectionViewLayout {
         
         for item in 0 ..< collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: item, section:0)
-            let startTime = delegate.startTime(of: collectionView)
-            let startHour = delegate.collectionView(collectionView, startTimeForDestinationAtIndexPath: indexPath)
+            let timelineStartHour = delegate.timelineStartTime(of: collectionView).inHours()
+            let eventStartHour = delegate.collectionView(collectionView, startTimeForDestinationAtIndexPath: indexPath).inHours()
             let hourHeight = delegate.hourHeight(of: collectionView)
-            let startOffset = delegate.startOffset(of: collectionView)
+            //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
             
-            let y = CGFloat(startHour - startTime) * hourHeight - startOffset
+            let relativeHour = eventStartHour - timelineStartHour
+            let y = CGFloat(relativeHour) * hourHeight// - startOffset
             let x: CGFloat = 0
             let width = contentWidth
             let height = hourHeight
@@ -74,8 +75,7 @@ class ItineraryLayout: UICollectionViewLayout {
 }
 
 protocol ItineraryLayoutDelegate: AnyObject {
-    func startOffset(of collectionView: UICollectionView) -> CGFloat
-    func startTime(of collectionView: UICollectionView) -> Int// hour!
+    func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
-    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> Int
+    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> TimeInterval
 }

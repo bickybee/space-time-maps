@@ -11,23 +11,27 @@ import UIKit
 // A place that we are /going/ to at some /time
 // I.e. a place with timing aspects to it
 
-class Destination: NSObject {
+class Destination: Schedulable {
     
     // Details about the place itself
     public var place : Place
     
     // Timing details about this destination, to be rendered accordingly
     // Relative to today, for simplicity, since we only provide 1-day views
-    public var startTime : Int // point at which to render cell
-    public var duration : Int // height of cell
+    public var startTime : TimeInterval // point at which to render cell
+    public var duration : TimeInterval // height of cell
+    
+    public var dateInterval : DateInterval
     
     // Timing constraints provided by the user, which influence the calculated timing details
     //var timeConstraints = TimeConstraints()
     
-    init(place: Place, startTime: Int) {
+    init(place: Place, startTime: TimeInterval) {
         self.place = place
         self.startTime = startTime
-        self.duration = 1
+        self.duration = TimeInterval.from(minutes: 30.0)
+        self.dateInterval = DateInterval()
+        
     }
     
 }

@@ -56,7 +56,7 @@ class Utils {
         // Get components of time
         guard let currentHour = currentComponents.hour else { return nil }
         guard let currentMinute = currentComponents.minute else { return nil }
-        let currentTime = Double(currentHour) + (Double(currentMinute + 1) / 60.0) // 1 min in future :-)
+        let currentTime = TimeInterval.from(hours: currentHour) + TimeInterval.from(minutes: currentMinute)
         
         return currentTime
         
