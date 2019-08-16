@@ -19,7 +19,13 @@ struct Itinerary {
             destinations.sort(by: { $0.startTime < $1.startTime })
         }
     }
-    var route : Route? 
+    
+    var route : Route? {
+        didSet {
+            route?.legs.sort(by: { $0.startTime < $1.startTime })
+        }
+    }
+    
     var travelMode : TravelMode
     
 }

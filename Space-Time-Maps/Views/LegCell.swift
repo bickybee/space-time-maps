@@ -11,16 +11,23 @@ import UIKit
 class LegCell: UICollectionViewCell {
     
     var timeLabel : UILabel!
+    var gradientView : UIView!
     let padding : CGFloat = 5
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupGradientView()
         setupLabel()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupGradientView() {
+        gradientView = UIView(frame: contentView.frame)
+        contentView.addSubview(gradientView)
     }
     
     func setupLabel() {

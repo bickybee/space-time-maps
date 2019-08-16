@@ -32,27 +32,33 @@ class ItineraryLayout: UICollectionViewLayout {
         
         guard let collectionView = collectionView else { return }
         
-        for item in 0 ..< collectionView.numberOfItems(inSection: 0) {
-            let indexPath = IndexPath(item: item, section:0)
-            let timelineStartHour = delegate.timelineStartTime(of: collectionView).inHours()
-            let eventStartHour = delegate.collectionView(collectionView, startTimeForDestinationAtIndexPath: indexPath).inHours()
-            let hourHeight = delegate.hourHeight(of: collectionView)
-            //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
-            
-            let relativeHour = eventStartHour - timelineStartHour
-            let y = CGFloat(relativeHour) * hourHeight// - startOffset
-            let x: CGFloat = 0
-            let width = contentWidth
-            let height = hourHeight
-            let frame = CGRect(x: x, y: y, width: width, height: height)
-            
-            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = frame
-            cache.append(attributes)
-            
-            contentHeight = max(contentHeight, frame.maxY)
-            
+        for section in 0 ... 1 {
+            for item in 0 ..< collectionView.numberOfItems(inSection: section) {
+                let indexPath = IndexPath(item: item, section: section)
+                cacheAttributesForCellAt(indexPath: indexPath, in: collectionView)
+            }
         }
+    }
+    
+    func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
+        
+        let timelineStartHour = delegate.timelineStartTime(of: collectionView).inHours()
+        let eventStartHour = delegate.collectionView(collectionView, startTimeForSchedulableAtIndexPath: indexPath).inHours()
+        let hourHeight = delegate.hourHeight(of: collectionView)
+        //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
+        
+        let relativeHour = eventStartHour - timelineStartHour
+        let y = CGFloat(relativeHour) * hourHeight// - startOffset
+        let x: CGFloat = 0
+        let width = contentWidth
+        let height = hourHeight
+        let frame = CGRect(x: x, y: y, width: width, height: height)
+        
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        attributes.frame = frame
+        cache.append(attributes)
+        
+        contentHeight = max(contentHeight, frame.maxY)
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -69,7 +75,7 @@ class ItineraryLayout: UICollectionViewLayout {
     }
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return cache[indexPath.item]
+        return cache.first(where: { $0.indexPath == indexPath })
     }
     
 }
@@ -77,5 +83,5 @@ class ItineraryLayout: UICollectionViewLayout {
 protocol ItineraryLayoutDelegate: AnyObject {
     func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
-    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> TimeInterval
+    func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
 }

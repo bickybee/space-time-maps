@@ -88,7 +88,7 @@ class QueryService {
         
     }
     
-    func dataToLeg(_ data: Data, with startTime: Double) -> Leg? {
+    func dataToLeg(_ data: Data, with departureTime: Double) -> Leg? {
         
         // Attempt to decode JSON object into RouteResponseObject
         let decoder = JSONDecoder()
@@ -101,7 +101,8 @@ class QueryService {
             let firstRouteOption = routeResponseObject.routes[0]
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = firstRouteOption.legs[0].duration.value
-            leg = Leg(polyline: polyline, duration: duration, startTime: startTime, dateInterval: DateInterval())
+            let actualDepartureTime = departureTime + TimeInterval.from(hours: 1.0) // lol temps
+            leg = Leg(polyline: polyline, duration: duration, startTime: actualDepartureTime, dateInterval: DateInterval())
         }
         return leg
         

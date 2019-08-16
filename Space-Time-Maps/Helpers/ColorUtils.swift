@@ -13,25 +13,35 @@ typealias UIColorGradient = (UIColor, UIColor)
 
 class ColorUtils {
     
-    private static let startColor = UIColor.green
-    private static let middleColor = UIColor.yellow
-    private static let endColor = UIColor.red
-    
     static func colorFor(index: Int, outOf maxIndex: Int) -> UIColor {
-        let gradientFraction = maxIndex == 0 ? 0 : CGFloat(index) / CGFloat(maxIndex)
-        let color = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: gradientFraction)
+        
+        let fraction = (maxIndex == 0) ? 0 : CGFloat(index) / CGFloat(maxIndex)
+        let color = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: fraction)
         return color
+        
     }
     
     static func gradientFor(index: Int, outOf maxIndex: Int) -> UIColorGradient {
-        let startFraction = CGFloat(index) / CGFloat(maxIndex + 1)
-        let endFraction = CGFloat(index + 1) / CGFloat(maxIndex + 1)
+        
+        let startFraction = CGFloat(index) / CGFloat(maxIndex)
+        let endFraction = CGFloat(index + 1) / CGFloat(maxIndex)
         let start = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: startFraction)
         let end = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: endFraction)
         return (start, end)
+        
     }
     
-    private static func colorAlongGradient(start: UIColor, middle: UIColor, end: UIColor, fraction: CGFloat) -> UIColor {
+}
+
+private extension ColorUtils {
+    
+    static let startColor = UIColor.green
+    static let middleColor = UIColor.yellow
+    static let endColor = UIColor.red
+    
+    // Point along 3-color gradient
+    static func colorAlongGradient(start: UIColor, middle: UIColor, end: UIColor, fraction: CGFloat) -> UIColor {
+        
         guard (0 <= fraction) && (fraction <= 1) else { return start }
         
         if fraction < 0.5 {
@@ -39,9 +49,12 @@ class ColorUtils {
         } else {
             return colorAlongGradient(start: middle, end: end, fraction: (fraction - 0.5) / 0.5)
         }
+        
     }
     
-    private static func colorAlongGradient(start: UIColor, end: UIColor, fraction: CGFloat) -> UIColor {
+    // Point along 2-color gradient
+    static func colorAlongGradient(start: UIColor, end: UIColor, fraction: CGFloat) -> UIColor {
+        
         guard (0 <= fraction) && (fraction <= 1) else { return start }
         
         // Get color components
@@ -55,6 +68,7 @@ class ColorUtils {
                        green: CGFloat(g1 + (g2 - g1) * fraction),
                        blue: CGFloat(b1 + (b2 - b1) * fraction),
                        alpha: CGFloat(a1 + (a2 - a1) * fraction))
+        
     }
     
 }

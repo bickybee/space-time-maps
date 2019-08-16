@@ -163,29 +163,30 @@ extension ItineraryViewController {
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1 //2
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var num = itinerary.destinations.count
-        if let route = itinerary.route {
-           // num += route.legs.count
+        
+        if section == 0 {
+            return itinerary.destinations.count
+        } else {
+            //return 0
+            return itinerary.route?.legs.count ?? 0
         }
-        return num
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let index = indexPath.item
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath)
-        
-        if let locationCell = cell as? LocationCell {
-            return setupLocationCell(locationCell, with: index)
-        } else if let legCell = cell as? LegCell {
-            return setupLegCell(legCell, with: index)
+        if indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! LocationCell
+            return setupLocationCell(cell, with: indexPath.item)
         } else {
-            return cell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
+            return setupLegCell(cell, with: indexPath.item)
         }
+        
     }
     
     func setupLocationCell(_ cell: LocationCell, with index: Int) -> LocationCell {
@@ -205,17 +206,18 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func setupLegCell(_ cell: LegCell, with index: Int) -> LegCell {
         
-//        var text = ""
-//        
-//        // If there's an existing route and the cell is odd, return a route cell
-//        if let route = itinerary.route {
-//            let legs = route.legs
-//            if index > 0 && index <= legs.count {
-//                let timeInSeconds = route.legs[index-1].duration
-//                let timeString = Utils.secondsToString(seconds: timeInSeconds)
-//                text += timeString + " -> "
-//            }
-//        }
+        guard let legs = itinerary.route?.legs else { return cell }
+        let maxIndex = legs.count - 1
+        let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex + 1)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = cell.bounds
+        gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
+        cell.gradientView.layer.sublayers = nil
+        cell.gradientView.layer.addSublayer(gradientLayer)
+        
+        let leg = legs[index]
+        let timeString = Utils.secondsToString(seconds: leg.duration)
+        cell.timeLabel.text = timeString
         
         return cell
     }
@@ -321,8 +323,15 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         return hourHeight
     }
     
-    func collectionView(_ collectionView:UICollectionView, startTimeForDestinationAtIndexPath indexPath: IndexPath) -> TimeInterval {
-        return itinerary.destinations[indexPath.item].startTime
+    func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
+        let section = indexPath.section
+        if section == 0 {
+            return itinerary.destinations[indexPath.item].startTime
+        } else if let legs = itinerary.route?.legs {
+            return legs[indexPath.item].startTime
+        } else {
+            return 0
+        }
     }
     
 }
