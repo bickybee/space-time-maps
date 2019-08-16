@@ -11,7 +11,8 @@ import UIKit
 class ItineraryViewController: DraggableCellViewController {
 
     // CollectionView Cell constants
-    private let reuseIdentifier = "locationCell"
+    private let locationReuseIdentifier = "locationCell"
+    private let legReuseIdentifier = "legCell"
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
@@ -55,7 +56,8 @@ class ItineraryViewController: DraggableCellViewController {
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
         }
-        collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(LocationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
+        collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
@@ -161,44 +163,59 @@ extension ItineraryViewController {
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 1 //2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itinerary.destinations.count
+        var num = itinerary.destinations.count
+        if let route = itinerary.route {
+           // num += route.legs.count
+        }
+        return num
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
+        
         let index = indexPath.item
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath)
         
-        
-        if let destination = itinerary.destinations[safe: index] {
-            var text = ""
-            
-            // If there's an existing route and the cell is odd, return a route cell
-            if let route = itinerary.route {
-                let legs = route.legs
-                if index > 0 && index <= legs.count {
-                    let timeInSeconds = route.legs[index-1].duration
-                    let timeString = Utils.secondsToString(seconds: timeInSeconds)
-                    text += timeString + " -> "
-                }
-            }
-            
-            // Else, return a location cell
-            if index == 0 {
-                cell.backgroundColor = .green
-            } else if index == itinerary.destinations.count - 1 {
-                cell.backgroundColor = .red
-            } else {
-                cell.backgroundColor = .yellow
-            }
-            text += destination.place.name
-            cell.nameLabel.text = text
-            
-            addDragRecognizerTo(cell: cell)
+        if let locationCell = cell as? LocationCell {
+            return setupLocationCell(locationCell, with: index)
+        } else if let legCell = cell as? LegCell {
+            return setupLegCell(legCell, with: index)
+        } else {
+            return cell
         }
+    }
+    
+    func setupLocationCell(_ cell: LocationCell, with index: Int) -> LocationCell {
+        
+        guard let destination = itinerary.destinations[safe: index] else { return cell }
+        
+        // Else, return a location cell
+        let maxIndex = itinerary.destinations.count - 1
+        let color = ColorUtils.colorFor(index: index, outOf: maxIndex)
+        cell.backgroundColor = color
+        cell.nameLabel.text = destination.place.name
+        addDragRecognizerTo(cell: cell)
+        
+        return cell
+        
+    }
+    
+    func setupLegCell(_ cell: LegCell, with index: Int) -> LegCell {
+        
+//        var text = ""
+//        
+//        // If there's an existing route and the cell is odd, return a route cell
+//        if let route = itinerary.route {
+//            let legs = route.legs
+//            if index > 0 && index <= legs.count {
+//                let timeInSeconds = route.legs[index-1].duration
+//                let timeString = Utils.secondsToString(seconds: timeInSeconds)
+//                text += timeString + " -> "
+//            }
+//        }
         
         return cell
     }

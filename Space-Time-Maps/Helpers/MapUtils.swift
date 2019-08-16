@@ -10,10 +10,7 @@ import Foundation
 import GoogleMaps
 
 class MapUtils {
-    
-    private static let startColour = UIColor.green
-    private static let middleColour = UIColor.yellow
-    private static let endColour = UIColor.red
+
     private static let strokeWidth : CGFloat = 3.0
     
     public static func polylinesForRouteLegs(_ legs : [Leg]) -> [GMSPolyline] {
@@ -39,8 +36,7 @@ class MapUtils {
         let maxIndex = places.count - 1
         
         for index in 0...maxIndex {
-            let gradientFraction = maxIndex == 0 ? 0 : CGFloat(index) / CGFloat(maxIndex)
-            let colour = Utils.colorAlongGradient(start: startColour, middle: middleColour, end: endColour, fraction: gradientFraction)
+            let colour = ColorUtils.colorFor(index: index, outOf: maxIndex)
             let marker = markerFor(place: places[index])
             marker.icon = GMSMarker.markerImage(with: colour)
             markers.append(marker)
@@ -76,11 +72,8 @@ class MapUtils {
     }
     
     private static func gradientStyleForPolyline(at index: Int, outOf maxIndex: Int) -> [GMSStyleSpan] {
-        let startFraction = CGFloat(index) / CGFloat(maxIndex + 1)
-        let endFraction = CGFloat(index + 1) / CGFloat(maxIndex + 1)
-        let start = Utils.colorAlongGradient(start: startColour, middle: middleColour, end: endColour, fraction: startFraction)
-        let end = Utils.colorAlongGradient(start: startColour, middle: middleColour, end: endColour, fraction: endFraction)
-        let style = GMSStrokeStyle.gradient(from: start, to: end)
+        let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex)
+        let style = GMSStrokeStyle.gradient(from: gradient.0, to: gradient.1)
         return [GMSStyleSpan(style: style)]
     }
     

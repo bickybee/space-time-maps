@@ -21,6 +21,8 @@
 		98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */; };
 		98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0CE23061A35003DE1CB /* Schedulable.swift */; };
 		98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */; };
+		98DEF0D523066372003DE1CB /* LegCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D423066372003DE1CB /* LegCell.swift */; };
+		98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D62306661B003DE1CB /* ColorUtils.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -56,6 +58,8 @@
 		98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSMapViewExtensions.swift; sourceTree = "<group>"; };
 		98DEF0CE23061A35003DE1CB /* Schedulable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedulable.swift; sourceTree = "<group>"; };
 		98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensions.swift; sourceTree = "<group>"; };
+		98DEF0D423066372003DE1CB /* LegCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegCell.swift; sourceTree = "<group>"; };
+		98DEF0D62306661B003DE1CB /* ColorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -101,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */,
-				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
 				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
+				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -139,6 +143,7 @@
 		B64B992622E0FB6D007793BA /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				98DEF0D62306661B003DE1CB /* ColorUtils.swift */,
 				98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */,
 				98DEF0B323039788003DE1CB /* Utils.swift */,
 				B62AFCB722E4DA4100B7D2CD /* LocationService.swift */,
@@ -164,9 +169,10 @@
 		B64B993322E25670007793BA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
 				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
+				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
 				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
+				98DEF0D423066372003DE1CB /* LegCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -346,9 +352,11 @@
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
+				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
+				98DEF0D523066372003DE1CB /* LegCell.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
 			);
