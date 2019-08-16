@@ -29,7 +29,7 @@ class ItineraryViewController: DraggableCellViewController {
     var timer: Timer?
     var previousPanLocation : CGPoint?
     var startTime: TimeInterval = TimeInterval.from(hours: 12.0)
-    var hourHeight: CGFloat = 50
+    var hourHeight: CGFloat = 100
     
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?

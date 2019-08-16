@@ -44,6 +44,7 @@ class ItineraryLayout: UICollectionViewLayout {
         
         let timelineStartHour = delegate.timelineStartTime(of: collectionView).inHours()
         let eventStartHour = delegate.collectionView(collectionView, startTimeForSchedulableAtIndexPath: indexPath).inHours()
+        let eventDuration = delegate.collectionView(collectionView, durationForSchedulableAtIndexPath: indexPath).inHours()
         let hourHeight = delegate.hourHeight(of: collectionView)
         //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
         
@@ -51,9 +52,9 @@ class ItineraryLayout: UICollectionViewLayout {
         let y = CGFloat(relativeHour) * hourHeight// - startOffset
         let x: CGFloat = 0
         let width = contentWidth
-        let height = hourHeight
+        let height = CGFloat(eventDuration) * hourHeight
         let frame = CGRect(x: x, y: y, width: width, height: height)
-        
+                
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         attributes.frame = frame
         cache.append(attributes)

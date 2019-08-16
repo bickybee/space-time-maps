@@ -27,7 +27,7 @@ class Destination: Schedulable {
     init(place: Place, startTime: TimeInterval) {
         self.place = place
         self.startTime = startTime
-        self.duration = TimeInterval.from(minutes: 30.0)        
+        self.duration = TimeInterval.from(minutes: 30.0)
     }
     
 }

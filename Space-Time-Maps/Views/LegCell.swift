@@ -34,7 +34,7 @@ class LegCell: UICollectionViewCell {
         timeLabel = UILabel()
         
         timeLabel.textAlignment = .left
-        timeLabel.textColor = UIColor.white
+        timeLabel.textColor = UIColor.black
         timeLabel.font = UIFont.systemFont(ofSize: 10.0)
         timeLabel.backgroundColor = .clear
         timeLabel.numberOfLines = 0

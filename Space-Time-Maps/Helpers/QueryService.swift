@@ -79,7 +79,7 @@ class QueryService {
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
-            let leg = self.dataToLeg(data, with: start.startTime)
+            let leg = self.dataToLeg(data, with: start.startTime + start.duration)
             callback(leg)
         }
         
@@ -98,7 +98,7 @@ class QueryService {
             let firstRouteOption = routeResponseObject.routes[0]
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = firstRouteOption.legs[0].duration.value
-            let actualDepartureTime = departureTime + TimeInterval.from(hours: 1.0) // lol temps
+            let actualDepartureTime = departureTime // lol temps
             leg = Leg(polyline: polyline, duration: TimeInterval(duration), startTime: actualDepartureTime)
         }
         return leg
