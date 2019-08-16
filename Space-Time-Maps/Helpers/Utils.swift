@@ -11,12 +11,12 @@ import UIKit.UIColor
 
 class Utils {
     
-    static func secondsToString(seconds: Int) -> String {
+    static func secondsToString(seconds: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         
         formatter.allowedUnits = [.hour, .minute]
         formatter.unitsStyle = .full
-        let formattedString = formatter.string(from: TimeInterval(seconds)) ?? "error"
+        let formattedString = formatter.string(from: seconds) ?? "error"
         
         return formattedString
     }

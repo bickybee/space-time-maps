@@ -72,7 +72,7 @@ class ParentViewController: UIViewController {
         
         let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
         let itineraryPlaces = itinerary.destinations.map { $0.place }
-        let itineraryLegs = itinerary.route?.legs
+        let itineraryLegs = itinerary.route
         
         // Send data to map
         mapController.refreshMarkup(destinationPlaces: itineraryPlaces, nonDestinationPlaces: nonItineraryPlaces, routeLegs: itineraryLegs)
@@ -80,15 +80,17 @@ class ParentViewController: UIViewController {
     }
     
     func updateTransportTimeLabel() {
-        if let duration = itineraryController.itinerary.route?.duration {
+        let duration = itineraryController.itinerary.duration
+        
+        if duration == 0 {
+            transportTimeLabel.text = "no route yet"
+        } else {
             let formatter = DateComponentsFormatter()
             formatter.allowedUnits = [.hour, .minute]
             formatter.unitsStyle = .full
             
             let formattedString = formatter.string(from: TimeInterval(duration))!
             transportTimeLabel.text = formattedString
-        } else {
-            transportTimeLabel.text = "no route yet"
         }
     }
     

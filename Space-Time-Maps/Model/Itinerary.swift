@@ -12,6 +12,8 @@ enum TravelMode : String {
     case driving, walking, bicycling, transit
 }
 
+typealias Route = [Leg]
+
 struct Itinerary {
     
     var destinations = [Destination]() {
@@ -20,10 +22,18 @@ struct Itinerary {
         }
     }
     
-    var route : Route? {
+    var route : [Leg] {
         didSet {
-            route?.legs.sort(by: { $0.startTime < $1.startTime })
+            route.sort(by: { $0.startTime < $1.startTime })
         }
+    }
+    
+    var duration : TimeInterval {
+        var totalDuration = TimeInterval(0)
+        route.forEach({leg in
+            totalDuration += leg.duration
+        })
+        return totalDuration
     }
     
     var travelMode : TravelMode

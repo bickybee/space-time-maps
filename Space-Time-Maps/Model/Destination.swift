@@ -21,17 +21,13 @@ class Destination: Schedulable {
     public var startTime : TimeInterval // point at which to render cell
     public var duration : TimeInterval // height of cell
     
-    public var dateInterval : DateInterval
-    
     // Timing constraints provided by the user, which influence the calculated timing details
     //var timeConstraints = TimeConstraints()
     
     init(place: Place, startTime: TimeInterval) {
         self.place = place
         self.startTime = startTime
-        self.duration = TimeInterval.from(minutes: 30.0)
-        self.dateInterval = DateInterval()
-        
+        self.duration = TimeInterval.from(minutes: 30.0)        
     }
     
 }

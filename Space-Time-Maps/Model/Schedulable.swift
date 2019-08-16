@@ -10,6 +10,7 @@ import UIKit
 
 protocol Schedulable {
     
-    var dateInterval : DateInterval { get set }
+    var startTime : TimeInterval { get set }
+    var duration : TimeInterval { get set }
     
 }

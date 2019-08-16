@@ -22,7 +22,7 @@ class ItineraryViewController: DraggableCellViewController {
     private let queryService = QueryService()
     
     // Interacting with itinerary
-    var itineraryBeforeModifications : Itinerary?
+    var itineraryBeforeModifications : Itinerary? // Inaccurate name tbh-- more like "itineraryWithoutCurrentDraggingPlace"
     var previousTouchHour : Double?
     
     // Interacting with timeline
@@ -35,7 +35,7 @@ class ItineraryViewController: DraggableCellViewController {
     weak var delegate : ItineraryViewControllerDelegate?
     
     // Data source!
-    var itinerary = Itinerary(destinations: [Destination](), route: nil, travelMode: .driving) {
+    var itinerary = Itinerary(destinations: [Destination](), route:[Leg](), travelMode: .driving) {
         didSet {
             collectionView.reloadData()
         }
@@ -97,7 +97,7 @@ extension ItineraryViewController {
     
     func computeRoute() {
         if itinerary.destinations.count == 0 {
-            self.itinerary.route = nil
+            self.itinerary.route = []
             delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
         } else {
             queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
@@ -172,7 +172,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             return itinerary.destinations.count
         } else {
             //return 0
-            return itinerary.route?.legs.count ?? 0
+            return itinerary.route.count ?? 0
         }
         
     }
@@ -206,7 +206,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func setupLegCell(_ cell: LegCell, with index: Int) -> LegCell {
         
-        guard let legs = itinerary.route?.legs else { return cell }
+        let legs = itinerary.route
         let maxIndex = legs.count - 1
         let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex + 1)
         let gradientLayer = CAGradientLayer()
@@ -324,14 +324,28 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
     }
     
     func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
+        guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
+        return schedulable.startTime
+    }
+    
+    func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
+        guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
+        return schedulable.duration
+    }
+    
+    func schedulableFor(indexPath: IndexPath) -> Schedulable? {
+        
         let section = indexPath.section
+        let item = indexPath.item
+        
         if section == 0 {
-            return itinerary.destinations[indexPath.item].startTime
-        } else if let legs = itinerary.route?.legs {
-            return legs[indexPath.item].startTime
+            return itinerary.destinations[safe: item]
+        } else if section == 1 {
+            return itinerary.route[safe: item]
         } else {
-            return 0
+            return nil
         }
+        
     }
     
 }

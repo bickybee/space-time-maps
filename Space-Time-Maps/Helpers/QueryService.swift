@@ -10,9 +10,7 @@ import Foundation
 import GoogleMaps.GMSMutablePath
 
 class QueryService {
-    
-    typealias RouteQueryResultHandler = (Route?) -> ()
-    
+        
     let session = URLSession(configuration: .default)
     let dispatchGroup = DispatchGroup()
     let gmapsDirectionsURLString = "https://maps.googleapis.com/maps/api/directions/json"
@@ -72,8 +70,7 @@ class QueryService {
         dispatchGroup.wait()
         
         DispatchQueue.main.async {
-            let route = Route(legs: legs)
-            callback(route)
+            callback(legs)
         }
         
     }
@@ -102,7 +99,7 @@ class QueryService {
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = firstRouteOption.legs[0].duration.value
             let actualDepartureTime = departureTime + TimeInterval.from(hours: 1.0) // lol temps
-            leg = Leg(polyline: polyline, duration: duration, startTime: actualDepartureTime, dateInterval: DateInterval())
+            leg = Leg(polyline: polyline, duration: TimeInterval(duration), startTime: actualDepartureTime)
         }
         return leg
         
@@ -126,82 +123,5 @@ class QueryService {
         return urlComponents.url
         
     }
-    
-    // MARK: - Place based (old)
-//
-//    // Send REST API query given an (ordered) list of places and a travel mode, callback with Route
-//    func sendRouteQuery(places: [Place], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
-//
-//        guard let url = routeQueryURLFrom(places: places, travelMode: travelMode) else { return }
-//        runQuery(url: url) {data in
-//            guard let route = self.dataToRoute(data) else { return }
-//            callback(route)
-//        }
-//    }
-//
-//
-//    // Unwrap JSON data to Route object
-//    func dataToRoute(_ data: Data) -> Route? {
-//
-//        // Attempt to decode JSON object into RouteResponseObject
-//        let decoder = JSONDecoder()
-//        guard let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) else { return nil }
-//
-//        // Parse out data into Route object
-//        let firstRoute = routeResponseObject.routes[0]
-//        let line = firstRoute.overviewPolyline.points
-//        let legs = firstRoute.legs.map { Leg(polyline: "", duration: $0.duration.value) }
-//        var totalDuration = 0
-//        for leg in legs {
-//            totalDuration += leg.duration
-//        }
-//        let route = Route(polyline: line, duration: totalDuration, legs: legs)
-//        return route
-//
-//    }
-//
-//    // Returns directions query URL given a list of places
-//    func routeQueryURLFrom(places: [Place], travelMode: TravelMode) -> URL? {
-//
-//        // Zero or one places: no route to be created
-//        guard places.count >= 2 else { return nil }
-//
-//        // 2 or more places, we can make a route query
-//        let startingID = places.first!.placeID
-//        let endingID = places.last!.placeID
-//        var enrouteIDs : [String]?
-//        if (places.count >= 3) {
-//             enrouteIDs = Array(places[1 ... places.count - 2]).map( { $0.placeID } )
-//        }
-//
-//        return routeQueryURLFrom(startingID: startingID, endingID: endingID, enrouteIDs: enrouteIDs, travelMode: travelMode)
-//    }
-//
-//    // Returns directions query URL given places organized by starting, ending, enroute
-//    func routeQueryURLFrom(startingID: String, endingID: String, enrouteIDs: [String]?, travelMode: TravelMode) -> URL? {
-//
-//        guard var urlComponents = URLComponents(string: gmapsDirectionsURLString) else { return nil }
-//
-//        urlComponents.queryItems = [
-//            URLQueryItem(name:"origin", value:"place_id:\(startingID)"),
-//            URLQueryItem(name:"destination", value:"place_id:\(endingID)"),
-//            URLQueryItem(name:"mode", value: travelMode.rawValue),
-//            URLQueryItem(name:"key", value:"\(self.apiKey)")
-//        ]
-//
-//        if let enrouteIDs = enrouteIDs {
-//            var enrouteString = ""
-//            for placeID in enrouteIDs {
-//                enrouteString += "|place_id:" + placeID
-//            }
-//            urlComponents.queryItems?.append(
-//                URLQueryItem(name:"waypoints", value:"optimize:true\(enrouteString)")
-//            )
-//        }
-//
-//        return urlComponents.url
-//
-//    }
-    
-}
 
+}

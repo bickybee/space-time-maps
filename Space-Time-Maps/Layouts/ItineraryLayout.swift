@@ -84,4 +84,5 @@ protocol ItineraryLayoutDelegate: AnyObject {
     func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
+    func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
 }
