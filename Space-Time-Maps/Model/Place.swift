@@ -20,7 +20,6 @@ class Place : NSObject {
     let name: String
     let coordinate: Coordinate
     let placeID: String
-    var timeConstraints : TimeConstraints?
     var isInItinerary = false
     
     override var description : String {

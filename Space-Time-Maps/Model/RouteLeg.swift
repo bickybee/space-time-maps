@@ -9,7 +9,9 @@
 import Foundation
 
 struct Leg : Schedulable {
+    
     var polyline : String
     var duration : TimeInterval
     var startTime : TimeInterval
+    
 }

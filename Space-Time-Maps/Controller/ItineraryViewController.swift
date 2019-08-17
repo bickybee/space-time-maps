@@ -19,7 +19,7 @@ class ItineraryViewController: DraggableCellViewController {
     @IBOutlet weak var timelineView: TimelineView!
     
     // API interfacing
-    private let queryService = QueryService()
+    private let scheduler = Scheduler()
     
     // Interacting with itinerary
     var itineraryBeforeModifications : Itinerary? // Inaccurate name tbh-- more like "itineraryWithoutCurrentDraggingPlace"
@@ -84,24 +84,26 @@ extension ItineraryViewController {
         let newDestination = Destination(place: place, startTime: time)
         var modifiedDestinations = initialDestinations
         modifiedDestinations.append(newDestination)
-        itinerary.destinations = modifiedDestinations
-        computeRoute()
+        modifiedDestinations.sort(by: { $0.startTime < $1.startTime })
+        computeRoute(with: modifiedDestinations)
         
     }
     
     func revertToInitialItinerary() {
         guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
-        itinerary.destinations = initialDestinations
-        computeRoute()
+        computeRoute(with: initialDestinations)
     }
     
-    func computeRoute() {
-        if itinerary.destinations.count == 0 {
+    func computeRoute(with destinations: [Destination]) {
+        if destinations.count < 2 {
             self.itinerary.route = []
+            self.itinerary.destinations = destinations
             delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
         } else {
-            queryService.getRouteFor(destinations: itinerary.destinations, travelMode: itinerary.travelMode) { route in
+            scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode) {route in
+                
                 self.itinerary.route = route
+                self.itinerary.destinations = destinations
                 self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
             }
         }
@@ -253,7 +255,7 @@ extension ItineraryViewController : DragDelegate {
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
         // Start drag session
         itineraryBeforeModifications = itinerary
-        if let _ = draggableCellViewController as? ItineraryViewController {
+        if draggableCellViewController as? ItineraryViewController != nil {
             var destinations = itinerary.destinations
             destinations.remove(at: index)
             itineraryBeforeModifications!.destinations = destinations

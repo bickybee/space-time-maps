@@ -8,18 +8,45 @@
 
 import UIKit
 
-let SECONDS_PER_MINUTE : Double = 60
-let MINUTES_PER_HOUR : Double = 60
-let HOURS_PER_DAY : Double = 24
+enum TimingType : String {
+    case arrival, departure, duration
+}
 
-class TimeConstraints: NSObject {
+class Constraints {
     
-    var arrivalTime : Date?
-    var departureTime : Date?
-    var duration : TimeInterval
+    var arrival : TimeConstraint?
+    var departure : TimeConstraint?
+    var duration : TimeConstraint?
     
-    override init() {
-        duration = 1 * SECONDS_PER_MINUTE * MINUTES_PER_HOUR
+    func all() -> [TimingType: TimeConstraint] {
+        
+        var constraints = [TimingType: TimeConstraint]()
+        
+        if arrival != nil { constraints[TimingType.arrival] = arrival }
+        if departure != nil { constraints[TimingType.departure] = departure }
+        if duration != nil { constraints[TimingType.duration] = duration }
+        
+        return constraints
+    }
+    
+    func with(flexibility: TimeConstraint.Flexibility) -> [TimingType: TimeConstraint] {
+    
+        let constraints = self.all()
+        let filteredConstraints = constraints.filter({ $0.value.flexibility == flexibility })
+        
+        return filteredConstraints
+    
     }
 
+}
+
+struct TimeConstraint {
+    
+    enum Flexibility : String {
+        case hard, soft
+    }
+    
+    var time : TimeInterval
+    var flexibility : TimeConstraint.Flexibility
+    
 }

@@ -14,20 +14,27 @@ import UIKit
 class Destination: Schedulable {
     
     // Details about the place itself
-    public var place : Place
+    var place : Place
     
     // Timing details about this destination, to be rendered accordingly
     // Relative to today, for simplicity, since we only provide 1-day views
-    public var startTime : TimeInterval // point at which to render cell
-    public var duration : TimeInterval // height of cell
+    var startTime : TimeInterval // point at which to render cell
+    var duration : TimeInterval // height of cell
     
     // Timing constraints provided by the user, which influence the calculated timing details
-    //var timeConstraints = TimeConstraints()
+    var constraints : Constraints//var timeConstraints = TimeConstraints()
     
     init(place: Place, startTime: TimeInterval) {
+        
         self.place = place
         self.startTime = startTime
         self.duration = TimeInterval.from(minutes: 30.0)
+        self.constraints = Constraints()
+        
+    }
+    
+    func hasConstraints() -> Bool {
+        return constraints.all().count > 0
     }
     
 }

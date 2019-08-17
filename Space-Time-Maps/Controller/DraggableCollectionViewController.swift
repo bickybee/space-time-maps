@@ -156,10 +156,10 @@ class DraggableCellViewController: UIViewController {
     
     func isDraggingSessionSetup() -> Bool {
         
-        guard let _ = draggingView,
-              let _ = draggingObject,
-              let _ = draggingIndex,
-              let _ = touchOffset else { return false }
+        guard draggingView != nil,
+              draggingObject != nil,
+              draggingIndex != nil,
+              touchOffset != nil else { return false }
         
         return true
         
