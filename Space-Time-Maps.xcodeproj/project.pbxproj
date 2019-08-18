@@ -24,7 +24,7 @@
 		98DEF0D523066372003DE1CB /* LegCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D423066372003DE1CB /* LegCell.swift */; };
 		98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D62306661B003DE1CB /* ColorUtils.swift */; };
 		98DEF0D92307294E003DE1CB /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D82307294E003DE1CB /* RouteLeg.swift */; };
-		98F8DA6F230742A200B4082D /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F8DA6E230742A200B4082D /* Scheduler.swift */; };
+		98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B9472308D1800032FBB7 /* Scheduler.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -62,7 +62,7 @@
 		98DEF0D423066372003DE1CB /* LegCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegCell.swift; sourceTree = "<group>"; };
 		98DEF0D62306661B003DE1CB /* ColorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		98DEF0D82307294E003DE1CB /* RouteLeg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLeg.swift; sourceTree = "<group>"; };
-		98F8DA6E230742A200B4082D /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Scheduler.swift; path = ../../../../Scheduler.swift; sourceTree = "<group>"; };
+		98E9B9472308D1800032FBB7 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 				B62AFCB722E4DA4100B7D2CD /* LocationService.swift */,
 				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
 				B6A625EB22DF93F10099D65C /* APIResponses.swift */,
-				98F8DA6E230742A200B4082D /* Scheduler.swift */,
+				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -337,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
+				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
@@ -354,7 +355,6 @@
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
-				98F8DA6F230742A200B4082D /* Scheduler.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
