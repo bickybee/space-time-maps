@@ -28,8 +28,8 @@ class TimelineView: UIView {
     private let lineWidth : CGFloat = 2
     private let stringAttributes = [
         NSAttributedString.Key.paragraphStyle: NSParagraphStyle(),
-        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 7.0),
-        NSAttributedString.Key.foregroundColor: UIColor.blue
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 8.0),
+        NSAttributedString.Key.foregroundColor: UIColor.lightGray
     ]
     
     override init(frame: CGRect) {
@@ -43,24 +43,24 @@ class TimelineView: UIView {
     }
     
     func initCommon() {
-        self.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
+        self.backgroundColor = UIColor.white
     }
     
-    func drawTicks(spacing: CGFloat, width: CGFloat) {
+    func drawTicks(spacing: CGFloat, tickWidth: CGFloat, timelineWidth: CGFloat) {
         
         let tickPath = UIBezierPath()
         tickPath.lineWidth = lineWidth
         
-        for tickNum in 0...numHourTicks {
-            let y = CGFloat(tickNum) * spacing + startOffset + lineWidth
-            let startTickAt = CGPoint(x: 0, y: y)
-            let endTickAt = CGPoint(x: width, y: y)
+        for tickNum in 0...(numHourTicks) {
+            let y = CGFloat(tickNum) * (spacing) + startOffset + lineWidth
+            let startTickAt = CGPoint(x: timelineWidth / 2.0, y: y)
+            let endTickAt = CGPoint(x: timelineWidth, y: y)
             tickPath.move(to: startTickAt)
             tickPath.addLine(to: endTickAt)
         }
         
         tickPath.close()
-        UIColor.blue.set()
+        UIColor.lightGray.set()
         tickPath.stroke()
         
     }
@@ -70,14 +70,15 @@ class TimelineView: UIView {
         for num in 0...numHourTicks {
             let str = NSAttributedString(string: (firstHour + num).description + ":00", attributes: stringAttributes)
             let x : CGFloat = 0
-            let y = CGFloat(num) * spacing - (spacing / 4) + startOffset
-            let point = CGPoint(x: x, y: y)
+            let y = CGFloat(num) * spacing + startOffset + lineWidth / 2
+            let point = CGPoint(x: x, y: y - 4.0)
             str.draw(at: point)
         }
     }
 
     override func draw(_ rect: CGRect) {
-        drawTicks(spacing: hourHeight, width: rect.width)
+        print(rect.size.width)
+        drawTicks(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width )
         drawNumbers(spacing: hourHeight)
     }
 

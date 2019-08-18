@@ -38,7 +38,7 @@ class MapUtils {
         
         for place in places {
             let marker = markerFor(place: place)
-            marker.icon = GMSMarker.markerImage(with: .gray)
+            marker.icon = GMSMarker.markerImage(with: .lightGray)
             markers.append(marker)
         }
         

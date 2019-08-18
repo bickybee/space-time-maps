@@ -69,7 +69,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         
         guard let place = places[safe: indexPath.item] else { return cell }
-        cell.backgroundColor = .gray
+        cell.backgroundColor = .lightGray
         cell.nameLabel.text = place.name
         addDragRecognizerTo(cell: cell)
         

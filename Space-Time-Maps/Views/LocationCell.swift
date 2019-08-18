@@ -12,10 +12,14 @@ class LocationCell: DraggableCell {
     
     var nameLabel : UILabel!
     let padding : CGFloat = 5
-    let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+    let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 35.0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        self.layer.cornerRadius = 5;
+        self.layer.masksToBounds = true;
+        
         setupLabel()
     }
     
@@ -24,16 +28,24 @@ class LocationCell: DraggableCell {
     }
     
     func setupLabel() {
+        let container = UIView()
+        container.frame = contentView.frame.inset(by: cellInsets)
+        container.backgroundColor = .white
+        container.layer.cornerRadius = 5;
+        container.layer.masksToBounds = true;
+        container.layer.zPosition = 0
+        
         nameLabel = UILabel()
-        
         nameLabel.textAlignment = .left
-        nameLabel.textColor = UIColor.black
+        nameLabel.textColor = UIColor.darkGray
         nameLabel.font = UIFont.systemFont(ofSize: 10.0)
-        nameLabel.backgroundColor = .white
         nameLabel.numberOfLines = 0
-        nameLabel.frame = contentView.frame.inset(by: cellInsets)
+        nameLabel.frame = container.frame
+        nameLabel.frame.size.height = container.frame.size.height - 10.0
+        nameLabel.frame.size.width = container.frame.size.width - 10.0
         
-        contentView.addSubview(nameLabel)
+        container.addSubview(nameLabel)
+        contentView.addSubview(container)
     }
     
 }

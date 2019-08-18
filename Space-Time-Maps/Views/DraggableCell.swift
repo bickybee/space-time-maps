@@ -29,9 +29,9 @@ class DraggableCell: UICollectionViewCell {
         let y = (contentView.bounds.size.height - sideLength)/2
         dragHandle = UIView(frame: CGRect(x: x, y: y, width: sideLength, height: sideLength))
         dragHandle.backgroundColor = .white
-        dragHandle.layer.borderColor = UIColor.black.cgColor
-        dragHandle.layer.borderWidth = 1
-        dragHandle.layer.zPosition = 10
+        dragHandle.layer.zPosition = 100
+        dragHandle.layer.cornerRadius = 5;
+        dragHandle.layer.masksToBounds = true;
         contentView.addSubview(dragHandle)
         
         dragOffset = CGPoint(x: dragHandle.center.x - contentView.center.x, y: dragHandle.center.y - contentView.center.y)

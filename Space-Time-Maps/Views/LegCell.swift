@@ -17,24 +17,26 @@ class LegCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupGradientView()
-        setupLabel()
+        setupGradientView(frame: frame)
+        setupLabel(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupGradientView() {
-        gradientView = UIView(frame: contentView.frame)
+    func setupGradientView(frame: CGRect) {
+        let width : CGFloat = 10.0
+        let gradientFrame = CGRect(x: frame.width / 4.0 - width / 2.0, y: 0, width: width, height: frame.height)
+        gradientView = UIView(frame: gradientFrame)
         contentView.addSubview(gradientView)
     }
     
-    func setupLabel() {
+    func setupLabel(frame: CGRect) {
         timeLabel = UILabel()
         
         timeLabel.textAlignment = .left
-        timeLabel.textColor = UIColor.black
+        timeLabel.textColor = UIColor.gray
         timeLabel.font = UIFont.systemFont(ofSize: 10.0)
         timeLabel.backgroundColor = .clear
         timeLabel.numberOfLines = 0

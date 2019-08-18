@@ -65,7 +65,7 @@ class ItineraryViewController: DraggableCellViewController {
     
     func setupTimelineView() {
         setCurrentTime()
-        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(setCurrentTime), userInfo: nil, repeats: true)
+//        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(setCurrentTime), userInfo: nil, repeats: true)
         
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panTime)))
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchTime)))
@@ -212,7 +212,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let maxIndex = legs.count - 1
         let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex + 1)
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = cell.bounds
+        gradientLayer.frame = cell.gradientView.frame
         gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
         cell.gradientView.layer.sublayers = nil
         cell.gradientView.layer.addSublayer(gradientLayer)

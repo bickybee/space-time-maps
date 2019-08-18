@@ -59,11 +59,12 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no route yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7v-eX-cwa">
                                         <rect key="frame" x="236" y="22" width="131" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="m7v-eX-cwa" firstAttribute="leading" secondItem="QZK-UO-X47" secondAttribute="trailing" constant="13" id="71n-kP-WKl"/>
                                     <constraint firstItem="QZK-UO-X47" firstAttribute="leading" secondItem="Wbw-O3-WyC" secondAttribute="leading" constant="8" id="7Tx-qH-a5N"/>
@@ -130,14 +131,14 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEC-kQ-YlV" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="30" height="332"/>
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="aDh-Lt-Ymy"/>
+                                    <constraint firstAttribute="width" constant="50" id="aDh-Lt-Ymy"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
-                                <rect key="frame" x="30" y="0.0" width="157.5" height="332"/>
+                                <rect key="frame" x="50" y="0.0" width="137.5" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewLayout key="collectionViewLayout" id="2fr-Po-gLr" customClass="ItineraryLayout" customModule="Space_Time_Maps" customModuleProvider="target"/>
                                 <cells>
@@ -203,7 +204,7 @@
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyw-DJ-Da2">
                                 <rect key="frame" x="137.5" y="282" width="50" height="50"/>
-                                <color key="backgroundColor" red="0.40853619873677793" green="0.60005020136815612" blue="1" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="cIE-LH-cPe"/>
                                     <constraint firstAttribute="height" constant="50" id="quC-VP-oq8"/>
