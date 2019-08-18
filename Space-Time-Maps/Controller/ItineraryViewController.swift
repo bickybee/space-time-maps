@@ -81,7 +81,7 @@ extension ItineraryViewController {
         // Need the initial itinerary to compare our modifications to
         guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
         
-        let newDestination = Destination(place: place, startTime: time)
+        let newDestination = Destination(place: place, startTime: time, constraints: Constraints())
         var modifiedDestinations = initialDestinations
         modifiedDestinations.append(newDestination)
         modifiedDestinations.sort(by: { $0.startTime < $1.startTime })
@@ -100,10 +100,10 @@ extension ItineraryViewController {
             self.itinerary.destinations = destinations
             delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
         } else {
-            scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode) {route in
+            scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode) {dests, route in
                 
                 self.itinerary.route = route
-                self.itinerary.destinations = destinations
+                self.itinerary.destinations = dests
                 self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
             }
         }

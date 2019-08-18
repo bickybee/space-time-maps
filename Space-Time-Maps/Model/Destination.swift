@@ -24,12 +24,12 @@ class Destination: Schedulable {
     // Timing constraints provided by the user, which influence the calculated timing details
     var constraints : Constraints//var timeConstraints = TimeConstraints()
     
-    init(place: Place, startTime: TimeInterval) {
+    init(place: Place, startTime: TimeInterval, constraints: Constraints) {
         
         self.place = place
         self.startTime = startTime
         self.duration = TimeInterval.from(minutes: 30.0)
-        self.constraints = Constraints()
+        self.constraints = constraints
         
     }
     
@@ -37,5 +37,8 @@ class Destination: Schedulable {
         return constraints.all().count > 0
     }
     
+    func copy() -> Destination {
+        return Destination(place: self.place, startTime: self.startTime, constraints: self.constraints)
+    }
 }
 
