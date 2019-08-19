@@ -16,7 +16,7 @@ class ItineraryViewController: DraggableCellViewController {
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var timelineView: TimelineView!
+    var timelineController: TimelineViewController!
     
     // API interfacing
     private let scheduler = Scheduler()
@@ -24,12 +24,7 @@ class ItineraryViewController: DraggableCellViewController {
     // Interacting with itinerary
     var itineraryBeforeModifications : Itinerary? // Inaccurate name tbh-- more like "itineraryWithoutCurrentDraggingPlace"
     var previousTouchHour : Double?
-    
-    // Interacting with timeline
-    var timer: Timer?
-    var previousPanLocation : CGPoint?
-    var startTime: TimeInterval = TimeInterval.from(hours: 12.0)
-    var hourHeight: CGFloat = 100
+
     
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?
@@ -49,7 +44,6 @@ class ItineraryViewController: DraggableCellViewController {
         self.dragDataDelegate = self as DragDataDelegate
         
         setupCollectionView()
-        setupTimelineView()
     }
     
     func setupCollectionView() {
@@ -64,11 +58,14 @@ class ItineraryViewController: DraggableCellViewController {
         collectionView.backgroundColor = .clear
     }
     
-    func setupTimelineView() {
-        setCurrentTime()
-//        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(setCurrentTime), userInfo: nil, repeats: true)
-        view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panTime)))
-        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchTime)))
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let timelineVC = segue.destination as? TimelineViewController {
+            
+//            timelineVC.setSidebarWidth(collectionView.bounds.minX)
+            timelineVC.delegate = self
+            timelineController = timelineVC
+            
+        }
     }
     
 }
@@ -109,76 +106,6 @@ extension ItineraryViewController {
         }
     }
     
-}
-
-// MARK: - Timeline related
-extension ItineraryViewController {
-    
-    func reloadTimelineRelatedViews() {
-        timelineView.startTime = startTime
-        timelineView.hourHeight = hourHeight
-        timelineView.setNeedsDisplay()
-        collectionView.reloadData()
-    }
-    
-    @objc func setCurrentTime() {
-        guard let currentTime = Utils.currentTime() else { return }
-        startTime = currentTime
-        reloadTimelineRelatedViews()
-    }
-    
-    @objc func panTime(gesture: UIPanGestureRecognizer) {
-        let location = gesture.location(in: view)
-        
-        switch gesture.state {
-        case .began:
-            previousPanLocation = location
-        case .changed:
-            guard let previousY = previousPanLocation?.y else { return }
-            let dy = location.y - previousY
-            
-            var newStartTime = startTime - Double(dy*100)
-            let newEndTime = (newStartTime + TimeInterval.from(hours:Double(view.frame.height / hourHeight)))
-            
-            if newStartTime < 0 {
-                newStartTime = startTime
-            } else if newEndTime > TimeInterval.from(hours: 24.5) {
-                newStartTime = startTime
-            }
-            
-            startTime = newStartTime
-            reloadTimelineRelatedViews()
-            previousPanLocation = location
-            
-        case .ended,
-             .cancelled:
-            previousPanLocation = nil
-            
-        default:
-            break
-        }
-    }
-    
-    @objc func pinchTime(_ gestureRecognizer : UIPinchGestureRecognizer) {
-        
-        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            
-            var newHourHeight = hourHeight * gestureRecognizer.scale
-            let newEndTime = (startTime + TimeInterval.from(hours:Double(view.frame.height / newHourHeight)))
-            if newEndTime > TimeInterval.from(hours: 24.5) {
-                let newStartTime = TimeInterval.from(hours: 24.5) - TimeInterval.from(hours:Double(view.frame.height / newHourHeight))
-                if newStartTime > 0 {
-                    startTime = newStartTime
-                } else {
-                    newHourHeight = hourHeight
-                }
-            }
-            hourHeight = newHourHeight
-            gestureRecognizer.scale = 1.0
-            
-            reloadTimelineRelatedViews()
-        }
-    }
 }
 
 // MARK: - CollectionView delegate methods
@@ -249,29 +176,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func hourInTimeline(for viewFrame: CGRect) -> Double? {
-        // Does the dragging view intersect our collection view?
-        let intersection = collectionView.frame.intersection(viewFrame)
-        guard !intersection.isNull else { return nil }
-        
-        // What time does this intersection correspond to? (Using top of view)
-        let y = Double(intersection.minY)
-        //let startOffset = startTime.inHours().truncatingRemainder(dividingBy: 1) * Double(hourHeight)
-        let relativeHour = y / Double(hourHeight)
-        let absoluteHour = relativeHour + startTime.inHours()        //set hour of destination
-        
-        return absoluteHour
-    }
-    
-    func roundedHourInTimeline(for viewFrame: CGRect) -> Double? {
-        // Does the dragging view intersect our collection view?
-        guard let hour = hourInTimeline(for: viewFrame) else { return nil }
-        let decimal = hour.truncatingRemainder(dividingBy: 1.0)
-        let roundedHour = floor(hour) + floor(decimal / 0.25) * 0.25
-        
-        return roundedHour
-    }
-    
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
         // Start drag session
         itineraryBeforeModifications = itinerary
@@ -297,7 +201,10 @@ extension ItineraryViewController : DragDelegate {
         // Get place for corresponding time of touch
         guard let place = object as? Place else { return }
         
-        let hour = roundedHourInTimeline(for: viewFrame)
+        let intersection = collectionView.frame.intersection(viewFrame)
+        let y = intersection.minY // using top of view
+        
+        let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
             if let hour = hour {
                 previewInsert(place: place, at: TimeInterval.from(hours: hour))
@@ -338,11 +245,11 @@ extension ItineraryViewController: DragDataDelegate {
 extension ItineraryViewController : ItineraryLayoutDelegate {
     
     func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval {
-        return startTime
+        return timelineController.startTime
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
-        return hourHeight
+        return timelineController.hourHeight
     }
     
     func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
@@ -368,6 +275,17 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
             return nil
         }
         
+    }
+}
+
+extension ItineraryViewController: TimelineViewDelegate {
+    
+    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartTime: TimeInterval) {
+        collectionView.reloadData()
+    }
+    
+    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateHourHeight: CGFloat) {
+        collectionView.reloadData()
     }
     
 }

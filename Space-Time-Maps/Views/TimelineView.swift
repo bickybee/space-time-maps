@@ -12,8 +12,8 @@ class TimelineView: UIView {
     
     var startTime : TimeInterval = TimeInterval.from(minutes: 15.0)
     var hourHeight : CGFloat = 50
-    var sidebarWidth : CGFloat!
-    var currentTime : TimeInterval!
+    var sidebarWidth : CGFloat = 50
+    var currentTime : TimeInterval = 0
     
     var startOffset : CGFloat {
         let timeInHours = startTime.inHours()
@@ -123,7 +123,6 @@ class TimelineView: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        print(rect.size.width)
         drawTicks(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width )
         drawNumbers(spacing: hourHeight)
         drawSidebarLine( )

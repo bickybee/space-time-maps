@@ -105,7 +105,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mtd-2F-eLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="927.20000000000005" y="992.65367316341838"/>
+            <point key="canvasLocation" x="908" y="991"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="Xlp-al-1ER">
@@ -114,13 +114,13 @@
                     <view key="view" contentMode="scaleToFill" id="NBt-nG-tlI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="TG7-18-4Y3"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aFq-In-wjR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1908" y="1167"/>
+            <point key="canvasLocation" x="927" y="1579"/>
         </scene>
         <!--Itinerary View Controller-->
         <scene sceneID="aMn-0x-YDd">
@@ -130,11 +130,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEC-kQ-YlV" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNK-lT-KjN">
                                 <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
+                                <connections>
+                                    <segue destination="ImL-qE-Gvw" kind="embed" id="lte-p8-zur"/>
+                                </connections>
+                            </containerView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc" customClass="PassThroughCollectionView" customModule="Space_Time_Maps" customModuleProvider="target">
                                 <rect key="frame" x="47.5" y="0.0" width="140" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -156,23 +158,22 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="zWw-aK-nXc" secondAttribute="trailing" id="07G-Pt-1RA"/>
-                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="leading" secondItem="cFr-st-Pin" secondAttribute="leading" id="8da-8s-H4b"/>
-                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="FgW-Ei-fNS"/>
+                            <constraint firstItem="qNK-lT-KjN" firstAttribute="leading" secondItem="cFr-st-Pin" secondAttribute="leading" id="65O-IQ-KG1"/>
+                            <constraint firstItem="qNK-lT-KjN" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="9bQ-il-nnC"/>
+                            <constraint firstAttribute="trailing" secondItem="qNK-lT-KjN" secondAttribute="trailing" id="H1u-nt-Puy"/>
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="HG7-kp-odL"/>
-                            <constraint firstItem="cFr-st-Pin" firstAttribute="trailing" secondItem="nEC-kQ-YlV" secondAttribute="trailing" id="eSy-lQ-bl7"/>
+                            <constraint firstItem="qNK-lT-KjN" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="lzY-L9-Bmx"/>
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="tmb-kT-pCZ"/>
-                            <constraint firstItem="nEC-kQ-YlV" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="vXt-MI-G4D"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cFr-st-Pin"/>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="zWw-aK-nXc" id="v04-7E-0aQ"/>
-                        <outlet property="timelineView" destination="nEC-kQ-YlV" id="zHO-fR-qJq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9cj-wp-vvJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1544" y="726"/>
+            <point key="canvasLocation" x="283" y="917"/>
         </scene>
         <!--Place Palette View Controller-->
         <scene sceneID="knU-dA-27b">
@@ -236,7 +237,36 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a1d-eX-IsH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1939.2" y="813.19340329835086"/>
+            <point key="canvasLocation" x="1531" y="917"/>
+        </scene>
+        <!--Timeline View Controller-->
+        <scene sceneID="s1C-Rj-a4P">
+            <objects>
+                <viewController id="ImL-qE-Gvw" customClass="TimelineViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="J3K-AL-jXp" userLabel="View" customClass="View">
+                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Krg-5c-QpC" userLabel="Timeline" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Krg-5c-QpC" firstAttribute="top" secondItem="J3K-AL-jXp" secondAttribute="top" id="7wH-xO-TeC"/>
+                            <constraint firstAttribute="bottom" secondItem="Krg-5c-QpC" secondAttribute="bottom" id="SdQ-O5-jeH"/>
+                            <constraint firstItem="Krg-5c-QpC" firstAttribute="leading" secondItem="J3K-AL-jXp" secondAttribute="leading" id="hLT-TX-Fbl"/>
+                            <constraint firstAttribute="trailing" secondItem="Krg-5c-QpC" secondAttribute="trailing" id="n01-1c-W5x"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="timelineView" destination="Krg-5c-QpC" id="W3G-nP-aUj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1An-a6-8YP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-264" y="917"/>
         </scene>
     </scenes>
 </document>

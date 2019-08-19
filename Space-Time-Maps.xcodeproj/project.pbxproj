@@ -25,6 +25,8 @@
 		98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D62306661B003DE1CB /* ColorUtils.swift */; };
 		98DEF0D92307294E003DE1CB /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D82307294E003DE1CB /* RouteLeg.swift */; };
 		98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B9472308D1800032FBB7 /* Scheduler.swift */; };
+		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
+		98E9B96C230B0B0E0032FBB7 /* PassThroughCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -63,6 +65,8 @@
 		98DEF0D62306661B003DE1CB /* ColorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		98DEF0D82307294E003DE1CB /* RouteLeg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLeg.swift; sourceTree = "<group>"; };
 		98E9B9472308D1800032FBB7 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
+		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
+		98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughCollectionView.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -138,6 +142,7 @@
 				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
+				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -176,6 +181,7 @@
 				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
 				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
 				98DEF0D423066372003DE1CB /* LegCell.swift */,
+				98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -353,6 +359,7 @@
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
+				98E9B96C230B0B0E0032FBB7 /* PassThroughCollectionView.swift in Sources */,
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
@@ -361,6 +368,7 @@
 				98DEF0BB2304676B003DE1CB /* DraggableCell.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* LegCell.swift in Sources */,
+				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
 			);
