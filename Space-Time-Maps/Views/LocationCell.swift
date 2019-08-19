@@ -53,7 +53,7 @@ class LocationCell: DraggableCell {
         super.layoutSubviews()
         let newHeight = self.frame.size.height - 10.0
         container.frame.size.height = newHeight
-        nameLabel.frame.size.height = newHeight
+        nameLabel.frame.size.height = newHeight - 8.0
     }
     
     

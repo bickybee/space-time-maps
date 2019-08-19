@@ -116,7 +116,7 @@ class TimelineViewController: UIViewController {
 
 extension TimelineViewController {
     
-    public func hourInTimeline(forY y: CGFloat) -> Double? {
+    public func hourInTimeline(forY y: CGFloat) -> Double {
 
         let relativeHour = y / hourHeight
         let absoluteHour = relativeHour + startHour
@@ -124,9 +124,9 @@ extension TimelineViewController {
         return Double(absoluteHour)
     }
     
-    public func roundedHourInTimeline(forY y: CGFloat) -> Double? {
+    public func roundedHourInTimeline(forY y: CGFloat) -> Double {
 
-        guard let hour = hourInTimeline(forY: y) else { return nil }
+        let hour = hourInTimeline(forY: y)
         let decimal = hour.truncatingRemainder(dividingBy: 1.0)
         let roundedHour = floor(hour) + floor(decimal / roundHourTo) * roundHourTo
         

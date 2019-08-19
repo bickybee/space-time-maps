@@ -27,6 +27,7 @@
 		98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B9472308D1800032FBB7 /* Scheduler.swift */; };
 		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
 		98E9B96C230B0B0E0032FBB7 /* PassThroughCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */; };
+		98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -67,6 +68,7 @@
 		98E9B9472308D1800032FBB7 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughCollectionView.swift; sourceTree = "<group>"; };
+		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
 		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
 				B6A625EB22DF93F10099D65C /* APIResponses.swift */,
 				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
+				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
 				B62AFCBF22E50E1700B7D2CD /* LocationCell.swift in Sources */,
+				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
 				B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */,
 				B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */,
 				98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */,

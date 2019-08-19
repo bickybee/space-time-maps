@@ -17,15 +17,10 @@ class ItineraryViewController: DraggableCellViewController {
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
     var timelineController: TimelineViewController!
-    
-    // API interfacing
-    private let scheduler = Scheduler()
-    
-    // Interacting with itinerary
-    var itineraryBeforeModifications : Itinerary? // Inaccurate name tbh-- more like "itineraryWithoutCurrentDraggingPlace"
+
+    var editingSession : ItineraryEditingSession?
     var previousTouchHour : Double?
 
-    
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?
     
@@ -73,44 +68,6 @@ class ItineraryViewController: DraggableCellViewController {
     
 }
 
-// MARK: - Itinerary related
-extension ItineraryViewController {
-    
-    func previewInsert(place: Place, at time: TimeInterval) {
-        
-        // Need the initial itinerary to compare our modifications to
-        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
-        
-        let newDestination = Destination(place: place, startTime: time, constraints: Constraints())
-        var modifiedDestinations = initialDestinations
-        modifiedDestinations.append(newDestination)
-        modifiedDestinations.sort(by: { $0.startTime < $1.startTime })
-        computeRoute(with: modifiedDestinations)
-        
-    }
-    
-    func revertToInitialItinerary() {
-        guard let initialDestinations = itineraryBeforeModifications?.destinations else { return }
-        computeRoute(with: initialDestinations)
-    }
-    
-    func computeRoute(with destinations: [Destination]) {
-        if destinations.count < 2 {
-            self.itinerary.route = []
-            self.itinerary.destinations = destinations
-            delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
-        } else {
-            scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode) {dests, route in
-                
-                self.itinerary.route = route
-                self.itinerary.destinations = dests
-                self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
-            }
-        }
-    }
-    
-}
-
 // MARK: - CollectionView delegate methods
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -123,8 +80,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         if section == 0 {
             return itinerary.destinations.count
         } else {
-            //return 0
-            return itinerary.route.count ?? 0
+            return itinerary.route.count
         }
         
     }
@@ -182,14 +138,26 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
+    func didEditItinerary(destinations: [Destination]?, route: Route?) {
+        
+        guard let destinations = destinations, let route = route else { return }
+        
+        self.itinerary.destinations = destinations
+        self.itinerary.route = route
+        delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
+    }
+    
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
-        // Start drag session
-        itineraryBeforeModifications = itinerary
+        
+        guard let place = object as? Place else { return }
+        
+        var editingDestinations = itinerary.destinations
+        
         if draggableCellViewController as? ItineraryViewController != nil {
-            var destinations = itinerary.destinations
-            destinations.remove(at: index)
-            itineraryBeforeModifications!.destinations = destinations
+            editingDestinations.remove(at: index)
         }
+        
+        editingSession = ItineraryEditingSession(movingPlace: place, withIndex: index, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withView view: UIView) {
@@ -205,18 +173,18 @@ extension ItineraryViewController : DragDelegate {
         }
         
         // Get place for corresponding time of touch
-        guard let place = object as? Place else { return }
+        guard let editingSession = editingSession else { return }
         
         let intersection = collectionView.frame.intersection(viewFrame)
-        let y = intersection.minY // using top of view
+        if intersection.isNull {
+            editingSession.removeDestination()
+            return
+        }
         
+        let y = intersection.minY // using top of view
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
-            if let hour = hour {
-                previewInsert(place: place, at: TimeInterval.from(hours: hour))
-            } else {
-                revertToInitialItinerary()
-            }
+            editingSession.moveDestination(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
         }
         
@@ -224,7 +192,7 @@ extension ItineraryViewController : DragDelegate {
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withView view: UIView) {
         // End drag session
-        itineraryBeforeModifications = nil
+        editingSession = nil
         previousTouchHour = nil
     }
     

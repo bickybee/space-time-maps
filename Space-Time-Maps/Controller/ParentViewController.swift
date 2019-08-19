@@ -43,7 +43,7 @@ class ParentViewController: UIViewController {
                 travelMode = .driving
             }
             itineraryController.itinerary.travelMode = travelMode
-            itineraryController.computeRoute(with: itineraryController.itinerary.destinations)
+//            itineraryController.computeRoute(with: itineraryController.itinerary.destinations)
         }
     }
     
