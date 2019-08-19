@@ -40,6 +40,10 @@ class TimelineViewController: UIViewController {
         timelineView.setNeedsDisplay()
     }
     
+    func setSidebarWidth( _ width: CGFloat) {
+        timelineView.sidebarWidth = width
+    }
+    
     @objc func setCurrentTime() {
         guard let currentTime = Utils.currentTime() else { return }
         timelineView.startTime = currentTime
@@ -99,6 +103,10 @@ class TimelineViewController: UIViewController {
             delegate?.timelineViewController(self, didUpdateHourHeight: hourHeight)
             renderTimeline()
         }
+    }
+    
+    func isTimelineWithinBounds(startTime: TimeInterval, hourHeight: CGFloat) {
+        // TODO
     }
 
 }

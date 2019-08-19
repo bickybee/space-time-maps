@@ -46,6 +46,10 @@ class ItineraryViewController: DraggableCellViewController {
         setupCollectionView()
     }
     
+    override func viewDidLayoutSubviews() {
+        timelineController.setSidebarWidth(collectionView.frame.minX)
+    }
+    
     func setupCollectionView() {
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
@@ -61,7 +65,6 @@ class ItineraryViewController: DraggableCellViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let timelineVC = segue.destination as? TimelineViewController {
             
-//            timelineVC.setSidebarWidth(collectionView.bounds.minX)
             timelineVC.delegate = self
             timelineController = timelineVC
             
