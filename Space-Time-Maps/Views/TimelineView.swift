@@ -12,6 +12,8 @@ class TimelineView: UIView {
     
     var startTime : TimeInterval = TimeInterval.from(minutes: 15.0)
     var hourHeight : CGFloat = 50
+    var sidebarWidth : CGFloat!
+    var currentTime : TimeInterval!
     
     var startOffset : CGFloat {
         let timeInHours = startTime.inHours()
@@ -25,7 +27,8 @@ class TimelineView: UIView {
         return Int(fullHours + 1)
     }
     
-    private let lineWidth : CGFloat = 2
+    private let tickOverflow : CGFloat = 10
+    private let lineWidth : CGFloat = 1
     private let stringAttributes = [
         NSAttributedString.Key.paragraphStyle: NSParagraphStyle(),
         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 8.0),
@@ -52,9 +55,10 @@ class TimelineView: UIView {
         tickPath.lineWidth = lineWidth
         
         for tickNum in 0...(numHourTicks) {
-            let y = CGFloat(tickNum) * (spacing) + startOffset + lineWidth
-            let startTickAt = CGPoint(x: timelineWidth / 2.0, y: y)
-            let endTickAt = CGPoint(x: timelineWidth, y: y)
+            let x = sidebarWidth - tickOverflow
+            let y = CGFloat(tickNum) * (spacing) + startOffset
+            let startTickAt = CGPoint(x: x, y: y)
+            let endTickAt = CGPoint(x: timelineWidth + tickOverflow, y: y)
             tickPath.move(to: startTickAt)
             tickPath.addLine(to: endTickAt)
         }
@@ -68,18 +72,62 @@ class TimelineView: UIView {
     func drawNumbers(spacing: CGFloat) {
         let firstHour = Int(ceil(startTime.inHours()))
         for num in 0...numHourTicks {
-            let str = NSAttributedString(string: (firstHour + num).description + ":00", attributes: stringAttributes)
-            let x : CGFloat = 0
+            var hour = firstHour + num
+            var midday : String
+            if hour > 12 {
+                hour -= 12
+                midday = "PM"
+            } else {
+                midday = "AM"
+            }
+            let str = NSAttributedString(string:(hour).description + midday, attributes: stringAttributes)
+            let x : CGFloat = sidebarWidth / 2.0 - tickOverflow
             let y = CGFloat(num) * spacing + startOffset + lineWidth / 2
             let point = CGPoint(x: x, y: y - 4.0)
             str.draw(at: point)
         }
+    }
+    
+    func drawSidebarLine() {
+            
+        let path = UIBezierPath()
+        path.lineWidth = lineWidth
+        
+        let startAt = CGPoint(x: sidebarWidth, y: 0)
+        let endAt = CGPoint(x: sidebarWidth, y: self.frame.height)
+        path.move(to: startAt)
+        path.addLine(to: endAt)
+        
+        path.close()
+        UIColor.lightGray.set()
+        path.stroke()
+
+    }
+    
+    func drawCurrentTime(spacing: CGFloat, tickWidth: CGFloat, timelineWidth: CGFloat) {
+        
+//        let path = UIBezierPath()
+//        path.lineWidth = lineWidth
+//        
+//        let x = sidebarWidth - tickOverflow
+//        let y = CGFloat(startTime.inHours()) * spacing
+//        let startAt = CGPoint(x: x, y: y)
+//        let endAt = CGPoint(x: tickWidth + tickOverflow, y: y)
+//        path.move(to: startAt)
+//        path.addLine(to: endAt)
+//        
+//        path.close()
+//        UIColor.red.set()
+//        path.stroke()
+        
     }
 
     override func draw(_ rect: CGRect) {
         print(rect.size.width)
         drawTicks(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width )
         drawNumbers(spacing: hourHeight)
+        drawSidebarLine( )
+        drawCurrentTime(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width)
     }
 
 }

@@ -61,12 +61,12 @@ class ItineraryViewController: DraggableCellViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
+        collectionView.backgroundColor = .clear
     }
     
     func setupTimelineView() {
         setCurrentTime()
 //        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(setCurrentTime), userInfo: nil, repeats: true)
-        
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panTime)))
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchTime)))
     }
@@ -136,10 +136,19 @@ extension ItineraryViewController {
         case .changed:
             guard let previousY = previousPanLocation?.y else { return }
             let dy = location.y - previousY
-            startTime -= Double(dy*100)
-            previousPanLocation = location
             
+            var newStartTime = startTime - Double(dy*100)
+            let newEndTime = (newStartTime + TimeInterval.from(hours:Double(view.frame.height / hourHeight)))
+            
+            if newStartTime < 0 {
+                newStartTime = startTime
+            } else if newEndTime > TimeInterval.from(hours: 24.5) {
+                newStartTime = startTime
+            }
+            
+            startTime = newStartTime
             reloadTimelineRelatedViews()
+            previousPanLocation = location
             
         case .ended,
              .cancelled:
@@ -153,7 +162,18 @@ extension ItineraryViewController {
     @objc func pinchTime(_ gestureRecognizer : UIPinchGestureRecognizer) {
         
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            hourHeight *= gestureRecognizer.scale
+            
+            var newHourHeight = hourHeight * gestureRecognizer.scale
+            let newEndTime = (startTime + TimeInterval.from(hours:Double(view.frame.height / newHourHeight)))
+            if newEndTime > TimeInterval.from(hours: 24.5) {
+                let newStartTime = TimeInterval.from(hours: 24.5) - TimeInterval.from(hours:Double(view.frame.height / newHourHeight))
+                if newStartTime > 0 {
+                    startTime = newStartTime
+                } else {
+                    newHourHeight = hourHeight
+                }
+            }
+            hourHeight = newHourHeight
             gestureRecognizer.scale = 1.0
             
             reloadTimelineRelatedViews()

@@ -112,6 +112,10 @@ class ParentViewController: UIViewController {
             }
             itineraryVC.delegate = self
             itineraryVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
+            guard let currentTime = Utils.currentTime() else { return }
+            itineraryVC.timelineView.startTime = currentTime
+            itineraryVC.timelineView.currentTime = currentTime
+            itineraryVC.timelineView.sidebarWidth = itineraryVC.collectionView.frame.minX
             itineraryController = itineraryVC
             
         } else if let mapVC = segue.destination as? MapViewController {

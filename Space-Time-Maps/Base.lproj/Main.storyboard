@@ -131,15 +131,15 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEC-kQ-YlV" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="332"/>
+                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="aDh-Lt-Ymy"/>
-                                </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
-                                <rect key="frame" x="50" y="0.0" width="137.5" height="332"/>
+                                <rect key="frame" x="47.5" y="0.0" width="140" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="140" id="A4L-Tz-0n3"/>
+                                </constraints>
                                 <collectionViewLayout key="collectionViewLayout" id="2fr-Po-gLr" customClass="ItineraryLayout" customModule="Space_Time_Maps" customModuleProvider="target"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="JK3-qD-mDh" customClass="LocationCell" customModule="Space_Time_Maps" customModuleProvider="target">
@@ -159,8 +159,8 @@
                             <constraint firstItem="nEC-kQ-YlV" firstAttribute="leading" secondItem="cFr-st-Pin" secondAttribute="leading" id="8da-8s-H4b"/>
                             <constraint firstItem="nEC-kQ-YlV" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="FgW-Ei-fNS"/>
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="HG7-kp-odL"/>
+                            <constraint firstItem="cFr-st-Pin" firstAttribute="trailing" secondItem="nEC-kQ-YlV" secondAttribute="trailing" id="eSy-lQ-bl7"/>
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="tmb-kT-pCZ"/>
-                            <constraint firstItem="zWw-aK-nXc" firstAttribute="leading" secondItem="nEC-kQ-YlV" secondAttribute="trailing" id="twj-1C-t8I"/>
                             <constraint firstItem="nEC-kQ-YlV" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="vXt-MI-G4D"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cFr-st-Pin"/>
