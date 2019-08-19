@@ -42,14 +42,14 @@ class ItineraryLayout: UICollectionViewLayout {
     
     func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
         
-        let timelineStartHour = delegate.timelineStartTime(of: collectionView).inHours()
+        let timelineStartHour = delegate.timelineStartHour(of: collectionView)
         let eventStartHour = delegate.collectionView(collectionView, startTimeForSchedulableAtIndexPath: indexPath).inHours()
         let eventDuration = delegate.collectionView(collectionView, durationForSchedulableAtIndexPath: indexPath).inHours()
         let hourHeight = delegate.hourHeight(of: collectionView)
         //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
         
-        let relativeHour = eventStartHour - timelineStartHour
-        let y = CGFloat(relativeHour) * hourHeight// - startOffset
+        let relativeHour = CGFloat(eventStartHour) - timelineStartHour
+        let y = relativeHour * hourHeight// - startOffset
         let x: CGFloat = 0
         let width = contentWidth
         let height = CGFloat(eventDuration) * hourHeight
@@ -82,7 +82,7 @@ class ItineraryLayout: UICollectionViewLayout {
 }
 
 protocol ItineraryLayoutDelegate: AnyObject {
-    func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval
+    func timelineStartHour(of collectionView: UICollectionView) -> CGFloat
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
     func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval

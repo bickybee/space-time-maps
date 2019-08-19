@@ -14,14 +14,15 @@ class TimelineViewController: UIViewController {
     @IBOutlet weak var timelineView: TimelineView!
     
     var previousPanLocation : CGPoint?
+    var panMultiplier: CGFloat = 1.0
     
     weak var delegate: TimelineViewDelegate?
     
     var roundHourTo = 0.25
     
     // Render variables
-    var startTime : TimeInterval = 0.0
     var hourHeight : CGFloat = 50.0
+    var startHour : CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ class TimelineViewController: UIViewController {
     }
     
     func renderTimeline() {
-        timelineView.startTime = startTime
+        timelineView.startHour = startHour
         timelineView.hourHeight = hourHeight
         timelineView.setNeedsDisplay()
     }
@@ -46,7 +47,7 @@ class TimelineViewController: UIViewController {
     
     @objc func setCurrentTime() {
         guard let currentTime = Utils.currentTime() else { return }
-        timelineView.startTime = currentTime
+        timelineView.startHour = CGFloat(currentTime.inHours())
         renderTimeline()
     }
     
@@ -60,18 +61,18 @@ class TimelineViewController: UIViewController {
             guard let previousY = previousPanLocation?.y else { return }
             let dy = location.y - previousY
             
-            var newStartTime = startTime - Double(dy*100)
-            let newEndTime = (newStartTime + TimeInterval.from(hours:Double(view.frame.height / hourHeight)))
+            var newStartHour = startHour - (dy / hourHeight) * panMultiplier // pan speed relative to hour height!
+            let newEndHour = newStartHour + view.frame.height / hourHeight
             
-            if newStartTime < 0 {
-                newStartTime = startTime
-            } else if newEndTime > TimeInterval.from(hours: 24.5) {
-                newStartTime = startTime
+            if newStartHour < 0 {
+                newStartHour = startHour
+            } else if newEndHour > 24.5 {
+                newStartHour = startHour
             }
             
             previousPanLocation = location
-            startTime = newStartTime
-            delegate?.timelineViewController(self, didUpdateStartTime: startTime)
+            startHour = newStartHour
+            delegate?.timelineViewController(self, didUpdateStartHour: startHour)
             renderTimeline()
             
         case .ended,
@@ -88,11 +89,11 @@ class TimelineViewController: UIViewController {
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             
             var newHourHeight = hourHeight * gestureRecognizer.scale
-            let newEndTime = (startTime + TimeInterval.from(hours:Double(view.frame.height / newHourHeight)))
-            if newEndTime > TimeInterval.from(hours: 24.5) {
-                let newStartTime = TimeInterval.from(hours: 24.5) - TimeInterval.from(hours:Double(view.frame.height / newHourHeight))
-                if newStartTime > 0 {
-                    startTime = newStartTime
+            let newEndHour = startHour + view.frame.height / newHourHeight
+            if newEndHour > 24.5 {
+                let newStartHour = 24.5 - view.frame.height / newHourHeight
+                if newStartHour > 0 {
+                    startHour = newStartHour
                 } else {
                     newHourHeight = hourHeight
                 }
@@ -105,7 +106,7 @@ class TimelineViewController: UIViewController {
         }
     }
     
-    func isTimelineWithinBounds(startTime: TimeInterval, hourHeight: CGFloat) {
+    func isTimelineWithinBounds(startHour: TimeInterval, hourHeight: CGFloat) {
         // TODO
     }
 
@@ -118,9 +119,9 @@ extension TimelineViewController {
     public func hourInTimeline(forY y: CGFloat) -> Double? {
 
         let relativeHour = y / hourHeight
-        let absoluteHour = Double(relativeHour) + startTime.inHours()
+        let absoluteHour = relativeHour + startHour
         
-        return absoluteHour
+        return Double(absoluteHour)
     }
     
     public func roundedHourInTimeline(forY y: CGFloat) -> Double? {
@@ -136,7 +137,7 @@ extension TimelineViewController {
 
 protocol TimelineViewDelegate : AnyObject {
     
-    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartTime: TimeInterval)
+    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartHour: CGFloat)
     func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateHourHeight: CGFloat)
     
 }

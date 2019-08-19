@@ -247,8 +247,8 @@ extension ItineraryViewController: DragDataDelegate {
 // MARK: - Custom CollectionView Layout delegate methods
 extension ItineraryViewController : ItineraryLayoutDelegate {
     
-    func timelineStartTime(of collectionView: UICollectionView) -> TimeInterval {
-        return timelineController.startTime
+    func timelineStartHour(of collectionView: UICollectionView) -> CGFloat {
+        return timelineController.startHour
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
@@ -283,7 +283,7 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
 
 extension ItineraryViewController: TimelineViewDelegate {
     
-    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartTime: TimeInterval) {
+    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartHour: CGFloat) {
         collectionView.reloadData()
     }
     

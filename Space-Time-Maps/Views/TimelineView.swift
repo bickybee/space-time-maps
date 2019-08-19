@@ -10,19 +10,17 @@ import UIKit
 
 class TimelineView: UIView {
     
-    var startTime : TimeInterval = TimeInterval.from(minutes: 15.0)
+    var startHour : CGFloat = 0.25
     var hourHeight : CGFloat = 50
     var sidebarWidth : CGFloat = 50
     var currentTime : TimeInterval = 0
     
     var startOffset : CGFloat {
-        let timeInHours = startTime.inHours()
-        return CGFloat(1 - timeInHours.truncatingRemainder(dividingBy: 1)) * hourHeight
+        return 1 - startHour.truncatingRemainder(dividingBy: 1) * hourHeight
     }
     
     var numHourTicks : Int {
         let heightMinusOffset = self.frame.height - startOffset
-        // How many full hours fit into the remaining time?
         let fullHours = floor(heightMinusOffset / hourHeight)
         return Int(fullHours + 1)
     }
@@ -56,7 +54,7 @@ class TimelineView: UIView {
         
         for tickNum in 0...(numHourTicks) {
             let x = sidebarWidth - tickOverflow
-            let y = CGFloat(tickNum) * (spacing) + startOffset
+            let y = CGFloat(tickNum) * spacing + startOffset
             let startTickAt = CGPoint(x: x, y: y)
             let endTickAt = CGPoint(x: timelineWidth + tickOverflow, y: y)
             tickPath.move(to: startTickAt)
@@ -70,7 +68,7 @@ class TimelineView: UIView {
     }
     
     func drawNumbers(spacing: CGFloat) {
-        let firstHour = Int(ceil(startTime.inHours()))
+        let firstHour = Int(ceil(startHour))
         for num in 0...numHourTicks {
             var hour = firstHour + num
             var midday : String
@@ -125,7 +123,7 @@ class TimelineView: UIView {
     override func draw(_ rect: CGRect) {
         drawTicks(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width )
         drawNumbers(spacing: hourHeight)
-        drawSidebarLine( )
+        drawSidebarLine()
         drawCurrentTime(spacing: hourHeight, tickWidth: rect.width, timelineWidth: rect.width)
     }
 
