@@ -150,6 +150,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let color = ColorUtils.colorFor(index: index, outOf: maxIndex)
         cell.backgroundColor = color
         cell.nameLabel.text = destination.place.name
+        cell.layoutSubviews()
         addDragRecognizerTo(cell: cell)
         
         return cell
@@ -170,6 +171,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let leg = legs[index]
         let timeString = Utils.secondsToString(seconds: leg.duration)
         cell.timeLabel.text = timeString
+        
+        cell.layoutSubviews()
         
         return cell
     }

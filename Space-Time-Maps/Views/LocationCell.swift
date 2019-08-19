@@ -10,6 +10,7 @@ import UIKit
 
 class LocationCell: DraggableCell {
     
+    var container : UIView!
     var nameLabel : UILabel!
     let padding : CGFloat = 5
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 35.0)
@@ -28,7 +29,7 @@ class LocationCell: DraggableCell {
     }
     
     func setupLabel() {
-        let container = UIView()
+        container = UIView()
         container.frame = contentView.frame.inset(by: cellInsets)
         container.backgroundColor = .white
         container.layer.cornerRadius = 5;
@@ -47,5 +48,13 @@ class LocationCell: DraggableCell {
         container.addSubview(nameLabel)
         contentView.addSubview(container)
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let newHeight = self.frame.size.height - 10.0
+        container.frame.size.height = newHeight
+        nameLabel.frame.size.height = newHeight
+    }
+    
     
 }

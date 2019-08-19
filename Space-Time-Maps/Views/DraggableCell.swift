@@ -37,4 +37,11 @@ class DraggableCell: UICollectionViewCell {
         dragOffset = CGPoint(x: dragHandle.center.x - contentView.center.x, y: dragHandle.center.y - contentView.center.y)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let newHeight = self.frame.size.height
+        dragHandle.center = CGPoint(x: dragHandle.frame.midX, y: newHeight/2)
+    }
+    
 }

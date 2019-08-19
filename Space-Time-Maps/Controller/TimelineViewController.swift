@@ -47,7 +47,7 @@ class TimelineViewController: UIViewController {
     
     @objc func setCurrentTime() {
         guard let currentTime = Utils.currentTime() else { return }
-        timelineView.startHour = CGFloat(currentTime.inHours())
+        timelineView.currentHour = CGFloat(currentTime.inHours())
         renderTimeline()
     }
     

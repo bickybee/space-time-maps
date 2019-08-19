@@ -45,4 +45,12 @@ class LegCell: UICollectionViewCell {
         contentView.addSubview(timeLabel)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let newHeight = self.frame.size.height
+        gradientView.frame.size.height = newHeight
+        timeLabel.frame.size.height = newHeight
+    }
+    
 }
