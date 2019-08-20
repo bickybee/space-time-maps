@@ -13,20 +13,16 @@ typealias UIColorGradient = (UIColor, UIColor)
 
 class ColorUtils {
     
-    static func colorFor(index: Int, outOf maxIndex: Int) -> UIColor {
+    static func colorFor(fraction: Double) -> UIColor {
         
-        let fraction = (maxIndex == 0) ? 0 : CGFloat(index) / CGFloat(maxIndex)
-        let color = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: fraction)
-        return color
+        return colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(fraction))
         
     }
     
-    static func gradientFor(index: Int, outOf maxIndex: Int) -> UIColorGradient {
+    static func gradientFor(startFraction: Double, endFraction: Double) -> UIColorGradient {
         
-        let startFraction = CGFloat(index) / CGFloat(maxIndex)
-        let endFraction = CGFloat(index + 1) / CGFloat(maxIndex)
-        let start = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: startFraction)
-        let end = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: endFraction)
+        let start = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(startFraction))
+        let end = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(endFraction))
         return (start, end)
         
     }

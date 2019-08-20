@@ -22,7 +22,8 @@ class MapUtils {
         
         for index in 0...maxIndex {
             let marker = markerFor(place: places[index])
-            let colour = ColorUtils.colorFor(index: index, outOf: maxIndex)
+            let fraction = Double(index) / Double(maxIndex)
+            let colour = ColorUtils.colorFor(fraction: fraction)
             marker.icon = GMSMarker.markerImage(with: colour)
             markers.append(marker)
         }
@@ -53,7 +54,9 @@ class MapUtils {
         
         for index in 0...maxIndex {
             let polyline = polylineFor(encodedPath: legs[index].polyline)
-            polyline.spans = gradientStyleForPolyline(at: index, outOf: maxIndex + 1) // want color to incl. same range as places, of which there are always 1 more
+            let startFraction = Double(index) / Double(maxIndex)
+            let endFraction = Double(index + 1) / Double(maxIndex + 1)
+            polyline.spans = gradientStyleForPolyline(startFraction: startFraction, endFraction: endFraction) // want color to incl. same range as places, of which there are always 1 more
             polylines.append(polyline)
         }
         
@@ -81,8 +84,8 @@ private extension MapUtils {
         return polyline
     }
     
-    static func gradientStyleForPolyline(at index: Int, outOf maxIndex: Int) -> [GMSStyleSpan] {
-        let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex)
+    static func gradientStyleForPolyline(startFraction: Double, endFraction: Double) -> [GMSStyleSpan] {
+        let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let style = GMSStrokeStyle.gradient(from: gradient.0, to: gradient.1)
         return [GMSStyleSpan(style: style)]
     }

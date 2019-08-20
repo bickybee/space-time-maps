@@ -20,10 +20,10 @@ class Scheduler : NSObject {
     func schedule(destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
 
         // Member variables... (easy access within closures)
-        schedDests = destinations.map( { return Destination(place: $0.place, startTime: $0.startTime, constraints: Constraints() )})
+        schedDests = destinations.map( { return Destination(place: $0.place, timing: $0.timing, constraints: Constraints() )})
         schedLegs = [Leg]()
         
-        destinations[1].constraints.arrival = TimeConstraint(time: destinations[1].startTime, flexibility: .hard)
+        destinations[1].constraints.arrival = Constraint(time: destinations[1].timing.start, flexibility: .hard)
     
         // First, find a seed constraint
         if let seedIndex = destinations.firstIndex(where: { $0.hasConstraints() }) {
@@ -84,12 +84,13 @@ class Scheduler : NSObject {
         // Setup callback
         legCallback = { leg in
             var leg = leg!
-            leg.startTime = destA.startTime + destA.duration
+            leg.timing.start = destA.timing.start + destA.timing.duration
             self.schedLegs.append(leg)
             
             i += 1
-            let nextStartTime = destA.startTime + destA.duration + leg.duration
-            let nextDestA = Destination(place: destB.place, startTime: nextStartTime, constraints: destB.constraints)
+            let nextStartTime = destA.timing.start + destA.timing.duration + leg.timing.duration
+            let nextDestA = destB.copy()
+            nextDestA.timing.start = nextStartTime
             self.schedDests[i] = nextDestA
             
             if i == self.schedDests.count - 1 {
@@ -116,11 +117,12 @@ class Scheduler : NSObject {
         // Setup callback
         legCallback = { leg in
             var leg = leg!
-            leg.startTime = destB.startTime - leg.duration
+            leg.timing.start = destB.timing.start - leg.timing.duration
             self.schedLegs.append(leg)
             
-            let nextStartTime = destB.startTime - destA.duration - leg.duration
-            let nextDestA = Destination(place: destA.place, startTime: nextStartTime, constraints: destA.constraints)
+            let nextStartTime = destB.timing.start - destA.timing.duration - leg.timing.duration
+            let nextDestA = destA.copy()
+            nextDestA.timing.start = nextStartTime
             self.schedDests[i - 1] = nextDestA
             i -= 1
             

@@ -8,28 +8,24 @@
 
 import UIKit
 
-enum TimingType : String {
-    case arrival, departure, duration
-}
-
 class Constraints {
     
-    var arrival : TimeConstraint?
-    var departure : TimeConstraint?
-    var duration : TimeConstraint?
+    var arrival : Constraint?
+    var departure : Constraint?
+    var duration : Constraint?
     
-    func all() -> [TimingType: TimeConstraint] {
+    func all() -> [Constraint.Kind: Constraint] {
         
-        var constraints = [TimingType: TimeConstraint]()
+        var constraints = [Constraint.Kind: Constraint]()
         
-        if arrival != nil { constraints[TimingType.arrival] = arrival }
-        if departure != nil { constraints[TimingType.departure] = departure }
-        if duration != nil { constraints[TimingType.duration] = duration }
+        if arrival != nil { constraints[Constraint.Kind.arrival] = arrival }
+        if departure != nil { constraints[Constraint.Kind.departure] = departure }
+        if duration != nil { constraints[Constraint.Kind.duration] = duration }
         
         return constraints
     }
     
-    func with(flexibility: TimeConstraint.Flexibility) -> [TimingType: TimeConstraint] {
+    func with(flexibility: Constraint.Flexibility) -> [Constraint.Kind: Constraint] {
     
         let constraints = self.all()
         let filteredConstraints = constraints.filter({ $0.value.flexibility == flexibility })
@@ -40,13 +36,17 @@ class Constraints {
 
 }
 
-struct TimeConstraint {
+struct Constraint {
     
     enum Flexibility : String {
         case hard, soft
     }
     
+    enum Kind : String {
+        case arrival, departure, duration
+    }
+    
     var time : TimeInterval
-    var flexibility : TimeConstraint.Flexibility
+    var flexibility : Constraint.Flexibility
     
 }

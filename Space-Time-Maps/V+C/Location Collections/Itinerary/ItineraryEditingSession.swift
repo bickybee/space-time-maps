@@ -12,14 +12,14 @@ class ItineraryEditingSession: NSObject {
     
     var travelMode : TravelMode
     var baseDestinations : [Destination]
-    var movingPlace : Place
+    var movingDestination : Destination
     var originalIndex : Int
     var callback : ([Destination]?, Route?) -> ()
     
     static let scheduler = Scheduler()
     
-    init(movingPlace place: Place, withIndex index: Int, inDestinations destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination]?, Route?) -> ()) {
-        self.movingPlace = place
+    init(movingDestination destination: Destination, withIndex index: Int, inDestinations destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination]?, Route?) -> ()) {
+        self.movingDestination = destination
         self.baseDestinations = destinations
         self.travelMode = travelMode
         self.callback = callback
@@ -28,10 +28,10 @@ class ItineraryEditingSession: NSObject {
     
     func moveDestination(toTime time: TimeInterval){
         
-        let destination = Destination(place: movingPlace, startTime: time, constraints: Constraints())
         var modifiedDestinations = baseDestinations
-        modifiedDestinations.append(destination)
-        modifiedDestinations.sort(by: { $0.startTime <= $1.startTime })
+        movingDestination.timing.start = time
+        modifiedDestinations.append(movingDestination)
+        modifiedDestinations.sort(by: { $0.timing.start <= $1.timing.start })
         computeRoute(with: modifiedDestinations)
         
     }

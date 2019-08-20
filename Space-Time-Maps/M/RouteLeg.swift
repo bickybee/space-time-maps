@@ -8,10 +8,11 @@
 
 import Foundation
 
+typealias Route = [Leg]
+
 struct Leg : Schedulable {
     
     var polyline : String
-    var duration : TimeInterval
-    var startTime : TimeInterval
+    var timing : Timing
     
 }

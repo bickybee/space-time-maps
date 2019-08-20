@@ -18,13 +18,15 @@ class ItineraryViewController: DraggableCellViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var timelineController: TimelineViewController!
 
+    // Itinerary editing
     var editingSession : ItineraryEditingSession?
     var previousTouchHour : Double?
+    var defaultDuration = TimeInterval.from(hours: 0.5)
 
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?
     
-    // Data source!
+    // Collection view data source!
     var itinerary = Itinerary(destinations: [Destination](), route:[Leg](), travelMode: .driving) {
         didSet {
             collectionView.reloadData()
@@ -101,12 +103,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         guard let destination = itinerary.destinations[safe: index] else { return cell }
         
-        // Else, return a location cell
-        let maxIndex = itinerary.destinations.count - 1
-        let color = ColorUtils.colorFor(index: index, outOf: maxIndex)
-        cell.backgroundColor = color
-        cell.nameLabel.text = destination.place.name
-        cell.layoutSubviews()
+        let fraction = Double(index) / Double(itinerary.destinations.count - 1)
+        cell.setupWith(name: destination.place.name, fraction: fraction)
         addDragRecognizerTo(cell: cell)
         
         return cell
@@ -116,19 +114,11 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func setupLegCell(_ cell: LegCell, with index: Int) -> LegCell {
         
         let legs = itinerary.route
-        let maxIndex = legs.count - 1
-        let gradient = ColorUtils.gradientFor(index: index, outOf: maxIndex + 1)
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = cell.gradientView.frame
-        gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
-        cell.gradientView.layer.sublayers = nil
-        cell.gradientView.layer.addSublayer(gradientLayer)
+        guard let leg = legs[safe: index] else { return cell }
         
-        let leg = legs[index]
-        let timeString = Utils.secondsToString(seconds: leg.duration)
-        cell.timeLabel.text = timeString
-        
-        cell.layoutSubviews()
+        let startFraction = Double(index) / Double(legs.count)
+        let endFraction = Double(index + 1) / Double(legs.count + 1)
+        cell.setupWith(duration: leg.timing.duration, fromStartFraction: startFraction, toEndFraction: endFraction)
         
         return cell
     }
@@ -149,7 +139,14 @@ extension ItineraryViewController : DragDelegate {
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
         
-        guard let place = object as? Place else { return }
+        let destination : Destination
+        if let place = object as? Place {
+            destination = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration), constraints: Constraints())
+        } else if let dest = object as? Destination {
+            destination = dest
+        } else {
+            return
+        }
         
         var editingDestinations = itinerary.destinations
         
@@ -157,7 +154,7 @@ extension ItineraryViewController : DragDelegate {
             editingDestinations.remove(at: index)
         }
         
-        editingSession = ItineraryEditingSession(movingPlace: place, withIndex: index, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: index, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withView view: UIView) {
@@ -205,7 +202,7 @@ extension ItineraryViewController: DragDataDelegate {
         guard let indexPath = collectionView.indexPath(for: draggableCell),
               let destination = itinerary.destinations[safe: indexPath.item] else { return nil }
         
-        return destination.place
+        return destination
     }
     
     func indexFor(draggableCell: DraggableCell) -> Int? {
@@ -229,12 +226,12 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
     
     func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
         guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
-        return schedulable.startTime
+        return schedulable.timing.start
     }
     
     func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
         guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
-        return schedulable.duration
+        return schedulable.timing.duration
     }
     
     func schedulableFor(indexPath: IndexPath) -> Schedulable? {

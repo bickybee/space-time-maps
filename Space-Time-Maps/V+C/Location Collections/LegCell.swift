@@ -25,14 +25,14 @@ class LegCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupGradientView(frame: CGRect) {
+    private func setupGradientView(frame: CGRect) {
         let width : CGFloat = 10.0
         let gradientFrame = CGRect(x: frame.width / 4.0 - width / 2.0, y: 0, width: width, height: frame.height)
         gradientView = UIView(frame: gradientFrame)
         contentView.addSubview(gradientView)
     }
     
-    func setupLabel(frame: CGRect) {
+    private func setupLabel(frame: CGRect) {
         timeLabel = UILabel()
         
         timeLabel.textAlignment = .left
@@ -43,6 +43,19 @@ class LegCell: UICollectionViewCell {
         timeLabel.frame = contentView.frame.inset(by: cellInsets)
         
         contentView.addSubview(timeLabel)
+    }
+    
+    public func setupWith(duration: Double, fromStartFraction startFraction: Double, toEndFraction endFraction: Double) {
+        let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.gradientView.frame
+        gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
+        self.gradientView.layer.sublayers = nil
+        self.gradientView.layer.addSublayer(gradientLayer)
+        
+        let timeString = Utils.secondsToString(seconds: duration)
+        self.timeLabel.text = timeString
+        self.layoutSubviews()
     }
     
     override func layoutSubviews() {

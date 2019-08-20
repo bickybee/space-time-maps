@@ -18,17 +18,15 @@ class Destination: Schedulable {
     
     // Timing details about this destination, to be rendered accordingly
     // Relative to today, for simplicity, since we only provide 1-day views
-    var startTime : TimeInterval // point at which to render cell
-    var duration : TimeInterval // height of cell
+    var timing : Timing
     
     // Timing constraints provided by the user, which influence the calculated timing details
     var constraints : Constraints//var timeConstraints = TimeConstraints()
     
-    init(place: Place, startTime: TimeInterval, constraints: Constraints) {
+    init(place: Place, timing: Timing, constraints: Constraints) {
         
         self.place = place
-        self.startTime = startTime
-        self.duration = TimeInterval.from(minutes: 30.0)
+        self.timing = timing
         self.constraints = constraints
         
     }
@@ -38,7 +36,7 @@ class Destination: Schedulable {
     }
     
     func copy() -> Destination {
-        return Destination(place: self.place, startTime: self.startTime, constraints: self.constraints)
+        return Destination(place: self.place, timing: self.timing, constraints: self.constraints)
     }
 }
 

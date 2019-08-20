@@ -28,7 +28,7 @@ class LocationCell: DraggableCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupLabel() {
+    private func setupLabel() {
         container = UIView()
         container.frame = contentView.frame.inset(by: cellInsets)
         container.backgroundColor = .white
@@ -47,6 +47,13 @@ class LocationCell: DraggableCell {
         
         container.addSubview(nameLabel)
         contentView.addSubview(container)
+    }
+    
+    public func setupWith(name: String, fraction: Double) {
+        let color = ColorUtils.colorFor(fraction: fraction)
+        self.backgroundColor = color
+        self.nameLabel.text = name
+        self.layoutSubviews()
     }
     
     override func layoutSubviews() {
