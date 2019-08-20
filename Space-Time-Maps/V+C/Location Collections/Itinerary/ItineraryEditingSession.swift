@@ -48,6 +48,5 @@ class ItineraryEditingSession: NSObject {
             ItineraryEditingSession.scheduler.schedule(destinations: destinations, travelMode: travelMode, callback: callback)
         }
     }
-    
 
 }

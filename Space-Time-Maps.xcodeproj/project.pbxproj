@@ -10,9 +10,9 @@
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
+		98BC8576230B74D1001D14BE /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8575230B74D1001D14BE /* Destination.swift */; };
 		98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */; };
 		98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */; };
-		98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A622FCC243003DE1CB /* Destination.swift */; };
 		98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */; };
 		98DEF0B423039788003DE1CB /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0B323039788003DE1CB /* Utils.swift */; };
 		98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */; };
@@ -51,9 +51,9 @@
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
+		98BC8575230B74D1001D14BE /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
 		98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraints.swift; sourceTree = "<group>"; };
 		98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		98DEF0A622FCC243003DE1CB /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Destination.swift; path = "/Users/vicky/Documents/code/space-time-maps/Space-Time-Maps/Model/Destination.swift"; sourceTree = "<absolute>"; };
 		98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryLayout.swift; sourceTree = "<group>"; };
 		98DEF0B323039788003DE1CB /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCollectionViewController.swift; sourceTree = "<group>"; };
@@ -69,7 +69,6 @@
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughCollectionView.swift; sourceTree = "<group>"; };
 		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
-		B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Toronto, Canada.gpx"; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
@@ -119,12 +118,75 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		98DEF0AA22FDE444003DE1CB /* Layouts */ = {
+		98BC856F230B71DC001D14BE /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
+				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
+				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
+				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
 				98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */,
+				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
+				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
 			);
-			path = Layouts;
+			path = Itinerary;
+			sourceTree = "<group>";
+		};
+		98BC8570230B71EC001D14BE /* Place Palette */ = {
+			isa = PBXGroup;
+			children = (
+				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
+			);
+			path = "Place Palette";
+			sourceTree = "<group>";
+		};
+		98BC8571230B71F2001D14BE /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
+				98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		98BC8572230B73C1001D14BE /* Location Collections */ = {
+			isa = PBXGroup;
+			children = (
+				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
+				98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */,
+				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
+				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
+				98DEF0D423066372003DE1CB /* LegCell.swift */,
+				98BC856F230B71DC001D14BE /* Itinerary */,
+				98BC8570230B71EC001D14BE /* Place Palette */,
+			);
+			path = "Location Collections";
+			sourceTree = "<group>";
+		};
+		98BC8573230B7433001D14BE /* V+C */ = {
+			isa = PBXGroup;
+			children = (
+				98BC8577230B74E5001D14BE /* Parent */,
+				98BC8571230B71F2001D14BE /* Map */,
+				98BC8572230B73C1001D14BE /* Location Collections */,
+			);
+			path = "V+C";
+			sourceTree = "<group>";
+		};
+		98BC8577230B74E5001D14BE /* Parent */ = {
+			isa = PBXGroup;
+			children = (
+				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
+			);
+			path = Parent;
+			sourceTree = "<group>";
+		};
+		98BC8578230C280B001D14BE /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				B6A625E322D7CFB40099D65C /* style.json */,
+				983F22C522EF87420012EF5C /* Keys.plist */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 		AFD388B64024ED9215659E5A /* Pods */ = {
@@ -136,57 +198,29 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		B64B992422E0FB49007793BA /* Controller */ = {
+		B64B992622E0FB6D007793BA /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
-				B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */,
-				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
-				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
-				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
-				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		B64B992622E0FB6D007793BA /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				98DEF0D62306661B003DE1CB /* ColorUtils.swift */,
-				98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */,
-				98DEF0B323039788003DE1CB /* Utils.swift */,
 				B62AFCB722E4DA4100B7D2CD /* LocationService.swift */,
 				B6A625E922DF6CBD0099D65C /* QueryService.swift */,
 				B6A625EB22DF93F10099D65C /* APIResponses.swift */,
-				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
-				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
+				98DEF0D62306661B003DE1CB /* ColorUtils.swift */,
+				98DEF0B323039788003DE1CB /* Utils.swift */,
 			);
-			path = Helpers;
+			path = Utils;
 			sourceTree = "<group>";
 		};
-		B64B993222E25615007793BA /* Model */ = {
+		B64B993222E25615007793BA /* M */ = {
 			isa = PBXGroup;
 			children = (
-				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
-				98DEF0CE23061A35003DE1CB /* Schedulable.swift */,
-				98DEF0D82307294E003DE1CB /* RouteLeg.swift */,
-				98DEF0A622FCC243003DE1CB /* Destination.swift */,
 				B64B992C22E15D4A007793BA /* Place.swift */,
+				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
+				98BC8575230B74D1001D14BE /* Destination.swift */,
+				98DEF0D82307294E003DE1CB /* RouteLeg.swift */,
+				98DEF0CE23061A35003DE1CB /* Schedulable.swift */,
 				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
 			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		B64B993322E25670007793BA /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
-				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
-				B62AFCBE22E50E1700B7D2CD /* LocationCell.swift */,
-				98DEF0D423066372003DE1CB /* LegCell.swift */,
-				98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */,
-			);
-			path = Views;
+			path = M;
 			sourceTree = "<group>";
 		};
 		B6B5A5A222C7CB3100CE4301 = {
@@ -210,20 +244,16 @@
 		B6B5A5AD22C7CB3200CE4301 /* Space-Time-Maps */ = {
 			isa = PBXGroup;
 			children = (
-				98DEF0AA22FDE444003DE1CB /* Layouts */,
+				B64B993222E25615007793BA /* M */,
+				98BC8573230B7433001D14BE /* V+C */,
 				989AF2B022F9BB54002CCFDD /* Extensions */,
-				B64B993322E25670007793BA /* Views */,
-				B64B992422E0FB49007793BA /* Controller */,
-				B64B993222E25615007793BA /* Model */,
-				B64B992622E0FB6D007793BA /* Helpers */,
-				B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */,
+				B64B992622E0FB6D007793BA /* Utils */,
+				98BC8578230C280B001D14BE /* Other */,
 				B6B5A5B222C7CB3200CE4301 /* Main.storyboard */,
-				B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */,
+				B6B5A5AE22C7CB3200CE4301 /* AppDelegate.swift */,
 				B6B5A5B722C7CB3200CE4301 /* LaunchScreen.storyboard */,
 				B6B5A5BA22C7CB3200CE4301 /* Info.plist */,
-				B6A625E322D7CFB40099D65C /* style.json */,
-				B62AFCAF22E3904C00B7D2CD /* Toronto, Canada.gpx */,
-				983F22C522EF87420012EF5C /* Keys.plist */,
+				B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */,
 			);
 			path = "Space-Time-Maps";
 			sourceTree = "<group>";
@@ -347,8 +377,8 @@
 			files = (
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
+				98BC8576230B74D1001D14BE /* Destination.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
-				98DEF0A722FCC243003DE1CB /* Destination.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
 				B62AFCBF22E50E1700B7D2CD /* LocationCell.swift in Sources */,
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,

@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/vicky/Documents/code/space-time-maps/Space-Time-Maps/Model/Destination.swift">
-   </FileRef>
-   <FileRef
       location = "group:Space-Time-Maps.xcodeproj">
    </FileRef>
    <FileRef
