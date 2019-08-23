@@ -17,12 +17,15 @@ class PlacePaletteViewController: DraggableCellViewController {
     weak var delegate : PlacePaletteViewControllerDelegate?
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchButton: UIButton!
+    @IBOutlet weak var enlargeButton: UIButton!
+    @IBOutlet weak var groupButton: UIButton!
+    var isBig : Bool = false
     
     // For autocomplete search
     var geographicSearchBounds : GMSCoordinateBounds?
     
     // Data source
-    var places = [Place]() {
+    var groups = [PlaceGroup]() {
         didSet {
             collectionView.reloadData()
         }
@@ -41,14 +44,41 @@ class PlacePaletteViewController: DraggableCellViewController {
         
         self.dragDataDelegate = self
         
+        var places = [Place]()
         places.append(contentsOf: Utils.defaultPlaces())
+        
+        let defaultPlaceGroup = PlaceGroup(name: "", places: places, kind: .none)
+        groups.append(defaultPlaceGroup)
         
     }
     
     @IBAction func searchClicked(_ sender: Any) {
         presentAutocompleteController()
     }
+    
+    @IBAction func groupClicked(_ sender: Any) {
+        print("create group modal")
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "createGroup" {
+            guard let groupCreationController = segue.destination as? GroupCreationViewController else { return }
+            groupCreationController.delegate = self
+        }
+    }
+    
+}
 
+extension PlacePaletteViewController: GroupCreationDelegate {
+    
+    func createGroup(name: String, kind: PlaceGroup.Kind) {
+        collectionView.performBatchUpdates({
+            let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
+            collectionView.insertSections(IndexSet(integer: groups.endIndex))
+            groups.append(newGroup)
+        }, completion: nil)
+    }
+    
     
 }
 
@@ -56,19 +86,23 @@ class PlacePaletteViewController: DraggableCellViewController {
 extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return groups.count
     }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return places.count
+        if let group = groups[safe: section] {
+            return group.places.count
+        } else {
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         
-        guard let place = places[safe: indexPath.item] else { return cell }
+        guard let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] else { return cell }
         cell.backgroundColor = .lightGray
         cell.nameLabel.text = place.name
         addDragRecognizerTo(cell: cell)
@@ -85,13 +119,53 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         return CGSize(width:size.width, height:self.cellHeight)
 
     }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        // 1
+        switch kind {
+        // 2
+        case UICollectionView.elementKindSectionHeader:
+            // 3
+            guard
+                let headerView = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: "groupHeader",
+                    for: indexPath) as? GroupHeaderView
+                else {
+                    fatalError("Invalid view type")
+            }
+            
+            guard let group = groups[safe: indexPath.section] else { assert(false, "No group here") }
+            headerView.label.text = group.name
+            headerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGroup)))
+            return headerView
+        default:
+            // 4
+            assert(false, "Invalid element type")
+        }
+    
+    }
+    
+    @objc func tapGroup(_ gesture: UITapGestureRecognizer) {
+        print("tapped")
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if section == 0 {
+            return CGSize(width: 0, height: 0)
+        } else {
+            return CGSize(width: collectionView.frame.size.width, height: 40.0)
+        }
+    }
 }
 
 extension PlacePaletteViewController: DragDataDelegate {
     
     func objectFor(draggableCell: DraggableCell) -> AnyObject? {
         guard let indexPath = collectionView.indexPath(for: draggableCell),
-              let place = places[safe: indexPath.item] else { return nil }
+            let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] else { return nil }
         
         return place
     }
@@ -135,9 +209,9 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, isInItinerary: false)
-        places.append(newPlace)
+        groups[0].places.append(newPlace)
         print(newPlace)
-        delegate?.placePaletteViewController(self, didUpdatePlaces: places)
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups[0].places)
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {

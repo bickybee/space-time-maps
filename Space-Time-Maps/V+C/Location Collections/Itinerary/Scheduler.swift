@@ -20,23 +20,23 @@ class Scheduler : NSObject {
     func schedule(destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
 
         // Member variables... (easy access within closures)
-        schedDests = destinations.map( { return Destination(place: $0.place, timing: $0.timing, constraints: Constraints() )})
+        schedDests = destinations.map( { return $0.copy() })
         schedLegs = [Leg]()
         
-        destinations[1].constraints.arrival = Constraint(time: destinations[1].timing.start, flexibility: .hard)
-    
         // First, find a seed constraint
-        if let seedIndex = destinations.firstIndex(where: { $0.hasConstraints() }) {
-            
-            // Schedule events propogating outwards from seed
-            scheduleEvents(seededAt: seedIndex) {
-                DispatchQueue.main.async {
-                    callback(self.schedDests, self.schedLegs)
-                }
-            }
-            
+        var seedIndex : Int
+        if let constrainedIndex = destinations.firstIndex(where: { $0.hasConstraints() }) {
+            print("seed found")
+            seedIndex = constrainedIndex
         } else {
-            print("schedule without constraints?")
+            print("no seed")
+            seedIndex = 0
+        }
+        
+        scheduleEvents(seededAt: seedIndex) {
+            DispatchQueue.main.async {
+                callback(self.schedDests, self.schedLegs)
+            }
         }
         
     }
@@ -88,9 +88,11 @@ class Scheduler : NSObject {
             self.schedLegs.append(leg)
             
             i += 1
-            let nextStartTime = destA.timing.start + destA.timing.duration + leg.timing.duration
+            let minStartTime = destA.timing.start + destA.timing.duration + leg.timing.duration
             let nextDestA = destB.copy()
-            nextDestA.timing.start = nextStartTime
+            if nextDestA.timing.start < minStartTime {
+                nextDestA.timing.start = minStartTime
+            }
             self.schedDests[i] = nextDestA
             
             if i == self.schedDests.count - 1 {
@@ -120,9 +122,11 @@ class Scheduler : NSObject {
             leg.timing.start = destB.timing.start - leg.timing.duration
             self.schedLegs.append(leg)
             
-            let nextStartTime = destB.timing.start - destA.timing.duration - leg.timing.duration
+            let maxStartTime = destB.timing.start - destA.timing.duration - leg.timing.duration
             let nextDestA = destA.copy()
-            nextDestA.timing.start = nextStartTime
+            if nextDestA.timing.start > maxStartTime {
+                nextDestA.timing.start = maxStartTime
+            }
             self.schedDests[i - 1] = nextDestA
             i -= 1
             
@@ -138,6 +142,49 @@ class Scheduler : NSObject {
         
         // Begin recursive callback hell!
         self.qs.getLegFor(start: destA, end: destB, travelMode: self.travelMode, callback: legCallback)
+    }
+    
+    // Assume all are "fully constrained"
+    func schedule2(destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
+        
+        // Member variables... (easy access within closures)
+        schedDests = destinations.map( { return $0.copy() })
+        schedLegs = [Leg]()
+        
+        var i = 0
+        var destA = schedDests[0]
+        var destB = schedDests[1]
+        var legCallback : ((Leg?) -> ())!
+        
+        // Setup callback
+        legCallback = { leg in
+            var leg = leg!
+            leg.timing.start = destA.timing.end
+            self.schedLegs.append(leg)
+            
+            i += 1
+            let minStartTime = destA.timing.end + leg.timing.duration
+            let nextDestA = destB.copy()
+            if nextDestA.timing.start < minStartTime {
+                nextDestA.timing.start = minStartTime
+            }
+            self.schedDests[i] = nextDestA
+            
+            if i == self.schedDests.count - 1 {
+                DispatchQueue.main.async {
+                    callback(self.schedDests, self.schedLegs)
+                }
+            } else {
+                destA = self.schedDests[i]
+                destB = self.schedDests[i + 1]
+                self.qs.getLegFor(start: destA, end: destB, travelMode: self.travelMode, callback: legCallback)
+                
+            }
+        }
+        
+        // Begin recursive callback hell!
+        self.qs.getLegFor(start: destA, end: destB, travelMode: self.travelMode, callback: legCallback)
+
     }
     
 }

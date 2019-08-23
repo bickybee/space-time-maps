@@ -19,6 +19,7 @@ class ItineraryEditingSession: NSObject {
     static let scheduler = Scheduler()
     
     init(movingDestination destination: Destination, withIndex index: Int, inDestinations destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination]?, Route?) -> ()) {
+        destination.constraints.areEnabled = true
         self.movingDestination = destination
         self.baseDestinations = destinations
         self.travelMode = travelMode
@@ -27,6 +28,8 @@ class ItineraryEditingSession: NSObject {
     }
     
     func moveDestination(toTime time: TimeInterval){
+        
+        print(movingDestination.place.name)
         
         var modifiedDestinations = baseDestinations
         movingDestination.timing.start = time
@@ -38,6 +41,11 @@ class ItineraryEditingSession: NSObject {
     
     func removeDestination() {
         computeRoute(with: baseDestinations)
+    }
+    
+    func end() {
+        movingDestination.constraints.areEnabled = false
+        moveDestination(toTime: movingDestination.timing.start)
     }
 
     

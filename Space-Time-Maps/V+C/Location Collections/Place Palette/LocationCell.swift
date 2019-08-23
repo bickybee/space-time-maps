@@ -2,7 +2,7 @@
 //  LocationCell.swift
 //  Space-Time-Maps
 //
-//  Created by vicky on 2019-07-21.
+//  Created by Vicky on 22/08/2019.
 //  Copyright © 2019 vicky. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ class LocationCell: DraggableCell {
     var container : UIView!
     var nameLabel : UILabel!
     let padding : CGFloat = 5
-    let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 35.0)
+    let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,6 +22,7 @@ class LocationCell: DraggableCell {
         self.layer.masksToBounds = true;
         
         setupLabel()
+        setupHandle()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -49,10 +50,24 @@ class LocationCell: DraggableCell {
         contentView.addSubview(container)
     }
     
-    public func setupWith(name: String, fraction: Double) {
+    private func setupHandle() {
+        dragHandle.frame = contentView.frame
+        dragHandle.backgroundColor = .clear
+        dragHandle.layer.zPosition = 1000
+        contentView.addSubview(dragHandle)
+        
+    }
+    
+    public func setupWith(name: String, fraction: Double, constrained: Bool) {
         let color = ColorUtils.colorFor(fraction: fraction)
         self.backgroundColor = color
         self.nameLabel.text = name
+        if constrained {
+            self.layer.borderColor = UIColor.black.cgColor
+            self.layer.borderWidth = 1
+        } else {
+            self.layer.borderWidth = 0
+        }
         self.layoutSubviews()
     }
     
@@ -62,6 +77,5 @@ class LocationCell: DraggableCell {
         container.frame.size.height = newHeight
         nameLabel.frame.size.height = newHeight - 8.0
     }
-    
     
 }

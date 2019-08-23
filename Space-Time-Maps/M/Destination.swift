@@ -32,7 +32,7 @@ class Destination: Schedulable {
     }
     
     func hasConstraints() -> Bool {
-        return constraints.all().count > 0
+        return constraints.areEnabled
     }
     
     func copy() -> Destination {

@@ -51,7 +51,7 @@ class ItineraryViewController: DraggableCellViewController {
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
         }
-        collectionView.register(LocationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
+        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -90,7 +90,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! LocationCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestinationCell
             return setupLocationCell(cell, with: indexPath.item)
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
@@ -99,12 +99,16 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    func setupLocationCell(_ cell: LocationCell, with index: Int) -> LocationCell {
+    func setupLocationCell(_ cell: DestinationCell, with index: Int) -> DestinationCell {
         
         guard let destination = itinerary.destinations[safe: index] else { return cell }
         
+//        if editingSession != nil {
+//            cell.setupWith(name: destination.place.name, color: .lightGray, constrained: destination.constraints.areEnabled)
+//        } else {
         let fraction = Double(index) / Double(itinerary.destinations.count - 1)
-        cell.setupWith(name: destination.place.name, fraction: fraction)
+        cell.setupWith(name: destination.place.name, fraction: fraction, constrained: destination.constraints.areEnabled)
+    
         addDragRecognizerTo(cell: cell)
         
         return cell
@@ -137,7 +141,7 @@ extension ItineraryViewController : DragDelegate {
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withView view: UIView) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
         
         let destination : Destination
         if let place = object as? Place {
@@ -157,28 +161,29 @@ extension ItineraryViewController : DragDelegate {
         editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: index, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withView view: UIView) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
         
         // First convert view from parent coordinates to local coordinates
-        let viewFrame : CGRect
-        if let placePaletteViewController = draggableCellViewController as? PlacePaletteViewController {
-            viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
-        } else if let itineraryViewController = draggableCellViewController as? ItineraryViewController {
-            viewFrame = itineraryViewController.collectionView.convert(view.frame, to: collectionView)
-        } else {
-            return
-        }
-        
+//        let viewFrame : CGRect
+//        if let placePaletteViewController = draggableCellViewController as? PlacePaletteViewController {
+//            viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
+//        } else if let itineraryViewController = draggableCellViewController as? ItineraryViewController {
+//            viewFrame = itineraryViewController.collectionView.convert(view.frame, to: collectionView)
+//        } else {
+//            return
+//        }
+//
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
+        let location = gesture.location(in: collectionView)
         
-        let intersection = collectionView.frame.intersection(viewFrame)
-        if intersection.isNull {
+//        let intersection = collectionView.frame.intersection(viewFrame)
+        if !collectionView.frame.contains(location) {
             editingSession.removeDestination()
             return
         }
         
-        let y = intersection.minY // using top of view
+        let y = location.y
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
             editingSession.moveDestination(toTime: TimeInterval.from(hours: hour))
@@ -187,10 +192,17 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withView view: UIView) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
         
+//        editingSession?.end()
         editingSession = nil
         previousTouchHour = nil
+        
+    }
+    
+    func cellForIndex(_ index: Int) -> DraggableCell? {
+        
+        return collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? DraggableCell
         
     }
     

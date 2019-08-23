@@ -54,7 +54,7 @@ class MapUtils {
         
         for index in 0...maxIndex {
             let polyline = polylineFor(encodedPath: legs[index].polyline)
-            let startFraction = Double(index) / Double(maxIndex)
+            let startFraction = Double(index) / Double(maxIndex + 1)
             let endFraction = Double(index + 1) / Double(maxIndex + 1)
             polyline.spans = gradientStyleForPolyline(startFraction: startFraction, endFraction: endFraction) // want color to incl. same range as places, of which there are always 1 more
             polylines.append(polyline)

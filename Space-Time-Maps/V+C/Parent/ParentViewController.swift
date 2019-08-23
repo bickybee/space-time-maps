@@ -16,9 +16,13 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
+    @IBOutlet weak var paletteContainer: UIView!
+    
     // UI outlets
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var transportTimeLabel: UILabel!
+    @IBOutlet weak var paletteSmallWidth: NSLayoutConstraint!
+    @IBOutlet weak var paletteBigWidth: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +51,46 @@ class ParentViewController: UIViewController {
         }
     }
     
+    @objc func swipeOutPalette(_ sender: Any) {
+        
+        print("swipe")
+
+        guard let palette = placePaletteController else { return }
+        view.layoutIfNeeded()
+        UIView.setAnimationCurve(.easeOut)
+        
+        if !palette.isBig {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.paletteSmallWidth.priority = .defaultHigh - 1
+                self.paletteBigWidth.priority = .defaultHigh + 1
+                palette.groupButton.isEnabled = true
+                palette.groupButton.alpha = 1.0
+                self.view.layoutIfNeeded()
+                self.itineraryController.removeFromParent()
+            })
+            palette.collectionView.reloadData()
+            
+        } else {
+            self.paletteSmallWidth.priority = .defaultHigh + 1
+            self.paletteBigWidth.priority = .defaultHigh - 1
+            UIView.animate(withDuration: 0.5, animations: {
+                
+                palette.groupButton.isEnabled = false
+                palette.groupButton.alpha = 0.0
+                self.view.layoutIfNeeded()
+                self.addChild(self.itineraryController)
+            })
+            palette.collectionView.reloadData()
+        }
+        
+        palette.isBig = !palette.isBig
+        
+        
+    }
+    
     // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces() {
-        let savedPlaces = placePaletteController.places
+        let savedPlaces = placePaletteController.groups[0].places
         let itineraryDestinations = itineraryController.itinerary.destinations
         savedPlaces.forEach{ $0.isInItinerary = false}
         for savedPlace in savedPlaces {
@@ -59,7 +100,7 @@ class ParentViewController: UIViewController {
                 }
             }
         }
-        placePaletteController.places = savedPlaces
+        placePaletteController.groups[0].places = savedPlaces
     }
     
     // Package itinerary and place data to send to map for rendering
@@ -68,7 +109,7 @@ class ParentViewController: UIViewController {
         
         // Package relevant data
         let itinerary = itineraryController.itinerary
-        let palettePlaces = placePaletteController.places
+        let palettePlaces = placePaletteController.groups[0].places
         
         let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
         let itineraryPlaces = itinerary.destinations.map { $0.place }
@@ -102,6 +143,7 @@ class ParentViewController: UIViewController {
             }
             placePaletteVC.delegate = self
             placePaletteVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
+            placePaletteVC.enlargeButton.addTarget(self, action: #selector(swipeOutPalette(_:)), for: .touchUpInside)
             placePaletteController = placePaletteVC
             
         }
