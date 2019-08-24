@@ -141,7 +141,7 @@ extension ItineraryViewController : DragDelegate {
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
         let destination : Destination
         if let place = object as? Place {
@@ -155,29 +155,18 @@ extension ItineraryViewController : DragDelegate {
         var editingDestinations = itinerary.destinations
         
         if draggableCellViewController as? ItineraryViewController != nil {
-            editingDestinations.remove(at: index)
+            editingDestinations.remove(at: indexPath.item)
         }
         
-        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: index, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: indexPath.item, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
-        // First convert view from parent coordinates to local coordinates
-//        let viewFrame : CGRect
-//        if let placePaletteViewController = draggableCellViewController as? PlacePaletteViewController {
-//            viewFrame = placePaletteViewController.collectionView.convert(view.frame, to: collectionView)
-//        } else if let itineraryViewController = draggableCellViewController as? ItineraryViewController {
-//            viewFrame = itineraryViewController.collectionView.convert(view.frame, to: collectionView)
-//        } else {
-//            return
-//        }
-//
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
         let location = gesture.location(in: collectionView)
         
-//        let intersection = collectionView.frame.intersection(viewFrame)
         if !collectionView.frame.contains(location) {
             editingSession.removeDestination()
             return
@@ -192,7 +181,7 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
 //        editingSession?.end()
         editingSession = nil
@@ -200,9 +189,9 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func cellForIndex(_ index: Int) -> DraggableCell? {
+    func cellForIndex(_ indexPath: IndexPath) -> DraggableCell? {
         
-        return collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? DraggableCell
+        return collectionView.cellForItem(at: indexPath) as? DraggableCell
         
     }
     
@@ -217,9 +206,9 @@ extension ItineraryViewController: DragDataDelegate {
         return destination
     }
     
-    func indexFor(draggableCell: DraggableCell) -> Int? {
+    func indexPathFor(draggableCell: DraggableCell) -> IndexPath? {
         guard let indexPath = collectionView.indexPath(for: draggableCell) else { return nil}
-        return indexPath.item
+        return indexPath
     }
     
 }

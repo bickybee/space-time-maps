@@ -99,6 +99,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="D3w-2M-fXw"/>
                     <connections>
+                        <outlet property="itineraryContainer" destination="R0v-a2-Sla" id="tKh-rp-uDQ"/>
                         <outlet property="paletteBigWidth" destination="eEP-1c-BUG" id="kxQ-Ck-xqu"/>
                         <outlet property="paletteContainer" destination="lXj-Tg-eL1" id="nez-7b-pZF"/>
                         <outlet property="paletteSmallWidth" destination="ag6-RB-Ex0" id="joc-wl-rbe"/>
@@ -228,32 +229,20 @@
                                     </connections>
                                 </collectionReusableView>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyw-DJ-Da2">
-                                <rect key="frame" x="43.5" y="282" width="50" height="50"/>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyw-DJ-Da2">
+                                <rect key="frame" x="50" y="282" width="50" height="50"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="cIE-LH-cPe"/>
                                     <constraint firstAttribute="height" constant="50" id="quC-VP-oq8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="search">
+                                <state key="normal" title="+place">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="searchClicked:" destination="0gj-fn-l7y" eventType="touchUpInside" id="wam-aG-gr1"/>
                                 </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fA6-Yn-9mj" userLabel="Enlarge">
-                                <rect key="frame" x="43.5" y="232" width="50" height="50"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="eF4-qM-jwj"/>
-                                    <constraint firstAttribute="height" constant="50" id="uEu-Hn-rmC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <state key="normal" title="enlarge">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kzn-pD-kSj" userLabel="Group">
                                 <rect key="frame" x="0.0" y="282" width="50" height="50"/>
@@ -271,18 +260,30 @@
                                     <segue destination="kC4-Ue-WdU" kind="presentation" identifier="createGroup" id="rjZ-ic-1ho"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fA6-Yn-9mj" userLabel="Enlarge">
+                                <rect key="frame" x="43.5" y="282" width="50" height="50"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="eF4-qM-jwj"/>
+                                    <constraint firstAttribute="height" constant="50" id="uEu-Hn-rmC"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="edit">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Kzn-pD-kSj" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="7Gh-Uv-ugQ"/>
                             <constraint firstAttribute="trailing" secondItem="vyY-Li-GSm" secondAttribute="trailing" id="Jxs-NP-GKY"/>
-                            <constraint firstItem="Fyw-DJ-Da2" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="LiD-GT-oHH"/>
                             <constraint firstItem="CD5-gs-1lf" firstAttribute="trailing" secondItem="fA6-Yn-9mj" secondAttribute="trailing" id="Ox3-Cm-hbd"/>
-                            <constraint firstItem="CD5-gs-1lf" firstAttribute="trailing" secondItem="Fyw-DJ-Da2" secondAttribute="trailing" id="PUR-oA-2O2"/>
                             <constraint firstItem="vyY-Li-GSm" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="Tje-CX-kMT"/>
                             <constraint firstItem="Kzn-pD-kSj" firstAttribute="leading" secondItem="CD5-gs-1lf" secondAttribute="leading" id="V6f-WH-jkZ"/>
                             <constraint firstItem="vyY-Li-GSm" firstAttribute="leading" secondItem="CD5-gs-1lf" secondAttribute="leading" id="Wxv-Bs-81b"/>
-                            <constraint firstItem="Fyw-DJ-Da2" firstAttribute="top" secondItem="fA6-Yn-9mj" secondAttribute="bottom" id="lKW-fT-p6I"/>
+                            <constraint firstItem="fA6-Yn-9mj" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="Yji-PW-SEa"/>
+                            <constraint firstItem="Fyw-DJ-Da2" firstAttribute="bottom" secondItem="CD5-gs-1lf" secondAttribute="bottom" id="jHC-s5-w2R"/>
+                            <constraint firstItem="Fyw-DJ-Da2" firstAttribute="leading" secondItem="Kzn-pD-kSj" secondAttribute="trailing" id="pHG-sX-KHm"/>
                             <constraint firstItem="vyY-Li-GSm" firstAttribute="top" secondItem="CD5-gs-1lf" secondAttribute="top" id="uBn-HZ-T7b"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CD5-gs-1lf"/>
@@ -307,45 +308,68 @@
                         <rect key="frame" x="0.0" y="0.0" width="93.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Group" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sla-fU-Tdo">
-                                <rect key="frame" x="0.0" y="52" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name (optional)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sla-fU-Tdo">
+                                <rect key="frame" x="-53.5" y="120" width="200.5" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="DiS-8D-WoU"/>
+                                </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="V6J-tX-Bxc">
-                                <rect key="frame" x="-12" y="118" width="121" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="First"/>
-                                    <segment title="Only One Of"/>
-                                </segments>
-                                <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uv-5p-3b0">
-                                <rect key="frame" x="14" y="194" width="66" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uv-5p-3b0">
+                                <rect key="frame" x="-3.5" y="264" width="100.5" height="30"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="A8b-Nl-WbC"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Create -&gt;">
+                                <state key="normal" title="Create Group">
                                     <color key="titleColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="create:" destination="kC4-Ue-WdU" eventType="touchUpInside" id="XpG-t5-4Iz"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="06S-uh-gAy">
-                                <rect key="frame" x="-12" y="118" width="121" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="06S-uh-gAy">
+                                <rect key="frame" x="-80.5" y="194" width="254.5" height="29"/>
                                 <segments>
-                                    <segment title="As Many Of"/>
+                                    <segment title="None"/>
                                     <segment title="One Of"/>
+                                    <segment title="As Many Of"/>
                                 </segments>
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4u5-pb-23U">
+                                <rect key="frame" x="8" y="0.0" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="bjK-Qh-WiS"/>
+                                </constraints>
+                                <state key="normal" title="&lt;--"/>
+                                <connections>
+                                    <action selector="dismiss:" destination="kC4-Ue-WdU" eventType="touchUpInside" id="AUV-S9-SjU"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create a New Group" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEU-4n-f5y">
+                                <rect key="frame" x="-24" y="82" width="155" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sla-fU-Tdo" firstAttribute="top" secondItem="CEU-4n-f5y" secondAttribute="bottom" constant="17" id="5G1-A6-kRI"/>
+                            <constraint firstItem="4Uv-5p-3b0" firstAttribute="centerX" secondItem="f9F-tf-N6e" secondAttribute="centerX" id="9i3-3F-WQr"/>
+                            <constraint firstItem="06S-uh-gAy" firstAttribute="top" secondItem="sla-fU-Tdo" secondAttribute="bottom" constant="44" id="CGy-wH-zQz"/>
+                            <constraint firstItem="4u5-pb-23U" firstAttribute="top" secondItem="f9F-tf-N6e" secondAttribute="top" id="JsZ-Y2-bTP"/>
+                            <constraint firstItem="CEU-4n-f5y" firstAttribute="centerX" secondItem="f9F-tf-N6e" secondAttribute="centerX" id="Lxz-kT-uYf"/>
+                            <constraint firstItem="4u5-pb-23U" firstAttribute="leading" secondItem="f9F-tf-N6e" secondAttribute="leading" constant="8" id="TUZ-2J-rJE"/>
+                            <constraint firstItem="sla-fU-Tdo" firstAttribute="centerX" secondItem="f9F-tf-N6e" secondAttribute="centerX" id="a3g-Ot-eT5"/>
+                            <constraint firstItem="f9F-tf-N6e" firstAttribute="top" secondItem="sla-fU-Tdo" secondAttribute="bottom" constant="-150" id="jPW-LM-tG6"/>
+                            <constraint firstItem="06S-uh-gAy" firstAttribute="centerX" secondItem="f9F-tf-N6e" secondAttribute="centerX" id="lLm-Ql-YBC"/>
+                            <constraint firstItem="4Uv-5p-3b0" firstAttribute="top" secondItem="06S-uh-gAy" secondAttribute="bottom" constant="42" id="zDS-41-ZdG"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="f9F-tf-N6e"/>
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="300" height="300"/>
@@ -353,13 +377,14 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="backButton" destination="4u5-pb-23U" id="JIy-Nt-O3y"/>
                         <outlet property="createButton" destination="4Uv-5p-3b0" id="2Pv-pa-lOe"/>
                         <outlet property="kindField" destination="06S-uh-gAy" id="QBz-im-csQ"/>
                         <outlet property="nameField" destination="sla-fU-Tdo" id="69t-gX-KRg"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1864" y="917"/>
+            <point key="canvasLocation" x="1864" y="916.64167916041981"/>
         </scene>
         <!--Timeline View Controller-->
         <scene sceneID="s1C-Rj-a4P">

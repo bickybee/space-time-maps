@@ -15,14 +15,17 @@ class GroupCreationViewController: UIViewController {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var kindField: UISegmentedControl!
     @IBOutlet weak var createButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func dismiss(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func create(_ sender: Any) {
         var text : String
         if let name = nameField.text {
@@ -31,20 +34,21 @@ class GroupCreationViewController: UIViewController {
             text = "Group"
         }
         
-        var kind : PlaceGroup.Kind
+        var kind : Group.Kind
         let selection = kindField.selectedSegmentIndex
         switch selection {
         case 0:
-            kind = .asManyOf
+            kind = .none
         case 1:
             kind = .oneOf
-        default:
+        case 2:
             kind = .asManyOf
+        default:
+            kind = .none
         }
         
         delegate?.createGroup(name: text, kind: kind)
         
-        print("bye")
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -52,6 +56,6 @@ class GroupCreationViewController: UIViewController {
 
 protocol GroupCreationDelegate: AnyObject {
     
-    func createGroup(name: String, kind: PlaceGroup.Kind)
+    func createGroup(name: String, kind: Group.Kind)
     
 }

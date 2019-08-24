@@ -17,6 +17,7 @@ class ParentViewController: UIViewController {
     var mapController : MapViewController!
     
     @IBOutlet weak var paletteContainer: UIView!
+    @IBOutlet weak var itineraryContainer: UIView!
     
     // UI outlets
     @IBOutlet weak var transportModePicker: UISegmentedControl!
@@ -53,22 +54,22 @@ class ParentViewController: UIViewController {
     
     @objc func swipeOutPalette(_ sender: Any) {
         
-        print("swipe")
-
         guard let palette = placePaletteController else { return }
         view.layoutIfNeeded()
         UIView.setAnimationCurve(.easeOut)
         
-        if !palette.isBig {
+        if !palette.inEditingMode {
             UIView.animate(withDuration: 0.5, animations: {
                 self.paletteSmallWidth.priority = .defaultHigh - 1
                 self.paletteBigWidth.priority = .defaultHigh + 1
                 palette.groupButton.isEnabled = true
                 palette.groupButton.alpha = 1.0
+                palette.searchButton.isEnabled = true
+                palette.searchButton.alpha = 1.0
                 self.view.layoutIfNeeded()
-                self.itineraryController.removeFromParent()
+                palette.collectionView.reloadData()
             })
-            palette.collectionView.reloadData()
+            palette.dragDelegate = palette
             
         } else {
             self.paletteSmallWidth.priority = .defaultHigh + 1
@@ -77,20 +78,29 @@ class ParentViewController: UIViewController {
                 
                 palette.groupButton.isEnabled = false
                 palette.groupButton.alpha = 0.0
+                palette.searchButton.isEnabled = true
+                palette.searchButton.alpha = 1.0
                 self.view.layoutIfNeeded()
-                self.addChild(self.itineraryController)
+                palette.collectionView.reloadData()
             })
-            palette.collectionView.reloadData()
+            palette.dragDelegate = self.itineraryController
         }
         
-        palette.isBig = !palette.isBig
+        palette.inEditingMode = !palette.inEditingMode
         
         
     }
     
-    // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces() {
-        let savedPlaces = placePaletteController.groups[0].places
+        var groups = placePaletteController.groups
+        for i in 0 ... (groups.count - 1)  {
+            groups[i].places = markItineraryPlaces(for: groups[i])
+        }
+    }
+    
+    // Compare itinerary places and saved places, mark which saved places are in the itinerary
+    func markItineraryPlaces(for group: Group) -> [Place] {
+        let savedPlaces = group.places
         let itineraryDestinations = itineraryController.itinerary.destinations
         savedPlaces.forEach{ $0.isInItinerary = false}
         for savedPlace in savedPlaces {
@@ -100,7 +110,7 @@ class ParentViewController: UIViewController {
                 }
             }
         }
-        placePaletteController.groups[0].places = savedPlaces
+        return savedPlaces
     }
     
     // Package itinerary and place data to send to map for rendering
@@ -109,7 +119,8 @@ class ParentViewController: UIViewController {
         
         // Package relevant data
         let itinerary = itineraryController.itinerary
-        let palettePlaces = placePaletteController.groups[0].places
+        let groups = placePaletteController.groups
+        let palettePlaces = groups.flatMap { $0.places }
         
         let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
         let itineraryPlaces = itinerary.destinations.map { $0.place }
@@ -168,7 +179,7 @@ class ParentViewController: UIViewController {
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place]) {
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [Group]) {
         updateMap()
     }
     

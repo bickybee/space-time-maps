@@ -38,3 +38,18 @@ class Place : NSObject {
     }
     
 }
+
+// Dumb stuff for creating placeholders in empty collectionview sections...
+extension Place {
+    
+    static func placeholder() -> Place {
+        return Place(name: "PLACEHOLDER", coordinate: Coordinate(lat:0, lon:0), placeID: "", isInItinerary: false)
+    }
+    
+    func isPlaceholder() -> Bool {
+        return self == Place.placeholder()
+    }
+    
+}
+
+

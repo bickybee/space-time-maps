@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PlaceGroup {
+struct Group {
     
     enum Kind : String {
         case asManyOf, oneOf, none
@@ -16,7 +16,7 @@ struct PlaceGroup {
     
     var name : String
     var places : [Place]
-    var kind : PlaceGroup.Kind
+    var kind : Group.Kind
     
     
 }

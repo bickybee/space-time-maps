@@ -15,8 +15,7 @@
 		98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA68230EFD4400769BB5 /* LocationCell.swift */; };
 		98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */; };
 		98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */; };
-		98DEBA71230F7EE700769BB5 /* PlaceGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA70230F7EE700769BB5 /* PlaceGroup.swift */; };
-		98DEBA73230FC49200769BB5 /* PlacePaletteLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA72230FC49200769BB5 /* PlacePaletteLayout.swift */; };
+		98DEBA71230F7EE700769BB5 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA70230F7EE700769BB5 /* Group.swift */; };
 		98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */; };
 		98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */; };
 		98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */; };
@@ -62,8 +61,7 @@
 		98DEBA68230EFD4400769BB5 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupHeaderView.swift; sourceTree = "<group>"; };
 		98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationViewController.swift; sourceTree = "<group>"; };
-		98DEBA70230F7EE700769BB5 /* PlaceGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceGroup.swift; sourceTree = "<group>"; };
-		98DEBA72230FC49200769BB5 /* PlacePaletteLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePaletteLayout.swift; sourceTree = "<group>"; };
+		98DEBA70230F7EE700769BB5 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraints.swift; sourceTree = "<group>"; };
 		98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryLayout.swift; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 				98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */,
 				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
 				98DEBA68230EFD4400769BB5 /* LocationCell.swift */,
-				98DEBA72230FC49200769BB5 /* PlacePaletteLayout.swift */,
 			);
 			path = "Place Palette";
 			sourceTree = "<group>";
@@ -236,7 +233,7 @@
 				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
 				98BC8579230C3A83001D14BE /* Timing.swift */,
 				98DEF0CE23061A35003DE1CB /* Schedulable.swift */,
-				98DEBA70230F7EE700769BB5 /* PlaceGroup.swift */,
+				98DEBA70230F7EE700769BB5 /* Group.swift */,
 			);
 			path = M;
 			sourceTree = "<group>";
@@ -398,10 +395,9 @@
 				98BC8576230B74D1001D14BE /* Destination.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
-				98DEBA73230FC49200769BB5 /* PlacePaletteLayout.swift in Sources */,
 				98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */,
 				B62AFCBF22E50E1700B7D2CD /* DestinationCell.swift in Sources */,
-				98DEBA71230F7EE700769BB5 /* PlaceGroup.swift in Sources */,
+				98DEBA71230F7EE700769BB5 /* Group.swift in Sources */,
 				98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */,
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
 				B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */,

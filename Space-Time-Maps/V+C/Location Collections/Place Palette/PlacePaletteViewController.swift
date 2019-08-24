@@ -19,35 +19,40 @@ class PlacePaletteViewController: DraggableCellViewController {
     @IBOutlet weak var searchButton: UIButton!
     @IBOutlet weak var enlargeButton: UIButton!
     @IBOutlet weak var groupButton: UIButton!
-    var isBig : Bool = false
+    var inEditingMode : Bool = false
     
     // For autocomplete search
     var geographicSearchBounds : GMSCoordinateBounds?
     
     // Data source
-    var groups = [PlaceGroup]() {
+    var groups = [Group]() {
         didSet {
             collectionView.reloadData()
         }
     }
     
+    var groupsBeforeEditing = [Group]()
+    
     // CollectionView cell
     private let cellHeight : CGFloat = 50.0
+    private var cellWidth : CGFloat!
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.cellWidth = collectionView.frame.width - (sectionInsets.left + sectionInsets.right)
         collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.isScrollEnabled = true
         
         self.dragDataDelegate = self
         
         var places = [Place]()
         places.append(contentsOf: Utils.defaultPlaces())
         
-        let defaultPlaceGroup = PlaceGroup(name: "", places: places, kind: .none)
+        let defaultPlaceGroup = Group(name: "", places: places, kind: .none)
         groups.append(defaultPlaceGroup)
         
     }
@@ -71,9 +76,9 @@ class PlacePaletteViewController: DraggableCellViewController {
 
 extension PlacePaletteViewController: GroupCreationDelegate {
     
-    func createGroup(name: String, kind: PlaceGroup.Kind) {
+    func createGroup(name: String, kind: Group.Kind) {
         collectionView.performBatchUpdates({
-            let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
+            let newGroup = Group(name: name, places: [Place](), kind: kind)
             collectionView.insertSections(IndexSet(integer: groups.endIndex))
             groups.append(newGroup)
         }, completion: nil)
@@ -92,7 +97,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let group = groups[safe: section] {
-            return group.places.count
+            return inEditingMode ? group.places.count + 1 : group.places.count
         } else {
             return 0
         }
@@ -101,8 +106,18 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
+        guard let group = groups[safe: indexPath.section] else { return cell }
         
-        guard let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] else { return cell }
+        // Placeholder cell?
+        if indexPath.item == group.places.endIndex {
+            cell.contentView.alpha = 0.0
+            cell.backgroundColor = .clear
+            return cell
+        }
+        
+        // Otherwise
+        let place = group.places[indexPath.item]
+        cell.contentView.alpha = 1.0
         cell.backgroundColor = .lightGray
         cell.nameLabel.text = place.name
         addDragRecognizerTo(cell: cell)
@@ -114,9 +129,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        var size = view.frame.size
-        size.width -= (sectionInsets.left + sectionInsets.right)
-        return CGSize(width:size.width, height:self.cellHeight)
+        return CGSize(width:self.cellWidth, height:self.cellHeight)
 
     }
     
@@ -138,8 +151,14 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
             }
             
             guard let group = groups[safe: indexPath.section] else { assert(false, "No group here") }
+            print(group.kind)
             headerView.label.text = group.name
             headerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGroup)))
+            if group.kind == .asManyOf {
+                headerView.backgroundColor = .green
+            } else {
+                headerView.backgroundColor = .lightGray
+            }
             return headerView
         default:
             // 4
@@ -170,11 +189,49 @@ extension PlacePaletteViewController: DragDataDelegate {
         return place
     }
     
-    func indexFor(draggableCell: DraggableCell) -> Int? {
+    func indexPathFor(draggableCell: DraggableCell) -> IndexPath? {
         guard let indexPath = collectionView.indexPath(for: draggableCell) else { return nil}
-        return indexPath.item
+        return indexPath
     }
     
+}
+
+extension PlacePaletteViewController: DragDelegate {
+
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+        groups[indexPath.section].places.remove(at: indexPath.item)
+        groupsBeforeEditing = groups
+        collectionView.reloadData()
+    }
+    
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+        guard let place = object as? Place else { return }
+        var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) ?? indexPath
+        groups = groupsBeforeEditing
+        if groups[insertAt.section].places.count == 1 {
+            if groups[0].places[0].isPlaceholder() && insertAt.item == 1 {
+                insertAt = indexPath
+            }
+        }
+        groups[insertAt.section].places.insert(place, at: insertAt.item)
+        collectionView.reloadData()
+    }
+    
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+        // remove leftover placeholder cells
+        for i in 0...groups.count - 1 {
+            var group = groups[i]
+            if group.places.count > 1 {
+                group.places = group.places.filter( { !$0.isPlaceholder() } )
+                groups[i] = group
+            }
+        }
+        print("done" )
+    }
+    
+    func cellForIndex(_ indexPath: IndexPath) -> DraggableCell? {
+        return nil
+    }
 }
 
 // MARK: - Delegates for GMS Autocomplete
@@ -211,7 +268,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, isInItinerary: false)
         groups[0].places.append(newPlace)
         print(newPlace)
-        delegate?.placePaletteViewController(self, didUpdatePlaces: groups[0].places)
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
@@ -238,6 +295,6 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces places: [Place])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [Group])
     
 }

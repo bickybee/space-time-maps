@@ -13,7 +13,7 @@ class DraggableCellViewController: UIViewController {
     
     // Dragging
     var draggingObject : AnyObject?
-    var draggingIndex : Int?
+    var draggingIndex : IndexPath?
     var draggingCell : DraggableCell?
     var draggingView : UIView?
     
@@ -109,7 +109,6 @@ class DraggableCellViewController: UIViewController {
               let draggableCell = originatingCell as? DraggableCell else { return false }
 
         // If we're good, set stuff accordingly
-        draggableCell.alpha = 0.5
         draggingCell = draggableCell
         
         return true
@@ -141,7 +140,7 @@ class DraggableCellViewController: UIViewController {
     func setupDraggingIndex() -> Bool {
         
         guard let draggingCell = draggingCell,
-              let index = dragDataDelegate?.indexFor(draggableCell: draggingCell) else { return false }
+              let index = dragDataDelegate?.indexPathFor(draggableCell: draggingCell) else { return false }
         
         draggingIndex = index
         
@@ -164,16 +163,16 @@ class DraggableCellViewController: UIViewController {
 // Let delegate handle any further actions associated with dragging the cell
 protocol DragDelegate : AnyObject {
     
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer)
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer)
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at index: Int, withGesture gesture: UIPanGestureRecognizer)
-    func cellForIndex(_ index: Int) -> DraggableCell?
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
+    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
+    func cellForIndex(_ indexPath: IndexPath) -> DraggableCell?
 }
 
 // Get object associated with dragging cell from the delegate
 protocol DragDataDelegate : AnyObject {
     
-    func indexFor(draggableCell: DraggableCell) -> Int?
+    func indexPathFor(draggableCell: DraggableCell) -> IndexPath?
     func objectFor(draggableCell: DraggableCell) -> AnyObject?
     
 }
