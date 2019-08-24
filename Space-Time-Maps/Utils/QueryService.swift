@@ -103,8 +103,8 @@ class QueryService {
             print(duration)
             let start = timing.start + (timing.duration / 2.0) - (duration / 2.0)
             
-            let timing = Timing(start: start, duration: TimeInterval(duration))
-            leg = Leg(polyline: polyline, timing: timing)
+            let travelTiming = Timing(start: start, duration: TimeInterval(duration))
+            leg = Leg(polyline: polyline, timing: timing, travelTiming: travelTiming)
         }
         return leg
         

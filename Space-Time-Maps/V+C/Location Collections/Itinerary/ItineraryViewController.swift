@@ -122,7 +122,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let startFraction = Double(index) / Double(legs.count)
         let endFraction = Double(index + 1) / Double(legs.count + 1)
-        cell.setupWith(duration: leg.timing.duration, startFraction: startFraction, endFraction: endFraction)
+        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
         
         return cell
     }

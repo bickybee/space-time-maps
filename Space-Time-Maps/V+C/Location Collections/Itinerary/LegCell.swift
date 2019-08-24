@@ -13,22 +13,42 @@ class LegCell: UICollectionViewCell {
     var timeLabel : UILabel!
     var gradientView : UIView!
     let padding : CGFloat = 5
+    let gradientWidth : CGFloat = 25.0
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupGradientView(frame: frame)
         setupLabel(frame: frame)
+        self.backgroundColor = .clear
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func draw(_ rect: CGRect) {
+        
+        super.draw(rect)
+        drawVerticalLine()
+    }
+    
+    func drawVerticalLine() {
+        let path = UIBezierPath()
+        path.lineWidth = 1
+        
+        let startAt = CGPoint(x: self.center.x, y: 0)
+        let endAt = CGPoint(x: self.center.x, y: self.frame.height)
+        path.move(to: startAt)
+        path.addLine(to: endAt)
+        
+        path.close()
+        UIColor.darkGray.set()
+        path.stroke()
+    }
+    
     private func setupGradientView(frame: CGRect) {
-        let width : CGFloat = 10.0
-        let gradientFrame = CGRect(x: frame.width / 4.0 - width / 2.0, y: 0, width: width, height: frame.height)
-        gradientView = UIView(frame: gradientFrame)
+        gradientView = UIView(frame: self.contentView.frame)
         contentView.addSubview(gradientView)
     }
     
@@ -45,11 +65,18 @@ class LegCell: UICollectionViewCell {
         contentView.addSubview(timeLabel)
     }
     
-    public func setupWith(duration: TimeInterval, startFraction: Double, endFraction: Double) {
+    public func setupWith(duration: TimeInterval, hourHeight: CGFloat, startFraction: Double, endFraction: Double) {
+        
         let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.gradientView.frame
+        
+        let gHeight = CGFloat(duration.inHours()) * hourHeight
+        let gY = contentView.center.y - gHeight / 2.0
+        let gX = contentView.center.x - gradientWidth / 2.0
+        
+        gradientLayer.frame = CGRect(x: gX, y: gY, width: gradientWidth, height: gHeight)
         gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
+        
         self.gradientView.layer.sublayers = nil
         self.gradientView.layer.addSublayer(gradientLayer)
         
