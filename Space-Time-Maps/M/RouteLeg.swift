@@ -14,5 +14,4 @@ struct Leg : Schedulable {
     
     var polyline : String
     var timing : Timing
-    
 }

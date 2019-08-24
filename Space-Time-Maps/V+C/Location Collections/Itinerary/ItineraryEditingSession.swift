@@ -33,6 +33,7 @@ class ItineraryEditingSession: NSObject {
         
         var modifiedDestinations = baseDestinations
         movingDestination.timing.start = time
+        movingDestination.timing.end = time + movingDestination.timing.duration
         modifiedDestinations.append(movingDestination)
         modifiedDestinations.sort(by: { $0.timing.start <= $1.timing.start })
         computeRoute(with: modifiedDestinations)

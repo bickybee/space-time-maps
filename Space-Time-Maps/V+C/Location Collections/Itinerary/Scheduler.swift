@@ -84,7 +84,6 @@ class Scheduler : NSObject {
         // Setup callback
         legCallback = { leg in
             var leg = leg!
-            leg.timing.start = destA.timing.start + destA.timing.duration
             self.schedLegs.append(leg)
             
             i += 1
@@ -118,8 +117,7 @@ class Scheduler : NSObject {
     
         // Setup callback
         legCallback = { leg in
-            var leg = leg!
-            leg.timing.start = destB.timing.start - leg.timing.duration
+            let leg = leg!
             self.schedLegs.append(leg)
             
             let maxStartTime = destB.timing.start - destA.timing.duration - leg.timing.duration
@@ -158,8 +156,8 @@ class Scheduler : NSObject {
         
         // Setup callback
         legCallback = { leg in
-            var leg = leg!
-            leg.timing.start = destA.timing.end
+            
+            let leg = leg!
             self.schedLegs.append(leg)
             
             i += 1

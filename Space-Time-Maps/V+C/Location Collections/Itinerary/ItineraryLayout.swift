@@ -43,16 +43,18 @@ class ItineraryLayout: UICollectionViewLayout {
     func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
         
         let timelineStartHour = delegate.timelineStartHour(of: collectionView)
-        let eventStartHour = delegate.collectionView(collectionView, startTimeForSchedulableAtIndexPath: indexPath).inHours()
-        let eventDuration = delegate.collectionView(collectionView, durationForSchedulableAtIndexPath: indexPath).inHours()
+        let eventTiming = delegate.collectionView(collectionView, timingForSchedulableAtIndexPath: indexPath)
         let hourHeight = delegate.hourHeight(of: collectionView)
         //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
         
-        let relativeHour = CGFloat(eventStartHour) - timelineStartHour
+        let startHour = eventTiming.start.inHours()
+        let duration = eventTiming.duration.inHours()
+        
+        let relativeHour = CGFloat(startHour) - timelineStartHour
         let y = relativeHour * hourHeight// - startOffset
         let x: CGFloat = 0
         let width = contentWidth
-        let height = CGFloat(eventDuration) * hourHeight
+        let height = CGFloat(duration) * hourHeight
         let frame = CGRect(x: x, y: y, width: width, height: height)
                 
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
@@ -84,6 +86,5 @@ class ItineraryLayout: UICollectionViewLayout {
 protocol ItineraryLayoutDelegate: AnyObject {
     func timelineStartHour(of collectionView: UICollectionView) -> CGFloat
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
-    func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
-    func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval
+    func collectionView(_ collectionView:UICollectionView, timingForSchedulableAtIndexPath indexPath: IndexPath) -> Timing
 }

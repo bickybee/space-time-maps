@@ -10,9 +10,11 @@ import UIKit
 
 struct Timing {
     
-    var start : TimeInterval
-    var duration : TimeInterval
-    var end : TimeInterval
+    var start : TimeInterval = 0
+    var duration : TimeInterval = 0
+    var end : TimeInterval = 0
+    
+    init() {}
     
     init(start: TimeInterval, end: TimeInterval) {
         self.start = start
@@ -30,6 +32,12 @@ struct Timing {
         self.end = end
         self.duration = duration
         self.start = end - duration
+    }
+    
+    init (start: TimeInterval, end: TimeInterval, duration: TimeInterval) {
+        self.start = start
+        self.end = end
+        self.duration = duration
     }
     
     

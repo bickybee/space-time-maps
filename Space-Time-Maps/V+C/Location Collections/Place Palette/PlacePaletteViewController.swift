@@ -108,7 +108,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         guard let group = groups[safe: indexPath.section] else { return cell }
         
-        // Placeholder cell?
+        // Placeholder cell? (for empty sctions)
         if indexPath.item == group.places.endIndex {
             cell.contentView.alpha = 0.0
             cell.backgroundColor = .clear

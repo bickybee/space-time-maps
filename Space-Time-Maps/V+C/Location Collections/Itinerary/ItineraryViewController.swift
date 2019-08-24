@@ -122,7 +122,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let startFraction = Double(index) / Double(legs.count)
         let endFraction = Double(index + 1) / Double(legs.count + 1)
-        cell.setupWith(duration: leg.timing.duration, fromStartFraction: startFraction, toEndFraction: endFraction)
+        cell.setupWith(duration: leg.timing.duration, startFraction: startFraction, endFraction: endFraction)
         
         return cell
     }
@@ -225,14 +225,9 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         return timelineController.hourHeight
     }
     
-    func collectionView(_ collectionView:UICollectionView, startTimeForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
-        guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
-        return schedulable.timing.start
-    }
-    
-    func collectionView(_ collectionView:UICollectionView, durationForSchedulableAtIndexPath indexPath: IndexPath) -> TimeInterval {
-        guard let schedulable = schedulableFor(indexPath: indexPath) else { return 0 }
-        return schedulable.timing.duration
+    func collectionView(_ collectionView:UICollectionView, timingForSchedulableAtIndexPath indexPath: IndexPath) -> Timing {
+        guard let schedulable = schedulableFor(indexPath: indexPath) else { return Timing() }
+        return schedulable.timing
     }
     
     func schedulableFor(indexPath: IndexPath) -> Schedulable? {

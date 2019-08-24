@@ -45,7 +45,7 @@ class LegCell: UICollectionViewCell {
         contentView.addSubview(timeLabel)
     }
     
-    public func setupWith(duration: Double, fromStartFraction startFraction: Double, toEndFraction endFraction: Double) {
+    public func setupWith(duration: TimeInterval, startFraction: Double, endFraction: Double) {
         let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.gradientView.frame

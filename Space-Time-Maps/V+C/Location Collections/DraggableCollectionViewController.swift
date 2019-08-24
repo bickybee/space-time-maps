@@ -119,6 +119,7 @@ class DraggableCellViewController: UIViewController {
         guard let draggingCell = draggingCell,
               let cellSnapshot = draggingCell.snapshotView(afterScreenUpdates: true) else { return false }
     
+        cellSnapshot.alpha = 0.6
         view.addSubview(cellSnapshot)
         
         draggingView = cellSnapshot
