@@ -15,7 +15,7 @@ class Utils {
         let formatter = DateComponentsFormatter()
         
         formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .full
+        formatter.unitsStyle = .short
         let formattedString = formatter.string(from: seconds) ?? "error"
         
         return formattedString

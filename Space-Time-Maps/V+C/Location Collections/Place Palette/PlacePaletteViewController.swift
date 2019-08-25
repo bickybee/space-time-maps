@@ -151,7 +151,6 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
             }
             
             guard let group = groups[safe: indexPath.section] else { assert(false, "No group here") }
-            print(group.kind)
             headerView.label.text = group.name
             headerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGroup)))
             if group.kind == .asManyOf {
@@ -267,7 +266,6 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, isInItinerary: false)
         groups[0].places.append(newPlace)
-        print(newPlace)
         delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }
     

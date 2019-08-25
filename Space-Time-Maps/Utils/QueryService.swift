@@ -38,7 +38,6 @@ class QueryService {
                 print("ERROR")
                 print(error.localizedDescription)
             } else if let data = data {
-                print("SUCCESS running query with response:")
                 callback(data)
             }
         }
@@ -99,8 +98,6 @@ class QueryService {
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = Double(firstRouteOption.legs[0].duration.value)
             
-            print(timing.duration)
-            print(duration)
             let start = timing.start + (timing.duration / 2.0) - (duration / 2.0)
             
             let travelTiming = Timing(start: start, duration: TimeInterval(duration))

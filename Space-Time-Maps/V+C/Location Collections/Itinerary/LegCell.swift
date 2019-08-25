@@ -48,7 +48,7 @@ class LegCell: UICollectionViewCell {
     }
     
     private func setupGradientView(frame: CGRect) {
-        gradientView = UIView(frame: self.contentView.frame)
+        gradientView = UIView(frame: contentView.frame)
         contentView.addSubview(gradientView)
     }
     
@@ -59,8 +59,11 @@ class LegCell: UICollectionViewCell {
         timeLabel.textColor = UIColor.gray
         timeLabel.font = UIFont.systemFont(ofSize: 10.0)
         timeLabel.backgroundColor = .clear
+        timeLabel.textAlignment = .right
         timeLabel.numberOfLines = 0
-        timeLabel.frame = contentView.frame.inset(by: cellInsets)
+        timeLabel.frame = contentView.frame.inset(by: cellInsets).offsetBy(dx: 0, dy: -5.0)
+        timeLabel.frame.size.width /= 2.0
+        timeLabel.frame.size.width -= (gradientWidth / 2.0) + padding
         
         contentView.addSubview(timeLabel)
     }
@@ -70,12 +73,16 @@ class LegCell: UICollectionViewCell {
         let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let gradientLayer = CAGradientLayer()
         
+        print("Effective height")
+        print(self.frame.size.height)
         let gHeight = CGFloat(duration.inHours()) * hourHeight
-        let gY = contentView.center.y - gHeight / 2.0
-        let gX = contentView.center.x - gradientWidth / 2.0
+        let gY = (self.frame.size.height / 2.0) - (gHeight / 2.0)
+        let gX = gradientView.center.x - (gradientWidth / 2.0)
         
         gradientLayer.frame = CGRect(x: gX, y: gY, width: gradientWidth, height: gHeight)
         gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
+        gradientLayer.borderColor = UIColor.darkGray.cgColor
+        gradientLayer.borderWidth = 1.0
         
         self.gradientView.layer.sublayers = nil
         self.gradientView.layer.addSublayer(gradientLayer)

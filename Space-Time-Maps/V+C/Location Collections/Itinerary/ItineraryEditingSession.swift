@@ -28,9 +28,7 @@ class ItineraryEditingSession: NSObject {
     }
     
     func moveDestination(toTime time: TimeInterval){
-        
-        print(movingDestination.place.name)
-        
+                
         var modifiedDestinations = baseDestinations
         movingDestination.timing.start = time
         movingDestination.timing.end = time + movingDestination.timing.duration
