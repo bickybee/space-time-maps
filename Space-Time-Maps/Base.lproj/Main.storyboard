@@ -34,10 +34,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="65"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QZK-UO-X47">
-                                        <rect key="frame" x="8" y="18" width="215" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="215" id="iVw-vh-mEZ"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="18" width="150" height="30"/>
                                         <segments>
                                             <segment title="Car"/>
                                             <segment title="Walk"/>
@@ -47,24 +44,50 @@
                                             <action selector="transportModeChanged:" destination="kWF-JP-3wc" eventType="valueChanged" id="2W0-xw-FNf"/>
                                         </connections>
                                     </segmentedControl>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no route yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7v-eX-cwa">
-                                        <rect key="frame" x="236" y="22" width="131" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Travel Time:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mi4-sJ-wpX">
+                                        <rect key="frame" x="206" y="38" width="59" height="12"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Time:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWA-Pa-p1t">
+                                        <rect key="frame" x="211" y="18" width="53.5" height="12"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0h 0m" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3u-kg-SMN" userLabel="TotalTime">
+                                        <rect key="frame" x="282.5" y="18" width="31" height="12"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0h 0m" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGD-dU-kzQ" userLabel="TravelTime">
+                                        <rect key="frame" x="283" y="38" width="31" height="12"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="m7v-eX-cwa" firstAttribute="leading" secondItem="QZK-UO-X47" secondAttribute="trailing" constant="13" id="71n-kP-WKl"/>
+                                    <constraint firstItem="Mi4-sJ-wpX" firstAttribute="top" secondItem="cWA-Pa-p1t" secondAttribute="bottom" constant="8" id="455-id-0Te"/>
                                     <constraint firstItem="QZK-UO-X47" firstAttribute="leading" secondItem="Wbw-O3-WyC" secondAttribute="leading" constant="8" id="7Tx-qH-a5N"/>
-                                    <constraint firstAttribute="bottom" secondItem="m7v-eX-cwa" secondAttribute="bottom" constant="22" id="NtK-UE-1Mi"/>
-                                    <constraint firstItem="m7v-eX-cwa" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="22" id="TuD-xg-kMw"/>
+                                    <constraint firstItem="aGD-dU-kzQ" firstAttribute="leading" secondItem="Mi4-sJ-wpX" secondAttribute="trailing" constant="18" id="GJP-bq-4OH"/>
+                                    <constraint firstItem="y3u-kg-SMN" firstAttribute="leading" secondItem="cWA-Pa-p1t" secondAttribute="trailing" constant="18" id="HcH-5v-88s"/>
+                                    <constraint firstItem="Mi4-sJ-wpX" firstAttribute="top" secondItem="cWA-Pa-p1t" secondAttribute="bottom" constant="8" id="MwS-Pl-Ae4"/>
+                                    <constraint firstItem="aGD-dU-kzQ" firstAttribute="top" secondItem="y3u-kg-SMN" secondAttribute="bottom" constant="8" id="OTm-ay-rp8"/>
+                                    <constraint firstItem="QZK-UO-X47" firstAttribute="width" secondItem="Wbw-O3-WyC" secondAttribute="width" multiplier="0.4" id="P5g-s6-hGX"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mi4-sJ-wpX" secondAttribute="bottom" constant="15" id="Ugg-N5-Ri5"/>
                                     <constraint firstAttribute="bottom" secondItem="QZK-UO-X47" secondAttribute="bottom" constant="18" id="fGi-MQ-jat"/>
+                                    <constraint firstItem="cWA-Pa-p1t" firstAttribute="leading" secondItem="QZK-UO-X47" secondAttribute="trailing" constant="53" id="jOe-lP-zPM"/>
                                     <constraint firstItem="QZK-UO-X47" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="18" id="o0A-h3-Xsz"/>
-                                    <constraint firstAttribute="trailing" secondItem="m7v-eX-cwa" secondAttribute="trailing" constant="8" id="oUY-wC-vCY"/>
+                                    <constraint firstItem="Mi4-sJ-wpX" firstAttribute="leading" secondItem="QZK-UO-X47" secondAttribute="trailing" constant="48" id="oP5-Pn-RC6"/>
                                     <constraint firstAttribute="height" constant="65" id="op7-nj-MOj"/>
+                                    <constraint firstItem="y3u-kg-SMN" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="18" id="sOX-4B-u9u"/>
+                                    <constraint firstItem="y3u-kg-SMN" firstAttribute="leading" secondItem="cWA-Pa-p1t" secondAttribute="trailing" constant="18" id="zYo-aV-z1n"/>
+                                    <constraint firstItem="cWA-Pa-p1t" firstAttribute="top" secondItem="Wbw-O3-WyC" secondAttribute="top" constant="18" id="zco-GO-fH2"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Bk-6M-Rcq" userLabel="Map">
@@ -103,8 +126,9 @@
                         <outlet property="paletteBigWidth" destination="eEP-1c-BUG" id="kxQ-Ck-xqu"/>
                         <outlet property="paletteContainer" destination="lXj-Tg-eL1" id="nez-7b-pZF"/>
                         <outlet property="paletteSmallWidth" destination="ag6-RB-Ex0" id="joc-wl-rbe"/>
+                        <outlet property="totalTimeLabel" destination="y3u-kg-SMN" id="BbB-7A-ddo"/>
                         <outlet property="transportModePicker" destination="QZK-UO-X47" id="6WF-2G-MeE"/>
-                        <outlet property="transportTimeLabel" destination="m7v-eX-cwa" id="F4P-Ky-jRM"/>
+                        <outlet property="travelTimeLabel" destination="aGD-dU-kzQ" id="huL-vm-jpt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mtd-2F-eLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -302,7 +326,6 @@
         <!--Group Creation View Controller-->
         <scene sceneID="cfC-Oo-7je">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VId-H2-8S8" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController modalPresentationStyle="overFullScreen" id="kC4-Ue-WdU" customClass="GroupCreationViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="center" id="6YV-eG-uUq">
                         <rect key="frame" x="0.0" y="0.0" width="93.5" height="332"/>
@@ -383,6 +406,7 @@
                         <outlet property="nameField" destination="sla-fU-Tdo" id="69t-gX-KRg"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VId-H2-8S8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1864" y="916.64167916041981"/>
         </scene>

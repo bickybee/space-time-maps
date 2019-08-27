@@ -18,9 +18,11 @@ class LegCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = .clear
+        self.isUserInteractionEnabled = false
+        
         setupGradientView(frame: frame)
         setupLabel(frame: frame)
-        self.backgroundColor = .clear
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,7 +30,6 @@ class LegCell: UICollectionViewCell {
     }
     
     override func draw(_ rect: CGRect) {
-        
         super.draw(rect)
         drawVerticalLine()
     }
@@ -73,10 +74,8 @@ class LegCell: UICollectionViewCell {
         let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let gradientLayer = CAGradientLayer()
         
-        print("Effective height")
-        print(self.frame.size.height)
         let gHeight = CGFloat(duration.inHours()) * hourHeight
-        let gY = (self.frame.size.height / 2.0) - (gHeight / 2.0)
+        let gY = (self.frame.size.height / 2.0) - (gHeight / 2.0) // height / 2 work but center.y doesnt??? idk!!!
         let gX = gradientView.center.x - (gradientWidth / 2.0)
         
         gradientLayer.frame = CGRect(x: gX, y: gY, width: gradientWidth, height: gHeight)

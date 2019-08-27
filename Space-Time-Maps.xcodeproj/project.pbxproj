@@ -31,7 +31,7 @@
 		98DEF0D92307294E003DE1CB /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D82307294E003DE1CB /* RouteLeg.swift */; };
 		98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B9472308D1800032FBB7 /* Scheduler.swift */; };
 		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
-		98E9B96C230B0B0E0032FBB7 /* PassThroughCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */; };
+		98E9B96C230B0B0E0032FBB7 /* PassThroughViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */; };
 		98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
@@ -77,7 +77,7 @@
 		98DEF0D82307294E003DE1CB /* RouteLeg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLeg.swift; sourceTree = "<group>"; };
 		98E9B9472308D1800032FBB7 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
-		98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughCollectionView.swift; sourceTree = "<group>"; };
+		98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughViews.swift; sourceTree = "<group>"; };
 		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
-				98E9B96B230B0B0E0032FBB7 /* PassThroughCollectionView.swift */,
+				98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */,
 				98DEF0BA2304676B003DE1CB /* DraggableCell.swift */,
 				98BC856F230B71DC001D14BE /* Itinerary */,
 				98BC8570230B71EC001D14BE /* Place Palette */,
@@ -413,7 +413,7 @@
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
-				98E9B96C230B0B0E0032FBB7 /* PassThroughCollectionView.swift in Sources */,
+				98E9B96C230B0B0E0032FBB7 /* PassThroughViews.swift in Sources */,
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,

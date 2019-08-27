@@ -31,7 +31,18 @@ struct Itinerary {
         route.forEach({leg in
             totalDuration += leg.timing.duration
         })
+        destinations.forEach({dest in
+            totalDuration += dest.timing.duration
+        })
         return totalDuration
+    }
+    
+    var travelTime : TimeInterval {
+        var totalTravelTime = TimeInterval(0)
+        route.forEach({leg in
+            totalTravelTime += leg.travelTiming.duration
+        })
+        return totalTravelTime
     }
     
     var travelMode : TravelMode

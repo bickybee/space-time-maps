@@ -20,8 +20,9 @@ class ParentViewController: UIViewController {
     @IBOutlet weak var itineraryContainer: UIView!
     
     // UI outlets
+    @IBOutlet weak var totalTimeLabel: UILabel!
+    @IBOutlet weak var travelTimeLabel: UILabel!
     @IBOutlet weak var transportModePicker: UISegmentedControl!
-    @IBOutlet weak var transportTimeLabel: UILabel!
     @IBOutlet weak var paletteSmallWidth: NSLayoutConstraint!
     @IBOutlet weak var paletteBigWidth: NSLayoutConstraint!
     
@@ -48,7 +49,7 @@ class ParentViewController: UIViewController {
                 travelMode = .driving
             }
             itineraryController.itinerary.travelMode = travelMode
-//            itineraryController.computeRoute(with: itineraryController.itinerary.destinations)
+            itineraryController.computeRoute()
         }
     }
     
@@ -133,17 +134,16 @@ class ParentViewController: UIViewController {
     
     func updateTransportTimeLabel() {
         let duration = itineraryController.itinerary.duration
+        let travelTime = itineraryController.itinerary.travelTime
         
-        if duration == 0 {
-            transportTimeLabel.text = "no route yet"
-        } else {
-            let formatter = DateComponentsFormatter()
-            formatter.allowedUnits = [.hour, .minute]
-            formatter.unitsStyle = .full
-            
-            let formattedString = formatter.string(from: TimeInterval(duration))!
-            transportTimeLabel.text = formattedString
-        }
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        
+        totalTimeLabel.text = formatter.string(from: TimeInterval(duration))!
+        travelTimeLabel.text = formatter.string(from: TimeInterval(travelTime))!
+
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

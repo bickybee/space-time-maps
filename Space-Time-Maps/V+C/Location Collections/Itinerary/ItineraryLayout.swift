@@ -49,12 +49,7 @@ class ItineraryLayout: UICollectionViewLayout {
         
         let startHour = eventTiming.start.inHours()
         let duration = eventTiming.duration.inHours()
-        if (indexPath.section == 1) {
-            print("Assigned height")
-            print(eventTiming.duration)
-            print (duration)
-        }
-        
+
         let relativeHour = CGFloat(startHour) - timelineStartHour
         let y = relativeHour * hourHeight// - startOffset
         let x: CGFloat = 0

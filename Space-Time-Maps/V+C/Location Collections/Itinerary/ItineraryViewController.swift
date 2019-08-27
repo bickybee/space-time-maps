@@ -59,6 +59,11 @@ class ItineraryViewController: DraggableCellViewController {
         collectionView.backgroundColor = .clear
     }
     
+    func computeRoute() {
+        let scheduler = Scheduler()
+        scheduler.schedule(destinations: itinerary.destinations, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let timelineVC = segue.destination as? TimelineViewController {
             
@@ -102,7 +107,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func setupLocationCell(_ cell: DestinationCell, with index: Int) -> DestinationCell {
         
         guard let destination = itinerary.destinations[safe: index] else { return cell }
-        
 //        if editingSession != nil {
 //            cell.setupWith(name: destination.place.name, color: .lightGray, constrained: destination.constraints.areEnabled)
 //        } else {
@@ -158,7 +162,7 @@ extension ItineraryViewController : DragDelegate {
             editingDestinations.remove(at: indexPath.item)
         }
         
-        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: indexPath.item, inDestinations: editingDestinations, travelMode: .driving, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: indexPath.item, inDestinations: editingDestinations, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
