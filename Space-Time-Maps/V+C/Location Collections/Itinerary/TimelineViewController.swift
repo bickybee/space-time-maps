@@ -17,9 +17,7 @@ class TimelineViewController: UIViewController {
     var panMultiplier: CGFloat = 1.0
     
     weak var delegate: TimelineViewDelegate?
-    
-    var roundHourTo = 0.25
-    
+        
     // Render variables
     var hourHeight : CGFloat = 50.0
     var startHour : CGFloat = 0.0
@@ -127,8 +125,7 @@ extension TimelineViewController {
     public func roundedHourInTimeline(forY y: CGFloat) -> Double {
 
         let hour = hourInTimeline(forY: y)
-        let decimal = hour.truncatingRemainder(dividingBy: 1.0)
-        let roundedHour = floor(hour) + floor(decimal / roundHourTo) * roundHourTo
+        let roundedHour = Utils.ceilHour(hour)
         
         return roundedHour
     }

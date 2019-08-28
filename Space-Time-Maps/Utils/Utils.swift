@@ -11,6 +11,8 @@ import UIKit.UIColor
 
 class Utils {
     
+    private static let roundHourTo : Double = 0.25
+    
     static func secondsToString(seconds: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         
@@ -42,6 +44,30 @@ class Utils {
         places.append(Place(name: "Art Gallery of Ontario", coordinate: Coordinate(lat: 43.6536066, lon: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", isInItinerary: false))
         places.append(Place(name: "Casa Loma", coordinate: Coordinate(lat: 43.67803709999999, lon: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE", isInItinerary: false))
         return places
+    }
+    
+    static func floorHour(_ hour: Double) -> Double {
+        let decimal = hour.truncatingRemainder(dividingBy: 1.0)
+        let clampedHour = floor(hour) + floor(decimal / Utils.roundHourTo) * Utils.roundHourTo
+        return clampedHour
+    }
+    
+    static func ceilHour(_ hour: Double) -> Double {
+        let decimal = hour.truncatingRemainder(dividingBy: 1.0)
+        let clampedHour = floor(hour) + ceil(decimal / Utils.roundHourTo) * Utils.roundHourTo
+        return clampedHour
+    }
+    
+    static func ceilTime(_ time: TimeInterval) -> TimeInterval {
+        let hour = time.inHours()
+        let clamped = ceilHour(hour)
+        return TimeInterval.from(hours: clamped)
+    }
+    
+    static func floorTime(_ time: TimeInterval) -> TimeInterval {
+        let hour = time.inHours()
+        let clamped = floorHour(hour)
+        return TimeInterval.from(hours: clamped)
     }
     
     

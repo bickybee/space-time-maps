@@ -41,6 +41,8 @@ class ItineraryViewController: DraggableContentViewController {
         self.dragDataDelegate = self as DragDataDelegate
         
         setupCollectionView()
+        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinchLocationCell)))
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -73,6 +75,15 @@ class ItineraryViewController: DraggableContentViewController {
         }
     }
     
+    @objc func pinchLocationCell(gesture: UIPinchGestureRecognizer) {
+        guard let editingSession = editingSession else { return }
+        
+        print("pinch!")
+        let scale = Double(gesture.scale)
+        editingSession.scaleDestinationDuration(with: scale)
+        gesture.scale = 1.0
+    }
+
 }
 
 // MARK: - CollectionView delegate methods
@@ -113,10 +124,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let fraction = Double(index) / Double(itinerary.destinations.count - 1)
         cell.setupWith(name: destination.place.name, fraction: fraction, constrained: destination.constraints.areEnabled)
     
-        if let draggableCell = cell as? Draggable {
-            addDragRecognizerTo(draggable: draggableCell)
-        }
-        
+        addDragRecognizerTo(draggable: cell)
         return cell
         
     }

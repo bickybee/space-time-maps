@@ -38,6 +38,16 @@ class ItineraryEditingSession: NSObject {
         
     }
     
+    func scaleDestinationDuration(with scale: Double) {
+        let duration = movingDestination.timing.duration * scale
+        let delta = duration - movingDestination.timing.duration
+        movingDestination.timing.duration = duration
+        movingDestination.timing.end += delta
+        var modifiedDestinations = baseDestinations
+        modifiedDestinations.append(movingDestination)
+        computeRoute(with: modifiedDestinations)
+    }
+    
     func removeDestination() {
         computeRoute(with: baseDestinations)
     }

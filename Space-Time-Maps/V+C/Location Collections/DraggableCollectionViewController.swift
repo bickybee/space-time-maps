@@ -15,7 +15,7 @@ protocol Draggable: UIView {
 }
 
 // To work with DraggableCell class
-class DraggableContentViewController: UIViewController {
+class DraggableContentViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // Dragging
     var draggingObject : Any?
@@ -37,8 +37,25 @@ class DraggableContentViewController: UIViewController {
     func addDragRecognizerTo(draggable: Draggable) {
         
         let dragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragObject))
+//        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchObject))
+        dragRecognizer.delegate = self
         draggable.dragHandle.addGestureRecognizer(dragRecognizer)
+//        view.addGestureRecognizer(pinchRecognizer)
         
+    }
+    
+    func gestureRecognizer(_: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
+        if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UIPinchGestureRecognizer != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
+        
+        print( "pinch" )
     }
     
     @objc func dragObject(_ gesture: UIPanGestureRecognizer) {

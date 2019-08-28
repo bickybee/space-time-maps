@@ -19,6 +19,7 @@ class Scheduler : NSObject {
     
     func schedule(destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
 
+        print("shedulce")
         // Member variables... (easy access within closures)
         schedDests = destinations.map( { return $0.copy() })
         schedLegs = [Leg]()
