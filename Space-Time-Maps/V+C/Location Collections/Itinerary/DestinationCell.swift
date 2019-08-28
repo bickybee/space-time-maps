@@ -8,8 +8,9 @@
 
 import UIKit
 
-class DestinationCell: DraggableCell {
+class DestinationCell: UICollectionViewCell, Draggable {
     
+    var dragHandle : UIView = UIView()
     var container : UIView!
     var nameLabel : UILabel!
     let padding : CGFloat = 5
@@ -84,7 +85,7 @@ class DestinationCell: DraggableCell {
         dragHandle.layer.zPosition = 100
         dragHandle.layer.cornerRadius = 5;
         dragHandle.layer.masksToBounds = true;
-        contentView.addSubview(dragHandle)
+        self.addSubview(dragHandle)
     }
     
     override func layoutSubviews() {

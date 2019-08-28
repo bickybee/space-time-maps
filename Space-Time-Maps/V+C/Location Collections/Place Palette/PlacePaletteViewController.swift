@@ -11,7 +11,7 @@ import GooglePlaces
 
 private let reuseIdentifier = "locationCell"
 
-class PlacePaletteViewController: DraggableCellViewController {
+class PlacePaletteViewController: DraggableContentViewController {
     
     // Delegates
     weak var delegate : PlacePaletteViewControllerDelegate?
@@ -120,7 +120,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         cell.contentView.alpha = 1.0
         cell.backgroundColor = .lightGray
         cell.nameLabel.text = place.name
-        addDragRecognizerTo(cell: cell)
+        addDragRecognizerTo(draggable: cell)
         
         return cell
     }
@@ -153,6 +153,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
             guard let group = groups[safe: indexPath.section] else { assert(false, "No group here") }
             headerView.label.text = group.name
             headerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGroup)))
+            addDragRecognizerTo(draggable: headerView)
             if group.kind == .asManyOf {
                 headerView.backgroundColor = .green
             } else {
@@ -181,29 +182,42 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
 
 extension PlacePaletteViewController: DragDataDelegate {
     
-    func objectFor(draggableCell: DraggableCell) -> AnyObject? {
-        guard let indexPath = collectionView.indexPath(for: draggableCell),
-            let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] else { return nil }
-        
-        return place
+    func objectFor(draggable: Draggable) -> Any? {
+        if let draggableCell = draggable as? UICollectionViewCell,
+            let indexPath = collectionView.indexPath(for: draggableCell),
+            let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] {
+            
+            return place
+            
+        } else if draggable as? UICollectionReusableView != nil {
+            return groups[safe: 0]
+        }
+
+        return nil
     }
     
-    func indexPathFor(draggableCell: DraggableCell) -> IndexPath? {
-        guard let indexPath = collectionView.indexPath(for: draggableCell) else { return nil}
-        return indexPath
+    func indexPathFor(draggable: Draggable) -> IndexPath? {
+        if let draggableCell = draggable as? UICollectionViewCell,
+            let indexPath = collectionView.indexPath(for: draggableCell) {
+            return indexPath
+        } else if draggable as? UICollectionReusableView != nil {
+            return IndexPath(item: 0, section: 0)
+        }
+        
+        return nil
     }
     
 }
 
 extension PlacePaletteViewController: DragDelegate {
 
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         groups[indexPath.section].places.remove(at: indexPath.item)
         groupsBeforeEditing = groups
         collectionView.reloadData()
     }
     
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         guard let place = object as? Place else { return }
         var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) ?? indexPath
         groups = groupsBeforeEditing
@@ -216,7 +230,7 @@ extension PlacePaletteViewController: DragDelegate {
         collectionView.reloadData()
     }
     
-    func draggableCellViewController( _ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         // remove leftover placeholder cells
         for i in 0...groups.count - 1 {
             var group = groups[i]
@@ -228,7 +242,7 @@ extension PlacePaletteViewController: DragDelegate {
         print("done" )
     }
     
-    func cellForIndex(_ indexPath: IndexPath) -> DraggableCell? {
+    func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
         return nil
     }
 }

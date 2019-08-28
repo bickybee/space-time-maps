@@ -18,5 +18,11 @@ struct Group {
     var places : [Place]
     var kind : Group.Kind
     
+}
+
+struct OneOfBlock : Schedulable {
+    
+    var places : [Place]
+    var timing : Timing
     
 }

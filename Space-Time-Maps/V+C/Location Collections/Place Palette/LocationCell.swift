@@ -8,8 +8,9 @@
 
 import UIKit
 
-class LocationCell: DraggableCell {
+class LocationCell: UICollectionViewCell, Draggable {
     
+    var dragHandle : UIView = UIView()
     var container : UIView!
     var nameLabel : UILabel!
     let padding : CGFloat = 5
@@ -54,7 +55,7 @@ class LocationCell: DraggableCell {
         dragHandle.frame = contentView.frame
         dragHandle.backgroundColor = .clear
         dragHandle.layer.zPosition = 1000
-        contentView.addSubview(dragHandle)
+        self.addSubview(dragHandle)
         
     }
     

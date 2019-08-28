@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ItineraryViewController: DraggableCellViewController {
+class ItineraryViewController: DraggableContentViewController {
 
     // CollectionView Cell constants
     private let locationReuseIdentifier = "locationCell"
@@ -113,7 +113,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let fraction = Double(index) / Double(itinerary.destinations.count - 1)
         cell.setupWith(name: destination.place.name, fraction: fraction, constrained: destination.constraints.areEnabled)
     
-        addDragRecognizerTo(cell: cell)
+        if let draggableCell = cell as? Draggable {
+            addDragRecognizerTo(draggable: draggableCell)
+        }
         
         return cell
         
@@ -145,7 +147,7 @@ extension ItineraryViewController : DragDelegate {
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didBeginDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
         let destination : Destination
         if let place = object as? Place {
@@ -158,14 +160,14 @@ extension ItineraryViewController : DragDelegate {
         
         var editingDestinations = itinerary.destinations
         
-        if draggableCellViewController as? ItineraryViewController != nil {
+        if draggableContentViewController as? ItineraryViewController != nil {
             editingDestinations.remove(at: indexPath.item)
         }
         
         editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: indexPath.item, inDestinations: editingDestinations, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didContinueDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
@@ -185,7 +187,7 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func draggableCellViewController(_ draggableCellViewController: DraggableCellViewController, didEndDragging object: AnyObject, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
 //        editingSession?.end()
         editingSession = nil
@@ -193,9 +195,9 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func cellForIndex(_ indexPath: IndexPath) -> DraggableCell? {
+    func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
         
-        return collectionView.cellForItem(at: indexPath) as? DraggableCell
+        return collectionView.cellForItem(at: indexPath) as? Draggable
         
     }
     
@@ -203,15 +205,17 @@ extension ItineraryViewController : DragDelegate {
 
 extension ItineraryViewController: DragDataDelegate {
     
-    func objectFor(draggableCell: DraggableCell) -> AnyObject? {
-        guard let indexPath = collectionView.indexPath(for: draggableCell),
+    func objectFor(draggable: Draggable) -> Any? {
+        guard let draggable = draggable as? UICollectionViewCell,
+            let indexPath = collectionView.indexPath(for: draggable),
               let destination = itinerary.destinations[safe: indexPath.item] else { return nil }
         
         return destination
     }
     
-    func indexPathFor(draggableCell: DraggableCell) -> IndexPath? {
-        guard let indexPath = collectionView.indexPath(for: draggableCell) else { return nil}
+    func indexPathFor(draggable: Draggable) -> IndexPath? {
+        guard let draggable = draggable as? UICollectionViewCell,
+            let indexPath = collectionView.indexPath(for: draggable) else { return nil}
         return indexPath
     }
     
