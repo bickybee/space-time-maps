@@ -144,7 +144,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         cellSnapshot.alpha = 0.6
         cellSnapshot.frame = draggable.frame
         cellSnapshot.bounds = draggable.bounds
-        view.addSubview(cellSnapshot)
+//        view.addSubview(cellSnapshot)
         
         draggingView = cellSnapshot
         

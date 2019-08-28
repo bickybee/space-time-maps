@@ -186,9 +186,11 @@ extension ItineraryViewController : DragDelegate {
             return
         }
         
-        let y = location.y
+        let cell = draggableContentViewController.draggingView!
+        let y = location.y - cell.frame.height / 2
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
+            
             editingSession.moveDestination(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
         }
