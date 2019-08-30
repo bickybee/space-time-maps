@@ -57,21 +57,12 @@ class TimelineViewController: UIViewController {
             previousPanLocation = location
         case .changed:
             guard let previousY = previousPanLocation?.y else { return }
-            let dy = location.y - previousY
+            let dy = (previousY - location.y) * panMultiplier
             
-            var newStartHour = startHour - (dy / hourHeight) * panMultiplier // pan speed relative to hour height!
-            let newEndHour = newStartHour + view.frame.height / hourHeight
             
-            if newStartHour < 0 {
-                newStartHour = startHour
-            } else if newEndHour > 24.5 {
-                newStartHour = startHour
-            }
+            shiftTimeline(by: dy)
             
             previousPanLocation = location
-            startHour = newStartHour
-            delegate?.timelineViewController(self, didUpdateStartHour: startHour)
-            renderTimeline()
             
         case .ended,
              .cancelled:
@@ -80,6 +71,21 @@ class TimelineViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    func shiftTimeline(by delta: CGFloat) {
+        var newStartHour = startHour + (delta / hourHeight) // pan speed relative to hour height!
+        let newEndHour = newStartHour + view.frame.height / hourHeight
+        
+        if newStartHour < 0 {
+            newStartHour = startHour
+        } else if newEndHour > 24.5 {
+            newStartHour = startHour
+        }
+        
+        startHour = newStartHour
+        delegate?.timelineViewController(self, didUpdateStartHour: startHour)
+        renderTimeline()
     }
     
     @objc func pinchTime(_ gestureRecognizer : UIPinchGestureRecognizer) {

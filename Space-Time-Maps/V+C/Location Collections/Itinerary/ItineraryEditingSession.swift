@@ -11,67 +11,67 @@ import UIKit
 class ItineraryEditingSession: NSObject {
     
     var travelMode : TravelMode
-    var baseDestinations : [Destination]
-    var movingDestination : Destination
+    var baseEvents : [Event]
+    var movingEvent : Event
     var originalIndex : Int
-    var callback : ([Destination]?, Route?) -> ()
+    var callback : ([Event]?, Route?) -> ()
     
     static let scheduler = Scheduler()
     
-    init(movingDestination destination: Destination, withIndex index: Int, inDestinations destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination]?, Route?) -> ()) {
-        destination.constraints.areEnabled = true
-        self.movingDestination = destination
-        self.baseDestinations = destinations
+    init(movingEvent event: Event, withIndex index: Int, inEvents events: [Event], travelMode: TravelMode, callback: @escaping ([Event]?, Route?) -> ()) {
+        self.movingEvent = event
+        self.baseEvents = events
         self.travelMode = travelMode
         self.callback = callback
         self.originalIndex = index
     }
     
-    func moveDestination(toTime time: TimeInterval){
+    func moveEvent(toTime time: TimeInterval){
                 
-        var modifiedDestinations = baseDestinations
-        movingDestination.timing.start = time
-        movingDestination.timing.end = time + movingDestination.timing.duration
-        modifiedDestinations.append(movingDestination)
-        modifiedDestinations.sort(by: { $0.timing.start <= $1.timing.start })
-        computeRoute(with: modifiedDestinations)
+        var modifiedEvents = baseEvents
+        movingEvent.timing.start = time
+        movingEvent.timing.end = time + movingEvent.timing.duration
+        modifiedEvents.append(movingEvent)
+        modifiedEvents.sort(by: { $0.timing.start <= $1.timing.start })
+        computeRoute(with: modifiedEvents)
         
     }
     
-    func scaleDestinationDuration(with scale: Double) {
-        let duration = movingDestination.timing.duration * scale
-        let delta = duration - movingDestination.timing.duration
-        movingDestination.timing.duration = duration
-        movingDestination.timing.end += delta
-        var modifiedDestinations = baseDestinations
-        modifiedDestinations.append(movingDestination)
-        computeRoute(with: modifiedDestinations)
+    
+    func changeEventDuration(with delta: Double) {
+        let duration = movingEvent.timing.duration + delta
+        guard duration >= TimeInterval.from(minutes: 30.0) else { return }
+//        let event = movingEvent.copy()
+        movingEvent.timing.duration = duration
+        movingEvent.timing.end = movingEvent.timing.start + movingEvent.timing.duration
+        var modifiedEvents = baseEvents
+        modifiedEvents.append(movingEvent)
+        modifiedEvents.sort(by: { $0.timing.start <= $1.timing.start })
+        computeRoute(with: modifiedEvents)
     }
     
-    func changeDestinationDuration(with delta: Double) {
-        let duration = movingDestination.timing.duration + delta
-//        let destination = movingDestination.copy()
-        movingDestination.timing.duration = duration
-        movingDestination.timing.end = movingDestination.timing.start + movingDestination.timing.duration
-        var modifiedDestinations = baseDestinations
-        modifiedDestinations.append(movingDestination)
-        computeRoute(with: modifiedDestinations)
-    }
-    
-    func removeDestination() {
-        computeRoute(with: baseDestinations)
+    func removeEvent() {
+        computeRoute(with: baseEvents)
     }
     
     func end() {
-        movingDestination.constraints.areEnabled = false
-        moveDestination(toTime: movingDestination.timing.start)
+        moveEvent(toTime: movingEvent.timing.start)
     }
 
     
-    func computeRoute(with destinations: [Destination]) {
-        if destinations.count <= 1 {
-            callback(destinations, [])
+    func computeRoute(with events: [Event]) {
+        if events.count <= 1 {
+            callback(events, [])
         } else {
+            var destinations = [Destination]()
+            events.forEach({ event in
+                if let dest = event as? Destination {
+                    destinations.append(dest)
+                } else if let group = event as? OneOfBlock {
+                    let dest = Destination(place: group.places[0], timing: group.timing, constraints: Constraints())
+                    destinations.append(dest)
+                }
+            })
             ItineraryEditingSession.scheduler.schedule(destinations: destinations, travelMode: travelMode, callback: callback)
         }
     }

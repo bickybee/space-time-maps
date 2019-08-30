@@ -37,10 +37,10 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     func addDragRecognizerTo(draggable: Draggable) {
         
         let dragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragObject))
-//        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchObject))
+        
         dragRecognizer.delegate = self
         draggable.dragHandle.addGestureRecognizer(dragRecognizer)
-//        view.addGestureRecognizer(pinchRecognizer)
+        
         
     }
     
@@ -53,10 +53,6 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         }
     }
     
-    @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
-        
-        print( "pinch" )
-    }
     
     @objc func dragObject(_ gesture: UIPanGestureRecognizer) {
         
@@ -144,7 +140,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         cellSnapshot.alpha = 0.6
         cellSnapshot.frame = draggable.frame
         cellSnapshot.bounds = draggable.bounds
-//        view.addSubview(cellSnapshot)
+        view.addSubview(cellSnapshot)
         
         draggingView = cellSnapshot
         

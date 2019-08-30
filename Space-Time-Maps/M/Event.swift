@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol Schedulable {
+protocol Event {
     
     var timing : Timing { get set }
     

@@ -41,6 +41,38 @@ class Scheduler : NSObject {
         callback(schedDests, schedLegs)
     }
     
+    func schedule3(events: [Event], travelMode: TravelMode, callback: @escaping ([Event], Route) -> ()) {
+        
+        let dispatchGroup = DispatchGroup()
+        var legs = [Leg]()
+        
+        for i in 0 ... events.count - 2 {
+            dispatchGroup.enter()
+            guard let destA = destinationFromEvent(events[i]),
+                let destB = destinationFromEvent(events[i + 1]) else { return }
+            
+            self.qs.getLegFor(start: destA, end: destB, travelMode: travelMode) { leg in
+                if let leg = leg {
+                    legs.append(leg)
+                    dispatchGroup.leave()
+                }
+            }
+        }
+        
+        dispatchGroup.wait()
+        callback(events, legs)
+    }
+    
+    func destinationFromEvent(_ event: Event) -> Destination? {
+        var destination : Destination?
+        if let dest = event as? Destination {
+            destination = dest
+        } else if let group = event as? OneOfBlock {
+            guard let place = group.places[safe: 0] else { return nil }
+            destination = Destination(place: place, timing: group.timing, constraints: Constraints())
+        }
+        return destination
+    }
     
     
 //    func scheduleEvents(seededAt index: Int, callback: () -> ()) {

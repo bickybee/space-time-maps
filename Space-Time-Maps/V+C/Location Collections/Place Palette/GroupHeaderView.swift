@@ -15,7 +15,6 @@ class GroupHeaderView: UICollectionReusableView, Draggable {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupHandle()
     }
     
@@ -26,7 +25,7 @@ class GroupHeaderView: UICollectionReusableView, Draggable {
     
     private func setupHandle() {
         dragHandle.frame = self.frame
-        dragHandle.backgroundColor = .red
+        dragHandle.backgroundColor = .lightText
         dragHandle.layer.zPosition = 1000
         self.addSubview(dragHandle)
         
@@ -35,7 +34,7 @@ class GroupHeaderView: UICollectionReusableView, Draggable {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let newHeight = self.frame.size.width
+        let newHeight = self.frame.size.height
         dragHandle.frame.size.height = newHeight
     }
     

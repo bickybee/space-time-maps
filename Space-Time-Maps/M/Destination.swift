@@ -11,7 +11,7 @@ import UIKit
 // A place that we are /going/ to at some /time
 // I.e. a place with timing aspects to it
 
-class Destination: Schedulable {
+class Destination: Event {
     
     // Details about the place itself
     var place : Place

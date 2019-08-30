@@ -10,7 +10,7 @@ import Foundation
 
 typealias Route = [Leg]
 
-struct Leg : Schedulable {
+struct Leg : Event {
     
     var polyline : String
     var timing : Timing

@@ -20,9 +20,11 @@ struct Group {
     
 }
 
-struct OneOfBlock : Schedulable {
+struct OneOfBlock : Event {
     
+    var name : String
     var places : [Place]
     var timing : Timing
+    var selectedIndex : Int
     
 }

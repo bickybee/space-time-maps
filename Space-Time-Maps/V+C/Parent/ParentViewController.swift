@@ -28,7 +28,15 @@ class ParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchObject))
+        view.addGestureRecognizer(pinchRecognizer)
     }
+    
+    @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
+        
+        itineraryController.pinchLocationCell(gesture: gesture)
+    }
+    
     
     // Change the mode of transport for the route calculations
     // FOR NOW just passing this to itineraryController, maybe should be part of that to begin with
@@ -102,12 +110,14 @@ class ParentViewController: UIViewController {
     // Compare itinerary places and saved places, mark which saved places are in the itinerary
     func markItineraryPlaces(for group: Group) -> [Place] {
         let savedPlaces = group.places
-        let itineraryDestinations = itineraryController.itinerary.destinations
+        let itineraryEvents = itineraryController.itinerary.events
         savedPlaces.forEach{ $0.isInItinerary = false}
         for savedPlace in savedPlaces {
-            for destination in itineraryDestinations {
-                if savedPlace == destination.place {
-                    savedPlace.isInItinerary = true
+            for event in itineraryEvents {
+                if let destination = event as? Destination {
+                    if savedPlace == destination.place {
+                        savedPlace.isInItinerary = true
+                    }
                 }
             }
         }
@@ -124,7 +134,9 @@ class ParentViewController: UIViewController {
         let palettePlaces = groups.flatMap { $0.places }
         
         let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
-        let itineraryPlaces = itinerary.destinations.map { $0.place }
+        var itineraryDestinations = [Destination]()
+        itinerary.events.forEach( { if let dest = $0 as? Destination {itineraryDestinations.append(dest)} } )
+        let itineraryPlaces = itineraryDestinations.map { $0.place }
         let itineraryLegs = itinerary.route
         
         // Send data to map

@@ -27,7 +27,7 @@ class ItineraryViewController: DraggableContentViewController {
     weak var delegate : ItineraryViewControllerDelegate?
     
     // Collection view data source!
-    var itinerary = Itinerary(destinations: [Destination](), route:[Leg](), travelMode: .driving) {
+    var itinerary = Itinerary(events: [Event](), route:[Leg](), travelMode: .driving) {
         didSet {
             collectionView.reloadData()
         }
@@ -63,7 +63,14 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         let scheduler = Scheduler()
-        scheduler.schedule(destinations: itinerary.destinations, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        // TEMP BEFORE I figure out how to actually schedule groups-- only do scheduling if all items are destinations! for now!! just doing interface stuff first...
+        var allDestinations = true
+        var destinations = [Destination]()
+        itinerary.events.forEach({ event in
+            guard let dest = event as? Destination else { allDestinations = false; return }
+            destinations.append(dest)
+        })
+        if allDestinations { ItineraryEditingSession.scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode, callback: didEditItinerary) }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -84,7 +91,7 @@ class ItineraryViewController: DraggableContentViewController {
         if abs(dir) >= thresh {
             let step = dir > 0 ? 1 : -1
             let deltaTime = TimeInterval.from(minutes: step * 15)
-            editingSession.changeDestinationDuration(with: deltaTime)
+            editingSession.changeEventDuration(with: deltaTime)
             gesture.scale = 1.0
         }
         
@@ -102,7 +109,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if section == 0 {
-            return itinerary.destinations.count
+            return itinerary.events.count
         } else {
             return itinerary.route.count
         }
@@ -123,12 +130,18 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func setupLocationCell(_ cell: DestinationCell, with index: Int) -> DestinationCell {
         
-        guard let destination = itinerary.destinations[safe: index] else { return cell }
+        guard let event = itinerary.events[safe: index] else { return cell }
 //        if editingSession != nil {
 //            cell.setupWith(name: destination.place.name, color: .lightGray, constrained: destination.constraints.areEnabled)
 //        } else {
-        let fraction = Double(index) / Double(itinerary.destinations.count - 1)
-        cell.setupWith(name: destination.place.name, fraction: fraction, constrained: destination.constraints.areEnabled)
+        var name = ""
+        if let dest = event as? Destination {
+            name = dest.place.name
+        } else if let group = event as? OneOfBlock {
+            name = group.name
+        }
+        let fraction = Double(index) / Double(itinerary.events.count - 1)
+        cell.setupWith(name: name, fraction: fraction, constrained: false)
     
         addDragRecognizerTo(draggable: cell)
         return cell
@@ -152,33 +165,38 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func didEditItinerary(destinations: [Destination]?, route: Route?) {
+    func didEditItinerary(destinations: [Event]?, route: Route?) {
         
         guard let destinations = destinations, let route = route else { return }
         
-        self.itinerary.destinations = destinations
+        self.itinerary.events = destinations
         self.itinerary.route = route
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
-        let destination : Destination
-        if let place = object as? Place {
-            destination = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration), constraints: Constraints())
-        } else if let dest = object as? Destination {
-            destination = dest
+        let event : Event
+        
+        if let eventObject = object as? Event {
+            event = eventObject
         } else {
-            return
+            if let place = object as? Place {
+                event = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration), constraints: Constraints())
+            } else if let group = object as? Group {
+                event = OneOfBlock(name: group.name, places: group.places, timing: Timing(start: 0, duration: defaultDuration), selectedIndex: 0)
+            } else {
+                return
+            }
         }
         
-        var editingDestinations = itinerary.destinations
+        var editingEvents = itinerary.events
         
         if draggableContentViewController as? ItineraryViewController != nil {
-            editingDestinations.remove(at: indexPath.item)
+            editingEvents.remove(at: indexPath.item)
         }
         
-        editingSession = ItineraryEditingSession(movingDestination: destination, withIndex: indexPath.item, inDestinations: editingDestinations, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(movingEvent: event, withIndex: indexPath.item, inEvents: editingEvents, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
@@ -188,7 +206,7 @@ extension ItineraryViewController : DragDelegate {
         let location = gesture.location(in: collectionView)
         
         if !collectionView.frame.contains(location) {
-            editingSession.removeDestination()
+            editingSession.removeEvent()
             return
         }
         
@@ -196,10 +214,15 @@ extension ItineraryViewController : DragDelegate {
         let y = location.y - cell.frame.height / 2
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
-            
-            editingSession.moveDestination(toTime: TimeInterval.from(hours: hour))
+            editingSession.moveEvent(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
         }
+        
+//        let spaceFromBottom = collectionView.frame.height - y
+//        print (spaceFromBottom)
+//        if spaceFromBottom <= 100 {
+//            timelineController.shiftTimeline(by: 2.0)
+//        }
         
     }
     
@@ -224,9 +247,9 @@ extension ItineraryViewController: DragDataDelegate {
     func objectFor(draggable: Draggable) -> Any? {
         guard let draggable = draggable as? UICollectionViewCell,
             let indexPath = collectionView.indexPath(for: draggable),
-              let destination = itinerary.destinations[safe: indexPath.item] else { return nil }
+              let event = itinerary.events[safe: indexPath.item] else { return nil }
         
-        return destination
+        return event
     }
     
     func indexPathFor(draggable: Draggable) -> IndexPath? {
@@ -249,18 +272,18 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         return timelineController.hourHeight
     }
     
-    func collectionView(_ collectionView:UICollectionView, timingForSchedulableAtIndexPath indexPath: IndexPath) -> Timing {
-        guard let schedulable = schedulableFor(indexPath: indexPath) else { return Timing() }
-        return schedulable.timing
+    func collectionView(_ collectionView:UICollectionView, timingForEventAtIndexPath indexPath: IndexPath) -> Timing {
+        guard let event = eventFor(indexPath: indexPath) else { return Timing() }
+        return event.timing
     }
     
-    func schedulableFor(indexPath: IndexPath) -> Schedulable? {
+    func eventFor(indexPath: IndexPath) -> Event? {
         
         let section = indexPath.section
         let item = indexPath.item
         
         if section == 0 {
-            return itinerary.destinations[safe: item]
+            return itinerary.events[safe: item]
         } else if section == 1 {
             return itinerary.route[safe: item]
         } else {

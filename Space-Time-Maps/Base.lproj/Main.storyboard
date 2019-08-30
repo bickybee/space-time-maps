@@ -201,7 +201,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9cj-wp-vvJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="283" y="917"/>
+            <point key="canvasLocation" x="281.60000000000002" y="916.64167916041981"/>
         </scene>
         <!--Place Palette View Controller-->
         <scene sceneID="knU-dA-27b">

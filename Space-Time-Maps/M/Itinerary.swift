@@ -14,9 +14,9 @@ enum TravelMode : String {
 
 struct Itinerary {
     
-    var destinations = [Destination]() {
+    var events = [Event]() {
         didSet {
-            destinations.sort(by: { $0.timing.start < $1.timing.start })
+            events.sort(by: { $0.timing.start < $1.timing.start })
         }
     }
     
@@ -31,7 +31,7 @@ struct Itinerary {
         route.forEach({leg in
             totalDuration += leg.timing.duration
         })
-        destinations.forEach({dest in
+        events.forEach({dest in
             totalDuration += dest.timing.duration
         })
         return totalDuration

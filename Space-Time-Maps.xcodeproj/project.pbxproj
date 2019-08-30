@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* GroupCell.swift */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
@@ -24,7 +25,7 @@
 		98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */; };
 		98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */; };
 		98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */; };
-		98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0CE23061A35003DE1CB /* Schedulable.swift */; };
+		98DEF0CF23061A35003DE1CB /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0CE23061A35003DE1CB /* Event.swift */; };
 		98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */; };
 		98DEF0D523066372003DE1CB /* LegCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D423066372003DE1CB /* LegCell.swift */; };
 		98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D62306661B003DE1CB /* ColorUtils.swift */; };
@@ -53,6 +54,7 @@
 /* Begin PBXFileReference section */
 		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
+		98127E6D23199DCD0030C44B /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
@@ -70,7 +72,7 @@
 		98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCollectionViewController.swift; sourceTree = "<group>"; };
 		98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUtils.swift; sourceTree = "<group>"; };
 		98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSMapViewExtensions.swift; sourceTree = "<group>"; };
-		98DEF0CE23061A35003DE1CB /* Schedulable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedulable.swift; sourceTree = "<group>"; };
+		98DEF0CE23061A35003DE1CB /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensions.swift; sourceTree = "<group>"; };
 		98DEF0D423066372003DE1CB /* LegCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegCell.swift; sourceTree = "<group>"; };
 		98DEF0D62306661B003DE1CB /* ColorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
 				98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */,
 				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
+				98127E6D23199DCD0030C44B /* GroupCell.swift */,
 				98DEF0D423066372003DE1CB /* LegCell.swift */,
 				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
 			);
@@ -232,7 +235,7 @@
 				98DEF0D82307294E003DE1CB /* RouteLeg.swift */,
 				98DEF0A022FC904B003DE1CB /* TimeConstraints.swift */,
 				98BC8579230C3A83001D14BE /* Timing.swift */,
-				98DEF0CE23061A35003DE1CB /* Schedulable.swift */,
+				98DEF0CE23061A35003DE1CB /* Event.swift */,
 				98DEBA70230F7EE700769BB5 /* Group.swift */,
 			);
 			path = M;
@@ -402,7 +405,7 @@
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
 				B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */,
 				B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */,
-				98DEF0CF23061A35003DE1CB /* Schedulable.swift in Sources */,
+				98DEF0CF23061A35003DE1CB /* Event.swift in Sources */,
 				9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */,
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
 				98DEF0D92307294E003DE1CB /* RouteLeg.swift in Sources */,
@@ -417,6 +420,7 @@
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
+				98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */,
 				9864447E2316B3BC00717664 /* Draggable.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
