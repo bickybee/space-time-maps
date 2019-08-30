@@ -79,9 +79,15 @@ class ItineraryViewController: DraggableContentViewController {
         guard let editingSession = editingSession else { return }
         
         print("pinch!")
-        let scale = Double(gesture.scale)
-        editingSession.scaleDestinationDuration(with: scale)
-        gesture.scale = 1.0
+        let dir = Double(gesture.scale - 1.0)
+        let thresh = 0.05
+        if abs(dir) >= thresh {
+            let step = dir > 0 ? 1 : -1
+            let deltaTime = TimeInterval.from(minutes: step * 15)
+            editingSession.changeDestinationDuration(with: deltaTime)
+            gesture.scale = 1.0
+        }
+        
     }
 
 }

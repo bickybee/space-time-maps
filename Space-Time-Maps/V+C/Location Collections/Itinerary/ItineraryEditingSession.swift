@@ -48,6 +48,16 @@ class ItineraryEditingSession: NSObject {
         computeRoute(with: modifiedDestinations)
     }
     
+    func changeDestinationDuration(with delta: Double) {
+        let duration = movingDestination.timing.duration + delta
+//        let destination = movingDestination.copy()
+        movingDestination.timing.duration = duration
+        movingDestination.timing.end = movingDestination.timing.start + movingDestination.timing.duration
+        var modifiedDestinations = baseDestinations
+        modifiedDestinations.append(movingDestination)
+        computeRoute(with: modifiedDestinations)
+    }
+    
     func removeDestination() {
         computeRoute(with: baseDestinations)
     }
