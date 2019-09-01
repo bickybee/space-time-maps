@@ -63,16 +63,16 @@ class ItineraryEditingSession: NSObject {
         if events.count <= 1 {
             callback(events, [])
         } else {
-            var destinations = [Destination]()
-            events.forEach({ event in
-                if let dest = event as? Destination {
-                    destinations.append(dest)
-                } else if let group = event as? OneOfBlock {
-                    let dest = Destination(place: group.places[0], timing: group.timing, constraints: Constraints())
-                    destinations.append(dest)
-                }
-            })
-            ItineraryEditingSession.scheduler.schedule(destinations: destinations, travelMode: travelMode, callback: callback)
+//            var destinations = [Destination]()
+//            events.forEach({ event in
+//                if let dest = event as? Destination {
+//                    destinations.append(dest)
+//                } else if let group = event as? OneOfBlock {
+//                    let dest = Destination(place: group.places[0], timing: group.timing, constraints: Constraints())
+//                    destinations.append(dest)
+//                }
+//            })
+            ItineraryEditingSession.scheduler.schedule(events: events, travelMode: travelMode, callback: callback)
         }
     }
 

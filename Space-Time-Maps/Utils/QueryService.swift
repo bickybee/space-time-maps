@@ -14,6 +14,7 @@ class QueryService {
     let session = URLSession(configuration: .default)
     let dispatchGroup = DispatchGroup()
     let gmapsDirectionsURLString = "https://maps.googleapis.com/maps/api/directions/json"
+    let gmapsMatrixURLString = "https://maps.googleapis.com/maps/api/distancematrix/json"
     var apiKey: String
     
     init() {
@@ -46,7 +47,14 @@ class QueryService {
         dataTask.resume()
     }
     
-    // MARK: - Destination-based
+    func getMatrixFor(origins: [Destination], destinations: [Destination], travelMode: TravelMode, callback: @escaping ([[TimeInterval]]?) -> ()) {
+        // matrix[row][col]
+        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { return }
+        runQuery(url: url) {data in
+            let results = self.dataToMatrix(data)
+            callback(results)
+        }
+    }
     
     func getRouteFor(destinations: [Destination], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
         
@@ -107,6 +115,43 @@ class QueryService {
         
     }
     
+    func dataToMatrix(_ data: Data) -> [[TimeInterval]]? {
+        let decoder = JSONDecoder()
+        var matrix : [[TimeInterval]]?
+        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
+            print(errorResponseObject.errorMessage)
+            matrix = nil
+        } else if let matrixResponseObject = try? decoder.decode(MatrixResponseObject.self, from: data) {
+            // Parse out data into Route object
+            let rows = matrixResponseObject.originAddresses.count
+            let cols = matrixResponseObject.destinationAddresses.count
+            matrix = Array(repeating: Array(repeating: 0, count: cols), count: rows)
+            for (i, row) in matrixResponseObject.rows.enumerated() {
+                for (j, elem) in row.elements.enumerated() {
+                    matrix![i][j] = TimeInterval(elem.duration.value)
+                }
+            }
+        }
+        return matrix
+    }
+    
+    func queryURLFor(origins: [Destination], destinations: [Destination], travelMode: TravelMode) -> URL? {
+        
+        guard var urlComponents = URLComponents(string: gmapsMatrixURLString) else { return nil }
+        
+        let originsString = batchPlaceIDStringFrom(destinations: origins)
+        let destinationsString = batchPlaceIDStringFrom(destinations: destinations)
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name:"origins", value:originsString),
+            URLQueryItem(name:"destinations", value:destinationsString),
+            URLQueryItem(name:"mode", value: travelMode.rawValue),
+            URLQueryItem(name:"key", value: self.apiKey)
+        ]
+        
+        return urlComponents.url
+    }
+    
     func queryURLFor(start: Destination, end: Destination, travelMode: TravelMode) -> URL? {
         
         guard var urlComponents = URLComponents(string: gmapsDirectionsURLString) else { return nil }
@@ -119,11 +164,22 @@ class QueryService {
             URLQueryItem(name:"origin", value:"place_id:\(startingID)"),
             URLQueryItem(name:"destination", value:"place_id:\(endingID)"),
             URLQueryItem(name:"mode", value: travelMode.rawValue),
-            URLQueryItem(name:"key", value:"\(self.apiKey)")
+            URLQueryItem(name:"key", value: self.apiKey)
         ]
         
         return urlComponents.url
         
+    }
+    
+    func batchPlaceIDStringFrom(destinations: [Destination]) -> String {
+        var str = ""
+        for (index, dest) in destinations.enumerated() {
+            str += "place_id:" + dest.place.placeID
+            if index < destinations.endIndex {
+                str += "|"
+            }
+        }
+        return str
     }
 
 }

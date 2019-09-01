@@ -26,5 +26,10 @@ struct OneOfBlock : Event {
     var places : [Place]
     var timing : Timing
     var selectedIndex : Int
+    var destinations : [Destination] {
+        get {
+            return places.map{ Destination(place: $0, timing: self.timing, constraints: Constraints()) }
+        }
+    }
     
 }

@@ -5,6 +5,31 @@
 
 import Foundation
 
+// MARK: - Welcome
+struct MatrixResponseObject: Codable {
+    let status: String
+    let originAddresses, destinationAddresses: [String]
+    let rows: [Row]
+    
+    enum CodingKeys: String, CodingKey {
+        case status
+        case originAddresses = "origin_addresses"
+        case destinationAddresses = "destination_addresses"
+        case rows
+    }
+}
+
+// MARK: - Row
+struct Row: Codable {
+    let elements: [Element]
+}
+
+// MARK: - Element
+struct Element: Codable {
+    let status: String
+    let duration, distance: Distance
+}
+
 struct ErrorResponseObject: Codable {
     let errorMessage: String
     let routes: [JSONAny]

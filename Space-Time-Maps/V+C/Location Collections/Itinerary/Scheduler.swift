@@ -8,71 +8,123 @@
 
 import Foundation
 
+// Here is where we determine exactly which places + timings get sent to Google Directions API
+// Using distance matrix API for batch calculations
 
 class Scheduler : NSObject {
     
     let qs = QueryService()
     
-    var schedDests : [Destination]!
-    var schedLegs : [Leg]!
-    var travelMode : TravelMode!
-    
-    func schedule(destinations: [Destination], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
+    func schedule(events: [Event], travelMode: TravelMode, callback: @escaping ([Destination], Route) -> ()) {
 
-        print("shedulce")
-        // Member variables... (easy access within closures)
-        schedDests = destinations.map( { return $0.copy() })
-        schedLegs = [Leg]()
-        self.travelMode = travelMode
-        
-        let dispatchGroup = DispatchGroup()
-        
-        for i in 0 ... schedDests.count - 2 {
-            dispatchGroup.enter()
-            self.qs.getLegFor(start: schedDests[i], end: schedDests[i + 1], travelMode: self.travelMode) { leg in
-                if let leg = leg {
-                    self.schedLegs.append(leg)
-                    dispatchGroup.leave()
-                }
-            }
-        }
-        
-        dispatchGroup.wait()
-        callback(schedDests, schedLegs)
-    }
-    
-    func schedule3(events: [Event], travelMode: TravelMode, callback: @escaping ([Event], Route) -> ()) {
-        
-        let dispatchGroup = DispatchGroup()
+//        let inputEvents = events.map{ $0.copy() } // TODO
+        let inputEvents = events
+        var destinations = [Destination]() // destination timing values may change while async requests are still going...
         var legs = [Leg]()
         
+        let dispatchGroup1 = DispatchGroup()
+        
+        for (i, event) in inputEvents.enumerated() {
+            if let destination = event as? Destination {
+                destinations.append(destination)
+            } else if let group = event as? OneOfBlock {
+                dispatchGroup1.enter()
+                guard let before = inputEvents[safe: i - 1] as? Destination else { return }
+                guard let after = inputEvents[safe: i + 1] as? Destination else { return }
+                getBestOption(group, before:before, after: after, travelMode: travelMode) { option in
+                    if let option = option {
+                        destinations.append(option)
+                    }
+                    dispatchGroup1.leave()
+                }
+                dispatchGroup1.wait()
+            }
+        }
+        
+        let dispatchGroup2 = DispatchGroup()
+        
         for i in 0 ... events.count - 2 {
-            dispatchGroup.enter()
-            guard let destA = destinationFromEvent(events[i]),
-                let destB = destinationFromEvent(events[i + 1]) else { return }
             
-            self.qs.getLegFor(start: destA, end: destB, travelMode: travelMode) { leg in
+            dispatchGroup2.enter()
+            self.qs.getLegFor(start: destinations[i], end: destinations[i + 1], travelMode: travelMode) { leg in
                 if let leg = leg {
                     legs.append(leg)
-                    dispatchGroup.leave()
+                    dispatchGroup2.leave()
                 }
             }
         }
         
-        dispatchGroup.wait()
-        callback(events, legs)
+        dispatchGroup2.wait()
+        callback(destinations, legs)
     }
     
-    func destinationFromEvent(_ event: Event) -> Destination? {
-        var destination : Destination?
-        if let dest = event as? Destination {
-            destination = dest
-        } else if let group = event as? OneOfBlock {
-            guard let place = group.places[safe: 0] else { return nil }
-            destination = Destination(place: place, timing: group.timing, constraints: Constraints())
+    func getBestOption(_ group: OneOfBlock, before: Destination, after: Destination, travelMode: TravelMode, callback:@escaping (Destination?) -> ()) {
+        
+        var origins = [Destination]()
+        origins.append(contentsOf: group.destinations)
+        origins.append(before)
+        
+        var destinations = [Destination]()
+        destinations.append(contentsOf: group.destinations)
+        destinations.append(after)
+        
+        self.qs.getMatrixFor(origins: origins, destinations: destinations, travelMode: travelMode) { matrix in
+            guard let matrix = matrix else { callback(nil); return }
+            
+            let index = self.indexOfBestOption(matrix)
+            let bestOption = group.destinations[index]
+            callback(bestOption)
         }
-        return destination
     }
+    
+    func indexOfBestOption(_ matrix: [[TimeInterval]]) -> Int {
+        print("which option?")
+        let n = matrix.count - 1 // n x n matrix
+        let numOptions = matrix.count - 1
+        var scores = Array(repeating: 0.0, count: numOptions)
+        for i in 0...numOptions - 1 {
+            scores[i] = matrix[i][n] + matrix[n][i]
+            print(i)
+            print(scores[i])
+        }
+        let minScore = scores.min()
+        let index = scores.firstIndex(of: minScore!)
+        return index!
+    }
+    
+//    func schedule3(events: [Event], travelMode: TravelMode, callback: @escaping ([Event], Route) -> ()) {
+//
+//        let dispatchGroup = DispatchGroup()
+//        var events = events.map( { return $0.copy() })
+//        var legs = [Leg]()
+//
+//        for i in 0 ... events.count - 2 {
+//            dispatchGroup.enter()
+//            guard let destA = destinationFromEvent(events[i]),
+//                let destB = destinationFromEvent(events[i + 1]) else { return }
+//
+//            self.qs.getLegFor(start: destA, end: destB, travelMode: travelMode) { leg in
+//                if let leg = leg {
+//                    legs.append(leg)
+//                    dispatchGroup.leave()
+//                }
+//            }
+//        }
+//
+//        dispatchGroup.wait()
+//        callback(events, legs)
+//    }
+//
+//    func destinationFromEvent(_ event: Event) -> Destination? {
+//        var destination : Destination?
+//        if let dest = event as? Destination {
+//            destination = dest
+//        } else if let group = event as? OneOfBlock {
+//            guard let place = group.places[safe: 0] else { return nil }
+//            destination = Destination(place: place, timing: group.timing, constraints: Constraints())
+//        }
+//        return destination
+//    }
     
     
 //    func scheduleEvents(seededAt index: Int, callback: () -> ()) {

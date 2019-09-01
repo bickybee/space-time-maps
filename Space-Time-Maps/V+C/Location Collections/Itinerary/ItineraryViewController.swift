@@ -70,7 +70,7 @@ class ItineraryViewController: DraggableContentViewController {
             guard let dest = event as? Destination else { allDestinations = false; return }
             destinations.append(dest)
         })
-        if allDestinations { ItineraryEditingSession.scheduler.schedule(destinations: destinations, travelMode: itinerary.travelMode, callback: didEditItinerary) }
+        if allDestinations { ItineraryEditingSession.scheduler.schedule(events: destinations, travelMode: itinerary.travelMode, callback: didEditItinerary) }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
