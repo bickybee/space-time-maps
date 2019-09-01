@@ -228,7 +228,7 @@ extension PlacePaletteViewController: DragDelegate {
                 insertAt = indexPath
             }
         }
-        groups[insertAt.section].places.insert(place, at: insertAt.item)
+        groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
         collectionView.reloadData()
     }
     
