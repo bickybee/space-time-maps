@@ -32,7 +32,7 @@ class PlacePaletteViewController: DraggableContentViewController {
     }
     
     var groupsBeforeEditing = [Group]()
-    var dragging = false
+    var midDrag = false
     var draggingIndexPath : IndexPath?
 //    var draggingView : UIView?
     
@@ -121,11 +121,14 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         // Dragging cell?
         if let draggingIndexPath = draggingIndexPath {
             if (indexPath == draggingIndexPath) {
+                print("clear")
+                print(draggingIndexPath)
                 cell.contentView.alpha = 0.0
                 cell.backgroundColor = .clear
                 return cell
             }
         }
+        print("not clear")
         
         // Otherwise
         let place = group.places[indexPath.item]
@@ -226,7 +229,7 @@ extension PlacePaletteViewController: DragDelegate {
 
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         guard object as? Place != nil else { return }
-        dragging = false
+        midDrag = false
         draggingIndexPath = indexPath
 //        draggingView = setupPlaceholderView(from: gesture.view!)
         groupsBeforeEditing = groups
@@ -244,14 +247,14 @@ extension PlacePaletteViewController: DragDelegate {
                 insertAt = draggingIndexPath!
             }
         }
-        if (!dragging ){
+        if (!midDrag ){
             collectionView.performBatchUpdates({
-                dragging = true
+                midDrag = true
                 groups = groupsBeforeEditing
                 groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
-            }, completion: { success in self.dragging = false })
+            }, completion: { success in self.midDrag = false })
         }
     }
     
@@ -264,9 +267,11 @@ extension PlacePaletteViewController: DragDelegate {
                 groups[i] = group
             }
         }
+//        dragging = false
+        let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
-        collectionView.reloadData()
-        print("done" )
+        collectionView.reloadItems(at: [reloadIndexPath])
+        
     }
     
     func cellForIndex(_ indexPath: IndexPath) -> Draggable? {

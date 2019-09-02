@@ -46,6 +46,8 @@ class TimelineViewController: UIViewController {
     @objc func setCurrentTime() {
         guard let currentTime = Utils.currentTime() else { return }
         timelineView.currentHour = CGFloat(currentTime.inHours())
+        let startAt = timelineView.currentHour - 1.0
+        shiftTimeline(to: startAt)
         renderTimeline()
     }
     
@@ -74,7 +76,12 @@ class TimelineViewController: UIViewController {
     }
     
     func shiftTimeline(by delta: CGFloat) {
-        var newStartHour = startHour + (delta / hourHeight) // pan speed relative to hour height!
+        let newStartHour = startHour + (delta / hourHeight) // pan speed relative to hour height!
+        shiftTimeline(to: newStartHour)
+    }
+    
+    func shiftTimeline(to hour: CGFloat) {
+        var newStartHour = hour
         let newEndHour = newStartHour + view.frame.height / hourHeight
         
         if newStartHour < 0 {
