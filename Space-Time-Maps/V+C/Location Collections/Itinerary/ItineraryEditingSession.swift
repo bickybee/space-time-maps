@@ -29,8 +29,8 @@ class ItineraryEditingSession: NSObject {
     func moveEvent(toTime time: TimeInterval){
                 
         var modifiedEvents = baseEvents
-        movingEvent.timing.start = time
-        movingEvent.timing.end = time + movingEvent.timing.duration
+        movingEvent.timing.start = time - movingEvent.timing.duration / 2
+        movingEvent.timing.end = time + movingEvent.timing.duration / 2
         modifiedEvents.append(movingEvent)
         modifiedEvents.sort(by: { $0.timing.start <= $1.timing.start })
         computeRoute(with: modifiedEvents)

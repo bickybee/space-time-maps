@@ -184,6 +184,8 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
 // Let delegate handle any further actions associated with dragging the cell
 protocol DragDelegate : AnyObject {
     
+    var dragging : Bool { get set }
+    
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)

@@ -33,6 +33,8 @@ class ItineraryViewController: DraggableContentViewController {
         }
     }
     
+    var dragging = false
+    
     // MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,8 +212,7 @@ extension ItineraryViewController : DragDelegate {
             return
         }
         
-        let cell = draggableContentViewController.draggingView!
-        let y = location.y - cell.frame.height / 2
+        let y = gesture.location(in: view).y
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
             editingSession.moveEvent(toTime: TimeInterval.from(hours: hour))

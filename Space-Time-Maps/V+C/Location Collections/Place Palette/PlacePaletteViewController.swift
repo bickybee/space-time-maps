@@ -32,6 +32,9 @@ class PlacePaletteViewController: DraggableContentViewController {
     }
     
     var groupsBeforeEditing = [Group]()
+    var dragging = false
+    var draggingIndexPath : IndexPath?
+//    var draggingView : UIView?
     
     // CollectionView cell
     private let cellHeight : CGFloat = 50.0
@@ -113,6 +116,15 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
             cell.contentView.alpha = 0.0
             cell.backgroundColor = .clear
             return cell
+        }
+        
+        // Dragging cell?
+        if let draggingIndexPath = draggingIndexPath {
+            if (indexPath == draggingIndexPath) {
+                cell.contentView.alpha = 0.0
+                cell.backgroundColor = .clear
+                return cell
+            }
         }
         
         // Otherwise
@@ -214,22 +226,33 @@ extension PlacePaletteViewController: DragDelegate {
 
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         guard object as? Place != nil else { return }
-        groups[indexPath.section].places.remove(at: indexPath.item)
+        dragging = false
+        draggingIndexPath = indexPath
+//        draggingView = setupPlaceholderView(from: gesture.view!)
         groupsBeforeEditing = groups
+        groupsBeforeEditing[indexPath.section].places.remove(at: indexPath.item)
         collectionView.reloadData()
     }
     
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         guard let place = object as? Place else { return }
-        var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) ?? indexPath
-        groups = groupsBeforeEditing
+        guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
+        
+//        draggingView!.center = gesture.location(in: view)
         if groups[insertAt.section].places.count == 1 {
             if groups[0].places[0].isPlaceholder() && insertAt.item == 1 {
-                insertAt = indexPath
+                insertAt = draggingIndexPath!
             }
         }
-        groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
-        collectionView.reloadData()
+        if (!dragging ){
+            collectionView.performBatchUpdates({
+                dragging = true
+                groups = groupsBeforeEditing
+                groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
+                collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
+                draggingIndexPath = insertAt
+            }, completion: { success in self.dragging = false })
+        }
     }
     
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
@@ -241,12 +264,25 @@ extension PlacePaletteViewController: DragDelegate {
                 groups[i] = group
             }
         }
+        draggingIndexPath = nil
+        collectionView.reloadData()
         print("done" )
     }
     
     func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
         return nil
     }
+    
+    func setupPlaceholderView(from uiView: UIView) -> UIView? {
+        guard let snapshot = uiView.snapshotView(afterScreenUpdates: true) else { return nil }
+        
+        snapshot.frame = uiView.frame
+        snapshot.bounds = uiView.bounds
+        collectionView.addSubview(snapshot)
+        
+        return snapshot
+    }
+
 }
 
 // MARK: - Delegates for GMS Autocomplete

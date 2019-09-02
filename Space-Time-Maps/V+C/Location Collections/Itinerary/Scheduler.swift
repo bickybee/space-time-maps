@@ -110,12 +110,12 @@ class Scheduler : NSObject {
         for i in 0...numOptions - 1 {
             scores[i] += m < n ? 0 : matrix[i][m]
             scores[i] += n < m ? 0 : matrix[n][i]
-            print("score of \(i): \(scores[i])")
         }
         
         let minScore = scores.min()
         let index = scores.firstIndex(of: minScore!)
         return index!
+        
     }
     
 //    func schedule3(events: [Event], travelMode: TravelMode, callback: @escaping ([Event], Route) -> ()) {
