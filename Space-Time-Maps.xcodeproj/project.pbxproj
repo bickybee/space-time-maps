@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* GroupCell.swift */; };
+		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
@@ -55,6 +56,7 @@
 		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		98127E6D23199DCD0030C44B /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
+		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */,
 				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
 				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
+				982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				98DEF0D523066372003DE1CB /* LegCell.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
+				982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

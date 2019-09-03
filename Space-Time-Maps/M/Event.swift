@@ -11,5 +11,6 @@ import UIKit
 protocol Event {
     
     var timing : Timing { get set }
+    func copy() -> Event
     
 }

@@ -18,6 +18,10 @@ struct Group {
     var places : [Place]
     var kind : Group.Kind
     
+    func copy() -> Group {
+        return Group(name: self.name, places: self.places, kind: self.kind)
+    }
+    
 }
 
 struct OneOfBlock : Event {
@@ -26,10 +30,19 @@ struct OneOfBlock : Event {
     var places : [Place]
     var timing : Timing
     var selectedIndex : Int
+    var selectedDestination : Destination {
+        get {
+            return Destination(place: self.places[self.selectedIndex], timing: self.timing)
+        }
+    }
     var destinations : [Destination] {
         get {
-            return places.map{ Destination(place: $0, timing: self.timing, constraints: Constraints()) }
+            return places.map{ Destination(place: $0, timing: self.timing) }
         }
+    }
+    
+    func copy() -> Event {
+        return OneOfBlock(name: self.name, places: self.places, timing: self.timing, selectedIndex: self.selectedIndex)
     }
     
 }

@@ -28,18 +28,16 @@ class ParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchObject))
-        view.addGestureRecognizer(pinchRecognizer)
+        view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
     }
     
+    // Pass pinches down to itinerary
     @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
-        
         itineraryController.pinchLocationCell(gesture: gesture)
     }
     
     
-    // Change the mode of transport for the route calculations
-    // FOR NOW just passing this to itineraryController, maybe should be part of that to begin with
+    // Pass travel mode changes down to itinerary
     @IBAction func transportModeChanged(_ sender: Any) {
         if let control = sender as? UISegmentedControl {
             let selection = control.selectedSegmentIndex
@@ -61,6 +59,7 @@ class ParentViewController: UIViewController {
         }
     }
     
+    
     @objc func swipeOutPalette(_ sender: Any) {
         
         guard let palette = placePaletteController else { return }
@@ -68,63 +67,45 @@ class ParentViewController: UIViewController {
         UIView.setAnimationCurve(.easeOut)
         
         if !palette.inEditingMode {
+            
+            // Maximize palette
             UIView.animate(withDuration: 0.5, animations: {
+                
                 self.paletteSmallWidth.priority = .defaultHigh - 1
                 self.paletteBigWidth.priority = .defaultHigh + 1
-                palette.groupButton.isEnabled = true
-                palette.groupButton.alpha = 1.0
-                palette.searchButton.isEnabled = true
-                palette.searchButton.alpha = 1.0
+                palette.groupButton.toggle()
+                palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
+                
             })
+            
+            // Enable palette editing
             palette.dragDelegate = palette
             
         } else {
-            self.paletteSmallWidth.priority = .defaultHigh + 1
-            self.paletteBigWidth.priority = .defaultHigh - 1
+            
+            // Minimize palette
             UIView.animate(withDuration: 0.5, animations: {
                 
-                palette.groupButton.isEnabled = false
-                palette.groupButton.alpha = 0.0
-                palette.searchButton.isEnabled = true
-                palette.searchButton.alpha = 1.0
+                self.paletteSmallWidth.priority = .defaultHigh + 1
+                self.paletteBigWidth.priority = .defaultHigh - 1
+                palette.groupButton.toggle()
+                palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
+                
             })
+            
+            // Return drag-and-drop functionality to itinerary
             palette.dragDelegate = self.itineraryController
         }
         
         palette.inEditingMode = !palette.inEditingMode
-        
-        
-    }
-    
-    func markItineraryPlaces() {
-        var groups = placePaletteController.groups
-        for i in 0 ... (groups.count - 1)  {
-            groups[i].places = markItineraryPlaces(for: groups[i])
-        }
-    }
-    
-    // Compare itinerary places and saved places, mark which saved places are in the itinerary
-    func markItineraryPlaces(for group: Group) -> [Place] {
-        let savedPlaces = group.places
-        let itineraryEvents = itineraryController.itinerary.events
-        savedPlaces.forEach{ $0.isInItinerary = false}
-        for savedPlace in savedPlaces {
-            for event in itineraryEvents {
-                if let destination = event as? Destination {
-                    if savedPlace == destination.place {
-                        savedPlace.isInItinerary = true
-                    }
-                }
-            }
-        }
-        return savedPlaces
     }
     
     // Package itinerary and place data to send to map for rendering
+    // TODO: REDO!!!
     func updateMap() {
         guard mapController.viewIfLoaded != nil else { return }
         
@@ -132,15 +113,10 @@ class ParentViewController: UIViewController {
         let itinerary = itineraryController.itinerary
         let groups = placePaletteController.groups
         let palettePlaces = groups.flatMap { $0.places }
-        
-        let nonItineraryPlaces = palettePlaces.filter { !$0.isInItinerary }
-        var itineraryDestinations = [Destination]()
-        itinerary.events.forEach( { if let dest = $0 as? Destination {itineraryDestinations.append(dest)} } )
-        let itineraryPlaces = itineraryDestinations.map { $0.place }
         let itineraryLegs = itinerary.route
         
         // Send data to map
-        mapController.refreshMarkup(destinationPlaces: itineraryPlaces, nonDestinationPlaces: nonItineraryPlaces, routeLegs: itineraryLegs)
+        mapController.refreshMarkup(destinationPlaces: [], nonDestinationPlaces: palettePlaces, routeLegs: itineraryLegs)
 
     }
     
@@ -200,7 +176,6 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
 extension ParentViewController : ItineraryViewControllerDelegate {
     
     func itineraryViewController(_ itineraryViewController: ItineraryViewController, didUpdateItinerary: Itinerary) {
-        markItineraryPlaces()
         updateTransportTimeLabel()
         updateMap()
     }

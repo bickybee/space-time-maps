@@ -242,11 +242,14 @@ extension PlacePaletteViewController: DragDelegate {
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
         
 //        draggingView!.center = gesture.location(in: view)
-        if groups[insertAt.section].places.count == 1 {
-            if groups[0].places[0].isPlaceholder() && insertAt.item == 1 {
-                insertAt = draggingIndexPath!
-            }
-        }
+//        if groups[insertAt.section].places.count == 1 {
+//            if groups[0].places[0].isPlaceholder() && insertAt.item == 1 {
+//                insertAt = draggingIndexPath!
+//            }
+//        }
+        
+        guard groups.count > insertAt.section, groups[insertAt.section].places.count >= insertAt.item else { return }
+        
         if (!midDrag ){
             collectionView.performBatchUpdates({
                 midDrag = true
@@ -260,13 +263,13 @@ extension PlacePaletteViewController: DragDelegate {
     
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         // remove leftover placeholder cells
-        for i in 0...groups.count - 1 {
-            var group = groups[i]
-            if group.places.count > 1 {
-                group.places = group.places.filter( { !$0.isPlaceholder() } )
-                groups[i] = group
-            }
-        }
+//        for i in 0...groups.count - 1 {
+//            var group = groups[i]
+//            if group.places.count > 1 {
+//                group.places = group.places.filter( { !$0.isPlaceholder() } )
+//                groups[i] = group
+//            }
+//        }
 //        dragging = false
         let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
@@ -321,7 +324,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
-        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, isInItinerary: false)
+        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!)
         groups[0].places.append(newPlace)
         delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }

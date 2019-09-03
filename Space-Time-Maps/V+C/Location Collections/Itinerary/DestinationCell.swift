@@ -22,6 +22,7 @@ class DestinationCell: UICollectionViewCell, Draggable {
         self.layer.cornerRadius = 5;
         self.layer.masksToBounds = true;
         
+        self.contentView.frame.size.width = self.frame.size.width / 2.0
         setupLabel()
         setupHandle()
     }
@@ -55,24 +56,12 @@ class DestinationCell: UICollectionViewCell, Draggable {
         let color = ColorUtils.colorFor(fraction: fraction)
         self.backgroundColor = color
         self.nameLabel.text = name
-        if constrained {
-            self.layer.borderColor = UIColor.black.cgColor
-            self.layer.borderWidth = 1
-        } else {
-            self.layer.borderWidth = 0
-        }
         self.layoutSubviews()
     }
     
     public func setupWith(name: String, color: UIColor, constrained: Bool) {
         self.backgroundColor = color
         self.nameLabel.text = name
-        if constrained {
-            self.layer.borderColor = UIColor.black.cgColor
-            self.layer.borderWidth = 1
-        } else {
-            self.layer.borderWidth = 0
-        }
         self.layoutSubviews()
     }
     

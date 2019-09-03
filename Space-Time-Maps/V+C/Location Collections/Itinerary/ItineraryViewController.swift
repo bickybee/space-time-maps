@@ -13,6 +13,7 @@ class ItineraryViewController: DraggableContentViewController {
     // CollectionView Cell constants
     private let locationReuseIdentifier = "locationCell"
     private let legReuseIdentifier = "legCell"
+    private let groupReuseIdentifier = "groupCell"
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
@@ -57,6 +58,7 @@ class ItineraryViewController: DraggableContentViewController {
         }
         collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
+        collectionView.register(GroupCell.self, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
@@ -66,13 +68,13 @@ class ItineraryViewController: DraggableContentViewController {
     func computeRoute() {
         let scheduler = Scheduler()
         // TEMP BEFORE I figure out how to actually schedule groups-- only do scheduling if all items are destinations! for now!! just doing interface stuff first...
-        var allDestinations = true
-        var destinations = [Destination]()
-        itinerary.events.forEach({ event in
-            guard let dest = event as? Destination else { allDestinations = false; return }
-            destinations.append(dest)
-        })
-        if allDestinations { ItineraryEditingSession.scheduler.schedule(events: destinations, travelMode: itinerary.travelMode, callback: didEditItinerary) }
+//        var allDestinations = true
+//        var destinations = [Destination]()
+//        itinerary.events.forEach({ event in
+//            guard let dest = event as? Destination else { allDestinations = false; return }
+//            destinations.append(dest)
+//        })
+        scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -87,9 +89,9 @@ class ItineraryViewController: DraggableContentViewController {
     @objc func pinchLocationCell(gesture: UIPinchGestureRecognizer) {
         guard let editingSession = editingSession else { return }
         
-        print("pinch!")
         let dir = Double(gesture.scale - 1.0)
         let thresh = 0.05
+        
         if abs(dir) >= thresh {
             let step = dir > 0 ? 1 : -1
             let deltaTime = TimeInterval.from(minutes: step * 15)
@@ -121,8 +123,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestinationCell
-            return setupLocationCell(cell, with: indexPath.item)
+            return setupDestinationCell(with: indexPath)
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
             return setupLegCell(cell, with: indexPath.item)
@@ -130,21 +131,23 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    func setupLocationCell(_ cell: DestinationCell, with index: Int) -> DestinationCell {
+    func setupDestinationCell(with indexPath: IndexPath) -> DestinationCell {
         
-        guard let event = itinerary.events[safe: index] else { return cell }
-//        if editingSession != nil {
-//            cell.setupWith(name: destination.place.name, color: .lightGray, constrained: destination.constraints.areEnabled)
-//        } else {
+        let event = itinerary.events[indexPath.item]
+
+        var cell : DestinationCell!
         var name = ""
         if let dest = event as? Destination {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestinationCell
             name = dest.place.name
         } else if let group = event as? OneOfBlock {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
             name = group.name
         }
-        let fraction = Double(index) / Double(itinerary.events.count - 1)
+        
+        let fraction = Double(indexPath.item) / Double(itinerary.events.count - 1)
         cell.setupWith(name: name, fraction: fraction, constrained: false)
-    
+        
         addDragRecognizerTo(draggable: cell)
         return cell
         
@@ -167,11 +170,11 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func didEditItinerary(destinations: [Event]?, route: Route?) {
+    func didEditItinerary(events: [Event]?, route: Route?) {
         
-        guard let destinations = destinations, let route = route else { return }
+        guard let events = events, let route = route else { return }
         
-        self.itinerary.events = destinations
+        self.itinerary.events = events
         self.itinerary.route = route
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
@@ -184,7 +187,7 @@ extension ItineraryViewController : DragDelegate {
             event = eventObject
         } else {
             if let place = object as? Place {
-                event = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration), constraints: Constraints())
+                event = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration))
             } else if let group = object as? Group {
                 event = OneOfBlock(name: group.name, places: group.places, timing: Timing(start: 0, duration: defaultDuration), selectedIndex: 0)
             } else {
@@ -294,6 +297,7 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
     }
 }
 
+// Reload collection when there are changes to the timeline (timeline panning, timeline pinching)
 extension ItineraryViewController: TimelineViewDelegate {
     
     func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartHour: CGFloat) {

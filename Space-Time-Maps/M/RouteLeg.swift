@@ -15,4 +15,9 @@ struct Leg : Event {
     var polyline : String
     var timing : Timing
     var travelTiming : Timing
+    
+    func copy() -> Event {
+        return Leg(polyline: self.polyline, timing: self.timing, travelTiming: self.travelTiming)
+    }
+    
 }

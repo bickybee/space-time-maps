@@ -13,30 +13,17 @@ import UIKit
 
 class Destination: Event {
     
-    // Details about the place itself
     var place : Place
-    
-    // Timing details about this destination, to be rendered accordingly
-    // Relative to today, for simplicity, since we only provide 1-day views
     var timing : Timing
     
-    // Timing constraints provided by the user, which influence the calculated timing details
-    var constraints : Constraints//var timeConstraints = TimeConstraints()
-    
-    init(place: Place, timing: Timing, constraints: Constraints) {
-        
+    init(place: Place, timing: Timing) {
         self.place = place
         self.timing = timing
-        self.constraints = constraints
         
     }
     
-    func hasConstraints() -> Bool {
-        return constraints.areEnabled
-    }
-    
-    func copy() -> Destination {
-        return Destination(place: self.place, timing: self.timing, constraints: self.constraints)
+    func copy() -> Event {
+        return Destination(place: self.place, timing: self.timing)
     }
 }
 

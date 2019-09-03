@@ -12,14 +12,12 @@ class ItineraryLayout: UICollectionViewLayout {
     
     weak var delegate: ItineraryLayoutDelegate!
 
-    fileprivate var cellPadding: CGFloat = 6
     fileprivate var cache = [UICollectionViewLayoutAttributes]()
     fileprivate var contentHeight: CGFloat = 0
     
     fileprivate var contentWidth: CGFloat {
         guard let collectionView = collectionView else { return 0 }
-        let insets = collectionView.contentInset
-        return collectionView.bounds.width - (insets.left + insets.right)
+        return collectionView.bounds.width
     }
     
     override var collectionViewContentSize: CGSize {
@@ -42,25 +40,28 @@ class ItineraryLayout: UICollectionViewLayout {
     
     func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
         
+        // Get data from delegate
         let timelineStartHour = delegate.timelineStartHour(of: collectionView)
         let eventTiming = delegate.collectionView(collectionView, timingForEventAtIndexPath: indexPath)
         let hourHeight = delegate.hourHeight(of: collectionView)
-        //let startOffset = CGFloat(startTime.inHours().truncatingRemainder(dividingBy: 1)) * hourHeight
         
         let startHour = eventTiming.start.inHours()
         let duration = eventTiming.duration.inHours()
 
+        // Turn data into layout attributes!
+        let width = contentWidth
+        let height = CGFloat(duration) * hourHeight
         let relativeHour = CGFloat(startHour) - timelineStartHour
         let y = relativeHour * hourHeight// - startOffset
         let x: CGFloat = 0
-        let width = contentWidth
-        let height = CGFloat(duration) * hourHeight
         let frame = CGRect(x: x, y: y, width: width, height: height)
-                
+        
+        // Add to cache
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         attributes.frame = frame
         cache.append(attributes)
         
+        // Update content height
         contentHeight = max(contentHeight, frame.maxY)
     }
     
