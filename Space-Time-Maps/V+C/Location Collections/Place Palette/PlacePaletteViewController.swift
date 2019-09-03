@@ -97,7 +97,6 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         return groups.count
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let group = groups[safe: section] {
             return inEditingMode ? group.places.count + 1 : group.places.count
@@ -121,14 +120,12 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         // Dragging cell?
         if let draggingIndexPath = draggingIndexPath {
             if (indexPath == draggingIndexPath) {
-                print("clear")
                 print(draggingIndexPath)
                 cell.contentView.alpha = 0.0
                 cell.backgroundColor = .clear
                 return cell
             }
         }
-        print("not clear")
         
         // Otherwise
         let place = group.places[indexPath.item]
@@ -248,7 +245,7 @@ extension PlacePaletteViewController: DragDelegate {
 //            }
 //        }
         
-        guard groups.count > insertAt.section, groups[insertAt.section].places.count >= insertAt.item else { return }
+        guard groupsBeforeEditing.count > insertAt.section, groupsBeforeEditing[insertAt.section].places.count >= insertAt.item else { return }
         
         if (!midDrag ){
             collectionView.performBatchUpdates({
