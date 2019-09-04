@@ -29,7 +29,7 @@ class GroupCreationViewController: UIViewController {
     @IBAction func create(_ sender: Any) {
         var text : String
         if let name = nameField.text {
-            text = name
+            text = name == "" ? "Group" : name
         } else {
             text = "Group"
         }

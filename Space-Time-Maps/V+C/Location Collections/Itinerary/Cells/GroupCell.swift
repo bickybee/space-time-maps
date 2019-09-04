@@ -1,39 +1,72 @@
 //
-//  GroupCell.swift
+//  AsManyOfCell.swift
 //  Space-Time-Maps
 //
-//  Created by Vicky on 30/08/2019.
+//  Created by Vicky on 04/09/2019.
 //  Copyright © 2019 vicky. All rights reserved.
 //
 
 import UIKit
 
-class GroupCell: DestinationCell {
-    
-    var nextBtn = UIButton()
-    var previousBtn = UIButton()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupButtons()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    func setupButtons() {
+class GroupCell: UICollectionViewCell {
 
-        nextBtn.frame = CGRect(x: self.frame.width - 25, y: 0 , width: 25, height: 25)
-        previousBtn.frame = CGRect(x: 0, y: 0 , width: 25, height: 25)
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var optionControl: UIPageControl!
+    @IBOutlet weak var nextBtn: UIButton!
+    @IBOutlet weak var prevBtn: UIButton!
+    @IBOutlet weak var tabView: UIView!
+    @IBOutlet weak var containerView: UIView!
+    
+    private let optionTint = UIColor.white.withAlphaComponent(0.5)
+    private let currentOptionTint = UIColor.white
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        setup()
+    }
+
+    func setup() {
         
-        nextBtn.backgroundColor = .blue
-        previousBtn.backgroundColor = .blue
         
-        self.addSubview(nextBtn)
-        self.addSubview(previousBtn)
+        tabView.layer.cornerRadius = 5
+        tabView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        
+        containerView.layer.cornerRadius = 5
+        containerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner]
+        
+        optionControl.transform = (CGAffineTransform(scaleX: 0.5, y: 0.5))
+        optionControl.pageIndicatorTintColor = optionTint
+        optionControl.currentPageIndicatorTintColor = currentOptionTint
+        
     }
     
-
+    func configureWith(_ oneOf: OneOfBlock) {
+        
+        configureLabelsWith(oneOf)
+        configureOptionControlWith(oneOf)
+        
+    }
+    
+    private func configureLabelsWith(_ oneOf: OneOfBlock) {
+        
+        nameLabel.text = oneOf.name
+        
+    }
+    
+    private func configureOptionControlWith(_ oneOf: OneOfBlock) {
+        
+        optionControl.numberOfPages = oneOf.places.count
+        
+        if let option = oneOf.selectedIndex {
+            optionControl.currentPageIndicatorTintColor = UIColor.white
+            optionControl.currentPage = option
+            optionControl.updateCurrentPageDisplay()
+        } else {
+            optionControl.currentPageIndicatorTintColor = UIColor.white.withAlphaComponent(0.5)
+            optionControl.updateCurrentPageDisplay()
+        }
+        
+    }
     
 }

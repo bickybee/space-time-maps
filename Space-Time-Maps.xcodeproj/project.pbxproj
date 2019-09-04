@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* GroupCell.swift */; };
+		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
 		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5787231EE5DE00E183F3 /* OneOfCell.xib */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
 		982D579423203F8300E183F3 /* DestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579223203F8300E183F3 /* DestCell.xib */; };
+		982D5797232050C500E183F3 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5795232050C500E183F3 /* GroupCell.swift */; };
+		982D5798232050C500E183F3 /* GroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5796232050C500E183F3 /* GroupCell.xib */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
@@ -59,12 +61,14 @@
 /* Begin PBXFileReference section */
 		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
-		98127E6D23199DCD0030C44B /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
+		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D5787231EE5DE00E183F3 /* OneOfCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OneOfCell.xib; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
 		982D579223203F8300E183F3 /* DestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestCell.xib; sourceTree = "<group>"; };
+		982D5795232050C500E183F3 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
+		982D5796232050C500E183F3 /* GroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupCell.xib; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
@@ -133,13 +137,13 @@
 		982D578A231EE5E300E183F3 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
-				98127E6D23199DCD0030C44B /* GroupCell.swift */,
 				98DEF0D423066372003DE1CB /* LegCell.swift */,
 				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
 				982D5787231EE5DE00E183F3 /* OneOfCell.xib */,
 				982D579123203F8300E183F3 /* DestCell.swift */,
 				982D579223203F8300E183F3 /* DestCell.xib */,
+				982D5795232050C500E183F3 /* GroupCell.swift */,
+				982D5796232050C500E183F3 /* GroupCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -222,6 +226,8 @@
 		98BC8578230C280B001D14BE /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				98127E6D23199DCD0030C44B /* OldGroupCell.swift */,
+				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
 				B6A625E322D7CFB40099D65C /* style.json */,
 				983F22C522EF87420012EF5C /* Keys.plist */,
 			);
@@ -367,6 +373,7 @@
 				982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
+				982D5798232050C500E183F3 /* GroupCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +428,7 @@
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				98BC8576230B74D1001D14BE /* Destination.swift in Sources */,
+				982D5797232050C500E183F3 /* GroupCell.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
 				98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */,
@@ -447,7 +455,7 @@
 				98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */,
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
-				98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */,
+				98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */,
 				9864447E2316B3BC00717664 /* Draggable.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,

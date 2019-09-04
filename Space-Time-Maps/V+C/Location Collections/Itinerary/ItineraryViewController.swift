@@ -13,6 +13,7 @@ class ItineraryViewController: DraggableContentViewController {
     // CollectionView Cell constants
     private let locationReuseIdentifier = "locationCell"
     private let legReuseIdentifier = "legCell"
+    private let oneOfReuseIdentifier = "oneOfCell"
     private let groupReuseIdentifier = "groupCell"
     
     // Child views
@@ -58,10 +59,12 @@ class ItineraryViewController: DraggableContentViewController {
         }
 //        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
-        let groupNib = UINib(nibName: "OneOfCell", bundle: nil)
+        let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)
         let destNib = UINib(nibName: "DestCell", bundle: nil)
-        collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
+        let groupNib = UINib(nibName: "GroupCell", bundle: nil)
+        collectionView.register(oneOfNib, forCellWithReuseIdentifier: oneOfReuseIdentifier)
         collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
+        collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
 
 //        collectionView.register(GroupCell.self, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.delegate = self
@@ -112,15 +115,19 @@ class ItineraryViewController: DraggableContentViewController {
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if section == 0 {
             return itinerary.events.count
-        } else {
+        } else if section == 1 {
             return itinerary.route.count
+        } else {
+            let count = itinerary.events.filter({$0 as? OneOfBlock != nil}).count
+            print(count)
+            return count
         }
         
     }
@@ -134,16 +141,21 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             } else {
                 return setupDestinationCell(with: indexPath)
             }
-        } else {
+        } else if indexPath.section == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
             return setupLegCell(cell, with: indexPath.item)
+        } else {
+            print("returning group cell")
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
+            cell.alpha = 1.0
+            return cell
         }
         
     }
     
     func setupOneOfCell(with indexPath: IndexPath) -> OneOfCell {
         let oneOf = itinerary.events[indexPath.item] as! OneOfBlock
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! OneOfCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: oneOfReuseIdentifier, for: indexPath) as! OneOfCell
         cell.nextBtn.tag = indexPath.item
         cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
         cell.prevBtn.tag = indexPath.item
@@ -325,6 +337,9 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
             return itinerary.events[safe: item]
         } else if section == 1 {
             return itinerary.route[safe: item]
+        } else if section == 2 {
+            let groups = itinerary.events.filter({ $0 as? OneOfBlock != nil})
+            return groups[safe: item]
         } else {
             return nil
         }

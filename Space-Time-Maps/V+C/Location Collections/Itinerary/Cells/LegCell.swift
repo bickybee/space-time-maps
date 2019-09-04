@@ -13,7 +13,7 @@ class LegCell: UICollectionViewCell {
     var timeLabel : UILabel!
     var gradientView : UIView!
     let padding : CGFloat = 5
-    let gradientWidth : CGFloat = 25.0
+    let gradientWidth : CGFloat = 10.0
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     
     override init(frame: CGRect) {
@@ -36,7 +36,7 @@ class LegCell: UICollectionViewCell {
     
     func drawVerticalLine() {
         let path = UIBezierPath()
-        path.lineWidth = 1
+        path.lineWidth = 10
         
         let startAt = CGPoint(x: self.center.x, y: 0)
         let endAt = CGPoint(x: self.center.x, y: self.frame.height)
@@ -44,7 +44,7 @@ class LegCell: UICollectionViewCell {
         path.addLine(to: endAt)
         
         path.close()
-        UIColor.darkGray.set()
+        UIColor.lightGray.withAlphaComponent(0.5).set()
         path.stroke()
     }
     
@@ -60,9 +60,8 @@ class LegCell: UICollectionViewCell {
         timeLabel.textColor = UIColor.gray
         timeLabel.font = UIFont.systemFont(ofSize: 10.0)
         timeLabel.backgroundColor = .clear
-        timeLabel.textAlignment = .right
         timeLabel.numberOfLines = 0
-        timeLabel.frame = contentView.frame.inset(by: cellInsets).offsetBy(dx: 0, dy: -5.0)
+        timeLabel.frame = contentView.frame.inset(by: cellInsets).offsetBy(dx: contentView.frame.size.width / 2.0 + padding, dy: -5.0)
         timeLabel.frame.size.width /= 2.0
         timeLabel.frame.size.width -= (gradientWidth / 2.0) + padding
         
@@ -80,8 +79,8 @@ class LegCell: UICollectionViewCell {
         
         gradientLayer.frame = CGRect(x: gX, y: gY, width: gradientWidth, height: gHeight)
         gradientLayer.colors = [gradient.0.cgColor, gradient.1.cgColor]
-        gradientLayer.borderColor = UIColor.darkGray.cgColor
-        gradientLayer.borderWidth = 1.0
+        gradientLayer.borderColor = UIColor.lightGray.cgColor
+        gradientLayer.borderWidth = 0.5
         
         self.gradientView.layer.sublayers = nil
         self.gradientView.layer.addSublayer(gradientLayer)

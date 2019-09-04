@@ -30,7 +30,7 @@ class ItineraryLayout: UICollectionViewLayout {
         
         guard let collectionView = collectionView else { return }
         
-        for section in 0 ... 1 {
+        for section in 0 ... collectionView.numberOfSections - 1 {
             for item in 0 ..< collectionView.numberOfItems(inSection: section) {
                 let indexPath = IndexPath(item: item, section: section)
                 cacheAttributesForCellAt(indexPath: indexPath, in: collectionView)
@@ -50,15 +50,22 @@ class ItineraryLayout: UICollectionViewLayout {
 
         // Turn data into layout attributes!
         let width = contentWidth
-        let height = CGFloat(duration) * hourHeight
+        var height = CGFloat(duration) * hourHeight
         let relativeHour = CGFloat(startHour) - timelineStartHour
-        let y = relativeHour * hourHeight// - startOffset
+        var y = relativeHour * hourHeight// - startOffset
+        if indexPath.section == 2 { // IF IT'S A GROUP CELL!!!
+            height += 40
+            y -= 25
+        }
         let x: CGFloat = 0
         let frame = CGRect(x: x, y: y, width: width, height: height)
         
         // Add to cache
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         attributes.frame = frame
+        if indexPath.section == 2 {
+            attributes.zIndex = -1
+        }
         cache.append(attributes)
         
         // Update content height

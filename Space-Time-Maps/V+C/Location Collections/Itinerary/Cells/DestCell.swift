@@ -36,13 +36,18 @@ class DestCell: UICollectionViewCell, Draggable {
     
     private func setup() {
         containerView.layer.cornerRadius = 5;
-        containerView.layer.masksToBounds = true;
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        containerView.layer.shadowRadius = 0.5
+        containerView.layer.shadowOpacity = 0.5;
+        containerView.layer.masksToBounds = false
+        self.layer.masksToBounds = false
+//        containerView.layer.masksToBounds = true;
         
         dragHandle = UIView(frame: containerView.frame)
         dragHandle.backgroundColor = .clear
         dragHandle.layer.zPosition = 100
         dragHandle.layer.cornerRadius = 5;
-        dragHandle.layer.masksToBounds = true;
+//        dragHandle.layer.masksToBounds = true;
         self.addSubview(dragHandle)
     }
     
