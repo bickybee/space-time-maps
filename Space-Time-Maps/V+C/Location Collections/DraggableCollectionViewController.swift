@@ -10,7 +10,7 @@ import UIKit
 
 protocol Draggable: UIView {
     
-    var dragHandle : UIView { get set }
+    var dragHandle : UIView! { get set }
     
 }
 

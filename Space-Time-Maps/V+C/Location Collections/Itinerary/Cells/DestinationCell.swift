@@ -10,7 +10,7 @@ import UIKit
 
 class DestinationCell: UICollectionViewCell, Draggable {
     
-    var dragHandle : UIView = UIView()
+    var dragHandle : UIView! = UIView()
     var contentContainer : UIView!
     var nameContainer : UIView!
     var nameLabel : UILabel!

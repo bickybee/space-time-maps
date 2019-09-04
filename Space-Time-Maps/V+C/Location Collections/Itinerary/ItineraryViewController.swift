@@ -56,10 +56,13 @@ class ItineraryViewController: DraggableContentViewController {
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
         }
-        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
+//        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
-        let nib = UINib(nibName: "OneOfCell", bundle: nil)
-        collectionView.register(nib, forCellWithReuseIdentifier: groupReuseIdentifier)
+        let groupNib = UINib(nibName: "OneOfCell", bundle: nil)
+        let destNib = UINib(nibName: "DestCell", bundle: nil)
+        collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
+        collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
+
 //        collectionView.register(GroupCell.self, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -145,26 +148,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
         cell.prevBtn.tag = indexPath.item
         cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
-        if let destination = oneOf.selectedDestination {
-            cell.destinationLabel.text = destination.place.name
-        } else {
-            cell.destinationLabel.text = "No destination selected"
-        }
-        
-        cell.groupLabel.text = oneOf.name
-        
+        cell.configureWith(oneOf)
         addDragRecognizerTo(draggable: cell)
         return cell
     }
     
-    func setupDestinationCell(with indexPath: IndexPath) -> DestinationCell {
+    func setupDestinationCell(with indexPath: IndexPath) -> DestCell {
         
         let event = itinerary.events[indexPath.item]
         let dest = event as! Destination
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestinationCell
-        var name = dest.place.name
-        let fraction = Double(indexPath.item) / Double(itinerary.events.count - 1)
-        cell.setupWith(name: name, fraction: fraction, constrained: false)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
+        cell.configureWith(dest)
         
         addDragRecognizerTo(draggable: cell)
         return cell
@@ -173,20 +167,23 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     @objc func prevOption(_ sender: UIButton) {
         print("PREV")
-        let index = sender.tag
-        var group = itinerary.events[index] as! OneOfBlock
-        group.selectedIndex = (group.selectedIndex! - 1) % (group.places.count)
-        itinerary.events[index] = group
+        let groupIndex = sender.tag
+        var group = itinerary.events[groupIndex] as! OneOfBlock
+        guard let index = group.selectedIndex else { return }
+        let newIndex = (index - 1) >= 0 ? index - 1 : group.places.count - 1
+        group.selectedIndex = newIndex
+        itinerary.events[groupIndex] = group
         let scheduler = Scheduler()
         scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     @objc func nextOption(_ sender: UIButton) {
         print("next")
-        let index = sender.tag
-        var group = itinerary.events[index] as! OneOfBlock
-        group.selectedIndex = (group.selectedIndex! + 1) % (group.places.count)
-        itinerary.events[index] = group
+        let groupIndex = sender.tag
+        var group = itinerary.events[groupIndex] as! OneOfBlock
+        guard let index = group.selectedIndex else { return }
+        group.selectedIndex = (index + 1) % (group.places.count)
+        itinerary.events[groupIndex] = group
         let scheduler = Scheduler()
         scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }

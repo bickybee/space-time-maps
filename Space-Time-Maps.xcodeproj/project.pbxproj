@@ -11,6 +11,8 @@
 		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5787231EE5DE00E183F3 /* OneOfCell.xib */; };
+		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
+		982D579423203F8300E183F3 /* DestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579223203F8300E183F3 /* DestCell.xib */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
@@ -61,6 +63,8 @@
 		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D5787231EE5DE00E183F3 /* OneOfCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OneOfCell.xib; sourceTree = "<group>"; };
+		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
+		982D579223203F8300E183F3 /* DestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestCell.xib; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
@@ -134,6 +138,8 @@
 				98DEF0D423066372003DE1CB /* LegCell.swift */,
 				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
 				982D5787231EE5DE00E183F3 /* OneOfCell.xib */,
+				982D579123203F8300E183F3 /* DestCell.swift */,
+				982D579223203F8300E183F3 /* DestCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -355,6 +361,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
+				982D579423203F8300E183F3 /* DestCell.xib in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
 				982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */,
@@ -432,6 +439,7 @@
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
+				982D579323203F8300E183F3 /* DestCell.swift in Sources */,
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,

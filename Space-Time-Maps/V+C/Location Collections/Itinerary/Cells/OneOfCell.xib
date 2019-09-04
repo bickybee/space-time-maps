@@ -20,10 +20,10 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sFz-Lb-eLC">
-                        <rect key="frame" x="33.5" y="0.0" width="201" height="60"/>
+                        <rect key="frame" x="53.5" y="0.0" width="161" height="60"/>
                         <subviews>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="75e-6W-eDg">
-                                <rect key="frame" x="0.0" y="30" width="201" height="30"/>
+                                <rect key="frame" x="0.0" y="35" width="161" height="30"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.5" height="0.5"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="FrO-bG-7zv"/>
@@ -36,7 +36,16 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2K-Xd-L3G" userLabel="Group">
-                                <rect key="frame" x="10" y="25" width="48.5" height="10"/>
+                                <rect key="frame" x="10" y="27" width="48.5" height="10"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duration" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TsG-Vv-S35" userLabel="Group">
+                                <rect key="frame" x="119" y="27" width="34" height="10"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="10" id="Ux3-vU-F6e"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -47,30 +56,32 @@
                             <constraint firstAttribute="trailing" secondItem="75e-6W-eDg" secondAttribute="trailing" id="6b6-zQ-Zpf"/>
                             <constraint firstItem="QEL-Ou-mx0" firstAttribute="leading" secondItem="sFz-Lb-eLC" secondAttribute="leading" constant="10" id="HbZ-nz-yp7"/>
                             <constraint firstItem="y2K-Xd-L3G" firstAttribute="leading" secondItem="sFz-Lb-eLC" secondAttribute="leading" constant="10" id="Hvk-17-Sg6"/>
+                            <constraint firstItem="TsG-Vv-S35" firstAttribute="centerY" secondItem="y2K-Xd-L3G" secondAttribute="centerY" id="Qi8-uc-RpH"/>
+                            <constraint firstAttribute="trailing" secondItem="TsG-Vv-S35" secondAttribute="trailing" constant="8" id="UFR-pa-NLJ"/>
+                            <constraint firstItem="y2K-Xd-L3G" firstAttribute="top" secondItem="QEL-Ou-mx0" secondAttribute="bottom" constant="5" id="byg-7k-sde"/>
                             <constraint firstItem="QEL-Ou-mx0" firstAttribute="top" secondItem="sFz-Lb-eLC" secondAttribute="top" constant="10" id="fCU-Qw-1Jr"/>
-                            <constraint firstItem="y2K-Xd-L3G" firstAttribute="centerY" secondItem="sFz-Lb-eLC" secondAttribute="centerY" id="hEl-br-Gx4"/>
-                            <constraint firstAttribute="bottom" secondItem="75e-6W-eDg" secondAttribute="bottom" id="hhl-O8-Kh3"/>
                             <constraint firstItem="75e-6W-eDg" firstAttribute="leading" secondItem="sFz-Lb-eLC" secondAttribute="leading" id="lYg-v9-NOy"/>
+                            <constraint firstAttribute="bottom" secondItem="75e-6W-eDg" secondAttribute="bottom" constant="-5" id="o4N-zZ-eHz"/>
                         </constraints>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="01L-xT-4c4">
-                        <rect key="frame" x="-1.5" y="20" width="30" height="30"/>
+                        <rect key="frame" x="18.5" y="20" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="OPG-AW-Uzq"/>
                             <constraint firstAttribute="height" constant="30" id="Ud6-aU-DpC"/>
                         </constraints>
-                        <state key="normal" title="⟵">
-                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <state key="normal" title="⇦">
+                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLF-RM-iCX">
-                        <rect key="frame" x="239.5" y="20" width="30" height="30"/>
+                        <rect key="frame" x="219.5" y="20" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="1Wa-4J-Szf"/>
                             <constraint firstAttribute="height" constant="30" id="dQq-iQ-S0r"/>
                         </constraints>
-                        <state key="normal" title="⟶">
-                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <state key="normal" title="⇨">
+                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </state>
                     </button>
                 </subviews>
@@ -78,7 +89,7 @@
             <constraints>
                 <constraint firstItem="XLF-RM-iCX" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="2vZ-0d-equ"/>
                 <constraint firstItem="sFz-Lb-eLC" firstAttribute="leading" secondItem="01L-xT-4c4" secondAttribute="trailing" constant="5" id="4p9-Y2-v49"/>
-                <constraint firstItem="sFz-Lb-eLC" firstAttribute="width" secondItem="ZTg-uK-7eu" secondAttribute="width" multiplier="0.75" id="GZB-JE-i8X"/>
+                <constraint firstItem="sFz-Lb-eLC" firstAttribute="width" secondItem="ZTg-uK-7eu" secondAttribute="width" multiplier="0.6" id="GZB-JE-i8X"/>
                 <constraint firstItem="sFz-Lb-eLC" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="ODw-wJ-10V"/>
                 <constraint firstItem="01L-xT-4c4" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="PBN-Eq-94y"/>
                 <constraint firstAttribute="bottom" secondItem="sFz-Lb-eLC" secondAttribute="bottom" id="TpH-pJ-mq3"/>
@@ -90,6 +101,7 @@
             <connections>
                 <outlet property="containerView" destination="sFz-Lb-eLC" id="AQb-ol-EJ0"/>
                 <outlet property="destinationLabel" destination="QEL-Ou-mx0" id="JsN-iP-t1M"/>
+                <outlet property="durationLabel" destination="TsG-Vv-S35" id="9Ip-s9-kkl"/>
                 <outlet property="groupLabel" destination="y2K-Xd-L3G" id="Cho-wM-XAb"/>
                 <outlet property="nextBtn" destination="XLF-RM-iCX" id="bOh-GM-Vhp"/>
                 <outlet property="optionControl" destination="75e-6W-eDg" id="Hsh-0s-77C"/>

@@ -9,21 +9,25 @@
 import UIKit
 
 class OneOfCell: UICollectionViewCell, Draggable {
-    var dragHandle : UIView = UIView()
+    
     @IBOutlet weak var containerView: UIView!
+    
+    // Data rendering
     @IBOutlet weak var destinationLabel: UILabel!
     @IBOutlet weak var groupLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var optionControl: UIPageControl!
+    var optionColor : UIColor!
+    
+    // Interactive
     @IBOutlet weak var prevBtn: UIButton!
     @IBOutlet weak var nextBtn: UIButton!
-    @IBOutlet weak var optionControl: UIPageControl!
-    
+    var dragHandle : UIView! = UIView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         setup()
     }
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,16 +38,55 @@ class OneOfCell: UICollectionViewCell, Draggable {
         super.init(coder: aDecoder)
     }
     
-    func setup() {
-        self.layer.cornerRadius = 5;
-        self.layer.masksToBounds = true;
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        dragHandle.frame = containerView.frame
+    }
+    
+    private func setup() {
+        containerView.layer.cornerRadius = 5;
+        containerView.layer.masksToBounds = true;
         
         optionControl.transform = (CGAffineTransform(scaleX: 0.5, y: 0.5))
+        optionControl.pageIndicatorTintColor = UIColor.white.withAlphaComponent(0.5)
+        optionControl.currentPageIndicatorTintColor = UIColor.white
         
-        dragHandle.frame = contentView.frame
+        dragHandle = UIView(frame: containerView.frame)
         dragHandle.backgroundColor = .clear
-        dragHandle.layer.zPosition = 1000
+        dragHandle.layer.zPosition = 100
+        dragHandle.layer.cornerRadius = 5;
+        dragHandle.layer.masksToBounds = true;
         self.addSubview(dragHandle)
+    }
+    
+    func configureWith(_ oneOf: OneOfBlock) {
+        
+        configureLabelsWith(oneOf)
+        configureOptionControlWith(oneOf)
+        
+    }
+    
+    private func configureLabelsWith(_ oneOf: OneOfBlock) {
+        
+        groupLabel.text = oneOf.name
+        destinationLabel.text = oneOf.selectedDestination?.place.name ?? "No destination selected"
+        durationLabel.text = Utils.secondsToString(seconds: oneOf.timing.duration)
+        
+    }
+    
+    private func configureOptionControlWith(_ oneOf: OneOfBlock) {
+        
+        optionControl.numberOfPages = oneOf.places.count
+        
+        if let option = oneOf.selectedIndex {
+            optionControl.currentPageIndicatorTintColor = UIColor.white
+            optionControl.currentPage = option
+            optionControl.updateCurrentPageDisplay()
+        } else {
+            optionControl.currentPageIndicatorTintColor = UIColor.white.withAlphaComponent(0.5)
+            optionControl.updateCurrentPageDisplay()
+        }
+        
     }
 
 }

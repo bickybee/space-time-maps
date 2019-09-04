@@ -10,7 +10,7 @@ import UIKit
 
 class LocationCell: UICollectionViewCell, Draggable {
     
-    var dragHandle : UIView = UIView()
+    var dragHandle : UIView! = UIView()
     var container : UIView!
     var nameLabel : UILabel!
     let padding : CGFloat = 5

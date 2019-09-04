@@ -169,11 +169,6 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
             headerView.tag = indexPath.section
             headerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapGroup)))
             addDragRecognizerTo(draggable: headerView)
-            if group.kind == .asManyOf {
-                headerView.backgroundColor = .green
-            } else {
-                headerView.backgroundColor = .lightGray
-            }
             return headerView
         default:
             // 4
