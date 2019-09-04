@@ -49,6 +49,7 @@ class PlacePaletteViewController: DraggableContentViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = true
+        searchButton.isEnabled = false
         
         self.dragDataDelegate = self
         
@@ -136,6 +137,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,

@@ -37,7 +37,6 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     func addDragRecognizerTo(draggable: Draggable) {
         
         let dragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragObject))
-        
         dragRecognizer.delegate = self
         draggable.dragHandle.addGestureRecognizer(dragRecognizer)
         

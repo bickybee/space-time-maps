@@ -11,7 +11,7 @@ import UIKit
 class TimelineView: UIView {
     
     var startHour : CGFloat = 12.0
-    var hourHeight : CGFloat = 50
+    var hourHeight : CGFloat = 100.0
     var sidebarWidth : CGFloat = 50
     var currentHour : CGFloat = 1.0
     var timelineWidth : CGFloat!

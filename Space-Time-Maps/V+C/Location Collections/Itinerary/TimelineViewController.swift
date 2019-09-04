@@ -19,7 +19,7 @@ class TimelineViewController: UIViewController {
     weak var delegate: TimelineViewDelegate?
         
     // Render variables
-    var hourHeight : CGFloat = 50.0
+    var hourHeight : CGFloat = 100.0
     var startHour : CGFloat = 0.0
     
     override func viewDidLoad() {

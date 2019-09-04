@@ -56,7 +56,6 @@ class LocationCell: UICollectionViewCell, Draggable {
         dragHandle.backgroundColor = .clear
         dragHandle.layer.zPosition = 1000
         self.addSubview(dragHandle)
-        
     }
     
     public func setupWith(name: String, fraction: Double, constrained: Bool) {

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		98127E6E23199DCD0030C44B /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* GroupCell.swift */; };
 		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
+		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
+		982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5787231EE5DE00E183F3 /* OneOfCell.xib */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
@@ -57,6 +59,8 @@
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		98127E6D23199DCD0030C44B /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
+		982D5787231EE5DE00E183F3 /* OneOfCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OneOfCell.xib; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
@@ -122,6 +126,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		982D578A231EE5E300E183F3 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
+				98127E6D23199DCD0030C44B /* GroupCell.swift */,
+				98DEF0D423066372003DE1CB /* LegCell.swift */,
+				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
+				982D5787231EE5DE00E183F3 /* OneOfCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		989AF2B022F9BB54002CCFDD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,14 +152,12 @@
 		98BC856F230B71DC001D14BE /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
+				982D578A231EE5E300E183F3 /* Cells */,
 				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
 				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
 				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
 				98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */,
-				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
-				98127E6D23199DCD0030C44B /* GroupCell.swift */,
-				98DEF0D423066372003DE1CB /* LegCell.swift */,
 				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
 			);
 			path = Itinerary;
@@ -343,6 +357,7 @@
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
+				982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
 			);
@@ -413,6 +428,7 @@
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
 				98DEF0D92307294E003DE1CB /* RouteLeg.swift in Sources */,
 				98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */,
+				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,

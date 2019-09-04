@@ -29,10 +29,14 @@ struct OneOfBlock : Event {
     var name : String
     var places : [Place]
     var timing : Timing
-    var selectedIndex : Int
-    var selectedDestination : Destination {
+    var selectedIndex : Int?
+    var selectedDestination : Destination? {
         get {
-            return Destination(place: self.places[self.selectedIndex], timing: self.timing)
+            if let index = selectedIndex {
+                return Destination(place: self.places[index], timing: self.timing)
+            } else {
+                return nil
+            }
         }
     }
     var destinations : [Destination] {

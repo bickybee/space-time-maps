@@ -43,23 +43,28 @@ class Scheduler : NSObject {
             // Groups must have their "best-option" calculated
             // TODO: handle different groups, ignore if "best-option" is already selected...
             else if var group = event as? OneOfBlock {
-                dispatchGroup.enter()
-                // Option selection depends in previous and following Event
-                // TODO: Handle if these are Groups (get their destination)
-                let before = events[safe: i - 1] as? Destination
-                let after = events[safe: i + 1] as? Destination
                 
-                findBestOption(group, before:before, after: after, travelMode: travelMode) { option in
-                    if let option = option {
-                        group.selectedIndex = option
-                        schedule.append(group)
+                if group.selectedDestination != nil {
+                    schedule.append(group)
+                } else {
+                    dispatchGroup.enter()
+                    // Option selection depends in previous and following Event
+                    // TODO: Handle if these are Groups (get their destination)
+                    let before = events[safe: i - 1] as? Destination
+                    let after = events[safe: i + 1] as? Destination
+                    
+                    findBestOption(group, before:before, after: after, travelMode: travelMode) { option in
+                        if let option = option {
+                            group.selectedIndex = option
+                            schedule.append(group)
+                        }
+                        
+                        dispatchGroup.leave()
                     }
                     
-                    dispatchGroup.leave()
+                    // Do these synchronously by forcing waits between loop iterations...
+                    dispatchGroup.wait()
                 }
-                
-                // Do these synchronously by forcing waits between loop iterations...
-                dispatchGroup.wait()
             }
         }
         
