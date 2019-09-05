@@ -25,13 +25,13 @@ class PlacePaletteViewController: DraggableContentViewController {
     var geographicSearchBounds : GMSCoordinateBounds?
     
     // Data source
-    var groups = [Group]() {
+    var groups = [PlaceGroup]() {
         didSet {
             collectionView.reloadData()
         }
     }
     
-    var groupsBeforeEditing = [Group]()
+    var groupsBeforeEditing = [PlaceGroup]()
     var midDrag = false
     var draggingIndexPath : IndexPath?
 //    var draggingView : UIView?
@@ -56,7 +56,7 @@ class PlacePaletteViewController: DraggableContentViewController {
         var places = [Place]()
         places.append(contentsOf: Utils.defaultPlaces())
         
-        let defaultPlaceGroup = Group(name: "", places: places, kind: .none)
+        let defaultPlaceGroup = PlaceGroup(name: "", places: places, kind: .none)
         groups.append(defaultPlaceGroup)
         
     }
@@ -80,9 +80,9 @@ class PlacePaletteViewController: DraggableContentViewController {
 
 extension PlacePaletteViewController: GroupCreationDelegate {
     
-    func createGroup(name: String, kind: Group.Kind) {
+    func createGroup(name: String, kind: PlaceGroup.Kind) {
         collectionView.performBatchUpdates({
-            let newGroup = Group(name: name, places: [Place](), kind: kind)
+            let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
             collectionView.insertSections(IndexSet(integer: groups.endIndex))
             groups.append(newGroup)
         }, completion: nil)
@@ -121,7 +121,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         // Dragging cell?
         if let draggingIndexPath = draggingIndexPath {
             if (indexPath == draggingIndexPath) {
-                print(draggingIndexPath)
+//                print(draggingIndexPath)
                 cell.contentView.alpha = 0.0
                 cell.backgroundColor = .clear
                 return cell
@@ -350,6 +350,6 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [Group])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup])
     
 }

@@ -8,6 +8,13 @@
 
 import Foundation
 
+protocol Event {
+    
+    var timing : Timing { get set }
+    func copy() -> Event
+    
+}
+
 struct PlaceGroup {
     
     enum Kind : String {
@@ -24,7 +31,45 @@ struct PlaceGroup {
     
 }
 
-class OneOfBlock : Event {
+//class EventBlock : Event {
+//    
+//    var timing: Timing
+//    var destinations: [Destination]
+//    
+//}
+
+class OptionBlock : Event {
+    
+    var options: [[Destination]]
+    var timing: Timing
+    var selectedIndex: Int?
+    var selectedOption: [Destination]? {
+        return selectedIndex != nil ? options[selectedIndex!] : nil
+    }
+    
+    init(options: [[Destination]], timing: Timing) {
+        self.timing = timing
+        self.options = options
+    }
+    
+    func copy() -> Event {
+        let copy = OptionBlock(options: self.options, timing: self.timing)
+        copy.selectedIndex = self.selectedIndex
+        return copy
+    }
+    
+}
+
+//
+//class AsManyOf : OptionGroup {
+//
+//    var name : String
+//    var timing : Timing
+//    var destinations : [Place]
+//
+//}
+
+class OneOfGroup : Event {
     
     var name : String
     var places : [Place]
@@ -53,7 +98,7 @@ class OneOfBlock : Event {
     }
     
     func copy() -> Event {
-        return OneOfBlock(name: self.name, places: self.places, timing: self.timing, selectedIndex: self.selectedIndex)
+        return OneOfGroup(name: self.name, places: self.places, timing: self.timing, selectedIndex: self.selectedIndex)
     }
     
 }

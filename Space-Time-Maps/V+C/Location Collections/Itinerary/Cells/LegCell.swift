@@ -12,6 +12,7 @@ class LegCell: UICollectionViewCell {
     
     var timeLabel : UILabel!
     var gradientView : UIView!
+    var lineView : UIView!
     let padding : CGFloat = 5
     let gradientWidth : CGFloat = 10.0
     let cellInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
@@ -21,6 +22,7 @@ class LegCell: UICollectionViewCell {
         self.backgroundColor = .clear
         self.isUserInteractionEnabled = false
         
+        setupLine(frame: frame)
         setupGradientView(frame: frame)
         setupLabel(frame: frame)
     }
@@ -28,25 +30,11 @@ class LegCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        drawVerticalLine()
-    }
-    
-    func drawVerticalLine() {
-        let path = UIBezierPath()
-        path.lineWidth = 10
-        
-        let x = contentView.frame.width/2.0
-        let startAt = CGPoint(x: x, y: 0)
-        let endAt = CGPoint(x: x, y: self.frame.height)
-        path.move(to: startAt)
-        path.addLine(to: endAt)
-        
-        path.close()
-        UIColor.lightGray.withAlphaComponent(0.5).set()
-        path.stroke()
+    func setupLine(frame: CGRect) {
+        lineView = UIView(frame: contentView.frame)
+        contentView.addSubview(lineView)
     }
     
     private func setupGradientView(frame: CGRect) {
@@ -86,6 +74,9 @@ class LegCell: UICollectionViewCell {
         self.gradientView.layer.sublayers = nil
         self.gradientView.layer.addSublayer(gradientLayer)
         
+        lineView.frame = CGRect(x: gX, y: 0, width: gradientWidth, height: contentView.frame.size.height)
+        lineView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        
         let timeString = Utils.secondsToString(seconds: duration)
         self.timeLabel.text = timeString
         self.layoutSubviews()
@@ -94,7 +85,8 @@ class LegCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let newHeight = self.frame.size.height
+        let newHeight = contentView.frame.size.height
+        lineView.frame.size.height = newHeight
         gradientView.frame.size.height = newHeight
         timeLabel.frame.size.height = newHeight
     }

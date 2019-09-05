@@ -167,7 +167,7 @@ class ParentViewController: UIViewController {
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [Group]) {
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         updateMap()
     }
     

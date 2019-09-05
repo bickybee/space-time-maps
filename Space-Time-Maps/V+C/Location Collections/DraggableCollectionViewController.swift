@@ -40,9 +40,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         dragRecognizer.delegate = self
         if draggable.dragHandle.gestureRecognizers?[0] == nil {
             draggable.dragHandle.addGestureRecognizer(dragRecognizer)
-        }
-        print (draggable.dragHandle.gestureRecognizers!.count)
-        
+        }        
         
     }
     

@@ -42,7 +42,7 @@ class Scheduler : NSObject {
                 
             // Groups must have their "best-option" calculated
             // TODO: handle different groups, ignore if "best-option" is already selected...
-            else if var group = event as? OneOfBlock {
+            else if var group = event as? OneOfGroup {
                 
                 if group.selectedDestination != nil {
                     schedule.append(group.copy())
@@ -73,7 +73,7 @@ class Scheduler : NSObject {
     }
     
     
-    func findBestOption(_ group: OneOfBlock, before: Destination?, after: Destination?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+    func findBestOption(_ group: OneOfGroup, before: Destination?, after: Destination?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
         // If it's an isolated group, just pick the first option
         guard !(before == nil && after == nil) else {
@@ -129,7 +129,7 @@ class Scheduler : NSObject {
         let destinations = events.compactMap({ (event) -> Destination? in
             if let destination = event as? Destination {
                 return destination
-            } else if let group = event as? OneOfBlock {
+            } else if let group = event as? OneOfGroup {
                 return group.selectedDestination
             } else {
                 return nil

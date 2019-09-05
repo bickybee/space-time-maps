@@ -34,7 +34,7 @@ class GroupCreationViewController: UIViewController {
             text = "Group"
         }
         
-        var kind : Group.Kind
+        var kind : PlaceGroup.Kind
         let selection = kindField.selectedSegmentIndex
         switch selection {
         case 0:
@@ -56,6 +56,6 @@ class GroupCreationViewController: UIViewController {
 
 protocol GroupCreationDelegate: AnyObject {
     
-    func createGroup(name: String, kind: Group.Kind)
+    func createGroup(name: String, kind: PlaceGroup.Kind)
     
 }

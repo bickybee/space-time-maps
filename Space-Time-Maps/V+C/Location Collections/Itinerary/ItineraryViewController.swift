@@ -58,10 +58,12 @@ class ItineraryViewController: DraggableContentViewController {
             layout.delegate = self
         }
 //        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
-        collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
+//        collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
         let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)
         let destNib = UINib(nibName: "DestCell", bundle: nil)
         let groupNib = UINib(nibName: "GroupCell", bundle: nil)
+        let routeNib = UINib(nibName: "RouteCell", bundle: nil)
+        collectionView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
         collectionView.register(oneOfNib, forCellWithReuseIdentifier: oneOfReuseIdentifier)
         collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
@@ -125,7 +127,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         } else if section == 1 {
             return itinerary.route.count
         } else {
-            let count = itinerary.events.filter({$0 as? OneOfBlock != nil}).count
+            let count = itinerary.events.filter({$0 as? OneOfGroup != nil}).count
             return count
         }
         
@@ -136,7 +138,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         if indexPath.section == 0 {
             return setupDestinationCell(with: indexPath)
         } else if indexPath.section == 1 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
             return setupLegCell(cell, with: indexPath.item)
         } else {
             return setupGroupCell(with: indexPath)
@@ -144,8 +146,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    func groupForIndex(_ index: Int) -> OneOfBlock {
-        let group = itinerary.events.filter({ $0 as? OneOfBlock != nil})[index] as! OneOfBlock
+    func groupForIndex(_ index: Int) -> OneOfGroup {
+        let group = itinerary.events.filter({ $0 as? OneOfGroup != nil})[index] as! OneOfGroup
         return group
     }
     
@@ -167,7 +169,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         if let destination = event as? Destination {
             cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
-        } else if let group = event as? OneOfBlock {
+        } else if let group = event as? OneOfGroup {
             if let destination = group.selectedDestination {
                 cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
             } else {
@@ -180,7 +182,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     @objc func prevOption(_ sender: UIButton) {
-        print("PREV")
         let groupIndex = sender.tag
         let group = groupForIndex(groupIndex)
         guard let index = group.selectedIndex else { return }
@@ -191,7 +192,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     @objc func nextOption(_ sender: UIButton) {
-        print("next")
         let groupIndex = sender.tag
         let group = groupForIndex(groupIndex)
         guard let index = group.selectedIndex else { return }
@@ -200,14 +200,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
-    func setupLegCell(_ cell: LegCell, with index: Int) -> LegCell {
+    func setupLegCell(_ cell: RouteCell, with index: Int) -> RouteCell {
         
         let legs = itinerary.route
         guard let leg = legs[safe: index] else { return cell }
         
-        let startFraction = Double(index) / Double(legs.count)
-        let endFraction = Double(index + 1) / Double(legs.count + 1)
-        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
+//        let startFraction = Double(index) / Double(legs.count)
+//        let endFraction = Double(index + 1) / Double(legs.count + 1)
+//        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
+//        cell.configureWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
+        
+        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
         
         return cell
     }
@@ -235,8 +238,8 @@ extension ItineraryViewController : DragDelegate {
         } else {
             if let place = object as? Place {
                 event = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration))
-            } else if let group = object as? Group {
-                event = OneOfBlock(name: group.name, places: group.places, timing: Timing(start: 0, duration: defaultDuration), selectedIndex: nil)
+            } else if let group = object as? PlaceGroup {
+                event = OneOfGroup(name: group.name, places: group.places, timing: Timing(start: 0, duration: defaultDuration), selectedIndex: nil)
             } else {
                 return
             }
@@ -338,7 +341,7 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         } else if section == 1 {
             return itinerary.route[safe: item]
         } else if section == 2 {
-            let groups = itinerary.events.filter({ $0 as? OneOfBlock != nil})
+            let groups = itinerary.events.filter({ $0 as? OneOfGroup != nil})
             return groups[safe: item]
         } else {
             return nil

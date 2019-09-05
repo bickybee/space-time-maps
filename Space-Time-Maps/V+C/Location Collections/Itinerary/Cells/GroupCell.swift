@@ -41,20 +41,20 @@ class GroupCell: UICollectionViewCell {
         
     }
     
-    func configureWith(_ oneOf: OneOfBlock) {
+    func configureWith(_ oneOf: OneOfGroup) {
         
         configureLabelsWith(oneOf)
         configureOptionControlWith(oneOf)
         
     }
     
-    private func configureLabelsWith(_ oneOf: OneOfBlock) {
+    private func configureLabelsWith(_ oneOf: OneOfGroup) {
         
         nameLabel.text = oneOf.name
         
     }
     
-    private func configureOptionControlWith(_ oneOf: OneOfBlock) {
+    private func configureOptionControlWith(_ oneOf: OneOfGroup) {
         
         optionControl.numberOfPages = oneOf.places.count
         

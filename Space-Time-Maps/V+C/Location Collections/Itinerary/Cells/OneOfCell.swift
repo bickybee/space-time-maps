@@ -59,14 +59,14 @@ class OneOfCell: UICollectionViewCell, Draggable {
         self.addSubview(dragHandle)
     }
     
-    func configureWith(_ oneOf: OneOfBlock) {
+    func configureWith(_ oneOf: OneOfGroup) {
         
         configureLabelsWith(oneOf)
         configureOptionControlWith(oneOf)
         
     }
     
-    private func configureLabelsWith(_ oneOf: OneOfBlock) {
+    private func configureLabelsWith(_ oneOf: OneOfGroup) {
         
         groupLabel.text = oneOf.name
         destinationLabel.text = oneOf.selectedDestination?.place.name ?? "No destination selected"
@@ -74,7 +74,7 @@ class OneOfCell: UICollectionViewCell, Draggable {
         
     }
     
-    private func configureOptionControlWith(_ oneOf: OneOfBlock) {
+    private func configureOptionControlWith(_ oneOf: OneOfGroup) {
         
         optionControl.numberOfPages = oneOf.places.count
         
