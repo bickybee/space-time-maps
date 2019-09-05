@@ -37,7 +37,7 @@ class Scheduler : NSObject {
             
             // Destinations are scheduled as-is
             if let destination = event as? Destination {
-                schedule.append(destination)
+                schedule.append(destination.copy())
             }
                 
             // Groups must have their "best-option" calculated
@@ -45,7 +45,7 @@ class Scheduler : NSObject {
             else if var group = event as? OneOfBlock {
                 
                 if group.selectedDestination != nil {
-                    schedule.append(group)
+                    schedule.append(group.copy())
                 } else {
                     dispatchGroup.enter()
                     // Option selection depends in previous and following Event
@@ -56,7 +56,7 @@ class Scheduler : NSObject {
                     findBestOption(group, before:before, after: after, travelMode: travelMode) { option in
                         if let option = option {
                             group.selectedIndex = option
-                            schedule.append(group)
+                            schedule.append(group.copy())
                         }
                         
                         dispatchGroup.leave()

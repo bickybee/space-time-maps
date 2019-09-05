@@ -126,7 +126,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             return itinerary.route.count
         } else {
             let count = itinerary.events.filter({$0 as? OneOfBlock != nil}).count
-            print(count)
             return count
         }
         
@@ -135,43 +134,46 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.section == 0 {
-            let event = itinerary.events[indexPath.item]
-            if event as? OneOfBlock != nil {
-                return setupOneOfCell(with: indexPath)
-            } else {
-                return setupDestinationCell(with: indexPath)
-            }
+            return setupDestinationCell(with: indexPath)
         } else if indexPath.section == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! LegCell
             return setupLegCell(cell, with: indexPath.item)
         } else {
-            print("returning group cell")
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-            cell.alpha = 1.0
-            return cell
+            return setupGroupCell(with: indexPath)
         }
         
     }
     
-    func setupOneOfCell(with indexPath: IndexPath) -> OneOfCell {
-        let oneOf = itinerary.events[indexPath.item] as! OneOfBlock
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: oneOfReuseIdentifier, for: indexPath) as! OneOfCell
+    func groupForIndex(_ index: Int) -> OneOfBlock {
+        let group = itinerary.events.filter({ $0 as? OneOfBlock != nil})[index] as! OneOfBlock
+        return group
+    }
+    
+    func setupGroupCell(with indexPath: IndexPath) -> GroupCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
+        let group = groupForIndex(indexPath.item)
         cell.nextBtn.tag = indexPath.item
         cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
         cell.prevBtn.tag = indexPath.item
         cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
-        cell.configureWith(oneOf)
-        addDragRecognizerTo(draggable: cell)
+        cell.configureWith(group)
         return cell
     }
     
     func setupDestinationCell(with indexPath: IndexPath) -> DestCell {
         
         let event = itinerary.events[indexPath.item]
-        let dest = event as! Destination
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
-        cell.configureWith(dest)
         
+        if let destination = event as? Destination {
+            cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
+        } else if let group = event as? OneOfBlock {
+            if let destination = group.selectedDestination {
+                cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
+            } else {
+                cell.configureWith(name: "No destination selected", duration: group.timing.duration)
+            }
+        }
         addDragRecognizerTo(draggable: cell)
         return cell
         
@@ -180,11 +182,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     @objc func prevOption(_ sender: UIButton) {
         print("PREV")
         let groupIndex = sender.tag
-        var group = itinerary.events[groupIndex] as! OneOfBlock
+        let group = groupForIndex(groupIndex)
         guard let index = group.selectedIndex else { return }
         let newIndex = (index - 1) >= 0 ? index - 1 : group.places.count - 1
         group.selectedIndex = newIndex
-        itinerary.events[groupIndex] = group
         let scheduler = Scheduler()
         scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
@@ -192,10 +193,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     @objc func nextOption(_ sender: UIButton) {
         print("next")
         let groupIndex = sender.tag
-        var group = itinerary.events[groupIndex] as! OneOfBlock
+        let group = groupForIndex(groupIndex)
         guard let index = group.selectedIndex else { return }
         group.selectedIndex = (index + 1) % (group.places.count)
-        itinerary.events[groupIndex] = group
         let scheduler = Scheduler()
         scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }

@@ -24,7 +24,7 @@ struct Group {
     
 }
 
-struct OneOfBlock : Event {
+class OneOfBlock : Event {
     
     var name : String
     var places : [Place]
@@ -43,6 +43,13 @@ struct OneOfBlock : Event {
         get {
             return places.map{ Destination(place: $0, timing: self.timing) }
         }
+    }
+    
+    init(name: String, places: [Place], timing: Timing, selectedIndex: Int?) {
+        self.name = name
+        self.places = places
+        self.timing = timing
+        self.selectedIndex = selectedIndex
     }
     
     func copy() -> Event {

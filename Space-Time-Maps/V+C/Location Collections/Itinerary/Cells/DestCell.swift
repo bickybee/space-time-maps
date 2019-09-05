@@ -51,6 +51,13 @@ class DestCell: UICollectionViewCell, Draggable {
         self.addSubview(dragHandle)
     }
     
+    func configureWith(name: String, duration: TimeInterval) {
+        
+        nameLabel.text = name
+        durationLabel.text = Utils.secondsToString(seconds: duration)
+        
+    }
+    
     func configureWith(_ destination: Destination) {
         
         nameLabel.text = destination.place.name

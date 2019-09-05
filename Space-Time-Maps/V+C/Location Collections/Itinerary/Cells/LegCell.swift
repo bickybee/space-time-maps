@@ -38,8 +38,9 @@ class LegCell: UICollectionViewCell {
         let path = UIBezierPath()
         path.lineWidth = 10
         
-        let startAt = CGPoint(x: self.center.x, y: 0)
-        let endAt = CGPoint(x: self.center.x, y: self.frame.height)
+        let x = contentView.frame.width/2.0
+        let startAt = CGPoint(x: x, y: 0)
+        let endAt = CGPoint(x: x, y: self.frame.height)
         path.move(to: startAt)
         path.addLine(to: endAt)
         

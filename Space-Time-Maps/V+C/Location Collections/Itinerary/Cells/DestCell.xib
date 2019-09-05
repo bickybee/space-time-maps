@@ -20,16 +20,19 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmr-V6-OSf">
-                        <rect key="frame" x="43" y="5" width="130" height="94"/>
+                        <rect key="frame" x="0.0" y="5" width="216" height="94"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nz2-w8-G1W" userLabel="Destination">
-                                <rect key="frame" x="10" y="10" width="84" height="12"/>
+                                <rect key="frame" x="10" y="10" width="196" height="12"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="12" id="zMB-us-N4G"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duration" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EOv-9L-c4M">
-                                <rect key="frame" x="86" y="27" width="34" height="10"/>
+                                <rect key="frame" x="172" y="27" width="34" height="10"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -38,16 +41,18 @@
                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="EOv-9L-c4M" secondAttribute="trailing" constant="10" id="3Qh-bN-GmA"/>
+                            <constraint firstAttribute="trailing" secondItem="nz2-w8-G1W" secondAttribute="trailing" constant="10" id="69b-tN-KGN"/>
                             <constraint firstItem="nz2-w8-G1W" firstAttribute="leading" secondItem="lmr-V6-OSf" secondAttribute="leading" constant="10" id="Nd7-FO-IJt"/>
-                            <constraint firstItem="EOv-9L-c4M" firstAttribute="top" secondItem="nz2-w8-G1W" secondAttribute="bottom" constant="5" id="hBI-YQ-2oE"/>
-                            <constraint firstItem="nz2-w8-G1W" firstAttribute="top" secondItem="lmr-V6-OSf" secondAttribute="top" constant="10" id="uKc-Li-U5R"/>
+                            <constraint firstItem="EOv-9L-c4M" firstAttribute="top" secondItem="nz2-w8-G1W" secondAttribute="bottom" priority="750" constant="5" id="hBI-YQ-2oE"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="EOv-9L-c4M" secondAttribute="bottom" constant="5" id="iBd-gZ-aGq"/>
+                            <constraint firstItem="nz2-w8-G1W" firstAttribute="top" secondItem="lmr-V6-OSf" secondAttribute="top" priority="750" constant="10" id="uKc-Li-U5R"/>
                         </constraints>
                     </view>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstItem="lmr-V6-OSf" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="66L-SE-JKY"/>
-                <constraint firstItem="lmr-V6-OSf" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" multiplier="0.6" id="ewv-aB-t6i"/>
+                <constraint firstItem="lmr-V6-OSf" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" id="ewv-aB-t6i"/>
                 <constraint firstItem="lmr-V6-OSf" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="rcB-PV-Cue"/>
                 <constraint firstItem="lmr-V6-OSf" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" id="xMc-KJ-URp"/>
             </constraints>
