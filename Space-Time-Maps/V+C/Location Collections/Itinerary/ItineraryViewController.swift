@@ -15,6 +15,7 @@ class ItineraryViewController: DraggableContentViewController {
     private let legReuseIdentifier = "legCell"
     private let oneOfReuseIdentifier = "oneOfCell"
     private let groupReuseIdentifier = "groupCell"
+    private let nilReuseIdentifier = "nilCell"
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
@@ -29,7 +30,7 @@ class ItineraryViewController: DraggableContentViewController {
     weak var delegate : ItineraryViewControllerDelegate?
     
     // Collection view data source!
-    var itinerary = Itinerary(events: [Event](), route:[Leg](), travelMode: .driving) {
+    var itinerary = Itinerary(schedule: [ScheduleBlock](), destinations: [Destination](), route:[Leg](), travelMode: .driving) {
         didSet {
             collectionView.reloadData()
         }
@@ -58,13 +59,13 @@ class ItineraryViewController: DraggableContentViewController {
             layout.delegate = self
         }
 //        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
-//        collectionView.register(LegCell.self, forCellWithReuseIdentifier: legReuseIdentifier)
-        let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)
+        collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
+//        let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)
         let destNib = UINib(nibName: "DestCell", bundle: nil)
         let groupNib = UINib(nibName: "GroupCell", bundle: nil)
         let routeNib = UINib(nibName: "RouteCell", bundle: nil)
         collectionView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
-        collectionView.register(oneOfNib, forCellWithReuseIdentifier: oneOfReuseIdentifier)
+//        collectionView.register(oneOfNib, forCellWithReuseIdentifier: oneOfReuseIdentifier)
         collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
 
@@ -77,14 +78,7 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         let scheduler = Scheduler()
-        // TEMP BEFORE I figure out how to actually schedule groups-- only do scheduling if all items are destinations! for now!! just doing interface stuff first...
-//        var allDestinations = true
-//        var destinations = [Destination]()
-//        itinerary.events.forEach({ event in
-//            guard let dest = event as? Destination else { allDestinations = false; return }
-//            destinations.append(dest)
-//        })
-        scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -105,7 +99,7 @@ class ItineraryViewController: DraggableContentViewController {
         if abs(dir) >= thresh {
             let step = dir > 0 ? 1 : -1
             let deltaTime = TimeInterval.from(minutes: step * 15)
-            editingSession.changeEventDuration(with: deltaTime)
+            editingSession.changeBlockDuration(with: deltaTime)
             gesture.scale = 1.0
         }
         
@@ -122,97 +116,100 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if section == 0 {
-            return itinerary.events.count
-        } else if section == 1 {
+        switch section {
+        case 0:
+            print("dest count: \(itinerary.destinations.count)")
+            return itinerary.destinations.count
+        case 1:
             return itinerary.route.count
-        } else {
-            let count = itinerary.events.filter({$0 as? OneOfGroup != nil}).count
-            return count
+        case 2:
+            return itinerary.schedule.count
+        default:
+            return 0
         }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.section == 0 {
+        let section = indexPath.section
+        switch section {
+        case 0:
             return setupDestinationCell(with: indexPath)
-        } else if indexPath.section == 1 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
-            return setupLegCell(cell, with: indexPath.item)
-        } else {
-            return setupGroupCell(with: indexPath)
+        case 1:
+            return setupLegCell(with: indexPath)
+        case 2:
+            return setupBlockCell(with: indexPath)
+        default:
+            return UICollectionViewCell()
         }
+    }
+    
+    func setupDestinationCell(with indexPath: IndexPath) -> UICollectionViewCell {
         
-    }
-    
-    func groupForIndex(_ index: Int) -> OneOfGroup {
-        let group = itinerary.events.filter({ $0 as? OneOfGroup != nil})[index] as! OneOfGroup
-        return group
-    }
-    
-    func setupGroupCell(with indexPath: IndexPath) -> GroupCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-        let group = groupForIndex(indexPath.item)
-        cell.nextBtn.tag = indexPath.item
-        cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
-        cell.prevBtn.tag = indexPath.item
-        cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
-        cell.configureWith(group)
-        return cell
-    }
-    
-    func setupDestinationCell(with indexPath: IndexPath) -> DestCell {
-        
-        let event = itinerary.events[indexPath.item]
+        let index = indexPath.item
+        let destination = itinerary.destinations[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
-        
-        if let destination = event as? Destination {
-            cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
-        } else if let group = event as? OneOfGroup {
-            if let destination = group.selectedDestination {
-                cell.configureWith(name: destination.place.name, duration: destination.timing.duration)
-            } else {
-                cell.configureWith(name: "No destination selected", duration: group.timing.duration)
-            }
-        }
+        cell.configureWith(destination)
         addDragRecognizerTo(draggable: cell)
         return cell
         
     }
     
-    @objc func prevOption(_ sender: UIButton) {
-        let groupIndex = sender.tag
-        let group = groupForIndex(groupIndex)
-        guard let index = group.selectedIndex else { return }
-        let newIndex = (index - 1) >= 0 ? index - 1 : group.places.count - 1
-        group.selectedIndex = newIndex
-        let scheduler = Scheduler()
-        scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
-    }
     
-    @objc func nextOption(_ sender: UIButton) {
-        let groupIndex = sender.tag
-        let group = groupForIndex(groupIndex)
-        guard let index = group.selectedIndex else { return }
-        group.selectedIndex = (index + 1) % (group.places.count)
-        let scheduler = Scheduler()
-        scheduler.schedule(events: itinerary.events, travelMode: itinerary.travelMode, callback: didEditItinerary)
-    }
-    
-    func setupLegCell(_ cell: RouteCell, with index: Int) -> RouteCell {
+    func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
         
-        let legs = itinerary.route
-        guard let leg = legs[safe: index] else { return cell }
-        
-//        let startFraction = Double(index) / Double(legs.count)
-//        let endFraction = Double(index + 1) / Double(legs.count + 1)
-//        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
-//        cell.configureWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
+        let index = indexPath.item
+        let leg = itinerary.route[index]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
+        //        let startFraction = Double(index) / Double(legs.count)
+        //        let endFraction = Double(index + 1) / Double(legs.count + 1)
+        //        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
+        //        cell.configureWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
         
         cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
+        return cell
+    }
+    
+    func setupBlockCell(with indexPath: IndexPath) -> UICollectionViewCell {
+        let index = indexPath.item
+        guard let block = itinerary.schedule[index] as? OptionBlock else {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
+        }
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
+        
+        cell.nextBtn.tag = index
+        cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
+        cell.prevBtn.tag = index
+        cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
+        cell.configureWith(block)
         
         return cell
+    }
+    
+    @objc func prevOption(_ sender: UIButton) {
+        let blockIndex = sender.tag
+        var block = itinerary.schedule[blockIndex] as! OptionBlock
+        guard let index = block.selectedIndex else { return }
+        
+        let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
+        block.selectedIndex = newIndex
+        
+        let scheduler = Scheduler()
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+
+    @objc func nextOption(_ sender: UIButton) {
+        let blockIndex = sender.tag
+        var block = itinerary.schedule[blockIndex] as! OptionBlock
+        guard let index = block.selectedIndex else { return }
+        
+        let newIndex = (index + 1) % (block.optionCount)
+        block.selectedIndex = newIndex
+        
+        let scheduler = Scheduler()
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
 }
 
@@ -220,38 +217,43 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func didEditItinerary(events: [Event]?, route: Route?) {
+    func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {
         
-        guard let events = events, let route = route else { return }
+        guard let blocks = blocks, let route = route else { return }
         
-        self.itinerary.events = events
+        self.itinerary.schedule = blocks
         self.itinerary.route = route
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
-        let event : Event
+        let block : ScheduleBlock
         
-        if let eventObject = object as? Event {
-            event = eventObject
+        if let scheduleObject = object as? ScheduleBlock {
+            block = scheduleObject
         } else {
+            let timing = Timing(start: 0, duration: defaultDuration)
             if let place = object as? Place {
-                event = Destination(place: place, timing: Timing(start: 0, duration: defaultDuration))
+                
+                let destination = Destination(place: place, timing: timing)
+                block = SingleBlock(timing: timing, destination: destination)
+                
             } else if let group = object as? PlaceGroup {
-                event = OneOfGroup(name: group.name, places: group.places, timing: Timing(start: 0, duration: defaultDuration), selectedIndex: nil)
+                let options = group.places.map({ Destination(place: $0, timing: timing) })
+                block = OneOfBlock(name: group.name, timing: Timing(start: 0, duration: defaultDuration), options: options)
             } else {
                 return
             }
         }
         
-        var editingEvents = itinerary.events
+        var editingBlocks = itinerary.schedule
         
         if draggableContentViewController as? ItineraryViewController != nil {
-            editingEvents.remove(at: indexPath.item)
+            editingBlocks.remove(at: indexPath.item)
         }
         
-        editingSession = ItineraryEditingSession(movingEvent: event, withIndex: indexPath.item, inEvents: editingEvents, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(movingBlock: block, withIndex: indexPath.item, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
@@ -261,22 +263,16 @@ extension ItineraryViewController : DragDelegate {
         let location = gesture.location(in: collectionView)
         
         if !collectionView.frame.contains(location) {
-            editingSession.removeEvent()
+            editingSession.removeBlock()
             return
         }
         
         let y = gesture.location(in: view).y
         let hour = timelineController.roundedHourInTimeline(forY: y)
         if hour != previousTouchHour {
-            editingSession.moveEvent(toTime: TimeInterval.from(hours: hour))
+            editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
         }
-        
-//        let spaceFromBottom = collectionView.frame.height - y
-//        print (spaceFromBottom)
-//        if spaceFromBottom <= 100 {
-//            timelineController.shiftTimeline(by: 2.0)
-//        }
         
     }
     
@@ -301,7 +297,7 @@ extension ItineraryViewController: DragDataDelegate {
     func objectFor(draggable: Draggable) -> Any? {
         guard let draggable = draggable as? UICollectionViewCell,
             let indexPath = collectionView.indexPath(for: draggable),
-              let event = itinerary.events[safe: indexPath.item] else { return nil }
+              let event = itinerary.schedule[safe: indexPath.item] else { return nil }
         
         return event
     }
@@ -331,19 +327,19 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         return event.timing
     }
     
-    func eventFor(indexPath: IndexPath) -> Event? {
+    func eventFor(indexPath: IndexPath) -> Schedulable? {
         
         let section = indexPath.section
         let item = indexPath.item
         
-        if section == 0 {
-            return itinerary.events[safe: item]
-        } else if section == 1 {
+        switch section {
+        case 0:
+            return itinerary.destinations[safe: item]
+        case 1:
             return itinerary.route[safe: item]
-        } else if section == 2 {
-            let groups = itinerary.events.filter({ $0 as? OneOfGroup != nil})
-            return groups[safe: item]
-        } else {
+        case 2:
+            return itinerary.schedule[safe: item]
+        default:
             return nil
         }
         

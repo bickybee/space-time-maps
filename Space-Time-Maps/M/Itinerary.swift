@@ -8,16 +8,25 @@
 
 import UIKit
 
+// Data on our current PLAN!
+
 enum TravelMode : String {
     case driving, walking, bicycling, transit
 }
 
 struct Itinerary {
     
-    var events = [Event]() {
+    var schedule = [ScheduleBlock]() {
         didSet {
-            events.sort(by: { $0.timing.start < $1.timing.start })
+            schedule.sort(by: { $0.timing.start < $1.timing.start })
+            destinations = schedule.compactMap({ $0.destinations }).flatMap({$0})
         }
+    }
+    
+    var destinations = [Destination]()
+    
+    var optionBlocks : [OptionBlock] {
+        return schedule.filter({$0.self is OptionBlock.Type}).map({ $0 as! OptionBlock })
     }
     
     var route : [Leg] {
@@ -31,7 +40,7 @@ struct Itinerary {
         route.forEach({leg in
             totalDuration += leg.timing.duration
         })
-        events.forEach({dest in
+        destinations.forEach({dest in
             totalDuration += dest.timing.duration
         })
         return totalDuration

@@ -17,33 +17,33 @@ class ItineraryEditingSession: NSObject {
     
     // These are set upon initialization, don't change after
     var travelMode : TravelMode
-    var baseEvents : [Event] // Ordered list of events NOT containing event being edited --> UNCHANGING!
+    var baseBlocks : [ScheduleBlock] // Ordered list of blocks NOT containing block being edited --> UNCHANGING!
     var originalIndex : Int
-    var callback : ([Event]?, Route?) -> () // TBH this probably shouldn't be set in the construcor, it should be an argument for each public method
+    var callback : ([ScheduleBlock]?, Route?) -> () // TBH this probably shouldn't be set in the construcor, it should be an argument for each public method
     
     // This is what gets modified!
-    var movingEvent : Event // Event being edited/moved around
+    var movingBlock : ScheduleBlock // Block being edited/moved around
     
     static let scheduler = Scheduler()
     
-    init(movingEvent event: Event, withIndex index: Int, inEvents events: [Event], travelMode: TravelMode, callback: @escaping ([Event]?, Route?) -> ()) {
-        self.movingEvent = event
-        self.baseEvents = events
+    init(movingBlock block: ScheduleBlock, withIndex index: Int, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+        self.movingBlock = block
+        self.baseBlocks = blocks
         self.travelMode = travelMode
         self.callback = callback
         self.originalIndex = index
     }
     
-    func moveEvent(toTime time: TimeInterval){
+    func moveBlock(toTime time: TimeInterval){
         
-        // Make this time the "middle" of the event
-        movingEvent.timing.start = time - movingEvent.timing.duration / 2
-        movingEvent.timing.end = time + movingEvent.timing.duration / 2
+        // Make this time the "middle" of the block
+        movingBlock.timing.start = time - movingBlock.timing.duration / 2
+        movingBlock.timing.end = time + movingBlock.timing.duration / 2
         
         // Create new schedule
-        var modifiedEvents = baseEvents
-        modifiedEvents.append(movingEvent)
-        modifiedEvents.sort(by: { $0.timing.start <= $1.timing.start })
+        var modifiedBlocks = baseBlocks
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
         
         // Compute new route with modifications
         computeRoute()
@@ -51,41 +51,41 @@ class ItineraryEditingSession: NSObject {
     }
     
     
-    func changeEventDuration(with delta: Double) {
-        let duration = movingEvent.timing.duration + delta
+    func changeBlockDuration(with delta: Double) {
+        let duration = movingBlock.timing.duration + delta
         guard duration >= MIN_DURATION else { return }
         
         // Shift it downwards from start-time, arbitrary design decision...
-        movingEvent.timing.duration = duration
-        movingEvent.timing.end = movingEvent.timing.start + movingEvent.timing.duration
+        movingBlock.timing.duration = duration
+        movingBlock.timing.end = movingBlock.timing.start + movingBlock.timing.duration
         
         // Compute new route with modifications
         computeRoute()
     }
     
-    func removeEvent() {
-        computeRoute(with: baseEvents)
+    func removeBlock() {
+        computeRoute(with: baseBlocks)
     }
     
     func end() {
-        moveEvent(toTime: movingEvent.timing.start)
+        moveBlock(toTime: movingBlock.timing.start)
     }
     
     func computeRoute() {
         
-        // Add movingEvent with whatever changes it may have had to the baseEvents (unchanging events!)
-        var modifiedEvents = baseEvents
-        modifiedEvents.append(movingEvent)
-        modifiedEvents.sort(by: { $0.timing.start <= $1.timing.start })
-        computeRoute(with: modifiedEvents)
+        // Add movingBlock with whatever changes it may have had to the baseBlocks (unchanging blocks!)
+        var modifiedBlocks = baseBlocks
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        computeRoute(with: modifiedBlocks)
         
     }
     
-    func computeRoute(with events: [Event]) {
-        if events.count <= 1 {
-            callback(events, [])
+    func computeRoute(with blocks: [ScheduleBlock]) {
+        if blocks.count <= 1 {
+            callback(blocks, [])
         } else {
-            ItineraryEditingSession.scheduler.schedule(events: events, travelMode: travelMode, callback: callback)
+            ItineraryEditingSession.scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
         }
     }
 

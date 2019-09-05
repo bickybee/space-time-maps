@@ -10,6 +10,8 @@ import Foundation
 import GoogleMaps
 import MobileCoreServices
 
+// Simply a location
+
 struct Coordinate {
     var lat, lon: Double
 }
@@ -32,6 +34,22 @@ class Place : NSObject {
     
     static func == (lhs: Place, rhs: Place) -> Bool {
         return lhs.placeID == rhs.placeID
+    }
+    
+}
+
+struct PlaceGroup {
+    
+    enum Kind : String {
+        case asManyOf, oneOf, none
+    }
+    
+    var name : String
+    var places : [Place]
+    var kind : PlaceGroup.Kind
+    
+    func copy() -> PlaceGroup {
+        return PlaceGroup(name: self.name, places: self.places, kind: self.kind)
     }
     
 }

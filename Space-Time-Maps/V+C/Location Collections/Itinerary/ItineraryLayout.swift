@@ -68,6 +68,7 @@ class ItineraryLayout: UICollectionViewLayout {
         } else {
             
             let width = contentWidth * 0.7
+            print(duration)
             let height = CGFloat(duration) * hourHeight
             if indexPath.section > 0 { print("layout assigned height: "); print(height) }
             let relativeHour = CGFloat(startHour) - timelineStartHour

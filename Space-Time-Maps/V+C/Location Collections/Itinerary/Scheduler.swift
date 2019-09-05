@@ -15,48 +15,51 @@ class Scheduler : NSObject {
     
     let qs = QueryService()
     
-    // Get a route for the given list of events
-    func schedule(events: [Event], travelMode: TravelMode, callback: @escaping ([Event], Route) -> ()) {
+    // Get a route for the given list of blocks
+    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock], Route) -> ()) {
 
-        // Make a copy, in case the original event list gets modified during this process
-        let inputEvents = events.map{ $0.copy() }
+        // Make a copy, in case the original block list gets modified during this process
+//        let inputBlocks = blocks.map{ $0.copy() }
         
-        let scheduledEvents = scheduleEvents(inputEvents, travelMode: travelMode)
-        let route = routeFromEvents(scheduledEvents, travelMode: travelMode)
+        let scheduledBlocks = scheduleBlocks(blocks, travelMode: travelMode)
+        let route = routeFromBlocks(scheduledBlocks, travelMode: travelMode)
         
-        callback(scheduledEvents, route)
+        callback(scheduledBlocks, route)
     }
     
     // "Scheduling" here really means selecting an ideal OPTION for each Group Event
-    func scheduleEvents(_ events: [Event], travelMode: TravelMode) -> [Event] {
+    func scheduleBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> [ScheduleBlock] {
         
-        var schedule = [Event]()
+        var schedule = [ScheduleBlock]()
         let dispatchGroup = DispatchGroup()
         
-        for (i, event) in events.enumerated() {
+        for (i, block) in blocks.enumerated() {
             
             // Destinations are scheduled as-is
-            if let destination = event as? Destination {
-                schedule.append(destination.copy())
+            if let singleBlock = block as? SingleBlock {
+                schedule.append(singleBlock)
             }
                 
             // Groups must have their "best-option" calculated
             // TODO: handle different groups, ignore if "best-option" is already selected...
-            else if var group = event as? OneOfGroup {
+            else if let optionBlock = block as? OneOfBlock {
                 
-                if group.selectedDestination != nil {
-                    schedule.append(group.copy())
-                } else {
+                // If this optionBlock already has an option selected, add to schedule
+                if optionBlock.destinations != nil {
+                    schedule.append(optionBlock)
+                }
+                // Otherwise, select an option!
+                else {
                     dispatchGroup.enter()
-                    // Option selection depends in previous and following Event
-                    // TODO: Handle if these are Groups (get their destination)
-                    let before = events[safe: i - 1] as? Destination
-                    let after = events[safe: i + 1] as? Destination
+                    // Option selection depends in previous and following events
+                    // TODO: Handle if these are OptionBlocks too
+                    let before = blocks[safe: i - 1] as? SingleBlock
+                    let after = blocks[safe: i + 1] as? SingleBlock
                     
-                    findBestOption(group, before:before, after: after, travelMode: travelMode) { option in
+                    findBestOption(optionBlock, before:before, after: after, travelMode: travelMode) { option in
                         if let option = option {
-                            group.selectedIndex = option
-                            schedule.append(group.copy())
+                            optionBlock.selectedIndex = option
+                            schedule.append(optionBlock)
                         }
                         
                         dispatchGroup.leave()
@@ -73,7 +76,7 @@ class Scheduler : NSObject {
     }
     
     
-    func findBestOption(_ group: OneOfGroup, before: Destination?, after: Destination?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
         // If it's an isolated group, just pick the first option
         guard !(before == nil && after == nil) else {
@@ -83,12 +86,12 @@ class Scheduler : NSObject {
         
         // Prepare matrix to be sent to Google Distance Matrix API
         var origins = [Destination]()
-        origins.append(contentsOf: group.destinations)
-        if let before = before { origins.append(before) }
+        origins.append(contentsOf: oneOfBlock.options)
+        if let before = before { origins.append(before.destination) }
         
         var destinations = [Destination]()
-        destinations.append(contentsOf: group.destinations)
-        if let after = after { destinations.append(after) }
+        destinations.append(contentsOf: oneOfBlock.options)
+        if let after = after { destinations.append(after.destination) }
         
         // Get matrix
         self.qs.getMatrixFor(origins: origins, destinations: destinations, travelMode: travelMode) { matrix in
@@ -123,19 +126,10 @@ class Scheduler : NSObject {
         
     }
     
-    func routeFromEvents(_ events: [Event], travelMode: TravelMode) -> Route {
+    func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route {
         
-        // First get destinations out of all events...
-        let destinations = events.compactMap({ (event) -> Destination? in
-            if let destination = event as? Destination {
-                return destination
-            } else if let group = event as? OneOfGroup {
-                return group.selectedDestination
-            } else {
-                return nil
-            }
-        })
-        
+        // First get destinations out of all blocks...
+        let destinations = blocks.compactMap({ $0.destinations }).flatMap({ $0 })
         return routeFromDestinations(destinations, travelMode: travelMode)
         
     }

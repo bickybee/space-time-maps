@@ -41,24 +41,24 @@ class GroupCell: UICollectionViewCell {
         
     }
     
-    func configureWith(_ oneOf: OneOfGroup) {
+    func configureWith(_ block: OptionBlock) {
         
-        configureLabelsWith(oneOf)
-        configureOptionControlWith(oneOf)
-        
-    }
-    
-    private func configureLabelsWith(_ oneOf: OneOfGroup) {
-        
-        nameLabel.text = oneOf.name
+        configureLabelsWith(block)
+        configureOptionControlWith(block)
         
     }
     
-    private func configureOptionControlWith(_ oneOf: OneOfGroup) {
+    private func configureLabelsWith(_ block: OptionBlock) {
         
-        optionControl.numberOfPages = oneOf.places.count
+        nameLabel.text = block.name
         
-        if let option = oneOf.selectedIndex {
+    }
+    
+    private func configureOptionControlWith(_ block: OptionBlock) {
+        
+        optionControl.numberOfPages = block.optionCount
+        
+        if let option = block.selectedIndex {
             optionControl.currentPageIndicatorTintColor = UIColor.white
             optionControl.currentPage = option
             optionControl.updateCurrentPageDisplay()
