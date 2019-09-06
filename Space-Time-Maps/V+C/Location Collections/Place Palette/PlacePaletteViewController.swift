@@ -315,6 +315,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!)
         groups[0].places.append(newPlace)
+        collectionView.reloadData()
         delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }
     
