@@ -53,7 +53,11 @@ protocol OptionBlock : ScheduleBlock {
 
 class OneOfBlock : OptionBlock {
 
-    var timing: Timing
+    var timing: Timing {
+        didSet {
+            optionIndex = nil
+        }
+    }
     var placeGroup : PlaceGroup
     
     var optionIndex: Int?
@@ -88,7 +92,11 @@ class OneOfBlock : OptionBlock {
 class AsManyOfBlock : OptionBlock {
     
     var placeGroup: PlaceGroup
-    var timing: Timing
+    var timing: Timing {
+        didSet {
+            optionIndex = nil
+        }
+    }
     var permutations: [[Destination]]
     
     var optionIndex: Int?
