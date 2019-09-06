@@ -191,10 +191,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     @objc func prevOption(_ sender: UIButton) {
         let blockIndex = sender.tag
         var block = itinerary.schedule[blockIndex] as! OptionBlock
-        guard let index = block.selectedIndex else { return }
+        guard let index = block.optionIndex else { return }
         
         let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
-        block.selectedIndex = newIndex
+        block.optionIndex = newIndex
         
         let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
@@ -203,10 +203,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     @objc func nextOption(_ sender: UIButton) {
         let blockIndex = sender.tag
         var block = itinerary.schedule[blockIndex] as! OptionBlock
-        guard let index = block.selectedIndex else { return }
+        guard let index = block.optionIndex else { return }
         
         let newIndex = (index + 1) % (block.optionCount)
-        block.selectedIndex = newIndex
+        block.optionIndex = newIndex
         
         let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
@@ -235,13 +235,11 @@ extension ItineraryViewController : DragDelegate {
         } else {
             let timing = Timing(start: 0, duration: defaultDuration)
             if let place = object as? Place {
-                
-                let destination = Destination(place: place, timing: timing)
-                block = SingleBlock(timing: timing, destination: destination)
+                block = SingleBlock(timing: timing, place: place)
                 
             } else if let group = object as? PlaceGroup {
-                let options = group.places.map({ Destination(place: $0, timing: timing) })
-                block = OneOfBlock(name: group.name, timing: Timing(start: 0, duration: defaultDuration), options: options)
+//                block = OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))
+                block = AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), permutations: [[]])
             } else {
                 return
             }

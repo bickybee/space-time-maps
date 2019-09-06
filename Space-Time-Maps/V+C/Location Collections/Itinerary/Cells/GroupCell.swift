@@ -58,7 +58,7 @@ class GroupCell: UICollectionViewCell {
         
         optionControl.numberOfPages = block.optionCount
         
-        if let option = block.selectedIndex {
+        if let option = block.optionIndex {
             optionControl.currentPageIndicatorTintColor = UIColor.white
             optionControl.currentPage = option
             optionControl.updateCurrentPageDisplay()

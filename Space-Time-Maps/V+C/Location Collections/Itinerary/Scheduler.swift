@@ -42,7 +42,7 @@ class Scheduler : NSObject {
                 
             // Groups must have their "best-option" calculated
             // TODO: handle different groups, ignore if "best-option" is already selected...
-            else if let optionBlock = block as? OneOfBlock {
+            else if var optionBlock = block as? OptionBlock {
                 
                 // If this optionBlock already has an option selected, add to schedule
                 if optionBlock.destinations != nil {
@@ -58,7 +58,7 @@ class Scheduler : NSObject {
                     
                     findBestOption(optionBlock, before:before, after: after, travelMode: travelMode) { option in
                         if let option = option {
-                            optionBlock.selectedIndex = option
+                            optionBlock.optionIndex = option
                             schedule.append(optionBlock)
                         }
                         
@@ -75,39 +75,129 @@ class Scheduler : NSObject {
         
     }
     
-    
-    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+    func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
-        // If it's an isolated group, just pick the first option
-        guard !(before == nil && after == nil) else {
-            callback(0)
-            return
+        if let oneOf = optionBlock as? OneOfBlock {
+            findBestOption(oneOf, before: before, after: after, travelMode: travelMode, callback: callback)
+        } else if let asManyOf = optionBlock as? AsManyOfBlock {
+            findBestOption(asManyOf, before: before, after: after, travelMode: travelMode, callback: callback)
         }
         
-        // Prepare matrix to be sent to Google Distance Matrix API
-        var origins = [Destination]()
-        origins.append(contentsOf: oneOfBlock.options)
-        if let before = before { origins.append(before.destination) }
+    }
+    
+    
+    func findBestOption(_ asManyOfBlock: AsManyOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
-        var destinations = [Destination]()
-        destinations.append(contentsOf: oneOfBlock.options)
-        if let after = after { destinations.append(after.destination) }
+        let places = asManyOfBlock.placeGroup.places
+        let indices = [Int](0...places.count - 1)
+        var permutations = [[Int]]()
+        Utils.permute(indices, indices.count - 1, &permutations)
         
-        // Get matrix
-        self.qs.getMatrixFor(origins: origins, destinations: destinations, travelMode: travelMode) { matrix in
+//        asManyOfBlock.
+        
+        getMatrixFor(asManyOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
             guard let matrix = matrix else {
                 callback(nil)
                 return
             }
             
-            // Determine best option from matrix and return it
+            let startTime = asManyOfBlock.timing.start
+            let (index, optionTimings) = self.computeOptions(matrix, permutations)
+            let options = self.permutationsToDestinations(permutations, optionTimings, places, startTime)
+            asManyOfBlock.permutations = options
+            callback(index)
+        }
+        
+    }
+    
+    func permutationsToDestinations(_ permutations: [[Int]], _ timings: [[TimeInterval]], _ places: [Place], _ startTime: TimeInterval) -> [[Destination]] {
+        
+        var options = [[Destination]]()
+        
+        for (i, perm) in permutations.enumerated() {
+            var destinations = [Destination]()
+            var time = startTime
+            
+            for (j, placeIndex) in perm.enumerated() {
+                time += timings[i][j]
+                destinations.append(Destination(place: places[placeIndex], timing: Timing(start: time, duration: TimeInterval.from(minutes: 30))))
+                time += TimeInterval.from(minutes: 30)
+            }
+            
+            options.append(destinations)
+        }
+        
+        return options
+    }
+
+    // also /creates/ the options???
+    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+        
+        // If it's an isolated group, just pick the first option
+        guard !(before == nil && after == nil) else {
+            callback(nil)
+            return
+        }
+        
+        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
+            guard let matrix = matrix else {
+                callback(nil)
+                return
+            }
+            
             let index = self.indexOfBestOption(matrix)
             callback(index)
         }
     }
     
+    func getMatrixFor(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback: @escaping (TimeMatrix?) -> ()) {
+        
+        // Prepare matrix to be sent to Google Distance Matrix API
+        var origins = [Place]()
+        origins.append(contentsOf: optionBlock.placeGroup.places)
+        if let before = before { origins.append(before.place) }
+        
+        var destinations = [Place]()
+        destinations.append(contentsOf: optionBlock.placeGroup.places)
+        if let after = after { destinations.append(after.place) }
+        
+        // Get matrix
+        self.qs.getMatrixFor(origins: origins, destinations: destinations, travelMode: travelMode) { matrix in
+            callback(matrix)
+        }
+    }
+    
+    func computeOptions(_ matrix: TimeMatrix, _ permutations: [[Int]]) -> (Int, [[TimeInterval]]) {
+        
+        var timings = [[TimeInterval]]()
+        let last = matrix.endIndex - 1
+        
+        for (i, permutation) in permutations.enumerated() {
+            var optionTiming = [TimeInterval]()
+            
+            // A -> B0
+            optionTiming.append(matrix[permutation.first!][last])
+            // B0 -> Bn
+            for j in 0 ... permutation.count - 2 {
+                let from = permutation[j + 1]
+                let to = permutation[j]
+                optionTiming.append(matrix[to][from])
+            }
+            
+            // Bn -> C
+            optionTiming.append(matrix[last][permutation.last!])
+            timings.append(optionTiming)
+        }
+        
+        let scores = timings.map( { $0.reduce(0, +) } )
+        let minScore = scores.min()
+        let index = scores.firstIndex(of: minScore!)
+        return (index!, timings)
+        
+    }
+    
     // Determine best option ==> involves east travel time!
-    func indexOfBestOption(_ matrix: [[TimeInterval]]) -> Int {
+    func indexOfBestOption(_ matrix: TimeMatrix) -> Int {
         
         let n = matrix.count - 1 // rows
         let m = matrix[0].count - 1 // cols

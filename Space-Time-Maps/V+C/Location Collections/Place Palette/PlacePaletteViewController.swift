@@ -229,7 +229,7 @@ extension PlacePaletteViewController: DragDelegate {
         midDrag = false
         draggingIndexPath = indexPath
 //        draggingView = setupPlaceholderView(from: gesture.view!)
-        groupsBeforeEditing = groups
+        groupsBeforeEditing = groups.map({ $0.copy() })
         groupsBeforeEditing[indexPath.section].places.remove(at: indexPath.item)
         collectionView.reloadData()
     }
@@ -250,7 +250,7 @@ extension PlacePaletteViewController: DragDelegate {
         if (!midDrag ){
             collectionView.performBatchUpdates({
                 midDrag = true
-                groups = groupsBeforeEditing
+                groups = groupsBeforeEditing.map({ $0.copy() })
                 groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
@@ -259,15 +259,7 @@ extension PlacePaletteViewController: DragDelegate {
     }
     
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
-        // remove leftover placeholder cells
-//        for i in 0...groups.count - 1 {
-//            var group = groups[i]
-//            if group.places.count > 1 {
-//                group.places = group.places.filter( { !$0.isPlaceholder() } )
-//                groups[i] = group
-//            }
-//        }
-//        dragging = false
+
         let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
         collectionView.reloadItems(at: [reloadIndexPath])

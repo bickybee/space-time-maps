@@ -70,6 +70,23 @@ class Utils {
         return TimeInterval.from(hours: clamped)
     }
     
+    // permuteWirth from
+    // https://github.com/raywenderlich/swift-algorithm-club/tree/master/Combinatorics
+    static func permute<T>(_ a: [T], _ n: Int, _ result: inout [[T]]) {
+        if n == 0 {
+            print(a)   // display the current permutation
+            result.append(a)
+        } else {
+            var a = a
+            permute(a, n - 1, &result)
+            for i in 0..<n {
+                a.swapAt(i, n)
+                permute(a, n - 1, &result)
+                a.swapAt(i, n)
+            }
+        }
+    }
+    
     
     
 }

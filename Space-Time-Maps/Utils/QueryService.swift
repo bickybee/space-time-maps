@@ -9,6 +9,8 @@
 import Foundation
 import GoogleMaps.GMSMutablePath
 
+typealias TimeMatrix = [[TimeInterval]]
+
 class QueryService {
         
     let session = URLSession(configuration: .default)
@@ -47,7 +49,7 @@ class QueryService {
         dataTask.resume()
     }
     
-    func getMatrixFor(origins: [Destination], destinations: [Destination], travelMode: TravelMode, callback: @escaping ([[TimeInterval]]?) -> ()) {
+    func getMatrixFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeMatrix?) -> ()) {
         // matrix[row][col]
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
@@ -115,9 +117,9 @@ class QueryService {
         
     }
     
-    func dataToMatrix(_ data: Data) -> [[TimeInterval]]? {
+    func dataToMatrix(_ data: Data) -> TimeMatrix? {
         let decoder = JSONDecoder()
-        var matrix : [[TimeInterval]]?
+        var matrix : TimeMatrix?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
             print(errorResponseObject.errorMessage)
             matrix = nil
@@ -135,12 +137,12 @@ class QueryService {
         return matrix
     }
     
-    func queryURLFor(origins: [Destination], destinations: [Destination], travelMode: TravelMode) -> URL? {
+    func queryURLFor(origins: [Place], destinations: [Place], travelMode: TravelMode) -> URL? {
         
         guard var urlComponents = URLComponents(string: gmapsMatrixURLString) else { return nil }
         
-        let originsString = batchPlaceIDStringFrom(destinations: origins)
-        let destinationsString = batchPlaceIDStringFrom(destinations: destinations)
+        let originsString = batchPlaceIDStringFrom(places: origins)
+        let destinationsString = batchPlaceIDStringFrom(places: destinations)
         
         urlComponents.queryItems = [
             URLQueryItem(name:"origins", value:originsString),
@@ -171,11 +173,11 @@ class QueryService {
         
     }
     
-    func batchPlaceIDStringFrom(destinations: [Destination]) -> String {
+    func batchPlaceIDStringFrom(places: [Place]) -> String {
         var str = ""
-        for (index, dest) in destinations.enumerated() {
-            str += "place_id:" + dest.place.placeID
-            if index < destinations.endIndex {
+        for (index, place) in places.enumerated() {
+            str += "place_id:" + place.placeID
+            if index < places.endIndex {
                 str += "|"
             }
         }

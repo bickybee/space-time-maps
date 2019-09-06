@@ -38,7 +38,7 @@ class Place : NSObject {
     
 }
 
-struct PlaceGroup {
+class PlaceGroup {
     
     enum Kind : String {
         case asManyOf, oneOf, none
@@ -47,6 +47,12 @@ struct PlaceGroup {
     var name : String
     var places : [Place]
     var kind : PlaceGroup.Kind
+    
+    init(name: String, places: [Place], kind: PlaceGroup.Kind) {
+        self.name = name
+        self.places = places
+        self.kind = kind
+    }
     
     func copy() -> PlaceGroup {
         return PlaceGroup(name: self.name, places: self.places, kind: self.kind)

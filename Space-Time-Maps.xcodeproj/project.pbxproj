@@ -36,7 +36,7 @@
 		98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */; };
 		98DEF0C12305F6E9003DE1CB /* GMSMapViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */; };
 		98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */; };
-		98DEF0D523066372003DE1CB /* LegCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D423066372003DE1CB /* LegCell.swift */; };
+		98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D423066372003DE1CB /* OldLegCell.swift */; };
 		98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEF0D62306661B003DE1CB /* ColorUtils.swift */; };
 		98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B9472308D1800032FBB7 /* Scheduler.swift */; };
 		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
@@ -91,7 +91,7 @@
 		98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapUtils.swift; sourceTree = "<group>"; };
 		98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSMapViewExtensions.swift; sourceTree = "<group>"; };
 		98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensions.swift; sourceTree = "<group>"; };
-		98DEF0D423066372003DE1CB /* LegCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegCell.swift; sourceTree = "<group>"; };
+		98DEF0D423066372003DE1CB /* OldLegCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldLegCell.swift; sourceTree = "<group>"; };
 		98DEF0D62306661B003DE1CB /* ColorUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		98E9B9472308D1800032FBB7 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
@@ -140,8 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				982D579D232162FC00E183F3 /* Xibs */,
-				98DEF0D423066372003DE1CB /* LegCell.swift */,
-				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
 				982D579123203F8300E183F3 /* DestCell.swift */,
 				982D5795232050C500E183F3 /* GroupCell.swift */,
 				982D57992320AB3C00E183F3 /* RouteCell.swift */,
@@ -239,6 +237,8 @@
 		98BC8578230C280B001D14BE /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
+				98DEF0D423066372003DE1CB /* OldLegCell.swift */,
 				98127E6D23199DCD0030C44B /* OldGroupCell.swift */,
 				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
 				B6A625E322D7CFB40099D65C /* style.json */,
@@ -472,7 +472,7 @@
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
-				98DEF0D523066372003DE1CB /* LegCell.swift in Sources */,
+				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
 				982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */,

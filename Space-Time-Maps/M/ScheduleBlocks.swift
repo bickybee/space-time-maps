@@ -20,122 +20,92 @@ protocol ScheduleBlock : Schedulable {
 
 class SingleBlock : ScheduleBlock {
     
-    var timing : Timing {
-        didSet {
-            destination.timing = timing
-        }
+    var timing : Timing
+    var place : Place
+    
+    var destination : Destination {
+        return Destination(place: place, timing: timing)
     }
-    var destination : Destination
     var destinations: [Destination]? {
         return [destination]
     }
     
-    init(timing: Timing, destination: Destination) {
+    init(timing: Timing, place: Place) {
         self.timing = timing
-        self.destination = destination
+        self.place = place
     }
     
 }
 
 protocol OptionBlock : ScheduleBlock {
     
-    var name: String { get set }
     var timing: Timing { get set }
+    var placeGroup: PlaceGroup { get set } // reference to original group
+    
+    var optionIndex: Int? { get set }
+    
     var optionCount: Int { get }
-    var selectedIndex: Int? { get set }
     var destinations: [Destination]? { get }
+    var name: String { get }
 }
 
 // lotsa code duplication to follow but that's ok, fix later
 
 class OneOfBlock : OptionBlock {
 
-    var name: String
-    var timing: Timing { // currently assuming that destinations always take on the greater block timing
-        didSet {
-            options.forEach({ $0.timing = timing })
-        }
-    }
-    var options: [Destination]
-    var selectedIndex: Int?
+    var timing: Timing
+    var placeGroup : PlaceGroup
+    
+    var optionIndex: Int?
+    
     var destination: Destination? {
-        return selectedIndex != nil ? options[selectedIndex!] : nil
+        
+        if let index = optionIndex {
+            let place = placeGroup.places[index]
+            return Destination(place: place, timing: timing)
+        } else {
+            return nil
+        }
+        
     }
     var destinations: [Destination]? {
         return destination != nil ? [destination!] : nil
     }
     var optionCount : Int {
-        return options.count
+        return placeGroup.places.count
+    }
+    var name : String {
+        return placeGroup.name
     }
     
-    init(name: String, timing: Timing, options: [Destination]) {
-        self.name = name
+    init(placeGroup: PlaceGroup, timing: Timing) {
+        self.placeGroup = placeGroup
         self.timing = timing
-        self.options = options
     }
     
 }
 
 class AsManyOfBlock : OptionBlock {
     
-    var name: String
+    var placeGroup: PlaceGroup
     var timing: Timing
-    var options: [[Destination]]
-    var selectedIndex: Int?
+    var permutations: [[Destination]]
+    
+    var optionIndex: Int?
     var destinations: [Destination]? {
-        return selectedIndex != nil ? options[selectedIndex!] : nil
+        return optionIndex != nil ? permutations[optionIndex!] : nil
     }
     var optionCount: Int {
-        return options.count
+        return permutations.count
+    }
+    var name : String {
+        return placeGroup.name
     }
     
-    init(name: String, timing: Timing, options: [[Destination]]) {
-        self.name = name
+    init(placeGroup: PlaceGroup, timing: Timing, permutations: [[Destination]]) {
+        self.placeGroup = placeGroup
         self.timing = timing
-        self.options = options
-    }
-    
-}
-
-//
-//class AsManyOf : OptionGroup {
-//
-//    var name : String
-//    var timing : Timing
-//    var destinations : [Place]
-//
-//}
-
-class OneOfGroup : Schedulable {
-    
-    var name : String
-    var places : [Place]
-    var timing : Timing
-    var selectedIndex : Int?
-    var selectedDestination : Destination? {
-        get {
-            if let index = selectedIndex {
-                return Destination(place: self.places[index], timing: self.timing)
-            } else {
-                return nil
-            }
-        }
-    }
-    var destinations : [Destination] {
-        get {
-            return places.map{ Destination(place: $0, timing: self.timing) }
-        }
-    }
-    
-    init(name: String, places: [Place], timing: Timing, selectedIndex: Int?) {
-        self.name = name
-        self.places = places
-        self.timing = timing
-        self.selectedIndex = selectedIndex
-    }
-    
-    func copy() -> Schedulable {
-        return OneOfGroup(name: self.name, places: self.places, timing: self.timing, selectedIndex: self.selectedIndex)
+        self.permutations = permutations
     }
     
 }
