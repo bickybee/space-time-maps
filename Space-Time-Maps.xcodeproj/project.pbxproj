@@ -328,6 +328,7 @@
 				B6B5A5A822C7CB3200CE4301 /* Frameworks */,
 				B6B5A5A922C7CB3200CE4301 /* Resources */,
 				908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */,
+				410D1C73C5FAB447C4B906D5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -392,6 +393,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		410D1C73C5FAB447C4B906D5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

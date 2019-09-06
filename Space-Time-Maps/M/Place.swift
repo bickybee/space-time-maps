@@ -21,6 +21,7 @@ class Place : NSObject {
     let name: String
     let coordinate: Coordinate
     let placeID: String
+    let color: UIColor
     
     override var description : String {
         return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""
@@ -30,6 +31,7 @@ class Place : NSObject {
         self.name = name
         self.coordinate = coordinate
         self.placeID = placeID
+        self.color = ColorUtils.randomColor()
     }
     
     static func == (lhs: Place, rhs: Place) -> Bool {

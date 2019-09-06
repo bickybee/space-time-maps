@@ -113,10 +113,21 @@ class ParentViewController: UIViewController {
         let itinerary = itineraryController.itinerary
         let groups = placePaletteController.groups
         let palettePlaces = groups.flatMap { $0.places }
+        let itineraryPlaces = itinerary.destinations.map ({ $0.place })
         let itineraryLegs = itinerary.route
         
+        var destinationPlaces = [Place]()
+        var nonDestinationPlaces = [Place]()
+        for place in palettePlaces {
+            if itineraryPlaces.contains(place) {
+                destinationPlaces.append(place)
+            } else {
+                nonDestinationPlaces.append(place)
+            }
+        }
+        
         // Send data to map
-        mapController.refreshMarkup(destinationPlaces: [], nonDestinationPlaces: palettePlaces, routeLegs: itineraryLegs)
+        mapController.refreshMarkup(destinationPlaces: destinationPlaces, nonDestinationPlaces: nonDestinationPlaces, routeLegs: itineraryLegs)
 
     }
     

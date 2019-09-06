@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UIColor
 
 // Building blocks to render/represent the itinerary
 
@@ -39,9 +40,10 @@ struct Leg : Schedulable {
     var polyline : String
     var timing : Timing
     var travelTiming : Timing
+    var gradient : [UIColor]
     
     func copy() -> Schedulable {
-        return Leg(polyline: self.polyline, timing: self.timing, travelTiming: self.travelTiming)
+        return Leg(polyline: self.polyline, timing: self.timing, travelTiming: self.travelTiming, gradient: self.gradient)
     }
     
 }

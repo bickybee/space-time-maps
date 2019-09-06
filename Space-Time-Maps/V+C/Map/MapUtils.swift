@@ -23,7 +23,7 @@ class MapUtils {
         for index in 0...maxIndex {
             let marker = markerFor(place: places[index])
             let fraction = Double(index) / Double(maxIndex)
-            let colour = ColorUtils.colorFor(fraction: fraction)
+            let colour = places[index].color
             marker.icon = GMSMarker.markerImage(with: colour)
             markers.append(marker)
         }
@@ -54,9 +54,9 @@ class MapUtils {
         
         for index in 0...maxIndex {
             let polyline = polylineFor(encodedPath: legs[index].polyline)
-            let startFraction = Double(index) / Double(maxIndex + 1)
-            let endFraction = Double(index + 1) / Double(maxIndex + 1)
-            polyline.spans = gradientStyleForPolyline(startFraction: startFraction, endFraction: endFraction) // want color to incl. same range as places, of which there are always 1 more
+//            let startFraction = Double(index) / Double(maxIndex + 1)
+//            let endFraction = Double(index + 1) / Double(maxIndex + 1)
+            polyline.spans = [GMSStyleSpan(style: GMSStrokeStyle.gradient(from: legs[index].gradient[0], to: legs[index].gradient[1]))]
             polylines.append(polyline)
         }
         

@@ -8,6 +8,7 @@
 
 import Foundation
 import GoogleMaps.GMSMutablePath
+import ChameleonFramework
 
 typealias TimeMatrix = [[TimeInterval]]
 
@@ -88,15 +89,16 @@ class QueryService {
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
-            let leg = self.dataToLeg(data, withDestinationTiming: Timing(start: start.timing.end, end: end.timing.start))
+            let leg =  self.dataToLeg(data, from: start, to: end)
             callback(leg)
         }
         
     }
     
-    func dataToLeg(_ data: Data, withDestinationTiming timing: Timing) -> Leg? {
+    func dataToLeg(_ data: Data, from start: Destination, to end: Destination) -> Leg? {
         
         // Attempt to decode JSON object into RouteResponseObject
+        let timing = Timing(start: start.timing.end, end: end.timing.start)
         let decoder = JSONDecoder()
         var leg : Leg?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
@@ -108,11 +110,13 @@ class QueryService {
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = Double(firstRouteOption.legs[0].duration.value)
             
-            let start = timing.start + (timing.duration / 2.0) - (duration / 2.0)
+            let startTime = timing.start + (timing.duration / 2.0) - (duration / 2.0)
             
-            let travelTiming = Timing(start: start, duration: TimeInterval(duration))
-            leg = Leg(polyline: polyline, timing: timing, travelTiming: travelTiming)
+            let travelTiming = Timing(start: startTime, duration: TimeInterval(duration))
+            let colors = [start.place.color, end.place.color]
+            leg = Leg(polyline: polyline, timing: timing, travelTiming: travelTiming, gradient: colors)
         }
+        
         return leg
         
     }

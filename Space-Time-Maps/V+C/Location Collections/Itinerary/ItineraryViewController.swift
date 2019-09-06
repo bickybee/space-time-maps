@@ -46,7 +46,6 @@ class ItineraryViewController: DraggableContentViewController {
         self.dragDataDelegate = self as DragDataDelegate
         
         setupCollectionView()
-        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinchLocationCell)))
 
     }
     
@@ -55,31 +54,33 @@ class ItineraryViewController: DraggableContentViewController {
     }
     
     func setupCollectionView() {
+        
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
         }
-        showDraggingView = false
-//        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
-        collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
-//        let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)
+        
         let destNib = UINib(nibName: "DestCell", bundle: nil)
         let groupNib = UINib(nibName: "GroupCell", bundle: nil)
         let routeNib = UINib(nibName: "RouteCell", bundle: nil)
         collectionView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
-//        collectionView.register(oneOfNib, forCellWithReuseIdentifier: oneOfReuseIdentifier)
         collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
+        collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
 
-//        collectionView.register(GroupCell.self, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
         collectionView.backgroundColor = .clear
+        
+        showDraggingView = false
+        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinchLocationCell)))
     }
     
     func computeRoute() {
+        
         let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -92,6 +93,7 @@ class ItineraryViewController: DraggableContentViewController {
     }
     
     @objc func pinchLocationCell(gesture: UIPinchGestureRecognizer) {
+        
         guard let editingSession = editingSession else { return }
         
         let dir = Double(gesture.scale - 1.0)
@@ -163,12 +165,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let index = indexPath.item
         let leg = itinerary.route[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
-        //        let startFraction = Double(index) / Double(legs.count)
-        //        let endFraction = Double(index + 1) / Double(legs.count + 1)
-        //        cell.setupWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, startFraction: startFraction, endFraction: endFraction)
-        //        cell.configureWith(duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
         
-        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight)
+        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, gradient: leg.gradient)
         return cell
     }
     

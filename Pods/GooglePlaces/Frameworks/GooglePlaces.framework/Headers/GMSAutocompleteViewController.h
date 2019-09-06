@@ -156,9 +156,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Specify individual place details to fetch for object |GMSPlace|.
- * Defaults to returning all details if not overidden.
+ * Defaults to returning all details if not overridden.
  */
 @property(nonatomic, assign) GMSPlaceField placeFields;
+
+/**
+ * Sets up the autocomplete bounds using the NE and SW corner locations.
+ */
+- (void)setAutocompleteBoundsUsingNorthEastCorner:(CLLocationCoordinate2D)NorthEastCorner
+                                  SouthWestCorner:(CLLocationCoordinate2D)SouthWestCorner;
 
 @end
 

@@ -62,6 +62,7 @@ class DestCell: UICollectionViewCell, Draggable {
         
         nameLabel.text = destination.place.name
         durationLabel.text = Utils.secondsToString(seconds: destination.timing.duration)
+        containerView.backgroundColor = destination.place.color
         
     }
     

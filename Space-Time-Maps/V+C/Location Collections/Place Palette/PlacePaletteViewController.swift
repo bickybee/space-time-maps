@@ -160,7 +160,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func locationCellFrom(_ cell: LocationCell, _ place: Place) -> LocationCell {
         
         cell.contentView.alpha = 1.0
-        cell.backgroundColor = .lightGray
+        cell.backgroundColor = place.color
         cell.nameLabel.text = place.name
         addDragRecognizerTo(draggable: cell)
         
