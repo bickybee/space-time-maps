@@ -17,6 +17,8 @@ protocol Draggable: UIView {
 // To work with DraggableCell class
 class DraggableContentViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    var showDraggingView = true
+    
     // Dragging
     var draggingObject : Any?
     var draggingIndex : IndexPath?
@@ -26,10 +28,6 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     weak var dragDelegate : DragDelegate?
     weak var dragDataDelegate : DragDataDelegate?
 
-    // UI consts
-    let draggingViewInsets = CGPoint(x: 30, y: 8)
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -110,7 +108,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         dragDelegate?.draggableContentViewController(self, didEndDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
         
         // Clean up dragging session
-        draggingView!.removeFromSuperview()
+        if showDraggingView { draggingView!.removeFromSuperview() }
         
         draggingView = nil
         draggable = nil
@@ -140,7 +138,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         cellSnapshot.alpha = 0.6
         cellSnapshot.frame = draggable.frame
         cellSnapshot.bounds = draggable.bounds
-        view.addSubview(cellSnapshot)
+        if showDraggingView { view.addSubview(cellSnapshot) }
         
         draggingView = cellSnapshot
         

@@ -1,24 +1,24 @@
+////
+////  TimeConstraints.swift
+////  Space-Time-Maps
+////
+////  Created by Vicky on 08/08/2019.
+////  Copyright © 2019 vicky. All rights reserved.
+////
 //
-//  TimeConstraints.swift
-//  Space-Time-Maps
+//import UIKit
 //
-//  Created by Vicky on 08/08/2019.
-//  Copyright © 2019 vicky. All rights reserved.
+//class Constraints {
 //
-
-import UIKit
-
-class Constraints {
-    
-    var areEnabled : Bool = false // TEMP for testing
-
+//    var areEnabled : Bool = false // TEMP for testing
+//
 //    var arrival : Constraint?
 //    var departure : Constraint?
 //    var duration : Constraint?
 //
 //
 //    func all() -> [Constraint.Kind: Constraint] {
-//        
+//
 //        var constraints = [Constraint.Kind: Constraint]()
 //
 //        if arrival != nil { constraints[Constraint.Kind.arrival] = arrival }
@@ -36,20 +36,20 @@ class Constraints {
 //        return filteredConstraints
 //
 //    }
-
-}
-
-struct Constraint {
-    
-    enum Flexibility : String {
-        case hard, soft
-    }
-    
-    enum Kind : String {
-        case arrival, departure, duration
-    }
-    
-    var time : TimeInterval
-    var flexibility : Constraint.Flexibility
-    
-}
+//
+//}
+//
+//struct Constraint {
+//
+//    enum Flexibility : String {
+//        case hard, soft
+//    }
+//
+//    enum Kind : String {
+//        case arrival, departure, duration
+//    }
+//
+//    var time : TimeInterval
+//    var flexibility : Constraint.Flexibility
+//
+//}

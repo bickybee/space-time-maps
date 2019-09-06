@@ -58,6 +58,7 @@ class ItineraryViewController: DraggableContentViewController {
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
         }
+        showDraggingView = false
 //        collectionView.register(DestinationCell.self, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
 //        let oneOfNib = UINib(nibName: "OneOfCell", bundle: nil)

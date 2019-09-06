@@ -158,7 +158,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="281.5" height="332"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNK-lT-KjN">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNK-lT-KjN" userLabel="Timeline">
                                 <rect key="frame" x="0.0" y="0.0" width="281.5" height="332"/>
                                 <connections>
                                     <segue destination="ImL-qE-Gvw" kind="embed" id="lte-p8-zur"/>
@@ -167,9 +167,6 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
                                 <rect key="frame" x="56.5" y="0.0" width="225" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="225" id="A4L-Tz-0n3"/>
-                                </constraints>
                                 <collectionViewLayout key="collectionViewLayout" id="2fr-Po-gLr" customClass="ItineraryLayout" customModule="Space_Time_Maps" customModuleProvider="target"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="locationCell" id="JK3-qD-mDh" customClass="DestinationCell" customModule="Space_Time_Maps" customModuleProvider="target">
@@ -192,6 +189,7 @@
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="HG7-kp-odL"/>
                             <constraint firstItem="qNK-lT-KjN" firstAttribute="top" secondItem="cFr-st-Pin" secondAttribute="top" id="lzY-L9-Bmx"/>
                             <constraint firstItem="zWw-aK-nXc" firstAttribute="bottom" secondItem="cFr-st-Pin" secondAttribute="bottom" id="tmb-kT-pCZ"/>
+                            <constraint firstItem="zWw-aK-nXc" firstAttribute="width" secondItem="cFr-st-Pin" secondAttribute="width" multiplier="0.8" id="uUr-Ho-Uj8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cFr-st-Pin"/>
                     </view>
@@ -280,7 +278,6 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="groupClicked:" destination="0gj-fn-l7y" eventType="touchUpInside" id="h4x-KV-0SX"/>
                                     <segue destination="kC4-Ue-WdU" kind="presentation" identifier="createGroup" id="rjZ-ic-1ho"/>
                                 </connections>
                             </button>
