@@ -74,6 +74,7 @@ class Scheduler : NSObject {
         return schedule
         
     }
+
     
     func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
@@ -81,8 +82,30 @@ class Scheduler : NSObject {
             findBestOption(oneOf, before: before, after: after, travelMode: travelMode, callback: callback)
         } else if let asManyOf = optionBlock as? AsManyOfBlock {
             findBestOption(asManyOf, before: before, after: after, travelMode: travelMode, callback: callback)
+        } else {
+            callback(nil)
         }
         
+    }
+    
+    // also /creates/ the options???
+    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+        
+        // If it's an isolated group, just pick the first option
+        guard !(before == nil && after == nil) else {
+            callback(nil)
+            return
+        }
+        
+        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
+            guard let matrix = matrix else {
+                callback(nil)
+                return
+            }
+            
+            let index = self.indexOfBestOption(matrix)
+            callback(index)
+        }
     }
     
     
@@ -92,8 +115,6 @@ class Scheduler : NSObject {
         let indices = [Int](0...places.count - 1)
         var permutations = [[Int]]()
         Utils.permute(indices, indices.count - 1, &permutations)
-        
-//        asManyOfBlock.
         
         getMatrixFor(asManyOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
             guard let matrix = matrix else {
@@ -129,26 +150,6 @@ class Scheduler : NSObject {
         
         return options
     }
-
-    // also /creates/ the options???
-    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-        
-        // If it's an isolated group, just pick the first option
-        guard !(before == nil && after == nil) else {
-            callback(nil)
-            return
-        }
-        
-        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
-            guard let matrix = matrix else {
-                callback(nil)
-                return
-            }
-            
-            let index = self.indexOfBestOption(matrix)
-            callback(index)
-        }
-    }
     
     func getMatrixFor(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback: @escaping (TimeMatrix?) -> ()) {
         
@@ -177,7 +178,7 @@ class Scheduler : NSObject {
             
             // A -> B0
             optionTiming.append(matrix[permutation.first!][last])
-            // B0 -> Bn
+            // B0 -> B(n-1)
             for j in 0 ... permutation.count - 2 {
                 let from = permutation[j + 1]
                 let to = permutation[j]

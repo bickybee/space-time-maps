@@ -131,7 +131,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if let group = groups[safe: section] {
-            return inEditingMode ? group.places.count + 1 : group.places.count // extra placeholder cell when in editing mode
+            return (inEditingMode && (group.places.count == 0)) ? 1 : group.places.count // extra placeholder cell when in editing mode
         } else {
             return 0
         }
@@ -296,7 +296,8 @@ extension PlacePaletteViewController: DragDelegate {
             collectionView.performBatchUpdates({
                 midDrag = true
                 groups = groupsBeforeEditing.map({ $0.copy() })
-                groups[insertAt.section].places.insert(place, at: insertAt.item) // FIXME TODO DEBUG!!!
+                groups[insertAt.section].places.insert(place, at: insertAt.item)
+                if groups[insertAt.section].places.count == 1 { collectionView.deleteItems(at: [insertAt]) } // first delete placeholder, if applicable
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
             }, completion: { success in self.midDrag = false })

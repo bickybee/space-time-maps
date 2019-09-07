@@ -35,8 +35,10 @@ class MapUtils {
         for index in 0...maxIndex {
             let marker = markerFor(place: places[index])
             let colour = places[index].color
-            let iconView = shadowColor != nil ? UIImageView(image: shadowedIcon(with: colour, shadowColor: .black)) : UIImageView(image: nonShadowedIcon(with: colour))
-            marker.iconView = iconView
+//            let iconView = shadowColor != nil ? UIImageView(image: shadowedIcon(with: colour, shadowColor: .black)) : UIImageView(image: nonShadowedIcon(with: colour))
+//            marker.iconView = iconView
+            let icon = GMSMarker.markerImage(with: colour)
+            marker.icon = icon
             markers.append(marker)
         }
         

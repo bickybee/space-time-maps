@@ -264,10 +264,14 @@ extension ItineraryViewController : DragDelegate {
     
     func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {
         
-        guard let blocks = blocks, let route = route else { return }
+        if let blocks = blocks {
+            self.itinerary.schedule = blocks
+        }
         
-        self.itinerary.schedule = blocks
-        self.itinerary.route = route
+        if let route = route {
+            self.itinerary.route = route
+        }
+    
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
     

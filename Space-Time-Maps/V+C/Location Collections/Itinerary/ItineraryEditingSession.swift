@@ -82,7 +82,7 @@ class ItineraryEditingSession: NSObject {
     }
     
     func computeRoute(with blocks: [ScheduleBlock]) {
-        if blocks.count <= 1 {
+        if blocks.count <= 0 {
             callback(blocks, [])
         } else {
             ItineraryEditingSession.scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
