@@ -18,20 +18,28 @@ struct Coordinate {
 
 class Place : NSObject {
     
+    static private let defaultTimeSpent = TimeInterval.from(hours: 1.0)
+    
     let name: String
     let coordinate: Coordinate
     let placeID: String
     let color: UIColor
+    let timeSpent: TimeInterval
     
     override var description : String {
         return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""
     }
     
-    init(name: String, coordinate: Coordinate, placeID: String) {
+    init(name: String, coordinate: Coordinate, placeID: String, timeSpent: TimeInterval) {
         self.name = name
         self.coordinate = coordinate
         self.placeID = placeID
         self.color = ColorUtils.randomColor()
+        self.timeSpent = timeSpent
+    }
+    
+    convenience init(name: String, coordinate: Coordinate, placeID: String) {
+        self.init(name: name, coordinate: coordinate, placeID: placeID, timeSpent: Place.defaultTimeSpent)
     }
     
     static func == (lhs: Place, rhs: Place) -> Bool {

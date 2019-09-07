@@ -24,6 +24,8 @@
 		9864447E2316B3BC00717664 /* Draggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9864447D2316B3BC00717664 /* Draggable.swift */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		98BC857A230C3A83001D14BE /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8579230C3A83001D14BE /* Timing.swift */; };
+		98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */; };
+		98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */; };
 		98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA68230EFD4400769BB5 /* LocationCell.swift */; };
 		98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */; };
 		98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */; };
@@ -79,6 +81,8 @@
 		9864447D2316B3BC00717664 /* Draggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draggable.swift; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		98BC8579230C3A83001D14BE /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
+		98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
+		98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceCell.xib; sourceTree = "<group>"; };
 		98DEBA68230EFD4400769BB5 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupHeaderView.swift; sourceTree = "<group>"; };
 		98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 				98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */,
 				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
 				98DEBA68230EFD4400769BB5 /* LocationCell.swift */,
+				98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */,
+				98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */,
 			);
 			path = "Place Palette";
 			sourceTree = "<group>";
@@ -381,6 +387,7 @@
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
 				982D579423203F8300E183F3 /* DestCell.xib in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
+				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
 				982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */,
@@ -456,6 +463,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */,
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				982D5797232050C500E183F3 /* GroupCell.swift in Sources */,

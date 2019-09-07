@@ -18,7 +18,7 @@ class ColorUtils {
     static private var usedColors = [UIColor]()
     
     static func randomColor() -> UIColor {
-        let color = UIColor.randomFlat
+        let color = RandomFlatColorWithShade(.dark)
         
         if usedColors.contains(color) {
             return randomColor()
@@ -27,7 +27,7 @@ class ColorUtils {
         usedColors.append(color)
         
         // Used up all the colors? allow repeats now...
-        if usedColors.count == 24 {
+        if usedColors.count == 12 {
             usedColors = [UIColor]()
         }
         

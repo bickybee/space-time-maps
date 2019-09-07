@@ -13,8 +13,20 @@ class MapUtils {
     
     // Weirdly separated dest vs. non-dest functions cuz of weird dumb implementation decisions elsewhere lol
     
+    public static func markersForPlaceGroups(_ placeGroups : [PlaceGroup]) -> [GMSMarker] {
+        
+        var markers = [GMSMarker]()
+        
+        for (i, group) in placeGroups.enumerated() {
+            markers.append(contentsOf: markersForPlaces(group.places, withShadow: i == 0 ? nil : .black))
+        }
+        
+        return markers
+    }
+
+    
     // Destination places get coloured via gradient
-    public static func markersForDestinationPlaces(_ places : [Place]) -> [GMSMarker] {
+    public static func markersForPlaces(_ places : [Place], withShadow shadowColor: UIColor? ) -> [GMSMarker] {
         
         guard places.count > 0 else { return [] }
         var markers = [GMSMarker]()
@@ -22,15 +34,49 @@ class MapUtils {
         
         for index in 0...maxIndex {
             let marker = markerFor(place: places[index])
-            let fraction = Double(index) / Double(maxIndex)
             let colour = places[index].color
-            marker.icon = GMSMarker.markerImage(with: colour)
+            let iconView = shadowColor != nil ? UIImageView(image: shadowedIcon(with: colour, shadowColor: .black)) : UIImageView(image: nonShadowedIcon(with: colour))
+            marker.iconView = iconView
             markers.append(marker)
         }
         
         return markers
     }
     
+    private static func shadowedIcon(with color: UIColor, shadowColor: UIColor) -> UIImage {
+        let bottomImage = GMSMarker.markerImage(with: shadowColor)
+        let topImage = GMSMarker.markerImage(with: color)
+        
+        let size = CGSize(width: topImage.size.width * 1.1, height: topImage.size.height * 1.1)
+        UIGraphicsBeginImageContext(size)
+        
+        let shadowSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        bottomImage.draw(in: shadowSize, blendMode: .normal, alpha: 0.75)
+        
+        let drawSize = CGRect(x: 3, y: 4, width: size.width - 6, height: size.height - 8)
+        topImage.draw(in: drawSize)
+        
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    private static func nonShadowedIcon(with color: UIColor) -> UIImage {
+        let topImage = GMSMarker.markerImage(with: color)
+        
+        let size = CGSize(width: topImage.size.width * 1.1, height: topImage.size.height * 1.1)
+        UIGraphicsBeginImageContext(size)
+
+        let drawSize = CGRect(x: 3, y: 4, width: size.width - 6, height: size.height - 8)
+        topImage.draw(in: drawSize)
+        
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+
     // Non-destination places are grey
     public static func markersForNonDestinationPlaces(_ places : [Place]) -> [GMSMarker] {
         
@@ -72,6 +118,8 @@ private extension MapUtils {
     
     static func markerFor(place: Place) -> GMSMarker {
         let marker = GMSMarker()
+        marker.layer.borderWidth = 2
+        marker.layer.borderColor = UIColor.red.cgColor
         marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
         marker.title = place.name
         return marker

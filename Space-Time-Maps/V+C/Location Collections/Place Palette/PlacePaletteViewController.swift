@@ -9,7 +9,7 @@
 import UIKit
 import GooglePlaces
 
-private let reuseIdentifier = "locationCell"
+private let reuseIdentifier = "placeCell"
 
 class PlacePaletteViewController: DraggableContentViewController {
     
@@ -47,19 +47,26 @@ class PlacePaletteViewController: DraggableContentViewController {
         
         setupCollectionView()
         setupPlaces()
-        
+        setupButtons()
         
     }
     
     func setupCollectionView() {
         
-        self.cellWidth = collectionView.frame.width - (sectionInsets.left + sectionInsets.right)
-        collectionView.register(LocationCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        let placeNib = UINib(nibName: "PlaceCell", bundle: nil)
+        collectionView.register(placeNib, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = true
         searchButton.isEnabled = false
         self.dragDataDelegate = self
+        
+        setupCellWidth()
+    }
+    
+    func setupButtons() {
+        
+        enlargeButton.addTarget(self, action: #selector(enlargePressed), for: .touchUpInside)
         
     }
     
@@ -70,6 +77,10 @@ class PlacePaletteViewController: DraggableContentViewController {
         let defaultPlaceGroup = PlaceGroup(name: "", places: places, kind: .none)
         groups.append(defaultPlaceGroup)
         
+    }
+    
+    func setupCellWidth() {
+        self.cellWidth = collectionView.bounds.width - (sectionInsets.left + sectionInsets.right)
     }
     
     @IBAction func searchClicked(_ sender: Any) {
@@ -86,6 +97,10 @@ class PlacePaletteViewController: DraggableContentViewController {
             
         }
         
+    }
+    
+    @objc func enlargePressed(_ sender: Any) {
+        delegate?.placePaletteViewController(self, didPressEdit: sender)
     }
     
 }
@@ -125,7 +140,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PlaceCell
         guard let group = groups[safe: indexPath.section] else { return cell }
         
         // Placeholder cell?
@@ -142,26 +157,26 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         
         // Otherwise
         let place = group.places[indexPath.item]
-        return locationCellFrom(cell, place)
+        return placeCellFrom(cell, place)
     }
     
-    func placeholderCellFrom(_ cell: LocationCell) -> LocationCell {
+    func placeholderCellFrom(_ cell: PlaceCell) -> PlaceCell {
         cell.contentView.alpha = 0.0
         cell.backgroundColor = .clear
         return cell
     }
     
-    func draggingCellFrom(_ cell: LocationCell) -> LocationCell {
+    func draggingCellFrom(_ cell: PlaceCell) -> PlaceCell {
         cell.contentView.alpha = 0.0
         cell.backgroundColor = .clear
         return cell
     }
     
-    func locationCellFrom(_ cell: LocationCell, _ place: Place) -> LocationCell {
+    func placeCellFrom(_ cell: PlaceCell, _ place: Place) -> PlaceCell {
         
         cell.contentView.alpha = 1.0
-        cell.backgroundColor = place.color
-        cell.nameLabel.text = place.name
+        cell.backgroundColor = .clear
+        cell.configureWith(place)
         addDragRecognizerTo(draggable: cell)
         
         return cell
@@ -175,7 +190,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
+        setupCellWidth()
         return CGSize(width:cellWidth, height:cellHeight)
 
     }
@@ -375,6 +390,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any)
     
 }
 

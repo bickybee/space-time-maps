@@ -121,7 +121,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         switch section {
         case 0:
-            print("dest count: \(itinerary.destinations.count)")
             return itinerary.destinations.count
         case 1:
             return itinerary.route.count
@@ -183,6 +182,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         cell.prevBtn.tag = index
         cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
         cell.configureWith(block)
+        addDragRecognizerTo(draggable: cell)
         
         return cell
     }
@@ -216,43 +216,12 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {
-        
-        guard let blocks = blocks, let route = route else { return }
-        
-        self.itinerary.schedule = blocks
-        self.itinerary.route = route
-        delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
-    }
-    
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
-        let block : ScheduleBlock
-        
-        if let scheduleObject = object as? ScheduleBlock {
-            block = scheduleObject
-        } else {
-            let timing = Timing(start: 0, duration: defaultDuration)
-            if let place = object as? Place {
-                block = SingleBlock(timing: timing, place: place)
-                
-            } else if let group = object as? PlaceGroup {
-                switch group.kind {
-                case .asManyOf:
-                    block = AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), permutations: [[]])
-                case .oneOf,
-                     .none:
-                    block = OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))
-                }
-                
-            } else {
-                return
-            }
-        }
-        
+        guard let block = blockFromObject(object) else { return }
         var editingBlocks = itinerary.schedule
         
-        if draggableContentViewController as? ItineraryViewController != nil {
+        if draggableContentViewController is ItineraryViewController {
             editingBlocks.remove(at: indexPath.item)
         }
         
@@ -290,6 +259,41 @@ extension ItineraryViewController : DragDelegate {
     func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
         
         return collectionView.cellForItem(at: indexPath) as? Draggable
+        
+    }
+    
+    func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {
+        
+        guard let blocks = blocks, let route = route else { return }
+        
+        self.itinerary.schedule = blocks
+        self.itinerary.route = route
+        delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
+    }
+    
+    func blockFromObject(_ object : Any) -> ScheduleBlock? {
+        
+        
+        if let scheduleObject = object as? ScheduleBlock {
+            print("found schedule object")
+            return scheduleObject
+        } else {
+            if let place = object as? Place {
+                return SingleBlock(timing: Timing(start: 0, duration: place.timeSpent), place: place)
+                
+            } else if let group = object as? PlaceGroup {
+                switch group.kind {
+                case .asManyOf:
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), permutations: [[]])
+                case .oneOf,
+                     .none:
+                    return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))
+                }
+                
+            } else {
+                return nil
+            }
+        }
         
     }
     

@@ -55,18 +55,16 @@ class MapViewController: UIViewController {
     }
     
     // Refresh all map markup
-    func refreshMarkup(destinationPlaces: [Place], nonDestinationPlaces: [Place], routeLegs: [Leg]?) {
+    func refreshMarkup(placeGroups: [PlaceGroup], routeLegs: [Leg]?) {
         
         // Setup fresh map
         mapView.clear()
         var allOverlays : [GMSOverlay]
         
-        // Get markers for places
-        let nonDestinationMarkers = MapUtils.markersForNonDestinationPlaces(nonDestinationPlaces)
-        let destinationMarkers = MapUtils.markersForDestinationPlaces(destinationPlaces)
+        let destinationMarkers = MapUtils.markersForPlaceGroups(placeGroups)
         
         // Wrap map to markers
-        let allMarkers = nonDestinationMarkers + destinationMarkers
+        let allMarkers = destinationMarkers
         mapView.wrapBoundsTo(markers: allMarkers)
         
         // Get polylines for route legs

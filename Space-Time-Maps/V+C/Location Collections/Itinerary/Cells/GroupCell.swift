@@ -8,8 +8,9 @@
 
 import UIKit
 
-class GroupCell: UICollectionViewCell {
+class GroupCell: UICollectionViewCell, Draggable {
 
+    var dragHandle : UIView! = UIView()
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var optionControl: UIPageControl!
     @IBOutlet weak var nextBtn: UIButton!
@@ -38,6 +39,12 @@ class GroupCell: UICollectionViewCell {
         optionControl.transform = (CGAffineTransform(scaleX: 0.5, y: 0.5))
         optionControl.pageIndicatorTintColor = optionTint
         optionControl.currentPageIndicatorTintColor = currentOptionTint
+        
+        dragHandle = UIView(frame: containerView.frame)
+        dragHandle.backgroundColor = .clear
+        dragHandle.layer.cornerRadius = 5;
+        dragHandle.layer.masksToBounds = true;
+        self.addSubview(dragHandle)
         
     }
     

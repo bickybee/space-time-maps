@@ -76,6 +76,7 @@ class ParentViewController: UIViewController {
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
+                palette.setupCellWidth()
                 palette.collectionView.reloadData()
                 
             })
@@ -93,6 +94,7 @@ class ParentViewController: UIViewController {
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
+                palette.setupCellWidth()
                 palette.collectionView.reloadData()
                 
             })
@@ -112,22 +114,10 @@ class ParentViewController: UIViewController {
         // Package relevant data
         let itinerary = itineraryController.itinerary
         let groups = placePaletteController.groups
-        let palettePlaces = groups.flatMap { $0.places }
-        let itineraryPlaces = itinerary.destinations.map ({ $0.place })
         let itineraryLegs = itinerary.route
         
-        var destinationPlaces = [Place]()
-        var nonDestinationPlaces = [Place]()
-        for place in palettePlaces {
-            if itineraryPlaces.contains(place) {
-                destinationPlaces.append(place)
-            } else {
-                nonDestinationPlaces.append(place)
-            }
-        }
-        
         // Send data to map
-        mapController.refreshMarkup(destinationPlaces: destinationPlaces, nonDestinationPlaces: nonDestinationPlaces, routeLegs: itineraryLegs)
+        mapController.refreshMarkup(placeGroups: groups, routeLegs: itineraryLegs)
 
     }
     
@@ -152,8 +142,6 @@ class ParentViewController: UIViewController {
                 placePaletteVC.dragDelegate = itineraryController as DragDelegate
             }
             placePaletteVC.delegate = self
-            placePaletteVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
-            placePaletteVC.enlargeButton.addTarget(self, action: #selector(swipeOutPalette(_:)), for: .touchUpInside)
             placePaletteController = placePaletteVC
             
         }
@@ -163,7 +151,6 @@ class ParentViewController: UIViewController {
                 placePaletteController.dragDelegate = itineraryVC as DragDelegate
             }
             itineraryVC.delegate = self
-            itineraryVC.view.frame.size.width = self.view.frame.size.width / 2 // HACKY!
             itineraryController = itineraryVC
             
         } else if let mapVC = segue.destination as? MapViewController {
@@ -174,12 +161,18 @@ class ParentViewController: UIViewController {
             
         }
     }
+    
+    
 }
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         updateMap()
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {
+        swipeOutPalette(sender)
     }
     
 }

@@ -8,7 +8,7 @@
 //
 //import UIKit
 //
-//protocol Draggable: UIView {
+//class Draggable: UIView {
 //
 //    var dragHandle : UIView { get set }
 //

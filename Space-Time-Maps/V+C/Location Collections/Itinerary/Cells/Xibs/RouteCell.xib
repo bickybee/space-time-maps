@@ -20,26 +20,27 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muJ-aH-6N1" userLabel="RouteLine">
-                        <rect key="frame" x="68.5" y="0.0" width="10" height="109"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="10" id="m3A-gU-9kF"/>
-                        </constraints>
+                        <rect key="frame" x="62.5" y="0.0" width="22" height="109"/>
+                        <color key="backgroundColor" red="0.85687879793384536" green="0.85687879793384536" blue="0.85687879793384536" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61f-8h-9Pj">
-                        <rect key="frame" x="83.5" y="50" width="17.5" height="9"/>
+                        <rect key="frame" x="89.5" y="50" width="17.5" height="9"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="9" id="FSw-yE-3Kc"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="7"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
+                        <color key="shadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <size key="shadowOffset" width="0.0" height="0.0"/>
                     </label>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstItem="muJ-aH-6N1" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="C3x-C1-cVC"/>
                 <constraint firstItem="61f-8h-9Pj" firstAttribute="leading" secondItem="muJ-aH-6N1" secondAttribute="trailing" constant="5" id="DbU-LT-3Ao"/>
+                <constraint firstItem="muJ-aH-6N1" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" multiplier="0.15" id="H8r-tG-iRJ"/>
                 <constraint firstAttribute="bottom" secondItem="muJ-aH-6N1" secondAttribute="bottom" id="Jgh-bz-5qf"/>
                 <constraint firstItem="muJ-aH-6N1" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="UU8-at-uQt"/>
                 <constraint firstItem="61f-8h-9Pj" firstAttribute="centerY" secondItem="muJ-aH-6N1" secondAttribute="centerY" id="oXw-do-Woc"/>
