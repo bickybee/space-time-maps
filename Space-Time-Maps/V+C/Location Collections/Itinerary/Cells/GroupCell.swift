@@ -26,9 +26,17 @@ class GroupCell: UICollectionViewCell, Draggable {
         // Initialization code
         setup()
     }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
     func setup() {
-        
         
         tabView.layer.cornerRadius = 5
         tabView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -45,6 +53,7 @@ class GroupCell: UICollectionViewCell, Draggable {
         dragHandle.layer.cornerRadius = 5;
         dragHandle.layer.masksToBounds = true;
         self.addSubview(dragHandle)
+
         
     }
     
@@ -74,6 +83,11 @@ class GroupCell: UICollectionViewCell, Draggable {
             optionControl.updateCurrentPageDisplay()
         }
         
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        dragHandle.frame = containerView.frame
     }
     
 }

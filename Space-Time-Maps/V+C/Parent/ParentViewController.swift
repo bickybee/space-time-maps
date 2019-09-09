@@ -114,7 +114,7 @@ class ParentViewController: UIViewController {
         // Package relevant data
         let itinerary = itineraryController.itinerary
         let groups = placePaletteController.groups
-        let itineraryLegs = itinerary.route
+        let itineraryLegs = itinerary.route.legs
         
         // Send data to map
         mapController.refreshMarkup(placeGroups: groups, routeLegs: itineraryLegs)
@@ -123,7 +123,7 @@ class ParentViewController: UIViewController {
     
     func updateTransportTimeLabel() {
         let duration = itineraryController.itinerary.duration
-        let travelTime = itineraryController.itinerary.travelTime
+        let travelTime = itineraryController.itinerary.route.travelTime
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute]

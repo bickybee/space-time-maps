@@ -14,7 +14,7 @@ enum TravelMode : String {
     case driving, walking, bicycling, transit
 }
 
-struct Itinerary {
+class Itinerary {
     
     var schedule = [ScheduleBlock]() {
         didSet {
@@ -24,36 +24,22 @@ struct Itinerary {
     }
     
     var destinations = [Destination]()
+    var route = Route()
+    var travelMode = TravelMode.driving
+    
+    // computed props
     
     var optionBlocks : [OptionBlock] {
         return schedule.filter({$0.self is OptionBlock.Type}).map({ $0 as! OptionBlock })
     }
     
-    var route : [Leg] {
-        didSet {
-            route.sort(by: { $0.timing.start < $1.timing.start })
-        }
-    }
-    
     var duration : TimeInterval {
-        var totalDuration = TimeInterval(0)
-        route.forEach({leg in
-            totalDuration += leg.timing.duration
-        })
+        var totalDuration = route.travelTime
         destinations.forEach({dest in
             totalDuration += dest.timing.duration
         })
         return totalDuration
     }
     
-    var travelTime : TimeInterval {
-        var totalTravelTime = TimeInterval(0)
-        route.forEach({leg in
-            totalTravelTime += leg.travelTiming.duration
-        })
-        return totalTravelTime
-    }
-    
-    var travelMode : TravelMode
-    
 }
+

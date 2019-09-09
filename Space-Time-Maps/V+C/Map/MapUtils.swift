@@ -97,14 +97,13 @@ class MapUtils {
     public static func polylinesForRouteLegs(_ legs : [Leg]) -> [GMSPolyline] {
         
         guard legs.count > 0 else { return [] }
-        let maxIndex = legs.count - 1
         var polylines = [GMSPolyline]()
         
-        for index in 0...maxIndex {
-            let polyline = polylineFor(encodedPath: legs[index].polyline)
-//            let startFraction = Double(index) / Double(maxIndex + 1)
-//            let endFraction = Double(index + 1) / Double(maxIndex + 1)
-            polyline.spans = [GMSStyleSpan(style: GMSStrokeStyle.gradient(from: legs[index].gradient[0], to: legs[index].gradient[1]))]
+        for leg in legs {
+            let polyline = polylineFor(encodedPath: leg.polyline)
+            let startColor = leg.startPlace.color
+            let endColor = leg.endPlace.color
+            polyline.spans = [GMSStyleSpan(style: GMSStrokeStyle.gradient(from: startColor, to: endColor))]
             polylines.append(polyline)
         }
         

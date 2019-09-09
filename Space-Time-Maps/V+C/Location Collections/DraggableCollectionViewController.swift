@@ -94,7 +94,6 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         let dx = location.x
         let dy = location.y
         draggingView!.center = CGPoint(x: dx, y: dy)
-        
         // Ping delegate
         dragDelegate?.draggableContentViewController(self, didContinueDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
     }

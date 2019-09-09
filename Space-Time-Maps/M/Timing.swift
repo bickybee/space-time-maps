@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol Schedulable {
+    var timing : Timing { get set }
+}
+
 struct Timing {
     
     var start : TimeInterval = 0

@@ -24,14 +24,15 @@ class ItineraryEditingSession: NSObject {
     // This is what gets modified!
     var movingBlock : ScheduleBlock // Block being edited/moved around
     
-    static let scheduler = Scheduler()
+    var scheduler : Scheduler
     
-    init(movingBlock block: ScheduleBlock, withIndex index: Int, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    init(scheduler: Scheduler, movingBlock block: ScheduleBlock, withIndex index: Int, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         self.movingBlock = block
         self.baseBlocks = blocks
         self.travelMode = travelMode
         self.callback = callback
         self.originalIndex = index
+        self.scheduler = scheduler
     }
     
     func moveBlock(toTime time: TimeInterval){
@@ -83,9 +84,9 @@ class ItineraryEditingSession: NSObject {
     
     func computeRoute(with blocks: [ScheduleBlock]) {
         if blocks.count <= 0 {
-            callback(blocks, [])
+            callback(blocks, Route())
         } else {
-            ItineraryEditingSession.scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
+            scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
         }
     }
 

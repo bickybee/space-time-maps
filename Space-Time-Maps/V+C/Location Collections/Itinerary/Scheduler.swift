@@ -8,21 +8,26 @@
 
 import Foundation
 
-class Scheduler : NSObject {
+class Scheduler {
     
     // Here is where we determine exactly which places + timings get sent to Google Directions API
     // Using distance matrix API for batch calculations
     
     let qs = QueryService()
+    var legCache = [String : LegData]()
     
     // Get a route for the given list of blocks
-    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock], Route) -> ()) {
+    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
 
         // Make a copy, in case the original block list gets modified during this process
 //        let inputBlocks = blocks.map{ $0.copy() }
         
         let scheduledBlocks = scheduleBlocks(blocks, travelMode: travelMode)
         let route = routeFromBlocks(scheduledBlocks, travelMode: travelMode)
+        if route != nil {
+            let optionBlocks = scheduledBlocks.compactMap({ $0 as? OptionBlock })
+            optionBlocks.forEach({ evenlyDisperseBlock($0, in: route!) })
+        }
         
         callback(scheduledBlocks, route)
     }
@@ -173,7 +178,7 @@ class Scheduler : NSObject {
         var timings = [[TimeInterval]]()
         let last = matrix.endIndex - 1
         
-        for (i, permutation) in permutations.enumerated() {
+        for permutation in permutations {
             var optionTiming = [TimeInterval]()
             
             // A -> B0
@@ -217,7 +222,7 @@ class Scheduler : NSObject {
         
     }
     
-    func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route {
+    func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route? {
         
         // First get destinations out of all blocks...
         let destinations = blocks.compactMap({ $0.destinations }).flatMap({ $0 })
@@ -225,29 +230,102 @@ class Scheduler : NSObject {
         
     }
     
+    func hashForLeg(start: Destination, end: Destination) -> String {
+        return start.place.placeID + end.place.placeID
+    }
+    
     // Access API to get a route
-    func routeFromDestinations(_ destinations: [Destination], travelMode: TravelMode) -> Route {
+    func routeFromDestinations(_ destinations: [Destination], travelMode: TravelMode) -> Route? {
         
-        var route = Route()
+        let route = Route()
         let dispatchGroup = DispatchGroup()
+        guard destinations.count > 1 else { return route }
         
         for i in 0 ... destinations.count - 2 {
             
-            dispatchGroup.enter()
-            self.qs.getLegFor(start: destinations[i], end: destinations[i + 1], travelMode: travelMode) { leg in
+            let start = destinations[i]
+            let end = destinations[i + 1]
+            let timing = Timing(start: start.timing.end, end: end.timing.start)
+            let hash = hashForLeg(start: start, end: end)
+            
+            if let cached = legCache[hash] {
+                let leg = Leg(data: cached, timing: timing)
+                route.add(leg)
                 
-                if let leg = leg {
-                    route.append(leg)
+            }
+            else {
+                dispatchGroup.enter()
+                self.qs.getLegDataFor(start: start, end: end, travelMode: travelMode) { legData in
+                    
+                    if let legData = legData {
+                        let leg = Leg(data: legData, timing: timing)
+                        route.add(leg)
+                        self.legCache[hash] = legData
+                    }
+                    
+                    dispatchGroup.leave()
+                    
                 }
-                
-                dispatchGroup.leave()
-                
             }
         }
         
         // Wait for all legs of route to be determined, then return
         dispatchGroup.wait()
         return route
+    }
+
+    func evenlyDisperseBlock(_ optionBlock: OptionBlock, in route: Route) {
+        
+        guard var destinations = optionBlock.destinations, destinations.count >= 2 else { return }
+ 
+        let timeBounds = timeBoundsOf(destinations, within: optionBlock.timing, in: route)
+        evenlyDisperseDestinations(destinations, within: timeBounds, in: route)
+        
+    }
+    
+    func timeBoundsOf(_ destinations : [Destination], within timing: Timing, in route: Route) -> Timing {
+        
+        let firstPlace = destinations.first!.place
+        let lastPlace = destinations.last!.place
+        let enteringLeg = route.legEndingAt(firstPlace)
+        let leavingLeg = route.legStartingAt(lastPlace)
+        
+        let minStartTime = enteringLeg != nil ? enteringLeg!.timing.start + enteringLeg!.travelTiming.duration : Double.infinity
+        let maxEndTime = leavingLeg != nil ? leavingLeg!.timing.end - leavingLeg!.travelTiming.duration : -Double.infinity
+        
+        let startTime = max(minStartTime, timing.start)
+        let endTime = min(maxEndTime, timing.end)
+        
+        return Timing(start: startTime, end: endTime)
+    }
+    
+    func evenlyDisperseDestinations(_ destinations : [Destination], within timing: Timing, in route: Route) {
+        
+        var extraTime = timing.duration
+        var legs = [Leg]()
+        
+        for (i, dest) in destinations.enumerated() {
+            extraTime -= dest.timing.duration
+            if i < (destinations.count - 1) {
+                let leg = route.legStartingAt(dest.place)!
+                legs.append(leg)
+                extraTime -= leg.travelTiming.duration
+            }
+        }
+        
+        let timeBetweenDests = extraTime / Double((destinations.count - 1))
+        for (i, leg) in legs.enumerated() {
+            let legStartTime = destinations[i].timing.end
+            let duration = timeBetweenDests
+            leg.timing = Timing(start: legStartTime, duration: duration)
+            
+            let nextDestStartTime = leg.timing.end
+            let nextDestDuration = destinations[i + 1].timing.duration
+            let nextDest = destinations[i + 1]
+            nextDest.timing = Timing(start: nextDestStartTime, duration: nextDestDuration)
+            
+        }
+        
     }
     
 }

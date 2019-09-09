@@ -13,6 +13,15 @@ class Utils {
     
     private static let roundHourTo : Double = 0.25
     
+    private static let starterPlaces = [
+        Place(name: "Gladstone Hotel", coordinate: Coordinate(lat: 43.642698, lon: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"),
+        Place(name: "Art Gallery of Ontario", coordinate: Coordinate(lat: 43.6536066, lon: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
+        Place(name: "Casa Loma", coordinate: Coordinate(lat: 43.67803709999999, lon: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
+        Place(name: "Christie Pits Park", coordinate: Coordinate(lat: 43.6645888, lon: -79.4206809), placeID: "ChIJ8f_In4s0K4gRRK-KutieqXA"),
+        Place(name: "Evergreen Brick Works", coordinate: Coordinate(lat: 43.6846206, lon: -79.3654466), placeID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"),
+        Place(name: "The Selby", coordinate: Coordinate(lat: 43.6710771, lon: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w")
+    ]
+    
     static func secondsToString(seconds: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         
@@ -40,10 +49,24 @@ class Utils {
     
     static func defaultPlaces() -> [Place] {
         var places = [Place]()
-        places.append(Place(name: "Gladstone Hotel", coordinate: Coordinate(lat: 43.642698, lon: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"))
-        places.append(Place(name: "Art Gallery of Ontario", coordinate: Coordinate(lat: 43.6536066, lon: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"))
-        places.append(Place(name: "Casa Loma", coordinate: Coordinate(lat: 43.67803709999999, lon: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"))
+        places.append(contentsOf: starterPlaces)
         return places
+    }
+    
+    static func defaultPlacesGroups() -> [PlaceGroup] {
+        
+        var groups = [PlaceGroup]()
+        
+        let places0 = PlaceGroup(name: "", places: Array(starterPlaces[0...1]), kind: .none)
+        groups.append(places0)
+        
+        let places1 = PlaceGroup(name: "one of", places: Array(starterPlaces[2...3]), kind: .oneOf)
+        groups.append(places1)
+        
+        let places2 = PlaceGroup(name: "as many of", places: Array(starterPlaces[4...5]), kind: .asManyOf)
+        groups.append(places2)
+        
+        return groups
     }
     
     static func floorHour(_ hour: Double) -> Double {

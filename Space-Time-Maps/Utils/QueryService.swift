@@ -58,34 +58,10 @@ class QueryService {
             callback(results)
         }
     }
+
     
-    func getRouteFor(destinations: [Destination], travelMode: TravelMode, callback: @escaping (Route) -> ()) {
+    func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
         
-        var legs = [Leg]()
-        let dispatchGroup = DispatchGroup()
-        
-        for i in 0 ..< destinations.count - 1 {
-            dispatchGroup.enter()
-            
-            let start = destinations[i]
-            let end = destinations[i+1]
-            getLegFor(start: start, end: end, travelMode: travelMode) { leg in
-                if let leg = leg {
-                    legs.append(leg)
-                }
-                dispatchGroup.leave()
-            }
-        }
-        
-        dispatchGroup.wait()
-        
-        DispatchQueue.main.async {
-            callback(legs)
-        }
-        
-    }
-    
-    func getLegFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (Leg?) -> ()) {
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
@@ -95,12 +71,11 @@ class QueryService {
         
     }
     
-    func dataToLeg(_ data: Data, from start: Destination, to end: Destination) -> Leg? {
+    func dataToLeg(_ data: Data, from start: Destination, to end: Destination) -> LegData? {
         
         // Attempt to decode JSON object into RouteResponseObject
-        let timing = Timing(start: start.timing.end, end: end.timing.start)
         let decoder = JSONDecoder()
-        var leg : Leg?
+        var leg : LegData?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
             print(errorResponseObject.errorMessage)
             leg = nil
@@ -109,12 +84,7 @@ class QueryService {
             let firstRouteOption = routeResponseObject.routes[0]
             let polyline = firstRouteOption.overviewPolyline.points
             let duration = Double(firstRouteOption.legs[0].duration.value)
-            
-            let startTime = timing.start + (timing.duration / 2.0) - (duration / 2.0)
-            
-            let travelTiming = Timing(start: startTime, duration: TimeInterval(duration))
-            let colors = [start.place.color, end.place.color]
-            leg = Leg(polyline: polyline, timing: timing, travelTiming: travelTiming, gradient: colors)
+            leg = LegData(startPlace: start.place, endPlace: end.place, polyline: polyline, duration: TimeInterval(duration))
         }
         
         return leg

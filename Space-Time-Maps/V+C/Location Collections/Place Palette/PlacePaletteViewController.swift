@@ -72,10 +72,8 @@ class PlacePaletteViewController: DraggableContentViewController {
     
     func setupPlaces() {
         
-        var places = [Place]()
-        places.append(contentsOf: Utils.defaultPlaces())
-        let defaultPlaceGroup = PlaceGroup(name: "", places: places, kind: .none)
-        groups.append(defaultPlaceGroup)
+        let defaultPlaceGroups = Utils.defaultPlacesGroups()
+        groups.append(contentsOf: defaultPlaceGroups)
         
     }
     
@@ -131,7 +129,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if let group = groups[safe: section] {
-            return (inEditingMode && (group.places.count == 0)) ? 1 : group.places.count // extra placeholder cell when in editing mode
+            return (inEditingMode && (group.count == 0)) ? 1 : group.count // extra placeholder cell when in editing mode
         } else {
             return 0
         }
@@ -144,7 +142,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         guard let group = groups[safe: indexPath.section] else { return cell }
         
         // Placeholder cell?
-        if indexPath.item == group.places.endIndex {
+        if indexPath.item == group.count {
             return placeholderCellFrom(cell)
         }
         
@@ -156,7 +154,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         }
         
         // Otherwise
-        let place = group.places[indexPath.item]
+        let place = group[indexPath.item]
         return placeCellFrom(cell, place)
     }
     
@@ -239,9 +237,9 @@ extension PlacePaletteViewController: DragDataDelegate {
         switch draggable {
             
         case is UICollectionViewCell:
-            guard let indexPath = collectionView.indexPath(for: draggable as! UICollectionViewCell),
-                  let place = groups[safe: indexPath.section]?.places[safe: indexPath.item] else { return nil }
+            guard let indexPath = collectionView.indexPath(for: draggable as! UICollectionViewCell) else { return nil }
             
+            let place = groups[indexPath.section][indexPath.item]
             return place
                 
         case is UICollectionReusableView:
@@ -281,7 +279,7 @@ extension PlacePaletteViewController: DragDelegate {
         midDrag = false
         draggingIndexPath = indexPath
         groupsBeforeEditing = groups.map({ $0.copy() })
-        groupsBeforeEditing[indexPath.section].places.remove(at: indexPath.item)
+        groupsBeforeEditing[indexPath.section].remove(at: indexPath.item)
         
         collectionView.reloadData()
     }
@@ -290,14 +288,20 @@ extension PlacePaletteViewController: DragDelegate {
         
         guard let place = object as? Place else { return }
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
-        guard groupsBeforeEditing.count > insertAt.section, groupsBeforeEditing[insertAt.section].places.count >= insertAt.item else { return }
+        guard groupsBeforeEditing.count > insertAt.section, groupsBeforeEditing[insertAt.section].count >= insertAt.item else { return }
         
         if (!midDrag ){
             collectionView.performBatchUpdates({
                 midDrag = true
+                
+                // if moving into an empty section, first delete the placeholder cell
+                if groups[insertAt.section].count == 0 { collectionView.deleteItems(at: [insertAt])}
+                
+                // if moving the only item out of the empty section, insert the placeholder cell
+                // TODO....
+                
                 groups = groupsBeforeEditing.map({ $0.copy() })
-                groups[insertAt.section].places.insert(place, at: insertAt.item)
-                if groups[insertAt.section].places.count == 1 { collectionView.deleteItems(at: [insertAt]) } // first delete placeholder, if applicable
+                groups[insertAt.section].insert(place, at: insertAt.item)
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
             }, completion: { success in self.midDrag = false })
@@ -361,7 +365,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!)
-        groups[0].places.append(newPlace)
+        groups[0].append(newPlace)
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }

@@ -39,6 +39,7 @@ class SingleBlock : ScheduleBlock {
 
 protocol OptionBlock : ScheduleBlock {
     
+    // set values
     var timing: Timing { get set }
     var placeGroup: PlaceGroup { get set } // reference to original group
     
@@ -53,19 +54,14 @@ protocol OptionBlock : ScheduleBlock {
 
 class OneOfBlock : OptionBlock {
 
-    var timing: Timing {
-        didSet {
-            optionIndex = nil
-        }
-    }
+    var timing: Timing
     var placeGroup : PlaceGroup
-    
     var optionIndex: Int?
     
     var destination: Destination? {
         
         if let index = optionIndex {
-            let place = placeGroup.places[index]
+            let place = placeGroup[index]
             return Destination(place: place, timing: timing)
         } else {
             return nil
@@ -76,7 +72,7 @@ class OneOfBlock : OptionBlock {
         return destination != nil ? [destination!] : nil
     }
     var optionCount : Int {
-        return placeGroup.places.count
+        return placeGroup.count
     }
     var name : String {
         return placeGroup.name
@@ -93,8 +89,9 @@ class AsManyOfBlock : OptionBlock {
     
     var placeGroup: PlaceGroup
     var timing: Timing {
-        didSet {
-            optionIndex = nil
+        willSet(newTiming) {
+            let delta = newTiming.start - timing.start
+            shiftDestinationsBy(delta)
         }
     }
     var permutations: [[Destination]]
@@ -114,6 +111,18 @@ class AsManyOfBlock : OptionBlock {
         self.placeGroup = placeGroup
         self.timing = timing
         self.permutations = permutations
+    }
+    
+    func shiftDestinationsBy(_ dT: TimeInterval) {
+        
+        if let dests = destinations {
+            for d in dests {
+                let duration = d.timing.duration
+                let start = d.timing.start + dT
+                d.timing = Timing(start: start, duration: duration)
+            }
+        }
+        
     }
     
 }

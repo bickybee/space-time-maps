@@ -82,6 +82,7 @@
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="BQr-AJ-0iu" secondAttribute="bottom" id="478-h3-362"/>
+                <constraint firstItem="BQr-AJ-0iu" firstAttribute="width" secondItem="ZTg-uK-7eu" secondAttribute="width" id="Gxq-l6-GHD"/>
                 <constraint firstAttribute="trailing" secondItem="BQr-AJ-0iu" secondAttribute="trailing" id="OWH-JL-A00"/>
                 <constraint firstItem="oxS-is-kFQ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="QCe-0y-jiI"/>
                 <constraint firstItem="oxS-is-kFQ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="YAP-pD-h24"/>

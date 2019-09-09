@@ -17,6 +17,8 @@ class ItineraryViewController: DraggableContentViewController {
     private let groupReuseIdentifier = "groupCell"
     private let nilReuseIdentifier = "nilCell"
     
+    private let scheduler = Scheduler()
+    
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
     var timelineController: TimelineViewController!
@@ -30,12 +32,7 @@ class ItineraryViewController: DraggableContentViewController {
     weak var delegate : ItineraryViewControllerDelegate?
     
     // Collection view data source!
-    var itinerary = Itinerary(schedule: [ScheduleBlock](), destinations: [Destination](), route:[Leg](), travelMode: .driving) {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
-    
+    var itinerary = Itinerary()
     var dragging = false
     
     // MARK: - Setup
@@ -78,7 +75,6 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         
-        let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
         
     }
@@ -158,14 +154,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
         
         let index = indexPath.item
-        let leg = itinerary.route[index]
+        let leg = itinerary.route.legs[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
+        let gradient = [leg.startPlace.color, leg.endPlace.color]
         
-        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, gradient: leg.gradient)
+        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: timelineController.hourHeight, gradient: gradient)
         return cell
     }
     
@@ -195,7 +191,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
         block.optionIndex = newIndex
         
-        let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
 
@@ -207,7 +202,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index + 1) % (block.optionCount)
         block.optionIndex = newIndex
         
-        let scheduler = Scheduler()
         scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
 }
@@ -225,7 +219,7 @@ extension ItineraryViewController : DragDelegate {
             editingBlocks.remove(at: indexPath.item)
         }
         
-        editingSession = ItineraryEditingSession(movingBlock: block, withIndex: indexPath.item, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: indexPath.item, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
@@ -271,6 +265,8 @@ extension ItineraryViewController : DragDelegate {
         if let route = route {
             self.itinerary.route = route
         }
+        
+        collectionView.reloadData()
     
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
     }
@@ -307,16 +303,45 @@ extension ItineraryViewController: DragDataDelegate {
     
     func objectFor(draggable: Draggable) -> Any? {
         guard let draggable = draggable as? UICollectionViewCell,
-            let indexPath = collectionView.indexPath(for: draggable),
-              let event = itinerary.schedule[safe: indexPath.item] else { return nil }
+              let indexPath = collectionView.indexPath(for: draggable),
+              let obj = eventFor(indexPath: indexPath) else { return nil }
         
-        return event
+        if obj is OptionBlock {
+            return obj
+        } else if obj is Destination {
+            return blockOfDestination(at: indexPath.item)
+        } else {
+            return nil
+        }
+    
     }
     
     func indexPathFor(draggable: Draggable) -> IndexPath? {
         guard let draggable = draggable as? UICollectionViewCell,
-            let indexPath = collectionView.indexPath(for: draggable) else { return nil}
+              let indexPath = collectionView.indexPath(for: draggable) else { return nil}
+        
         return indexPath
+    }
+    
+    // this is bad i think?? lol TODO make not bad!
+    func blockOfDestination(at index: Int) -> ScheduleBlock? {
+        
+        var count = 0
+        
+        for block in itinerary.schedule {
+            
+            if let destinations = block.destinations {
+                count += destinations.count
+            }
+            
+            if count > index {
+                return block
+            }
+
+        }
+        
+        return nil
+        
     }
     
 }
@@ -347,7 +372,7 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         case 0:
             return itinerary.destinations[safe: item]
         case 1:
-            return itinerary.route[safe: item]
+            return itinerary.route.legs[safe: item]
         case 2:
             return itinerary.schedule[safe: item]
         default:
