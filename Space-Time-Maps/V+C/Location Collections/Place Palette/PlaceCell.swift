@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaceCell: UICollectionViewCell, Draggable {
+class PlaceCell: UICollectionViewCell {
 
     var dragHandle : UIView! = UIView()
     @IBOutlet weak var nameLabel: UILabel!
@@ -32,7 +32,6 @@ class PlaceCell: UICollectionViewCell, Draggable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        dragHandle.frame = containerView.frame
     }
     
     private func setup() {
@@ -40,12 +39,6 @@ class PlaceCell: UICollectionViewCell, Draggable {
         containerView.layer.shadowOpacity = 0.5;
         containerView.layer.masksToBounds = true
         self.layer.masksToBounds = true
-        
-        dragHandle = UIView(frame: containerView.frame)
-        dragHandle.backgroundColor = .clear
-        dragHandle.layer.zPosition = 100
-        dragHandle.layer.cornerRadius = 5;
-        self.addSubview(dragHandle)
     }
     
     func configureWith(name: String, duration: TimeInterval) {

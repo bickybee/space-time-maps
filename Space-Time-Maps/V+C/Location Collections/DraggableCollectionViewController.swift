@@ -8,12 +8,6 @@
 
 import UIKit
 
-protocol Draggable: UIView {
-    
-    var dragHandle : UIView! { get set }
-    
-}
-
 // To work with DraggableCell class
 class DraggableContentViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -22,7 +16,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     // Dragging
     var draggingObject : Any?
     var draggingIndex : IndexPath?
-    var draggable : Draggable?
+    var draggable : UIView?
     var draggingView : UIView?
     
     weak var dragDelegate : DragDelegate?
@@ -32,13 +26,11 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         super.viewDidLoad()
     }
     
-    func addDragRecognizerTo(draggable: Draggable) {
+    func addDragRecognizerTo(draggable: UIView) {
         
         let dragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragObject))
         dragRecognizer.delegate = self
-        if draggable.dragHandle.gestureRecognizers?[0] == nil {
-            draggable.dragHandle.addGestureRecognizer(dragRecognizer)
-        }        
+        draggable.addGestureRecognizer(dragRecognizer)
         
     }
     
@@ -119,9 +111,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     func setupDraggableFrom(gesture: UIPanGestureRecognizer) -> Bool {
         
         // Traverse view hierarchy lol
-        guard let handle = gesture.view,
-              let originatingView = handle.superview,
-              let draggableView = originatingView as? Draggable else { return false }
+        guard let draggableView = gesture.view else { return false }
 
         // If we're good, set stuff accordingly
         draggable = draggableView
@@ -184,14 +174,14 @@ protocol DragDelegate : AnyObject {
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
-    func cellForIndex(_ indexPath: IndexPath) -> Draggable?
+    func cellForIndex(_ indexPath: IndexPath) -> UIView?
 }
 
 // Get object associated with dragging cell from the delegate
 protocol DragDataDelegate : AnyObject {
     
-    func indexPathFor(draggable: Draggable) -> IndexPath?
-    func objectFor(draggable: Draggable) -> Any?
+    func indexPathFor(draggable: UIView) -> IndexPath?
+    func objectFor(draggable: UIView) -> Any?
     
 }
 

@@ -250,9 +250,9 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
+    func cellForIndex(_ indexPath: IndexPath) -> UIView? {
         
-        return collectionView.cellForItem(at: indexPath) as? Draggable
+        return collectionView.cellForItem(at: indexPath)
         
     }
     
@@ -301,7 +301,7 @@ extension ItineraryViewController : DragDelegate {
 
 extension ItineraryViewController: DragDataDelegate {
     
-    func objectFor(draggable: Draggable) -> Any? {
+    func objectFor(draggable: UIView) -> Any? {
         guard let draggable = draggable as? UICollectionViewCell,
               let indexPath = collectionView.indexPath(for: draggable),
               let obj = eventFor(indexPath: indexPath) else { return nil }
@@ -316,7 +316,7 @@ extension ItineraryViewController: DragDataDelegate {
     
     }
     
-    func indexPathFor(draggable: Draggable) -> IndexPath? {
+    func indexPathFor(draggable: UIView) -> IndexPath? {
         guard let draggable = draggable as? UICollectionViewCell,
               let indexPath = collectionView.indexPath(for: draggable) else { return nil}
         

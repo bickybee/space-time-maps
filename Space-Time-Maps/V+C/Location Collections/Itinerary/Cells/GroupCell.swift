@@ -8,9 +8,8 @@
 
 import UIKit
 
-class GroupCell: UICollectionViewCell, Draggable {
+class GroupCell: UICollectionViewCell {
 
-    var dragHandle : UIView! = UIView()
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var optionControl: UIPageControl!
     @IBOutlet weak var nextBtn: UIButton!
@@ -48,13 +47,6 @@ class GroupCell: UICollectionViewCell, Draggable {
         optionControl.pageIndicatorTintColor = optionTint
         optionControl.currentPageIndicatorTintColor = currentOptionTint
         
-        dragHandle = UIView(frame: containerView.frame)
-        dragHandle.backgroundColor = .clear
-        dragHandle.layer.cornerRadius = 5;
-        dragHandle.layer.masksToBounds = true;
-        self.addSubview(dragHandle)
-
-        
     }
     
     func configureWith(_ block: OptionBlock) {
@@ -87,7 +79,6 @@ class GroupCell: UICollectionViewCell, Draggable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        dragHandle.frame = containerView.frame
     }
     
 }

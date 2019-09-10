@@ -8,9 +8,8 @@
 
 import UIKit
 
-class DestinationCell: UICollectionViewCell, Draggable {
+class DestinationCell: UICollectionViewCell{
     
-    var dragHandle : UIView! = UIView()
     var contentContainer : UIView!
     var nameContainer : UIView!
     var nameLabel : UILabel!
@@ -37,7 +36,6 @@ class DestinationCell: UICollectionViewCell, Draggable {
         contentView.addSubview(contentContainer)
         
         setupLabel()
-        setupHandle()
         
     }
     
@@ -70,26 +68,13 @@ class DestinationCell: UICollectionViewCell, Draggable {
         self.nameLabel.text = name
         self.layoutSubviews()
     }
-    
-    func setupHandle() {
-//        let sideLength : CGFloat = 25.0
-//        let x = contentView.bounds.size.width - sideLength - 5
-//        let y = (contentView.bounds.size.height - sideLength)/2
-        dragHandle = UIView(frame: contentContainer.frame)
-        dragHandle.backgroundColor = .clear
-        dragHandle.layer.zPosition = 100
-        dragHandle.layer.cornerRadius = 5;
-        dragHandle.layer.masksToBounds = true;
-        self.addSubview(dragHandle)
-    }
+
     
     override func layoutSubviews() {
         super.layoutSubviews()
         let newHeight = self.frame.size.height - 10.0
         nameContainer.frame.size.height = newHeight
         nameLabel.frame.size.height = newHeight - 8.0
-        dragHandle.center = CGPoint(x: dragHandle.frame.midX, y: newHeight/2)
-
     }
     
     

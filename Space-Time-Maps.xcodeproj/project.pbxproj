@@ -164,6 +164,7 @@
 		9877042A2326AD1D009E1A63 /* Scraps */ = {
 			isa = PBXGroup;
 			children = (
+				98DEBA68230EFD4400769BB5 /* LocationCell.swift */,
 				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
 				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
 				98DEF0D423066372003DE1CB /* OldLegCell.swift */,
@@ -204,7 +205,6 @@
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
 				98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */,
 				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
-				98DEBA68230EFD4400769BB5 /* LocationCell.swift */,
 				98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */,
 				98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */,
 			);

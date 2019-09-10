@@ -232,7 +232,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
 
 extension PlacePaletteViewController: DragDataDelegate {
     
-    func objectFor(draggable: Draggable) -> Any? {
+    func objectFor(draggable: UIView) -> Any? {
         
         switch draggable {
             
@@ -251,7 +251,7 @@ extension PlacePaletteViewController: DragDataDelegate {
 
     }
     
-    func indexPathFor(draggable: Draggable) -> IndexPath? {
+    func indexPathFor(draggable: UIView) -> IndexPath? {
         
         switch draggable {
             
@@ -317,7 +317,7 @@ extension PlacePaletteViewController: DragDelegate {
         
     }
     
-    func cellForIndex(_ indexPath: IndexPath) -> Draggable? {
+    func cellForIndex(_ indexPath: IndexPath) -> UIView? {
         return nil
     }
     
