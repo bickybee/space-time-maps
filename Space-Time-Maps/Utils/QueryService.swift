@@ -10,7 +10,9 @@ import Foundation
 import GoogleMaps.GMSMutablePath
 import ChameleonFramework
 
+typealias PlaceIDs = String
 typealias TimeMatrix = [[TimeInterval]]
+typealias TimeDict = [ PlaceIDs : TimeInterval ]
 
 class QueryService {
         
@@ -58,6 +60,15 @@ class QueryService {
             callback(results)
         }
     }
+    
+    func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
+        //dict [placeIDa + placeIDb] = time btwn them
+        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { return }
+        runQuery(url: url) {data in
+            let results = self.dataToTimeDict(data, origins, destinations)
+            callback(results)
+        }
+    }
 
     
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
@@ -89,6 +100,27 @@ class QueryService {
         
         return leg
         
+    }
+    
+    func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place]) -> TimeDict? {
+        let decoder = JSONDecoder()
+        var dict : TimeDict?
+        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
+            print(errorResponseObject.errorMessage)
+            dict = nil
+        } else if let matrixResponseObject = try? decoder.decode(MatrixResponseObject.self, from: data) {
+            // Parse out data into Route object
+            dict = TimeDict()
+            let originIDs = origins.map( { $0.placeID })
+            let destIDs = destinations.map( { $0.placeID })
+            for (i, row) in matrixResponseObject.rows.enumerated() {
+                for (j, elem) in row.elements.enumerated() {
+                    let key = originIDs[i] + destIDs[j]
+                    dict![key] = TimeInterval(elem.duration.value)
+                }
+            }
+        }
+        return dict
     }
     
     func dataToMatrix(_ data: Data) -> TimeMatrix? {

@@ -39,7 +39,6 @@ class LocationCell: UICollectionViewCell {
         containerView.layer.shadowOpacity = 0.5;
         containerView.layer.masksToBounds = false
         self.layer.masksToBounds = false
-        //        containerView.layer.masksToBounds = true;
         
     }
     

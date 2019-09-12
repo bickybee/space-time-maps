@@ -13,6 +13,9 @@ class Scheduler {
     // Here is where we determine exactly which places + timings get sent to Google Directions API
     // Using distance matrix API for batch calculations
     
+    typealias Permutation<T> = [T]
+    typealias Combination<T> = [T]
+    
     let qs = QueryService()
     var legCache = [String : LegData]()
     
@@ -38,48 +41,161 @@ class Scheduler {
         var schedule = [ScheduleBlock]()
         let dispatchGroup = DispatchGroup()
         
-        for (i, block) in blocks.enumerated() {
+        var i = 0
+        
+        while (i < blocks.count) {
+            
+            let block = blocks[i]
             
             // Destinations are scheduled as-is
             if let singleBlock = block as? SingleBlock {
                 schedule.append(singleBlock)
+                i += 1
             }
                 
             // Groups must have their "best-option" calculated
             // TODO: handle different groups, ignore if "best-option" is already selected...
-            else if var optionBlock = block as? OptionBlock {
+            else if block is OptionBlock {
                 
-                // If this optionBlock already has an option selected, add to schedule
-                if optionBlock.destinations != nil {
-                    schedule.append(optionBlock)
+                let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
+                let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
+                var scheduledAlready = true
+                for o in optionBlocks {
+                    if o.destinations == nil {
+                        scheduledAlready = false
+                        break
+                    }
                 }
-                // Otherwise, select an option!
-                else {
-                    dispatchGroup.enter()
-                    // Option selection depends in previous and following events
-                    // TODO: Handle if these are OptionBlocks too
-                    let before = blocks[safe: i - 1] as? SingleBlock
-                    let after = blocks[safe: i + 1] as? SingleBlock
+                
+                if scheduledAlready {
                     
-                    findBestOption(optionBlock, before:before, after: after, travelMode: travelMode) { option in
-                        if let option = option {
-                            optionBlock.optionIndex = option
-                            schedule.append(optionBlock)
-                        }
-                        
+                    schedule.append(contentsOf: optionBlocks)
+                    
+                } else {
+                    
+                    let before = blocks[safe: i - 1] as? SingleBlock
+                    let after = blocks[safe: range.upperBound + 1] as? SingleBlock
+                    
+                    dispatchGroup.enter()
+                    scheduleOptionBlocks(optionBlocks, before: before, after: after, travelMode: travelMode) {
+                        schedule.append(contentsOf: optionBlocks)
                         dispatchGroup.leave()
                     }
                     
-                    // Do these synchronously by forcing waits between loop iterations...
                     dispatchGroup.wait()
                 }
+
+                i =  range.upperBound + 1
+
             }
         }
         
         return schedule
         
     }
+    
+    func scheduleOptionBlocks(_ blocks: [OptionBlock], before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping () -> ()) {
+        
+        var allPlaces = blocks.flatMap( { $0.placeGroup.places } )
+        
+        if let beforePlace = before?.place {
+            allPlaces.append(beforePlace)
+        }
+        
+        if let afterPlace = after?.place {
+            allPlaces.append(afterPlace)
+        }
+        
+        qs.getTimeDictFor(origins: allPlaces, destinations: allPlaces, travelMode: travelMode) { dict in
+            
+            guard let timeDict = dict else { callback(); return }
+            let optionCombinations = self.optionCombinationsFor(blocks)
+            let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
+            let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
+            let minScore = scores.min()
+            let iMin = scores.firstIndex(of: minScore!)!
+            let bestOption = optionCombinations[iMin]
+            
+            for i in blocks.indices {
+                
+                var block = blocks[i]
+                if let asManyOf = block as? AsManyOfBlock {
+                    self.scheduleOptionsForBlock(asManyOf, with: timeDict)
+                }
+                
+                block.optionIndex = bestOption[i]
+                
+            }
+            
+            callback()
+        }
+        
+    }
 
+    
+    func optionCombinationsFor(_ blocks: [OptionBlock]) -> [Combination<Int>] {
+        
+        var output = [Combination<Int>]()
+        let options = blocks.map( { Array(0 ... $0.optionCount - 1) } )
+        Utils.combinations(options, &output, [], 0, options.count - 1)
+        return output
+        
+    }
+    
+    func placeIDCombinationsFor(_ blocks: [OptionBlock], indexCombinations: [Combination<Int>]) -> [Combination<Permutation<String>>] {
+        var combinations = [Combination<Permutation<String>>]()
+        for combo in indexCombinations {
+            var c = Combination<Permutation<String>>()
+            for (iBlock, iPermutation) in combo.enumerated() {
+                c.append(blocks[iBlock].permutationPlaceIDs[iPermutation])
+            }
+            combinations.append(c)
+        }
+        
+        return combinations
+    }
+    
+    func optionScores(_ placeIDCombos: [Combination<Permutation<String>>], from timeDict: TimeDict, before: SingleBlock?, after: SingleBlock?) -> [Double] {
+        var flatter = placeIDCombos.map( { $0.flatMap( {$0} ) } )
+        
+        if let beforePlaceID = before?.place.placeID {
+            for i in flatter.indices {
+                flatter[i].insert(beforePlaceID, at: 0)
+            }
+        }
+        
+        if let afterPlaceID = after?.place.placeID {
+            for i in flatter.indices {
+                flatter[i].append(afterPlaceID)
+            }
+        }
+        
+        var scores = [Double]()
+        for c in flatter {
+            var score : Double = 0
+            for i in c.indices.dropLast() {
+                let key = c[i] + c[i+1]
+                score += timeDict[key]!
+            }
+            scores.append(score)
+        }
+        return scores
+    }
+
+    
+    func rangeOfOptionBlockChain(in blocks: [ScheduleBlock], startingAt startIndex: Int) -> ClosedRange<Int> {
+        var endIndex : Int?
+        var i = startIndex
+        while (endIndex == nil) && (i < blocks.count - 1){
+            if blocks[i + 1] is OptionBlock {
+                i += 1
+            } else {
+                endIndex = i
+            }
+        }
+        let range = startIndex ... (endIndex ?? blocks.count - 1)
+        return range
+    }
     
     func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
@@ -117,7 +233,9 @@ class Scheduler {
     func findBestOption(_ asManyOfBlock: AsManyOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
         
         let places = asManyOfBlock.placeGroup.places
-        let indices = [Int](0...places.count - 1)
+//        let placeIDs = places.map( { $0.placeID } )
+//        var permutations = [[String]]()
+        let indices = Array(places.indices)
         var permutations = [[Int]]()
         Utils.permute(indices, indices.count - 1, &permutations)
         
@@ -130,10 +248,34 @@ class Scheduler {
             let startTime = asManyOfBlock.timing.start
             let (index, optionTimings) = self.computeOptions(matrix, permutations)
             let options = self.permutationsToDestinations(permutations, optionTimings, places, startTime)
-            asManyOfBlock.permutations = options
+            asManyOfBlock.options = options
             callback(index)
         }
         
+    }
+    
+    func scheduleOptionsForBlock(_ block: AsManyOfBlock, with timings: TimeDict) {
+        
+        var options = [[Destination]]()
+        
+        for perm in block.permutations {
+            var destinations = [Destination]()
+            var time = block.timing.start
+            
+            for i in perm.indices {
+                let place = block.placeGroup[perm[i]]
+                destinations.append(Destination(place: place, timing: Timing(start: time, duration: TimeInterval.from(minutes: 30))))
+                time += TimeInterval.from(minutes: 30)
+                if (i != perm.indices.last) {
+                    let nextPlace = block.placeGroup[perm[i + 1]]
+                    time += timings[place.placeID + nextPlace.placeID]!
+                }
+            }
+            
+            options.append(destinations)
+        }
+        
+        block.options = options
     }
     
     func permutationsToDestinations(_ permutations: [[Int]], _ timings: [[TimeInterval]], _ places: [Place], _ startTime: TimeInterval) -> [[Destination]] {
@@ -276,7 +418,7 @@ class Scheduler {
 
     func evenlyDisperseBlock(_ optionBlock: OptionBlock, in route: Route) {
         
-        guard var destinations = optionBlock.destinations, destinations.count >= 2 else { return }
+        guard let destinations = optionBlock.destinations, destinations.count >= 2 else { return }
  
         let timeBounds = timeBoundsOf(destinations, within: optionBlock.timing, in: route)
         evenlyDisperseDestinations(destinations, within: timeBounds, in: route)

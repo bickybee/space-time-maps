@@ -284,7 +284,7 @@ extension ItineraryViewController : DragDelegate {
             } else if let group = object as? PlaceGroup {
                 switch group.kind {
                 case .asManyOf:
-                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), permutations: [[]])
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)))
                 case .oneOf,
                      .none:
                     return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))

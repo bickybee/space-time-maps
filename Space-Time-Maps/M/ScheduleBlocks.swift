@@ -43,6 +43,8 @@ protocol OptionBlock : ScheduleBlock {
     var timing: Timing { get set }
     var placeGroup: PlaceGroup { get set } // reference to original group
     
+    var permutations: [[Int]] { get }
+    var permutationPlaceIDs: [[String]] { get }
     var optionIndex: Int? { get set }
     
     var optionCount: Int { get }
@@ -50,13 +52,18 @@ protocol OptionBlock : ScheduleBlock {
     var name: String { get }
 }
 
-// lotsa code duplication to follow but that's ok, fix later
+// lotsa code duplication to follow but that's ok, FIXE later
 
 class OneOfBlock : OptionBlock {
 
     var timing: Timing
     var placeGroup : PlaceGroup
     var optionIndex: Int?
+    var permutations : [[Int]]
+    
+    var permutationPlaceIDs: [[String]] {
+        return permutations.map( { $0.map( { placeGroup[$0].placeID } ) } )
+    }
     
     var destination: Destination? {
         
@@ -81,6 +88,7 @@ class OneOfBlock : OptionBlock {
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
+        self.permutations = placeGroup.places.indices.map( { [$0] } )
     }
     
 }
@@ -94,11 +102,18 @@ class AsManyOfBlock : OptionBlock {
             shiftDestinationsBy(delta)
         }
     }
-    var permutations: [[Destination]]
+    
+    var permutations: [[Int]] // indices into placeGroup
+    
+    var permutationPlaceIDs: [[String]] {
+        return permutations.map( { $0.map( { placeGroup[$0].placeID } ) } )
+    }
+    
+    var options: [[Destination]]?
     
     var optionIndex: Int?
     var destinations: [Destination]? {
-        return optionIndex != nil ? permutations[optionIndex!] : nil
+        return optionIndex != nil ? options![optionIndex!] : nil
     }
     var optionCount: Int {
         return permutations.count
@@ -107,11 +122,22 @@ class AsManyOfBlock : OptionBlock {
         return placeGroup.name
     }
     
-    init(placeGroup: PlaceGroup, timing: Timing, permutations: [[Destination]]) {
+    init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
-        self.permutations = permutations
+        self.permutations = []
+        
+        updatePermutations()
     }
+    
+    func updatePermutations() {
+        let places = placeGroup.places.indices
+        let indices = Array(places.indices)
+        var p = [[Int]]()
+        Utils.permute(indices, indices.count - 1, &p)
+        permutations = p
+    }
+    
     
     func shiftDestinationsBy(_ dT: TimeInterval) {
         

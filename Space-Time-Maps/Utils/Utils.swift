@@ -13,7 +13,7 @@ class Utils {
     
     private static let roundHourTo : Double = 0.25
     
-    private static let starterPlaces = [
+    private static let starterPlaces : [Place] = [
         Place(name: "Gladstone Hotel", coordinate: Coordinate(lat: 43.642698, lon: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"),
         Place(name: "Art Gallery of Ontario", coordinate: Coordinate(lat: 43.6536066, lon: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
         Place(name: "Casa Loma", coordinate: Coordinate(lat: 43.67803709999999, lon: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
@@ -95,6 +95,7 @@ class Utils {
     
     // permuteWirth from
     // https://github.com/raywenderlich/swift-algorithm-club/tree/master/Combinatorics
+    // usage example: Utils.permute(indices, indices.count - 1, &permutations)
     static func permute<T>(_ a: [T], _ n: Int, _ result: inout [[T]]) {
         if n == 0 {
             print(a)   // display the current permutation
@@ -106,6 +107,34 @@ class Utils {
                 a.swapAt(i, n)
                 permute(a, n - 1, &result)
                 a.swapAt(i, n)
+            }
+        }
+    }
+    
+    static func cartesianProduct<T>(_ arrs: [[[T]]]) -> [[T]] {
+        
+        var output = [[T]]()
+        
+        for i in 0 ..< arrs.count - 1 {
+            let a1 = arrs[i]
+            let a2 = arrs[i + 1]
+            
+            for val1 in a1 {
+                for val2 in a2 {
+                    output.append(val1 + val2)
+                }
+            }
+        }
+        
+        return output
+    }
+    
+    static func combinations<T>(_ input: [[T]], _ output: inout [[T]], _ prev: [T], _ i: Int, _ n: Int) {
+        for elem in input[i] {
+            if (i == n) {
+                output.append(prev + [elem])
+            } else {
+                combinations(input, &output, prev + [elem], i + 1, n)
             }
         }
     }
