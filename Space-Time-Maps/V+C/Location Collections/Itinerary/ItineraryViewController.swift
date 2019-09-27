@@ -269,6 +269,7 @@ extension ItineraryViewController : DragDelegate {
         collectionView.reloadData()
     
         delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
+        print("helloooo")
     }
     
     func blockFromObject(_ object : Any) -> ScheduleBlock? {

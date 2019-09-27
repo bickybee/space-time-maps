@@ -19,7 +19,8 @@ class Scheduler {
     let qs = QueryService()
     var legCache = [String : LegData]()
     
-    // Get a route for the given list of blocks
+    
+    // Returns scheduled blocks, associated scheduled route
     func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
 
         // Make a copy, in case the original block list gets modified during this process
@@ -35,11 +36,11 @@ class Scheduler {
         callback(scheduledBlocks, route)
     }
     
-    // "Scheduling" here really means selecting an ideal OPTION for each Group Event
+    
+    // Returns scheduled blocks
     func scheduleBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> [ScheduleBlock] {
         
         var schedule = [ScheduleBlock]()
-        let dispatchGroup = DispatchGroup()
         
         var i = 0
         
@@ -47,36 +48,41 @@ class Scheduler {
             
             let block = blocks[i]
             
-            // Destinations are scheduled as-is
+            // Single block scheduled as-is
             if let singleBlock = block as? SingleBlock {
                 schedule.append(singleBlock)
                 i += 1
             }
                 
-            // Groups must have their "best-option" calculated
-            // TODO: handle different groups, ignore if "best-option" is already selected...
+            // Option blocks require furtuher calculations
             else if block is OptionBlock {
                 
+                // How many option blocks are there in a row? Will need to consider them all together.
                 let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
                 let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
-                var scheduledAlready = true
+                var allScheduledAlready = true
+                
                 for o in optionBlocks {
                     if o.destinations == nil {
-                        scheduledAlready = false
+                        allScheduledAlready = false
                         break
                     }
                 }
                 
-                if scheduledAlready {
-                    
+                // If they're all scheduled already, move along, no rescheduling needed.
+                if allScheduledAlready {
                     schedule.append(contentsOf: optionBlocks)
-                    
-                } else {
+                }
+                
+                // If even one of them is not yet scheduled, all need to be reconsidered.
+                else {
                     
                     let before = blocks[safe: i - 1] as? SingleBlock
                     let after = blocks[safe: range.upperBound + 1] as? SingleBlock
                     
+                    let dispatchGroup = DispatchGroup()
                     dispatchGroup.enter()
+                    
                     scheduleOptionBlocks(optionBlocks, before: before, after: after, travelMode: travelMode) {
                         schedule.append(contentsOf: optionBlocks)
                         dispatchGroup.leave()
@@ -94,6 +100,7 @@ class Scheduler {
         
     }
     
+    // Sets destinations for option blocks
     func scheduleOptionBlocks(_ blocks: [OptionBlock], before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping () -> ()) {
         
         var allPlaces = blocks.flatMap( { $0.placeGroup.places } )
@@ -195,63 +202,6 @@ class Scheduler {
         }
         let range = startIndex ... (endIndex ?? blocks.count - 1)
         return range
-    }
-    
-    func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-        
-        if let oneOf = optionBlock as? OneOfBlock {
-            findBestOption(oneOf, before: before, after: after, travelMode: travelMode, callback: callback)
-        } else if let asManyOf = optionBlock as? AsManyOfBlock {
-            findBestOption(asManyOf, before: before, after: after, travelMode: travelMode, callback: callback)
-        } else {
-            callback(nil)
-        }
-        
-    }
-    
-    // also /creates/ the options???
-    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-        
-        // If it's an isolated group, just pick the first option
-        guard !(before == nil && after == nil) else {
-            callback(nil)
-            return
-        }
-        
-        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
-            guard let matrix = matrix else {
-                callback(nil)
-                return
-            }
-            
-            let index = self.indexOfBestOption(matrix)
-            callback(index)
-        }
-    }
-    
-    
-    func findBestOption(_ asManyOfBlock: AsManyOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-        
-        let places = asManyOfBlock.placeGroup.places
-//        let placeIDs = places.map( { $0.placeID } )
-//        var permutations = [[String]]()
-        let indices = Array(places.indices)
-        var permutations = [[Int]]()
-        Utils.permute(indices, indices.count - 1, &permutations)
-        
-        getMatrixFor(asManyOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
-            guard let matrix = matrix else {
-                callback(nil)
-                return
-            }
-            
-            let startTime = asManyOfBlock.timing.start
-            let (index, optionTimings) = self.computeOptions(matrix, permutations)
-            let options = self.permutationsToDestinations(permutations, optionTimings, places, startTime)
-            asManyOfBlock.options = options
-            callback(index)
-        }
-        
     }
     
     func scheduleOptionsForBlock(_ block: AsManyOfBlock, with timings: TimeDict) {
@@ -432,8 +382,8 @@ class Scheduler {
         let enteringLeg = route.legEndingAt(firstPlace)
         let leavingLeg = route.legStartingAt(lastPlace)
         
-        let minStartTime = enteringLeg != nil ? enteringLeg!.timing.start + enteringLeg!.travelTiming.duration : Double.infinity
-        let maxEndTime = leavingLeg != nil ? leavingLeg!.timing.end - leavingLeg!.travelTiming.duration : -Double.infinity
+        let minStartTime = enteringLeg != nil ? enteringLeg!.timing.start + enteringLeg!.travelTiming.duration : -Double.infinity
+        let maxEndTime = leavingLeg != nil ? leavingLeg!.timing.end - leavingLeg!.travelTiming.duration : Double.infinity
         
         let startTime = max(minStartTime, timing.start)
         let endTime = min(maxEndTime, timing.end)
@@ -466,6 +416,64 @@ class Scheduler {
             let nextDest = destinations[i + 1]
             nextDest.timing = Timing(start: nextDestStartTime, duration: nextDestDuration)
             
+        }
+        
+    }
+    
+    
+    func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+        
+        if let oneOf = optionBlock as? OneOfBlock {
+            findBestOption(oneOf, before: before, after: after, travelMode: travelMode, callback: callback)
+        } else if let asManyOf = optionBlock as? AsManyOfBlock {
+            findBestOption(asManyOf, before: before, after: after, travelMode: travelMode, callback: callback)
+        } else {
+            callback(nil)
+        }
+        
+    }
+    
+    // also /creates/ the options???
+    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+        
+        // If it's an isolated group, just pick the first option
+        guard !(before == nil && after == nil) else {
+            callback(nil)
+            return
+        }
+        
+        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
+            guard let matrix = matrix else {
+                callback(nil)
+                return
+            }
+            
+            let index = self.indexOfBestOption(matrix)
+            callback(index)
+        }
+    }
+    
+    
+    func findBestOption(_ asManyOfBlock: AsManyOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
+        
+        let places = asManyOfBlock.placeGroup.places
+        //        let placeIDs = places.map( { $0.placeID } )
+        //        var permutations = [[String]]()
+        let indices = Array(places.indices)
+        var permutations = [[Int]]()
+        Utils.permute(indices, indices.count - 1, &permutations)
+        
+        getMatrixFor(asManyOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
+            guard let matrix = matrix else {
+                callback(nil)
+                return
+            }
+            
+            let startTime = asManyOfBlock.timing.start
+            let (index, optionTimings) = self.computeOptions(matrix, permutations)
+            let options = self.permutationsToDestinations(permutations, optionTimings, places, startTime)
+            asManyOfBlock.options = options
+            callback(index)
         }
         
     }
