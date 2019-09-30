@@ -149,7 +149,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let destination = itinerary.destinations[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
         cell.configureWith(destination)
-        addDragRecognizerTo(draggable: cell)
+        cell.isUserInteractionEnabled = false
+//        addDragRecognizerTo(draggable: cell)
         return cell
         
     }
@@ -168,7 +169,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func setupBlockCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let index = indexPath.item
         guard let block = itinerary.schedule[index] as? OptionBlock else {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
+            addDragRecognizerTo(draggable: cell)
+            return cell
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
@@ -307,7 +310,7 @@ extension ItineraryViewController: DragDataDelegate {
               let indexPath = collectionView.indexPath(for: draggable),
               let obj = eventFor(indexPath: indexPath) else { return nil }
         
-        if obj is OptionBlock {
+        if obj is ScheduleBlock {
             return obj
         } else if obj is Destination {
             return blockOfDestination(at: indexPath.item)

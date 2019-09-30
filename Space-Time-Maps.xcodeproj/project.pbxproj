@@ -10,7 +10,6 @@
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
 		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
-		982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5787231EE5DE00E183F3 /* OneOfCell.xib */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
 		982D579423203F8300E183F3 /* DestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579223203F8300E183F3 /* DestCell.xib */; };
 		982D5797232050C500E183F3 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5795232050C500E183F3 /* GroupCell.swift */; };
@@ -66,7 +65,6 @@
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
-		982D5787231EE5DE00E183F3 /* OneOfCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OneOfCell.xib; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
 		982D579223203F8300E183F3 /* DestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestCell.xib; sourceTree = "<group>"; };
 		982D5795232050C500E183F3 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 		982D579D232162FC00E183F3 /* Xibs */ = {
 			isa = PBXGroup;
 			children = (
-				982D5787231EE5DE00E183F3 /* OneOfCell.xib */,
 				982D579223203F8300E183F3 /* DestCell.xib */,
 				982D579A2320AB3C00E183F3 /* RouteCell.xib */,
 				982D5796232050C500E183F3 /* GroupCell.xib */,
@@ -395,7 +392,6 @@
 				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
-				982D5789231EE5DE00E183F3 /* OneOfCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
 				982D5798232050C500E183F3 /* GroupCell.xib in Resources */,

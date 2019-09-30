@@ -12,7 +12,7 @@ class NilCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.alpha = 0.0
+        self.alpha = 1.0
         self.backgroundColor = .clear
     }
     
