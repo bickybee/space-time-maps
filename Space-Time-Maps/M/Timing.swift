@@ -8,6 +8,13 @@
 
 import UIKit
 
+typealias TimeDict = [ PlacePair : TimeInterval ]
+
+struct PlacePair : Hashable {
+    var startID : String
+    var endID : String
+}
+
 protocol Schedulable {
     var timing : Timing { get set }
 }

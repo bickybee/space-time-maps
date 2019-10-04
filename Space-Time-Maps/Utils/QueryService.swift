@@ -10,10 +10,6 @@ import Foundation
 import GoogleMaps.GMSMutablePath
 import ChameleonFramework
 
-typealias PlaceIDs = String
-typealias TimeMatrix = [[TimeInterval]]
-typealias TimeDict = [ PlaceIDs : TimeInterval ]
-
 class QueryService {
         
     let session = URLSession(configuration: .default)
@@ -50,15 +46,6 @@ class QueryService {
         
         // Run data task
         dataTask.resume()
-    }
-    
-    func getMatrixFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeMatrix?) -> ()) {
-        // matrix[row][col]
-        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { return }
-        runQuery(url: url) {data in
-            let results = self.dataToMatrix(data)
-            callback(results)
-        }
     }
     
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
@@ -115,32 +102,12 @@ class QueryService {
             let destIDs = destinations.map( { $0.placeID })
             for (i, row) in matrixResponseObject.rows.enumerated() {
                 for (j, elem) in row.elements.enumerated() {
-                    let key = originIDs[i] + destIDs[j]
+                    let key = PlacePair(startID: originIDs[i], endID: destIDs[j])
                     dict![key] = TimeInterval(elem.duration.value)
                 }
             }
         }
         return dict
-    }
-    
-    func dataToMatrix(_ data: Data) -> TimeMatrix? {
-        let decoder = JSONDecoder()
-        var matrix : TimeMatrix?
-        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
-            print(errorResponseObject.errorMessage)
-            matrix = nil
-        } else if let matrixResponseObject = try? decoder.decode(MatrixResponseObject.self, from: data) {
-            // Parse out data into Route object
-            let rows = matrixResponseObject.originAddresses.count
-            let cols = matrixResponseObject.destinationAddresses.count
-            matrix = Array(repeating: Array(repeating: 0, count: cols), count: rows)
-            for (i, row) in matrixResponseObject.rows.enumerated() {
-                for (j, elem) in row.elements.enumerated() {
-                    matrix![i][j] = TimeInterval(elem.duration.value)
-                }
-            }
-        }
-        return matrix
     }
     
     func queryURLFor(origins: [Place], destinations: [Place], travelMode: TravelMode) -> URL? {

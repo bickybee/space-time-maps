@@ -30,6 +30,7 @@ class MapViewController: UIViewController {
         mapView.settings.myLocationButton = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.isMyLocationEnabled = true
+        mapView.delegate = self
         
         //Style map w/ json file
         do {
@@ -50,9 +51,9 @@ class MapViewController: UIViewController {
     }
     
     // Parent should respond to user input, eventually trickle down only what should be rendered
-    override func didMove(toParent parent: UIViewController?) {
-        self.mapView.delegate = parent as? GMSMapViewDelegate
-    }
+//    override func didMove(toParent parent: UIViewController?) {
+//        self.mapView.delegate = parent as? GMSMapViewDelegate
+//    }
     
     // Refresh all map markup
     func refreshMarkup(placeGroups: [PlaceGroup], routeLegs: [Leg]?) {
@@ -93,5 +94,15 @@ class MapViewController: UIViewController {
 protocol MapViewControllerDelegate : AnyObject {
     
     func mapViewController(_ mapViewController: MapViewController, didUpdateBounds bounds: GMSCoordinateBounds)
+    
+}
+
+extension MapViewController : GMSMapViewDelegate {
+    
+    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
+        let visibleRegion = mapView.projection.visibleRegion()
+        let bounds = GMSCoordinateBounds(region: visibleRegion)
+        delegate?.mapViewController(self, didUpdateBounds: bounds)
+    }
     
 }

@@ -17,7 +17,7 @@ extension GMSMapView {
         overlays.forEach( { $0.map = self } )
     }
     
-    func wrapBoundsTo(markers: [GMSMarker]) {
+    func wrapBoundsTo(markers: [GMSMarker]) -> GMSCoordinateBounds {
         
         var bounds = GMSCoordinateBounds()
         for marker in markers {
@@ -25,6 +25,8 @@ extension GMSMapView {
         }
         let update = GMSCameraUpdate.fit(bounds, withPadding: 60)
         self.animate(with: update)
+        
+        return bounds
         
     }
     

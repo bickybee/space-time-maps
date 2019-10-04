@@ -190,7 +190,7 @@ class Scheduler {
         for c in flatter {
             var score : Double = 0
             for i in c.indices.dropLast() {
-                let key = c[i] + c[i+1]
+                let key = PlacePair(startID: c[i], endID: c[i+1])
                 score += timeDict[key]!
             }
             scores.append(score)
@@ -228,7 +228,7 @@ class Scheduler {
                 time += TimeInterval.from(minutes: 30)
                 if (i != perm.indices.last) {
                     let nextPlace = block.placeGroup[perm[i + 1]]
-                    time += timings[place.placeID + nextPlace.placeID]!
+                    time += timings[PlacePair(startID: place.placeID, endID: nextPlace.placeID)]!
                 }
             }
             
@@ -256,23 +256,6 @@ class Scheduler {
         }
         
         return options
-    }
-    
-    func getMatrixFor(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback: @escaping (TimeMatrix?) -> ()) {
-        
-        // Prepare matrix to be sent to Google Distance Matrix API
-        var origins = [Place]()
-        origins.append(contentsOf: optionBlock.placeGroup.places)
-        if let before = before { origins.append(before.place) }
-        
-        var destinations = [Place]()
-        destinations.append(contentsOf: optionBlock.placeGroup.places)
-        if let after = after { destinations.append(after.place) }
-        
-        // Get matrix
-        self.qs.getMatrixFor(origins: origins, destinations: destinations, travelMode: travelMode) { matrix in
-            callback(matrix)
-        }
     }
 
     func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route? {
@@ -358,6 +341,10 @@ class Scheduler {
         let endTime = min(maxEndTime, timing.end)
         
         return Timing(start: startTime, end: endTime)
+    }
+    
+    func evenlyDisperse(_ destinations: [Destination], within timing: Timing, timeDict: TimeDict) {
+        
     }
     
     

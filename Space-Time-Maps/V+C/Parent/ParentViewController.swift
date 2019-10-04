@@ -31,11 +31,14 @@ class ParentViewController: UIViewController {
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
     }
     
+    override func viewDidLayoutSubviews() {
+        updateMap()
+    }
+    
     // Pass pinches down to itinerary
     @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
         itineraryController.pinchLocationCell(gesture: gesture)
     }
-    
     
     // Pass travel mode changes down to itinerary
     @IBAction func transportModeChanged(_ sender: Any) {
