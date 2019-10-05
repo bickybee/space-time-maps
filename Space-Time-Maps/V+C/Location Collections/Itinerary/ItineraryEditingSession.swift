@@ -18,20 +18,22 @@ class ItineraryEditingSession: NSObject {
     // These are set upon initialization, don't change after
     var travelMode : TravelMode
     var baseBlocks : [ScheduleBlock] // Ordered list of blocks NOT containing block being edited --> UNCHANGING!
-    var originalIndex : Int
     var callback : ([ScheduleBlock]?, Route?) -> () // TBH this probably shouldn't be set in the construcor, it should be an argument for each public method
     
     // This is what gets modified!
     var movingBlock : ScheduleBlock // Block being edited/moved around
+    var lastPosition : Int?
     
     var scheduler : Scheduler
     
-    init(scheduler: Scheduler, movingBlock block: ScheduleBlock, withIndex index: Int, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    init(scheduler: Scheduler, movingBlock block: ScheduleBlock, withIndex index: Int?, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         self.movingBlock = block
         self.baseBlocks = blocks
+        self.baseBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        
         self.travelMode = travelMode
         self.callback = callback
-        self.originalIndex = index
+        self.lastPosition = index
         self.scheduler = scheduler
     }
     
@@ -41,13 +43,27 @@ class ItineraryEditingSession: NSObject {
         movingBlock.timing.start = time - movingBlock.timing.duration / 2
         movingBlock.timing.end = time + movingBlock.timing.duration / 2
         
-        // Create new schedule
-        var modifiedBlocks = baseBlocks
-        modifiedBlocks.append(movingBlock)
-        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        if intersectsOtherBlocks(movingBlock) {
+            removeBlock()
+        } else {
         
-        // Compute new route with modifications
-        computeRoute()
+            // Create new schedule
+            var modifiedBlocks = baseBlocks
+            var insertAt = modifiedBlocks.endIndex
+            for (i, block) in modifiedBlocks.enumerated() {
+                
+                if block.timing.start >= movingBlock.timing.start {
+                    insertAt = i
+                    break
+                }
+                
+            }
+            
+            let changedOrder = (insertAt != lastPosition)
+            modifiedBlocks.insert(movingBlock, at: insertAt)
+            lastPosition = insertAt
+            computeRoute(with: modifiedBlocks, changedOrder: changedOrder)
+        }
         
     }
     
@@ -60,33 +76,44 @@ class ItineraryEditingSession: NSObject {
         movingBlock.timing.duration = duration
         movingBlock.timing.end = movingBlock.timing.start + movingBlock.timing.duration
         
-        // Compute new route with modifications
-        computeRoute()
+        if intersectsOtherBlocks(movingBlock) {
+            removeBlock()
+        } else {
+            // Compute new route with modifications
+            var modifiedBlocks = baseBlocks
+            modifiedBlocks.append(movingBlock)
+            modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+            
+            computeRoute(with: modifiedBlocks, changedOrder: false)
+        }
+        
     }
     
     func removeBlock() {
-        computeRoute(with: baseBlocks)
+        computeRoute(with: baseBlocks, changedOrder: true)
     }
     
     func end() {
         moveBlock(toTime: movingBlock.timing.start)
     }
     
-    func computeRoute() {
+    func intersectsOtherBlocks(_ block: ScheduleBlock) -> Bool {
         
-        // Add movingBlock with whatever changes it may have had to the baseBlocks (unchanging blocks!)
-        var modifiedBlocks = baseBlocks
-        modifiedBlocks.append(movingBlock)
-        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
-        computeRoute(with: modifiedBlocks)
+        for b in baseBlocks {
+            if b.timing.intersects(block.timing) {
+                return true
+            }
+        }
         
+        return false
     }
     
-    func computeRoute(with blocks: [ScheduleBlock]) {
+    
+    func computeRoute(with blocks: [ScheduleBlock], changedOrder: Bool) {
         if blocks.count <= 0 {
             callback(blocks, Route())
         } else {
-            scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
+            scheduler.schedule(blocks: blocks, changedOrder: changedOrder, travelMode: travelMode, callback: callback)
         }
     }
 

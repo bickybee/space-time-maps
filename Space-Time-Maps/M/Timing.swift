@@ -51,5 +51,13 @@ struct Timing {
         self.duration = duration
     }
     
+    func contains(_ time: TimeInterval) -> Bool {
+        return (start <= time) && (end >= time)
+    }
+    
+    func intersects(_ timing: Timing) -> Bool {
+        return self.contains(timing.start) || self.contains(timing.end)
+    }
+    
     
 }

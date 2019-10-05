@@ -21,12 +21,12 @@ class Scheduler {
     
     
     // Returns blocks with destinations and timings set, associated scheduled route
-    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func schedule(blocks: [ScheduleBlock], changedOrder: Bool, travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
 
         // Make a copy, in case the original block list gets modified during this process
 //        let inputBlocks = blocks.map{ $0.copy() }
         
-        let scheduledBlocks = scheduleBlocks(blocks, travelMode: travelMode)
+        let scheduledBlocks = scheduleBlocks(blocks, changedOrder: changedOrder, travelMode: travelMode)
         let route = routeFromBlocks(scheduledBlocks, travelMode: travelMode)
         if route != nil {
             let optionBlocks = scheduledBlocks.compactMap({ $0 as? OptionBlock })
@@ -38,7 +38,7 @@ class Scheduler {
     
     
     // Returns blocks with destinations and timings set
-    func scheduleBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> [ScheduleBlock] {
+    func scheduleBlocks(_ blocks: [ScheduleBlock], changedOrder: Bool, travelMode: TravelMode) -> [ScheduleBlock] {
         
         var schedule = [ScheduleBlock]()
         
@@ -60,17 +60,23 @@ class Scheduler {
                 // How many option blocks are there in a row? Will need to consider them all together.
                 let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
                 let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
-                var allScheduledAlready = true
                 
-                for o in optionBlocks {
-                    if o.destinations == nil {
-                        allScheduledAlready = false
-                        break
+                var shouldRescheduleOptionBlocks = changedOrder
+                if (!changedOrder) {
+                    var allScheduledAlready = true
+                    
+                    for o in optionBlocks {
+                        if o.destinations == nil {
+                            allScheduledAlready = false
+                            break
+                        }
                     }
+                    shouldRescheduleOptionBlocks = !allScheduledAlready
                 }
                 
+                
                 // If they're all scheduled already, move along, no rescheduling needed.
-                if allScheduledAlready {
+                if !shouldRescheduleOptionBlocks {
                     schedule.append(contentsOf: optionBlocks)
                 }
                 

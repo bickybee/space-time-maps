@@ -75,7 +75,7 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, changedOrder: true, travelMode: itinerary.travelMode, callback: didEditItinerary)
         
     }
     
@@ -194,7 +194,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
         block.optionIndex = newIndex
         
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, changedOrder: false, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
 
     @objc func nextOption(_ sender: UIButton) {
@@ -205,7 +205,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index + 1) % (block.optionCount)
         block.optionIndex = newIndex
         
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, changedOrder: false, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
 }
 
@@ -217,12 +217,14 @@ extension ItineraryViewController : DragDelegate {
         
         guard let block = blockFromObject(object) else { return }
         var editingBlocks = itinerary.schedule
+        var index : Int?
         
         if draggableContentViewController is ItineraryViewController {
             editingBlocks.remove(at: indexPath.item)
+            index = indexPath.item
         }
         
-        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: indexPath.item, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
@@ -232,7 +234,10 @@ extension ItineraryViewController : DragDelegate {
         let location = gesture.location(in: collectionView)
         
         if !collectionView.frame.contains(location) {
-            editingSession.removeBlock()
+            if previousTouchHour != nil {
+                editingSession.removeBlock()
+                previousTouchHour = nil
+            }
             return
         }
         
@@ -247,7 +252,6 @@ extension ItineraryViewController : DragDelegate {
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
         
-//        editingSession?.end()
         editingSession = nil
         previousTouchHour = nil
         
