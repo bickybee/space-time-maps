@@ -129,7 +129,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if let group = groups[safe: section] {
-            return (inEditingMode && (group.count == 0)) ? 1 : group.count // extra placeholder cell when in editing mode
+            return inEditingMode ? group.count + 1 : group.count // extra placeholder cell when in editing mode
         } else {
             return 0
         }
@@ -142,7 +142,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         guard let group = groups[safe: indexPath.section] else { return cell }
         
         // Placeholder cell?
-        if indexPath.item == group.count {
+        if isPlaceholder(indexPath) {
             return placeholderCellFrom(cell)
         }
         
@@ -175,8 +175,10 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         cell.contentView.alpha = 1.0
         cell.backgroundColor = .clear
         cell.configureWith(place)
-        cell.gestureRecognizers?.forEach(cell.removeGestureRecognizer)
-        addDragRecognizerTo(draggable: cell)
+        if (cell.gestureRecognizers == nil) || (cell.gestureRecognizers?.count == 0) {
+            addDragRecognizerTo(draggable: cell)
+        }
+        print(cell.gestureRecognizers?.count)
         
         return cell
         
@@ -190,8 +192,16 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         setupCellWidth()
-        return CGSize(width:cellWidth, height:cellHeight)
+        if isPlaceholder(indexPath) {
+            return CGSize(width:cellWidth, height:cellHeight * 0.2)
+        } else {
+            return CGSize(width:cellWidth, height:cellHeight)
+        }
 
+    }
+    
+    func isPlaceholder(_ indexPath: IndexPath) -> Bool {
+        return indexPath.item == groups[indexPath.section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -294,20 +304,27 @@ extension PlacePaletteViewController: DragDelegate {
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
         guard groupsBeforeEditing.count > insertAt.section, groupsBeforeEditing[insertAt.section].count >= insertAt.item else { return }
         
+        print(draggingIndexPath)
+        
         if (!midDrag ){
             collectionView.performBatchUpdates({
                 midDrag = true
                 
                 // if moving into an empty section, first delete the placeholder cell
-                if groups[insertAt.section].count == 0 { collectionView.deleteItems(at: [insertAt])}
-                
-                // if moving the only item out of the empty section, insert the placeholder cell
-                // TODO....
+//                let movingToEmptyGroup = (groups[insertAt.section].count == 0)
+//                if movingToEmptyGroup { collectionView.deleteItems(at: [insertAt])}
+//                print("moving to empty group: \(movingToEmptyGroup)")
                 
                 groups = groupsBeforeEditing.map({ $0.copy() })
                 groups[insertAt.section].insert(place, at: insertAt.item)
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
+                
+                // if moving the only item out of the empty section, insert the placeholder cell
+//                let emptyingGroup = (insertAt.section != indexPath.section) && (groups[indexPath.section].count == 0)
+//                if emptyingGroup { collectionView.insertItems(at: [indexPath]) }
+//                print("emptying group: \(emptyingGroup)")
+                
             }, completion: { success in self.midDrag = false })
         }
     }
