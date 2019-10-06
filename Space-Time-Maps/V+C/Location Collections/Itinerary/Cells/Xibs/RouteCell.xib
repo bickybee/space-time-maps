@@ -21,7 +21,7 @@
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muJ-aH-6N1" userLabel="RouteLine">
                         <rect key="frame" x="62.5" y="0.0" width="22" height="109"/>
-                        <color key="backgroundColor" red="0.85687879793384536" green="0.85687879793384536" blue="0.85687879793384536" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.85687879793384536" green="0.85687879793384536" blue="0.85687879793384536" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61f-8h-9Pj">
                         <rect key="frame" x="89.5" y="50" width="17.5" height="9"/>

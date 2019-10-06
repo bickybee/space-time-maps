@@ -175,6 +175,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         cell.contentView.alpha = 1.0
         cell.backgroundColor = .clear
         cell.configureWith(place)
+        cell.gestureRecognizers?.forEach(cell.removeGestureRecognizer)
         addDragRecognizerTo(draggable: cell)
         
         return cell
@@ -213,7 +214,10 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         guard let group = groups[safe: indexPath.section] else { assert(false, "No group here") }
         headerView.label.text = group.name
         headerView.tag = indexPath.section
-        addDragRecognizerTo(draggable: headerView)
+        headerView.gestureRecognizers?.forEach(headerView.removeGestureRecognizer)
+        if !inEditingMode {
+            addDragRecognizerTo(draggable: headerView)
+        }
         return headerView
         
     }
@@ -310,7 +314,7 @@ extension PlacePaletteViewController: DragDelegate {
     
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
 
-        
+        guard object as? Place != nil else { return }
         let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
         collectionView.reloadItems(at: [reloadIndexPath])

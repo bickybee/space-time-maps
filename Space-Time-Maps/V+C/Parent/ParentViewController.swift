@@ -69,7 +69,9 @@ class ParentViewController: UIViewController {
         view.layoutIfNeeded()
         UIView.setAnimationCurve(.easeOut)
         
-        if !palette.inEditingMode {
+        palette.inEditingMode = !palette.inEditingMode
+        
+        if palette.inEditingMode {
             
             // Maximize palette
             UIView.animate(withDuration: 0.5, animations: {
@@ -105,8 +107,7 @@ class ParentViewController: UIViewController {
             // Return drag-and-drop functionality to itinerary
             palette.dragDelegate = self.itineraryController
         }
-        
-        palette.inEditingMode = !palette.inEditingMode
+    
     }
     
     // Package itinerary and place data to send to map for rendering
