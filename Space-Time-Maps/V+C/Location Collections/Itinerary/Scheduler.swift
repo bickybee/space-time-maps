@@ -17,7 +17,7 @@ class Scheduler {
     typealias Combination<T> = [T] // Possibilities w/ unvaried orderings
     
     let qs = QueryService()
-    var legCache = [String : LegData]()
+    var legCache = [LegData]()
     
     
     // Returns blocks with destinations and timings set, associated scheduled route
@@ -272,10 +272,6 @@ class Scheduler {
         
     }
     
-    func hashForLeg(start: Destination, end: Destination) -> String {
-        return start.place.placeID + end.place.placeID
-    }
-    
     // Access API to get a route
     func routeFromDestinations(_ destinations: [Destination], travelMode: TravelMode) -> Route? {
         
@@ -288,9 +284,8 @@ class Scheduler {
             let start = destinations[i]
             let end = destinations[i + 1]
             let timing = Timing(start: start.timing.end, end: end.timing.start)
-            let hash = hashForLeg(start: start, end: end)
             
-            if let cached = legCache[hash] {
+            if let cached = legCache.first(where: { $0.matches(start.place, end.place, travelMode) }) {
                 let leg = Leg(data: cached, timing: timing)
                 route.add(leg)
                 
@@ -302,7 +297,7 @@ class Scheduler {
                     if let legData = legData {
                         let leg = Leg(data: legData, timing: timing)
                         route.add(leg)
-                        self.legCache[hash] = legData
+                        self.legCache.append(legData)
                     }
                     
                     dispatchGroup.leave()

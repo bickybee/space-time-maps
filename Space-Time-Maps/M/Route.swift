@@ -14,6 +14,19 @@ struct LegData {
     var endPlace : Place
     var polyline: String
     var duration: TimeInterval
+    var travelMode : TravelMode
+    
+    func matches(_ start: Place, _ end: Place, _ travelMode: TravelMode) -> Bool {
+        return (self.startPlace.placeID == start.placeID)
+            && (self.endPlace.placeID == end.placeID)
+            && (self.travelMode == travelMode)
+    }
+    
+    static func == (lhs: LegData, rhs: LegData) -> Bool {
+        return (lhs.startPlace.placeID == rhs.startPlace.placeID)
+                && (lhs.endPlace.placeID == rhs.endPlace.placeID)
+                && (lhs.travelMode == rhs.travelMode)
+    }
     
 }
 

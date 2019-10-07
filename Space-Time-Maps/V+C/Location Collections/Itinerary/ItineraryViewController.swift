@@ -170,8 +170,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let index = indexPath.item
         guard let block = itinerary.schedule[index] as? OptionBlock else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
-            cell.gestureRecognizers?.forEach(cell.removeGestureRecognizer)
-            addDragRecognizerTo(draggable: cell)
+            if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
+                addDragRecognizerTo(draggable: cell)
+            }
             return cell
         }
         
@@ -182,8 +183,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         cell.prevBtn.tag = index
         cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
         cell.configureWith(block)
-        cell.gestureRecognizers?.forEach(cell.removeGestureRecognizer)
-        addDragRecognizerTo(draggable: cell)
+        if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
+            addDragRecognizerTo(draggable: cell)
+        }
         
         return cell
     }

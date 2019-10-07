@@ -99,9 +99,16 @@ class ItineraryEditingSession: NSObject {
     
     func intersectsOtherBlocks(_ block: ScheduleBlock) -> Bool {
         
-        for b in baseBlocks {
-            if b.timing.intersects(block.timing) {
-                return true
+        guard let destinations = block.destinations else { return false }
+        
+        for dest in destinations {
+            for b in baseBlocks {
+                guard let bDests = b.destinations else { continue }
+                for d in bDests {
+                    if d.timing.intersects(dest.timing) {
+                        return true
+                    }
+                }
             }
         }
         
