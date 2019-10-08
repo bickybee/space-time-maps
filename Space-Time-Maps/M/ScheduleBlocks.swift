@@ -50,6 +50,7 @@ protocol OptionBlock : ScheduleBlock {
     var optionCount: Int { get }
     var destinations: [Destination]? { get }
     var name: String { get }
+    var fixed : Bool { get set }
 }
 
 // lotsa code duplication to follow but that's ok, FIXE later
@@ -60,6 +61,7 @@ class OneOfBlock : OptionBlock {
     var placeGroup : PlaceGroup
     var optionIndex: Int?
     var permutations : [[Int]]
+    var fixed : Bool
     
     var permutationPlaceIDs: [[String]] {
         return permutations.map( { $0.map( { placeGroup[$0].placeID } ) } )
@@ -89,6 +91,7 @@ class OneOfBlock : OptionBlock {
         self.placeGroup = placeGroup
         self.timing = timing
         self.permutations = placeGroup.places.indices.map( { [$0] } )
+        self.fixed = false
     }
     
 }
@@ -121,10 +124,12 @@ class AsManyOfBlock : OptionBlock {
     var name : String {
         return placeGroup.name
     }
+    var fixed: Bool
     
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
+        self.fixed = false
         
         let indices = Array(placeGroup.places.indices)
         var p = [[Int]]()
@@ -198,7 +203,7 @@ class AsManyOfBlock : OptionBlock {
         let topFive = validPermTimes.prefix(5)
         let validPerms = topFive.map( { $0.1 })
         permutations = validPerms
-        
+
     }
 
     

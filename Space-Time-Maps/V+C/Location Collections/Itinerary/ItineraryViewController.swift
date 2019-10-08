@@ -74,8 +74,8 @@ class ItineraryViewController: DraggableContentViewController {
     }
     
     func computeRoute() {
-        
-        scheduler.schedule(blocks: itinerary.schedule, changedOrder: true, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
         
     }
     
@@ -197,8 +197,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
         block.optionIndex = newIndex
-        
-        scheduler.schedule(blocks: itinerary.schedule, changedOrder: false, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        block.fixed = true
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        block.fixed = false
     }
 
     @objc func nextOption(_ sender: UIButton) {
@@ -208,8 +209,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let newIndex = (index + 1) % (block.optionCount)
         block.optionIndex = newIndex
-        
-        scheduler.schedule(blocks: itinerary.schedule, changedOrder: false, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        block.fixed = true
+        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        block.fixed = false
     }
 }
 
@@ -277,9 +279,11 @@ extension ItineraryViewController : DragDelegate {
             self.itinerary.route = route
         }
         
-        collectionView.reloadData()
-    
-        delegate?.itineraryViewController(self, didUpdateItinerary: itinerary)
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+            self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+        }
+
     }
     
     func blockFromObject(_ object : Any) -> ScheduleBlock? {

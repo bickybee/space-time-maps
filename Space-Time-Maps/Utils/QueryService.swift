@@ -50,7 +50,7 @@ class QueryService {
     
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
-        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { return }
+        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
         runQuery(url: url) {data in
             let results = self.dataToTimeDict(data, origins, destinations)
             callback(results)

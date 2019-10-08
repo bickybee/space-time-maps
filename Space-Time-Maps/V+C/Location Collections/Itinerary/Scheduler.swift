@@ -16,17 +16,13 @@ class Scheduler {
     typealias Permutation<T> = [T] // Possibilities w/ varied orderings
     typealias Combination<T> = [T] // Possibilities w/ unvaried orderings
     
-    let qs = QueryService()
-    var legCache = [LegData]()
-    
+    private let qs = QueryService()
+    private var legCache = [LegData]()
     
     // Returns blocks with destinations and timings set, associated scheduled route
-    func schedule(blocks: [ScheduleBlock], changedOrder: Bool, travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
-
-        // Make a copy, in case the original block list gets modified during this process
-//        let inputBlocks = blocks.map{ $0.copy() }
-        
-        let scheduledBlocks = scheduleBlocks(blocks, changedOrder: changedOrder, travelMode: travelMode)
+    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+//        print("regular")
+        let scheduledBlocks = scheduleBlocks(blocks, travelMode: travelMode)
         let route = routeFromBlocks(scheduledBlocks, travelMode: travelMode)
         if route != nil {
             let optionBlocks = scheduledBlocks.compactMap({ $0 as? OptionBlock })
@@ -36,9 +32,66 @@ class Scheduler {
         callback(scheduledBlocks, route)
     }
     
+    func scheduleShift(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+//        print("shift")
+        // Don't actually need to reschedule blocks, just the route!
+        let route = routeFromBlocks(blocks, travelMode: travelMode)
+        if route != nil {
+            let optionBlocks = blocks.compactMap({ $0 as? OptionBlock })
+            optionBlocks.forEach({ evenlyDisperseBlock($0, in: route!) })
+        }
+        
+        callback(blocks, route)
+    }
+    
+    func schedulePinch(of block: ScheduleBlock, in blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+        print("pinch")
+        // Check if the change in duration means that more or less destinations can fit into the asManyOf block
+        
+        if let asManyOf = block as? AsManyOfBlock {
+            
+            let places = asManyOf.placeGroup.places
+            
+            var needsRescheduling = false
+            
+            let dispatchGroup = DispatchGroup()
+            dispatchGroup.enter()
+            
+            qs.getTimeDictFor(origins: places, destinations: places, travelMode: travelMode) { timeDict in
+                let originalPermLength = asManyOf.destinations!.count
+                asManyOf.setPermutationsUsing(timeDict!)
+                
+                let newPermLength = asManyOf.permutations[0].count //SO BAD!!!! FIXME
+                needsRescheduling = originalPermLength != newPermLength
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.wait()
+            
+            if needsRescheduling {
+                print("needs reschedule")
+                self.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
+            } else {
+                print("is fine")
+                self.scheduleShift(blocks: blocks, travelMode: travelMode, callback: callback)
+            }
+            
+        } else {
+            self.scheduleShift(blocks: blocks, travelMode: travelMode, callback: callback)
+        }
+        
+    }
+    
+    
+}
+
+// MARK: - Private interal methods!!!
+
+private extension Scheduler {
+    
     
     // Returns blocks with destinations and timings set
-    func scheduleBlocks(_ blocks: [ScheduleBlock], changedOrder: Bool, travelMode: TravelMode) -> [ScheduleBlock] {
+    func scheduleBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> [ScheduleBlock] {
         
         var schedule = [ScheduleBlock]()
         
@@ -55,38 +108,40 @@ class Scheduler {
                 
                 continue
             }
+            
+            let optionBlock = block as! OptionBlock
+            if optionBlock.fixed {
+                schedule.append(optionBlock)
+                i += 1
                 
-            // Otherwise it's an option block, requiring further calculations
-            // How many option blocks are there in a row? Will need to consider them all together.
-            let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
-            let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
-            
-            // Do the options need to be recalculated?
-            // If the order has changed, yes
-            // If the order hasn't changed, but one or more of the blocks hasn't had its options calculated yet, also yes
-            var allCalculatedAlready = true
-            if (!changedOrder) {
-                for o in optionBlocks {
-                    if o.destinations == nil {
-                        allCalculatedAlready = false
-                        break
-                    }
-                }
-            }
-            
-            if (!changedOrder && allCalculatedAlready) {
+                continue
                 
-            }
-            
-            let mustRecalculateOptions = changedOrder || (!allCalculatedAlready)
-            
-            // If they're all calculated already, move along, no rescheduling needed.
-            if !mustRecalculateOptions {
-                schedule.append(contentsOf: optionBlocks)
-            }
-            
-            // If even one of them is not yet scheduled, all need to be reconsidered.
-            else {
+            } else {
+                
+                // Otherwise it's an option block, requiring further calculations
+                // How many option blocks are there in a row? Will need to consider them all together.
+                let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
+                let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
+                
+                // Do the options need to be recalculated?
+                // If the order has changed, yes
+                // If the order hasn't changed, but one or more of the blocks hasn't had its options calculated yet, also yes
+                //            var allCalculatedAlready = true
+                //            for o in optionBlocks {
+                //                if o.destinations == nil {
+                //                    allCalculatedAlready = false
+                //                    break
+                //                }
+                //            }
+                //
+                //            // If they're all calculated already, move along, no rescheduling needed.
+                //            if false {
+                //                schedule.append(contentsOf: optionBlocks)
+                //            }
+                
+                // If even one of them is not yet scheduled, all need to be reconsidered.
+                //else {
+                print("SCHED")
                 
                 // Are there destinations leading into/out of this set of option blocks?
                 let before = blocks[safe: i - 1] as? SingleBlock
@@ -101,10 +156,14 @@ class Scheduler {
                 }
                 
                 dispatchGroup.wait()
+                //}
+                
+                // Continue past the option block group
+                i =  range.upperBound + 1
+                
             }
-
-            // Continue past the option block group
-            i =  range.upperBound + 1
+                
+            
 
         }
         
@@ -223,8 +282,13 @@ class Scheduler {
         var endIndex : Int?
         var i = startIndex
         while (endIndex == nil) && (i < blocks.count - 1){
-            if blocks[i + 1] is OptionBlock {
-                i += 1
+            if let ob = blocks[i + 1] as? OptionBlock {
+                if !ob.fixed {
+                    i += 1
+                } else {
+                    endIndex = i
+                }
+                
             } else {
                 endIndex = i
             }
