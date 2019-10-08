@@ -52,56 +52,60 @@ class Scheduler {
             if let singleBlock = block as? SingleBlock {
                 schedule.append(singleBlock)
                 i += 1
+                
+                continue
             }
                 
-            // Option blocks require furtuher calculations
-            else if block is OptionBlock {
-                
-                // How many option blocks are there in a row? Will need to consider them all together.
-                let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
-                let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
-                
-                var shouldRescheduleOptionBlocks = changedOrder
-                if (!changedOrder) {
-                    var allScheduledAlready = true
-                    
-                    for o in optionBlocks {
-                        if o.destinations == nil {
-                            allScheduledAlready = false
-                            break
-                        }
+            // Otherwise it's an option block, requiring further calculations
+            // How many option blocks are there in a row? Will need to consider them all together.
+            let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
+            let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
+            
+            // Do the options need to be recalculated?
+            // If the order has changed, yes
+            // If the order hasn't changed, but one or more of the blocks hasn't had its options calculated yet, also yes
+            var allCalculatedAlready = true
+            if (!changedOrder) {
+                for o in optionBlocks {
+                    if o.destinations == nil {
+                        allCalculatedAlready = false
+                        break
                     }
-                    shouldRescheduleOptionBlocks = !allScheduledAlready
                 }
+            }
+            
+            if (!changedOrder && allCalculatedAlready) {
                 
+            }
+            
+            let mustRecalculateOptions = changedOrder || (!allCalculatedAlready)
+            
+            // If they're all calculated already, move along, no rescheduling needed.
+            if !mustRecalculateOptions {
+                schedule.append(contentsOf: optionBlocks)
+            }
+            
+            // If even one of them is not yet scheduled, all need to be reconsidered.
+            else {
                 
-                // If they're all scheduled already, move along, no rescheduling needed.
-                if !shouldRescheduleOptionBlocks {
+                // Are there destinations leading into/out of this set of option blocks?
+                let before = blocks[safe: i - 1] as? SingleBlock
+                let after = blocks[safe: range.upperBound + 1] as? SingleBlock
+                
+                let dispatchGroup = DispatchGroup()
+                dispatchGroup.enter()
+                
+                scheduleOptionBlocks(optionBlocks, before: before, after: after, travelMode: travelMode) {
                     schedule.append(contentsOf: optionBlocks)
+                    dispatchGroup.leave()
                 }
                 
-                // If even one of them is not yet scheduled, all need to be reconsidered.
-                else {
-                    
-                    // Are there destinations leading into/out of this set of option blocks?
-                    let before = blocks[safe: i - 1] as? SingleBlock
-                    let after = blocks[safe: range.upperBound + 1] as? SingleBlock
-                    
-                    let dispatchGroup = DispatchGroup()
-                    dispatchGroup.enter()
-                    
-                    scheduleOptionBlocks(optionBlocks, before: before, after: after, travelMode: travelMode) {
-                        schedule.append(contentsOf: optionBlocks)
-                        dispatchGroup.leave()
-                    }
-                    
-                    dispatchGroup.wait()
-                }
-
-                // Continue past the option block group
-                i =  range.upperBound + 1
-
+                dispatchGroup.wait()
             }
+
+            // Continue past the option block group
+            i =  range.upperBound + 1
+
         }
         
         return schedule
@@ -127,6 +131,15 @@ class Scheduler {
             // Use time dict to get scores for all possible permutations of destinations in option blocks,
             // Find best permutation!
             guard let timeDict = dict else { callback(); return }
+            
+            // First set perms of asManyOf blocks lol TODO: put this somewhere where it makes more sense
+            
+            for b in blocks {
+                if let asManyOf = b as? AsManyOfBlock {
+                    asManyOf.setPermutationsUsing(timeDict)
+                }
+            }
+            
             let optionCombinations = self.optionCombinationsFor(blocks)
             let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
             let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
@@ -149,6 +162,7 @@ class Scheduler {
         }
         
     }
+
 
     // Returns option index combinations
     func optionCombinationsFor(_ blocks: [OptionBlock]) -> [Combination<Int>] {
@@ -244,6 +258,77 @@ class Scheduler {
         block.options = options
     }
     
+    // Spread destinations of selected option evenly in optionBlock
+    func evenlyDisperseBlock(_ optionBlock: OptionBlock, in route: Route) {
+        
+        guard let destinations = optionBlock.destinations, destinations.count >= 2 else { return }
+        
+        let timeBounds = timeBoundsOf(destinations, within: optionBlock.timing, in: route)
+        evenlyDisperseDestinations(destinations, within: timeBounds, in: route)
+        
+    }
+    
+    // Figure out the time bounds (might not necessarily be the option block timing, depends on entering/exiting leg timings)
+    func timeBoundsOf(_ destinations : [Destination], within timing: Timing, in route: Route) -> Timing {
+        
+        let firstPlace = destinations.first!.place
+        let lastPlace = destinations.last!.place
+        
+        var minStartTime = -Double.infinity
+        var maxEndTime = Double.infinity
+        
+        if let enteringLeg = route.legEndingAt(firstPlace) {
+            minStartTime = enteringLeg.timing.start + enteringLeg.travelTiming.duration
+        }
+        
+        if let leavingLeg = route.legStartingAt(lastPlace) {
+            maxEndTime = leavingLeg.timing.end - leavingLeg.travelTiming.duration
+        }
+        
+        let startTime = max(minStartTime, timing.start)
+        let endTime = min(maxEndTime, timing.end)
+        
+        return Timing(start: startTime, end: endTime)
+    }
+    
+    func evenlyDisperse(_ destinations: [Destination], within timing: Timing, timeDict: TimeDict) {
+        
+    }
+    
+    
+    func evenlyDisperseDestinations(_ destinations : [Destination], within timing: Timing, in route: Route) {
+        
+        var extraTime = timing.duration
+        var legs = [Leg]()
+        
+        let firstDest = destinations[0]
+        firstDest.timing.start = timing.start
+        firstDest.timing.end = firstDest.timing.start + firstDest.timing.duration
+        
+        for (i, dest) in destinations.enumerated() {
+            extraTime -= dest.timing.duration
+            if i < (destinations.count - 1) {
+                let leg = route.legStartingAt(dest.place)!
+                legs.append(leg)
+                extraTime -= leg.travelTiming.duration
+            }
+        }
+        
+        let timeBetweenDests = extraTime / Double((destinations.count - 1))
+        for (i, leg) in legs.enumerated() {
+            let legStartTime = destinations[i].timing.end
+            let duration = timeBetweenDests
+            leg.timing = Timing(start: legStartTime, duration: duration)
+            
+            let nextDestStartTime = leg.timing.end
+            let nextDestDuration = destinations[i + 1].timing.duration
+            let nextDest = destinations[i + 1]
+            nextDest.timing = Timing(start: nextDestStartTime, duration: nextDestDuration)
+            
+        }
+        
+    }
+    
     func permutationsToDestinations(_ permutations: [[Int]], _ timings: [[TimeInterval]], _ places: [Place], _ startTime: TimeInterval) -> [[Destination]] {
         
         var options = [[Destination]]()
@@ -263,6 +348,8 @@ class Scheduler {
         
         return options
     }
+    
+    // MARK: - Route scheduling
 
     func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route? {
         
@@ -310,186 +397,6 @@ class Scheduler {
         dispatchGroup.wait()
         return route
     }
-
-    // Spread destinations of selected option evenly in optionBlock
-    func evenlyDisperseBlock(_ optionBlock: OptionBlock, in route: Route) {
-        
-        guard let destinations = optionBlock.destinations, destinations.count >= 2 else { return }
- 
-        let timeBounds = timeBoundsOf(destinations, within: optionBlock.timing, in: route)
-        evenlyDisperseDestinations(destinations, within: timeBounds, in: route)
-        
-    }
-    
-    // Figure out the time bounds (might not necessarily be the option block timing, depends on entering/exiting leg timings)
-    func timeBoundsOf(_ destinations : [Destination], within timing: Timing, in route: Route) -> Timing {
-        
-        let firstPlace = destinations.first!.place
-        let lastPlace = destinations.last!.place
-        
-        var minStartTime = -Double.infinity
-        var maxEndTime = Double.infinity
-        
-        if let enteringLeg = route.legEndingAt(firstPlace) {
-            minStartTime = enteringLeg.timing.start + enteringLeg.travelTiming.duration
-        }
-        
-        if let leavingLeg = route.legStartingAt(lastPlace) {
-            maxEndTime = leavingLeg.timing.end - leavingLeg.travelTiming.duration
-        }
-
-        let startTime = max(minStartTime, timing.start)
-        let endTime = min(maxEndTime, timing.end)
-        
-        return Timing(start: startTime, end: endTime)
-    }
-    
-    func evenlyDisperse(_ destinations: [Destination], within timing: Timing, timeDict: TimeDict) {
-        
-    }
-    
-    
-    func evenlyDisperseDestinations(_ destinations : [Destination], within timing: Timing, in route: Route) {
-        
-        var extraTime = timing.duration
-        var legs = [Leg]()
-        
-        let firstDest = destinations[0]
-        firstDest.timing.start = timing.start
-        firstDest.timing.end = firstDest.timing.start + firstDest.timing.duration
-        
-        for (i, dest) in destinations.enumerated() {
-            extraTime -= dest.timing.duration
-            if i < (destinations.count - 1) {
-                let leg = route.legStartingAt(dest.place)!
-                legs.append(leg)
-                extraTime -= leg.travelTiming.duration
-            }
-        }
-        
-        let timeBetweenDests = extraTime / Double((destinations.count - 1))
-        for (i, leg) in legs.enumerated() {
-            let legStartTime = destinations[i].timing.end
-            let duration = timeBetweenDests
-            leg.timing = Timing(start: legStartTime, duration: duration)
-            
-            let nextDestStartTime = leg.timing.end
-            let nextDestDuration = destinations[i + 1].timing.duration
-            let nextDest = destinations[i + 1]
-            nextDest.timing = Timing(start: nextDestStartTime, duration: nextDestDuration)
-            
-        }
-        
-    }
-    
-    //
-    //    func computeOptions(_ matrix: TimeMatrix, _ permutations: [[Int]]) -> (Int, [[TimeInterval]]) {
-    //
-    //        var timings = [[TimeInterval]]()
-    //        let last = matrix.endIndex - 1
-    //
-    //        for permutation in permutations {
-    //            var optionTiming = [TimeInterval]()
-    //
-    //            // A -> B0
-    //            optionTiming.append(matrix[permutation.first!][last])
-    //            // B0 -> B(n-1)
-    //            for j in 0 ... permutation.count - 2 {
-    //                let from = permutation[j + 1]
-    //                let to = permutation[j]
-    //                optionTiming.append(matrix[to][from])
-    //            }
-    //
-    //            // Bn -> C
-    //            optionTiming.append(matrix[last][permutation.last!])
-    //            timings.append(optionTiming)
-    //        }
-    //
-    //        let scores = timings.map( { $0.reduce(0, +) } )
-    //        let minScore = scores.min()
-    //        let index = scores.firstIndex(of: minScore!)
-    //        return (index!, timings)
-    //
-    //    }
-    //
-    //    // Determine best option ==> involves least travel time!
-    //    func indexOfBestOption(_ matrix: TimeMatrix) -> Int {
-    //
-    //        let n = matrix.count - 1 // rows
-    //        let m = matrix[0].count - 1 // cols
-    //
-    //        let numOptions = max(n, m)
-    //        var scores = Array(repeating: 0.0, count: numOptions)
-    //
-    //        for i in 0...numOptions - 1 {
-    //            scores[i] += m < n ? 0 : matrix[i][m]
-    //            scores[i] += n < m ? 0 : matrix[n][i]
-    //        }
-    //
-    //        let minScore = scores.min()
-    //        let index = scores.firstIndex(of: minScore!)
-    //        return index!
-    //
-    //    }
-    //
-//
-//
-//    func findBestOption(_ optionBlock: OptionBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-//
-//        if let oneOf = optionBlock as? OneOfBlock {
-//            findBestOption(oneOf, before: before, after: after, travelMode: travelMode, callback: callback)
-//        } else if let asManyOf = optionBlock as? AsManyOfBlock {
-//            findBestOption(asManyOf, before: before, after: after, travelMode: travelMode, callback: callback)
-//        } else {
-//            callback(nil)
-//        }
-//
-//    }
-//
-//    // also /creates/ the options???
-//    func findBestOption(_ oneOfBlock: OneOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-//
-//        // If it's an isolated group, just pick the first option
-//        guard !(before == nil && after == nil) else {
-//            callback(nil)
-//            return
-//        }
-//
-//        getMatrixFor(oneOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
-//            guard let matrix = matrix else {
-//                callback(nil)
-//                return
-//            }
-//
-//            let index = self.indexOfBestOption(matrix)
-//            callback(index)
-//        }
-//    }
-//
-//
-//    func findBestOption(_ asManyOfBlock: AsManyOfBlock, before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping (Int?) -> ()) {
-//
-//        let places = asManyOfBlock.placeGroup.places
-//        //        let placeIDs = places.map( { $0.placeID } )
-//        //        var permutations = [[String]]()
-//        let indices = Array(places.indices)
-//        var permutations = [[Int]]()
-//        Utils.permute(indices, indices.count - 1, &permutations)
-//
-//        getMatrixFor(asManyOfBlock, before: before, after: after, travelMode: travelMode) { matrix in
-//            guard let matrix = matrix else {
-//                callback(nil)
-//                return
-//            }
-//
-//            let startTime = asManyOfBlock.timing.start
-//            let (index, optionTimings) = self.computeOptions(matrix, permutations)
-//            let options = self.permutationsToDestinations(permutations, optionTimings, places, startTime)
-//            asManyOfBlock.options = options
-//            callback(index)
-//        }
-//
-//    }
     
 }
 

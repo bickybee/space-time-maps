@@ -72,7 +72,7 @@ class PlacePaletteViewController: DraggableContentViewController {
     
     func setupPlaces() {
         
-        let defaultPlaceGroups = [PlaceGroup(name: "places", places: [], kind: .none)]//Utils.defaultPlacesGroups()
+        let defaultPlaceGroups = Utils.defaultPlacesGroups()//[PlaceGroup(name: "places", places: [], kind: .none)]
         groups.append(contentsOf: defaultPlaceGroups)
         
     }

@@ -139,6 +139,48 @@ class Utils {
         }
     }
     
+    // from https://www.geeksforgeeks.org/print-subsets-given-size-set/
+    private static func subsetUtil(_ arr: [Int], _ n: Int, _ r: Int, _ index: Int, _ data: inout [Int], _ i: Int, _ output: inout [[Int]]) {
+        
+        if(index == r){
+            var temp = [Int]()
+            for j in 0 ..< r {
+                temp.append(data[j])
+            }
+            output.append(temp)
+            return
+        }
+        
+        if(i >= n){
+            return
+        }
+        
+        data[index] = arr[i]
+        
+        subsetUtil(arr, n, r, index + 1, &data, i + 1, &output)
+        subsetUtil(arr, n, r, index, &data, i + 1, &output)
+        
+    }
     
+    // from https://www.geeksforgeeks.org/print-subsets-given-size-set/
+    static func subsets(_ arr: [Int], _ n: Int, _ size: Int) -> [[Int]] {
+        
+        var data : [Int] = Array(0 ... size - 1)
+        var output = [[Int]]()
+        subsetUtil(arr, n, size, 0, &data, 0, &output)
+        return output
+        
+    }
+
+    static func subsetPermutations(input: [Int], size: Int) -> [[Int]] {
+        let subs = subsets(input, input.count, size)
+        var perms = [[Int]]()
+        for s in subs {
+            var result = [[Int]]()
+            permute(s, s.count - 1, &result)
+            perms.append(contentsOf: result)
+        }
+        return perms
+    }
     
 }

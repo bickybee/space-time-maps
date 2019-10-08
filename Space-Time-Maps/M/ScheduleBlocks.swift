@@ -125,19 +125,13 @@ class AsManyOfBlock : OptionBlock {
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
-        self.permutations = []
         
-        updatePermutations()
-    }
-    
-    func updatePermutations() {
-        let places = placeGroup.places.indices
-        let indices = Array(places.indices)
+        let indices = Array(placeGroup.places.indices)
         var p = [[Int]]()
         Utils.permute(indices, indices.count - 1, &p)
-        permutations = p
+        
+        self.permutations = p
     }
-    
     
     func shiftDestinationsBy(_ dT: TimeInterval) {
         
@@ -150,5 +144,64 @@ class AsManyOfBlock : OptionBlock {
         }
         
     }
+    
+    func defaultPermutations() -> [[Int]] {
+//        let places = placeGroup.places.indices
+        let indices = Array(placeGroup.places.indices)
+        var p = [[Int]]()
+        Utils.permute(indices, indices.count - 1, &p)
+        return p
+    }
+    
+    // Find out which combination of places actually fits in the overall timeblock
+    func setPermutationsUsing(_ timeDict: TimeDict) {
+        
+        // First try default permutations
+        var validPermTimes = [ ( TimeInterval, [Int] )]()
+        var trialPerms = defaultPermutations()
+        var subsetSize = placeGroup.count
+        
+        var optionFound = false
+        while (!optionFound) {
+            
+            // Sum up all the times for each perm and see if it fits in the asManyOf block
+            for perm in trialPerms {
+                var timeNeeded = TimeInterval(0)
+                for (i, placeIndex) in perm.enumerated() {
+                    timeNeeded += placeGroup[placeIndex].timeSpent
+                    if (i < perm.count - 1) {
+                        timeNeeded += timeDict[PlacePair(startID: placeGroup[placeIndex].placeID, endID: placeGroup[perm[i + 1]].placeID)]!
+                    }
+                }
+                
+                if timeNeeded <= timing.duration {
+                    validPermTimes.append( (timeNeeded, perm) )
+                }
+            }
+            
+            if validPermTimes.count > 0 {
+                // Were any perms valid? If so, we're good to go
+                optionFound = true
+            } else {
+                // Otherwise, try a smaller subset of places
+                subsetSize -= 1
+                trialPerms = Utils.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
+            }
+            
+        }
+        
+        // Only take best 5
+        if validPermTimes.count > 5 {
+            validPermTimes.sort(by: { $0.0 <= $1.0 } )
+        }
+        
+        let topFive = validPermTimes.prefix(5)
+        let validPerms = topFive.map( { $0.1 })
+        permutations = validPerms
+        
+    }
+
+    
+    
     
 }
