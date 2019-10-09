@@ -31,6 +31,8 @@ class PlacePaletteViewController: DraggableContentViewController {
         }
     }
     
+    var placeToAdd : Place?
+    
     var groupsBeforeEditing = [PlaceGroup]()
     var midDrag = false
     var draggingIndexPath : IndexPath?
@@ -93,6 +95,13 @@ class PlacePaletteViewController: DraggableContentViewController {
             guard let groupCreationController = segue.destination as? GroupCreationViewController else { return }
             groupCreationController.delegate = self
             
+        } else if segue.identifier == "addPlace" {
+            
+            guard let placeCreationController = segue.destination as? PlaceCreationViewController else { return }
+            guard let place = placeToAdd else { return }
+            placeCreationController.place = place
+            placeCreationController.delegate = self
+            
         }
         
     }
@@ -117,6 +126,16 @@ extension PlacePaletteViewController: GroupCreationDelegate {
         
     }
     
+    
+}
+
+extension PlacePaletteViewController: PlaceCreationDelegate {
+    
+    func createPlace(_ newPlace: Place) {
+        groups[0].append(newPlace)
+        collectionView.reloadData()
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
+    }
     
 }
 
@@ -386,9 +405,9 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!)
-        groups[0].append(newPlace)
-        collectionView.reloadData()
-        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
+        self.placeToAdd = newPlace
+        dismiss(animated: true, completion: nil)
+        performSegue(withIdentifier: "addPlace", sender: nil)
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {

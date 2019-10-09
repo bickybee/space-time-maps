@@ -24,7 +24,7 @@ class Place : NSObject {
     let coordinate: Coordinate
     let placeID: String
     let color: UIColor
-    let timeSpent: TimeInterval
+    var timeSpent: TimeInterval
     
     override var description : String {
         return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""
