@@ -33,6 +33,7 @@ class ParentViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         updateMap()
+        itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}))
     }
     
     // Pass pinches down to itinerary
@@ -57,7 +58,7 @@ class ParentViewController: UIViewController {
             default:
                 travelMode = .driving
             }
-            itineraryController.itinerary.travelMode = travelMode
+            itineraryController.updateScheduler(travelMode)
             itineraryController.computeRoute()
         }
     }
@@ -173,6 +174,8 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         updateMap()
+        let places = groups.flatMap({ $0.places })
+        itineraryController.updateScheduler(places)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {

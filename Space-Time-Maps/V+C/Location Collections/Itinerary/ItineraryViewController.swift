@@ -26,7 +26,7 @@ class ItineraryViewController: DraggableContentViewController {
     // Itinerary editing
     var editingSession : ItineraryEditingSession?
     var previousTouchHour : Double?
-    var defaultDuration = TimeInterval.from(hours: 0.5)
+    var defaultDuration = TimeInterval.from(hours: 1.0)
 
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?
@@ -75,8 +75,17 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
         
+    }
+    
+    func updateScheduler(_ places: [Place]) {
+        scheduler.updateTimeDict(with: places)
+    }
+    
+    func updateScheduler(_ travelMode: TravelMode) {
+        scheduler.travelMode = travelMode
+        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -198,7 +207,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
         block.optionIndex = newIndex
         block.fixed = true
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
         block.fixed = false
     }
 
@@ -210,7 +219,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let newIndex = (index + 1) % (block.optionCount)
         block.optionIndex = newIndex
         block.fixed = true
-        scheduler.schedule(blocks: itinerary.schedule, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
         block.fixed = false
     }
 }

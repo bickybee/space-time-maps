@@ -66,7 +66,7 @@ class ItineraryEditingSession: NSObject {
             if changedOrder {
                 computeRoute(with: modifiedBlocks, changedOrder: true)
             } else {
-                scheduler.scheduleShift(blocks: modifiedBlocks, travelMode: travelMode, callback: callback)
+                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
             }
         }
         
@@ -89,13 +89,13 @@ class ItineraryEditingSession: NSObject {
             modifiedBlocks.append(movingBlock)
             modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
             
-            scheduler.schedulePinch(of: movingBlock, in: modifiedBlocks, travelMode: travelMode, callback: callback)
+            scheduler.schedulePinch(of: movingBlock, in: modifiedBlocks, callback: callback)
         }
         
     }
     
     func removeBlock() {
-        scheduler.schedule(blocks: baseBlocks, travelMode: travelMode, callback: callback)
+        scheduler.schedule(blocks: baseBlocks, callback: callback)
     }
     
     func end() {
@@ -125,7 +125,7 @@ class ItineraryEditingSession: NSObject {
         if blocks.count <= 0 {
             callback(blocks, Route())
         } else {
-            scheduler.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
+            scheduler.schedule(blocks: blocks, callback: callback)
         }
     }
 

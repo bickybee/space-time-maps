@@ -18,12 +18,13 @@ class Scheduler {
     
     private let qs = QueryService()
     private var legCache = [LegData]()
+    private var timeDict = TimeDict()
+    var travelMode : TravelMode = .driving
     
     // Returns blocks with destinations and timings set, associated scheduled route
-    func schedule(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
-//        print("regular")
-        let scheduledBlocks = scheduleBlocks(blocks, travelMode: travelMode)
-        let route = routeFromBlocks(scheduledBlocks, travelMode: travelMode)
+    func schedule(blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+        let scheduledBlocks = scheduleBlocks(blocks)
+        let route = routeFromBlocks(scheduledBlocks)
         if route != nil {
             let optionBlocks = scheduledBlocks.compactMap({ $0 as? OptionBlock })
             optionBlocks.forEach({ evenlyDisperseBlock($0, in: route!) })
@@ -32,10 +33,10 @@ class Scheduler {
         callback(scheduledBlocks, route)
     }
     
-    func scheduleShift(blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func scheduleShift(blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
 //        print("shift")
         // Don't actually need to reschedule blocks, just the route!
-        let route = routeFromBlocks(blocks, travelMode: travelMode)
+        let route = routeFromBlocks(blocks)
         if route != nil {
             let optionBlocks = blocks.compactMap({ $0 as? OptionBlock })
             optionBlocks.forEach({ evenlyDisperseBlock($0, in: route!) })
@@ -44,42 +45,39 @@ class Scheduler {
         callback(blocks, route)
     }
     
-    func schedulePinch(of block: ScheduleBlock, in blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func schedulePinch(of block: ScheduleBlock, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         print("pinch")
         // Check if the change in duration means that more or less destinations can fit into the asManyOf block
         
         if let asManyOf = block as? AsManyOfBlock {
             
-            let places = asManyOf.placeGroup.places
-            
             var needsRescheduling = false
             
-            let dispatchGroup = DispatchGroup()
-            dispatchGroup.enter()
+            let originalPermLength = asManyOf.destinations!.count
+            asManyOf.setPermutationsUsing(timeDict)
             
-            qs.getTimeDictFor(origins: places, destinations: places, travelMode: travelMode) { timeDict in
-                let originalPermLength = asManyOf.destinations!.count
-                asManyOf.setPermutationsUsing(timeDict!)
-                
-                let newPermLength = asManyOf.permutations[0].count //SO BAD!!!! FIXME
-                needsRescheduling = originalPermLength != newPermLength
-                dispatchGroup.leave()
-            }
-            
-            dispatchGroup.wait()
+            let newPermLength = asManyOf.permutations[0].count //SO BAD!!!! FIXME
+            needsRescheduling = originalPermLength != newPermLength
             
             if needsRescheduling {
                 print("needs reschedule")
-                self.schedule(blocks: blocks, travelMode: travelMode, callback: callback)
+                self.schedule(blocks: blocks, callback: callback)
             } else {
                 print("is fine")
-                self.scheduleShift(blocks: blocks, travelMode: travelMode, callback: callback)
+                self.scheduleShift(blocks: blocks, callback: callback)
             }
             
         } else {
-            self.scheduleShift(blocks: blocks, travelMode: travelMode, callback: callback)
+            self.scheduleShift(blocks: blocks, callback: callback)
         }
         
+    }
+    
+    func updateTimeDict(with places: [Place]) {
+        qs.getTimeDictFor(origins: places, destinations: places, travelMode: travelMode) { timeDict in
+            guard let dict = timeDict else { return }
+            self.timeDict = dict
+        }
     }
     
     
@@ -91,7 +89,7 @@ private extension Scheduler {
     
     
     // Returns blocks with destinations and timings set
-    func scheduleBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> [ScheduleBlock] {
+    func scheduleBlocks(_ blocks: [ScheduleBlock]) -> [ScheduleBlock] {
         
         var schedule = [ScheduleBlock]()
         
@@ -150,7 +148,7 @@ private extension Scheduler {
                 let dispatchGroup = DispatchGroup()
                 dispatchGroup.enter()
                 
-                scheduleOptionBlocks(optionBlocks, before: before, after: after, travelMode: travelMode) {
+                scheduleOptionBlocks(optionBlocks, before: before, after: after) {
                     schedule.append(contentsOf: optionBlocks)
                     dispatchGroup.leave()
                 }
@@ -172,7 +170,7 @@ private extension Scheduler {
     }
     
     // Sets destinations and timings for option blocks
-    func scheduleOptionBlocks(_ blocks: [OptionBlock], before: SingleBlock?, after: SingleBlock?, travelMode: TravelMode, callback:@escaping () -> ()) {
+    func scheduleOptionBlocks(_ blocks: [OptionBlock], before: SingleBlock?, after: SingleBlock?, callback:@escaping () -> ()) {
         
         var allPlaces = blocks.flatMap( { $0.placeGroup.places } )
         
@@ -184,43 +182,36 @@ private extension Scheduler {
             allPlaces.append(afterPlace)
         }
         
-        // Time dict = timings between places (by placeID)
-        qs.getTimeDictFor(origins: allPlaces, destinations: allPlaces, travelMode: travelMode) { dict in
-            
-            // Use time dict to get scores for all possible permutations of destinations in option blocks,
-            // Find best permutation!
-            guard let timeDict = dict else { callback(); return }
-            
-            // First set perms of asManyOf blocks lol TODO: put this somewhere where it makes more sense
-            
-            for b in blocks {
-                if let asManyOf = b as? AsManyOfBlock {
-                    asManyOf.setPermutationsUsing(timeDict)
-                }
+
+        // First set perms of asManyOf blocks lol TODO: put this somewhere where it makes more sense
+        
+        for b in blocks {
+            if let asManyOf = b as? AsManyOfBlock {
+                asManyOf.setPermutationsUsing(timeDict)
             }
-            
-            let optionCombinations = self.optionCombinationsFor(blocks)
-            let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
-            let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
-            let minScore = scores.min()
-            let iMin = scores.firstIndex(of: minScore!)!
-            let bestOption = optionCombinations[iMin] // Contains ideal option index for each block
-            
-            for i in blocks.indices {
-                
-                var block = blocks[i]
-                if let asManyOf = block as? AsManyOfBlock {
-                    self.scheduleOptionsForBlock(asManyOf, with: timeDict)
-                }
-                
-                block.optionIndex = bestOption[i]
-                
-            }
-            
-            callback()
         }
         
+        let optionCombinations = self.optionCombinationsFor(blocks)
+        let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
+        let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
+        let minScore = scores.min()
+        let iMin = scores.firstIndex(of: minScore!)!
+        let bestOption = optionCombinations[iMin] // Contains ideal option index for each block
+        
+        for i in blocks.indices {
+            
+            var block = blocks[i]
+            if let asManyOf = block as? AsManyOfBlock {
+                self.scheduleOptionsForBlock(asManyOf, with: timeDict)
+            }
+            
+            block.optionIndex = bestOption[i]
+            
+        }
+        
+        callback()
     }
+    
 
 
     // Returns option index combinations
@@ -308,8 +299,8 @@ private extension Scheduler {
             
             for i in perm.indices {
                 let place = block.placeGroup[perm[i]]
-                destinations.append(Destination(place: place, timing: Timing(start: time, duration: TimeInterval.from(minutes: 30))))
-                time += TimeInterval.from(minutes: 30)
+                destinations.append(Destination(place: place, timing: Timing(start: time, duration: TimeInterval.from(minutes: 60))))
+                time += TimeInterval.from(minutes: 60)
                 if (i != perm.indices.last) {
                     let nextPlace = block.placeGroup[perm[i + 1]]
                     time += timings[PlacePair(startID: place.placeID, endID: nextPlace.placeID)]!
@@ -354,11 +345,6 @@ private extension Scheduler {
         
         return Timing(start: startTime, end: endTime)
     }
-    
-    func evenlyDisperse(_ destinations: [Destination], within timing: Timing, timeDict: TimeDict) {
-        
-    }
-    
     
     func evenlyDisperseDestinations(_ destinations : [Destination], within timing: Timing, in route: Route) {
         
@@ -413,18 +399,22 @@ private extension Scheduler {
         return options
     }
     
-    // MARK: - Route scheduling
+}
 
-    func routeFromBlocks(_ blocks: [ScheduleBlock], travelMode: TravelMode) -> Route? {
+// MARK: - Route scheduling
+private extension Scheduler {
+    
+
+    func routeFromBlocks(_ blocks: [ScheduleBlock]) -> Route? {
         
         // First get destinations out of all blocks...
         let destinations = blocks.compactMap({ $0.destinations }).flatMap({ $0 })
-        return routeFromDestinations(destinations, travelMode: travelMode)
+        return routeFromDestinations(destinations)
         
     }
     
     // Access API to get a route
-    func routeFromDestinations(_ destinations: [Destination], travelMode: TravelMode) -> Route? {
+    func routeFromDestinations(_ destinations: [Destination]) -> Route? {
         
         let route = Route()
         let dispatchGroup = DispatchGroup()
