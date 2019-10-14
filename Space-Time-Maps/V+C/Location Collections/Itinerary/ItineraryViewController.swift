@@ -75,17 +75,17 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
-        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
+        scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary)
         
     }
     
     func updateScheduler(_ places: [Place]) {
-        scheduler.updateTimeDict(with: places)
+        scheduler.updatePlaces(places)
     }
     
     func updateScheduler(_ travelMode: TravelMode) {
         scheduler.travelMode = travelMode
-        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))
+        scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -198,30 +198,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         return cell
     }
-    
+        
     @objc func prevOption(_ sender: UIButton) {
         let blockIndex = sender.tag
-        var block = itinerary.schedule[blockIndex] as! OptionBlock
-        guard let index = block.optionIndex else { return }
-        
-        let newIndex = (index - 1) >= 0 ? index - 1 : block.optionCount - 1
-        block.optionIndex = newIndex
-        block.fixed = true
-        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
-        block.fixed = false
+        scheduler.scheduleOptionChange(of: blockIndex, direction: -1, in: itinerary.schedule, callback: didEditItinerary)
     }
 
     @objc func nextOption(_ sender: UIButton) {
         let blockIndex = sender.tag
-        var block = itinerary.schedule[blockIndex] as! OptionBlock
-        guard let index = block.optionIndex else { return }
-        
-        let newIndex = (index + 1) % (block.optionCount)
-        block.optionIndex = newIndex
-        block.fixed = true
-        scheduler.schedule(blocks: itinerary.schedule, callback: didEditItinerary)
-        block.fixed = false
+        scheduler.scheduleOptionChange(of: blockIndex, direction: 1, in: itinerary.schedule, callback: didEditItinerary)
     }
+
 }
 
 // MARK: - PlacePalette Drag Delegate

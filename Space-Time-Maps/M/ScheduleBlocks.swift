@@ -43,33 +43,33 @@ protocol OptionBlock : ScheduleBlock {
     var timing: Timing { get set }
     var placeGroup: PlaceGroup { get set } // reference to original group
     
-    var permutations: [[Int]] { get }
-    var permutationPlaceIDs: [[String]] { get }
-    var optionIndex: Int? { get set }
+    var options: [[Int]] { get } // lists of indices into placegroup
+    var optionPlaceIDs: [[String]] { get } // convenience
     
-    var optionCount: Int { get }
-    var destinations: [Destination]? { get }
+    var selectedOption: Int? { get set }
+    
+    var destinations: [Destination]? { get } // result of selected option
     var name: String { get }
-    var fixed : Bool { get set }
+    var isFixed : Bool { get set }
 }
 
 // lotsa code duplication to follow but that's ok, FIXE later
 
 class OneOfBlock : OptionBlock {
 
-    var timing: Timing
+    var timing: Timing // applying timing to destinatino, no longer true tho
     var placeGroup : PlaceGroup
-    var optionIndex: Int?
-    var permutations : [[Int]]
-    var fixed : Bool
+    var selectedOption: Int?
+    var options : [[Int]]
+    var isFixed : Bool
     
-    var permutationPlaceIDs: [[String]] {
-        return permutations.map( { $0.map( { placeGroup[$0].placeID } ) } )
+    var optionPlaceIDs: [[String]] {
+        return options.map( { $0.map( { placeGroup[$0].placeID } ) } )
     }
     
     var destination: Destination? {
         
-        if let index = optionIndex {
+        if let index = selectedOption {
             let place = placeGroup[index]
             return Destination(place: place, timing: timing)
         } else {
@@ -90,8 +90,8 @@ class OneOfBlock : OptionBlock {
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
-        self.permutations = placeGroup.places.indices.map( { [$0] } )
-        self.fixed = false
+        self.options = placeGroup.places.indices.map( { [$0] } )
+        self.isFixed = false
     }
     
 }
@@ -106,45 +106,47 @@ class AsManyOfBlock : OptionBlock {
         }
     }
     
-    var permutations: [[Int]] // indices into placeGroup
+    var options: [[Int]] // indices into placeGroup
     
-    var permutationPlaceIDs: [[String]] {
-        return permutations.map( { $0.map( { placeGroup[$0].placeID } ) } )
+    var optionPlaceIDs: [[String]] {
+        return options.map( { $0.map( { placeGroup[$0].placeID } ) } )
     }
     
-    var options: [[Destination]]?
+    var scheduledOptions: [[Destination]]?
     
-    var optionIndex: Int?
+    var selectedOption: Int?
     var destinations: [Destination]? {
-        return optionIndex != nil ? options![optionIndex!] : nil
+        return selectedOption != nil ? scheduledOptions![selectedOption!] : nil
     }
     var optionCount: Int {
-        return permutations.count
+        return options.count
     }
     var name : String {
         return placeGroup.name
     }
-    var fixed: Bool
+    var isFixed: Bool
     
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
         self.timing = timing
-        self.fixed = false
+        self.isFixed = false
         
         let indices = Array(placeGroup.places.indices)
         var p = [[Int]]()
-        Utils.permute(indices, indices.count - 1, &p)
+        Combinatorics.permute(indices, indices.count - 1, &p)
         
-        self.permutations = p
+        self.options = p
     }
     
     func shiftDestinationsBy(_ dT: TimeInterval) {
         
-        if let dests = destinations {
-            for d in dests {
-                let duration = d.timing.duration
-                let start = d.timing.start + dT
-                d.timing = Timing(start: start, duration: duration)
+        if let scheduledOptions = scheduledOptions {
+            for dests in scheduledOptions {
+                for d in dests {
+                    let duration = d.timing.duration
+                    let start = d.timing.start + dT
+                    d.timing = Timing(start: start, duration: duration)
+                }
             }
         }
         
@@ -154,18 +156,21 @@ class AsManyOfBlock : OptionBlock {
 //        let places = placeGroup.places.indices
         let indices = Array(placeGroup.places.indices)
         var p = [[Int]]()
-        Utils.permute(indices, indices.count - 1, &p)
+        Combinatorics.permute(indices, indices.count - 1, &p)
         return p
     }
     
     // Find out which combination of places actually fits in the overall timeblock
     func setPermutationsUsing(_ timeDict: TimeDict) {
         
-        // First try default permutations
+        // Keep track of valid terms and their total times
         var validPermTimes = [ ( TimeInterval, [Int] )]()
+        
+        // First try permutations that include ALL places, then decrease number of places (subset size) if none fit, etc.
         var trialPerms = defaultPermutations()
         var subsetSize = placeGroup.count
         
+        // Let's gooo
         var optionFound = false
         while (!optionFound) {
             
@@ -190,7 +195,7 @@ class AsManyOfBlock : OptionBlock {
             } else {
                 // Otherwise, try a smaller subset of places
                 subsetSize -= 1
-                trialPerms = Utils.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
+                trialPerms = Combinatorics.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
             }
             
         }
@@ -202,7 +207,7 @@ class AsManyOfBlock : OptionBlock {
         
         let topFive = validPermTimes.prefix(5)
         let validPerms = topFive.map( { $0.1 })
-        permutations = validPerms
+        options = validPerms
 
     }
 

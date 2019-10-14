@@ -64,7 +64,7 @@ class ItineraryEditingSession: NSObject {
             lastPosition = insertAt
             
             if changedOrder {
-                computeRoute(with: modifiedBlocks, changedOrder: true)
+                scheduler.reschedule(blocks: modifiedBlocks, callback: callback)
             } else {
                 scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
             }
@@ -95,7 +95,7 @@ class ItineraryEditingSession: NSObject {
     }
     
     func removeBlock() {
-        scheduler.schedule(blocks: baseBlocks, callback: callback)
+        scheduler.reschedule(blocks: baseBlocks, callback: callback)
     }
     
     func end() {
@@ -118,15 +118,6 @@ class ItineraryEditingSession: NSObject {
         }
         
         return false
-    }
-    
-    
-    func computeRoute(with blocks: [ScheduleBlock], changedOrder: Bool) {
-        if blocks.count <= 0 {
-            callback(blocks, Route())
-        } else {
-            scheduler.schedule(blocks: blocks, callback: callback)
-        }
     }
 
 }
