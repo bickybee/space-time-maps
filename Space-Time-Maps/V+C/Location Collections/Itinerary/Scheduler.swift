@@ -55,13 +55,16 @@ class Scheduler {
         
          // Only applicable if it's an asManyOf
         if let asManyOf = block as? AsManyOfBlock {
-            
-            let originalPermLength = asManyOf.destinations!.count
-            asManyOf.setPermutationsUsing(timeDict)
-            let newPermLength = asManyOf.options[0].count //SO BAD!!!! FIXME
-            scheduleOptionsForBlock(asManyOf, with: timeDict)
-            
-            needsRescheduling = originalPermLength != newPermLength
+            if asManyOf.options.count == 0 {
+                needsRescheduling = true
+            } else {
+                let originalPermLength = asManyOf.destinations!.count
+                asManyOf.setPermutationsUsing(timeDict)
+                let newPermLength = asManyOf.options[0].count //SO BAD!!!! FIXME
+                scheduleOptionsForBlock(asManyOf, with: timeDict)
+                
+                needsRescheduling = originalPermLength != newPermLength
+            }
         }
         
         if needsRescheduling {

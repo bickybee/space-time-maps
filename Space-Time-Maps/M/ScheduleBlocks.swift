@@ -192,12 +192,13 @@ class AsManyOfBlock : OptionBlock {
             if validPermTimes.count > 0 {
                 // Were any perms valid? If so, we're good to go
                 optionFound = true
-            } else {
+            } else if subsetSize > 1 {
                 // Otherwise, try a smaller subset of places
                 subsetSize -= 1
                 trialPerms = Combinatorics.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
+            } else {
+                break
             }
-            
         }
         
         // Only take best 5
