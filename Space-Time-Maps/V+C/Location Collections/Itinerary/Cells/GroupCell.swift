@@ -14,7 +14,6 @@ class GroupCell: UICollectionViewCell {
     @IBOutlet weak var optionControl: UIPageControl!
     @IBOutlet weak var nextBtn: UIButton!
     @IBOutlet weak var prevBtn: UIButton!
-    @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var containerView: UIView!
     
     private let optionTint = UIColor.white.withAlphaComponent(0.5)
@@ -37,11 +36,7 @@ class GroupCell: UICollectionViewCell {
 
     func setup() {
         
-        tabView.layer.cornerRadius = 5
-        tabView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        
         containerView.layer.cornerRadius = 5
-        containerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner]
         
         optionControl.transform = (CGAffineTransform(scaleX: 0.5, y: 0.5))
         optionControl.pageIndicatorTintColor = optionTint

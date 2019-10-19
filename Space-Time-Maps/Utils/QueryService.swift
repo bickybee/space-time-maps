@@ -18,6 +18,8 @@ class QueryService {
     let gmapsMatrixURLString = "https://maps.googleapis.com/maps/api/distancematrix/json"
     var apiKey: String
     
+    var pingCount = 0
+    
     init() {
         var keys: NSDictionary?
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
@@ -25,8 +27,8 @@ class QueryService {
         }
         
         if let dict = keys {
-            let mapsKey = dict["mapsKey"] as? String
-            apiKey = mapsKey!
+            let key = dict["apiKey"] as? String
+            apiKey = key!
         } else {
             apiKey = ""
         }
@@ -51,6 +53,8 @@ class QueryService {
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
+        pingCount += 1
+        print("pings to distance matrix API: \(pingCount)")
         runQuery(url: url) {data in
             let results = self.dataToTimeDict(data, origins, destinations)
             callback(results)

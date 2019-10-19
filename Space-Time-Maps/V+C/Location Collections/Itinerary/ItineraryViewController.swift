@@ -284,11 +284,10 @@ extension ItineraryViewController : DragDelegate {
     
     func blockFromObject(_ object : Any) -> ScheduleBlock? {
         
-        
+        // If we're dragging within the itinerary, object is and stays a block
         if let scheduleObject = object as? ScheduleBlock {
-            print("found schedule object")
             return scheduleObject
-        } else {
+        } else { // Otherwise we're dragging a place or placegroup from the palette into the itinerary, meaning we need to turn it into a block
             if let place = object as? Place {
                 return SingleBlock(timing: Timing(start: 0, duration: place.timeSpent), place: place)
                 

@@ -29,9 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         
         if let dict = keys {
-            let mapsKey = dict["mapsKey"] as? String
-            GMSServices.provideAPIKey(mapsKey!)
-            GMSPlacesClient.provideAPIKey(mapsKey!)
+            let iosKey = dict["iosKey"] as? String
+            GMSServices.provideAPIKey(iosKey!)
+            GMSPlacesClient.provideAPIKey(iosKey!)
         }
         
         return true

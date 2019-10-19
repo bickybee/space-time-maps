@@ -47,40 +47,31 @@ class ItineraryLayout: UICollectionViewLayout {
         
         let startHour = eventTiming.start.inHours()
         let duration = eventTiming.duration.inHours()
-
+        
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        
+        var width = contentWidth * 0.7
+        let height = CGFloat(duration) * hourHeight
+        let relativeHour = CGFloat(startHour) - timelineStartHour
+        let y = relativeHour * hourHeight// - startOffset
+        var x = contentWidth * 0.15
+        
         if indexPath.section == 2 {
-            
-            let width = contentWidth
-            let height = CGFloat(duration) * hourHeight + 40
-            let relativeHour = CGFloat(startHour) - timelineStartHour
-            let y = relativeHour * hourHeight - 25// - startOffset
-            let x : CGFloat = 0.0
-            let frame = CGRect(x: x, y: y, width: width, height: height)
-            
-            // Add to cache
-            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = frame
             attributes.zIndex = -1
-            cache.append(attributes)
-            // Update content height
-            contentHeight = max(contentHeight, frame.maxY)
-            
-        } else {
-            
-            let width = contentWidth * 0.7
-            let height = CGFloat(duration) * hourHeight
-            let relativeHour = CGFloat(startHour) - timelineStartHour
-            let y = relativeHour * hourHeight// - startOffset
-            let x = contentWidth * 0.15
-            let frame = CGRect(x: x, y: y, width: width, height: height)
-            
-            // Add to cache
-            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = frame
-            cache.append(attributes)
-            // Update content height
-            contentHeight = max(contentHeight, frame.maxY)
+            x = 0.0
+            width = contentWidth
         }
+        
+        let frame = CGRect(x: x, y: y, width: width, height: height)
+        
+        // Add to cache
+        attributes.frame = frame
+        
+        
+        
+        cache.append(attributes)
+        // Update content height
+        contentHeight = max(contentHeight, frame.maxY)
 
     }
     

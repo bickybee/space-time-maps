@@ -33,6 +33,7 @@ class ParentViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         updateMap()
+        print("layout subviews")
         itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}))
     }
     
@@ -173,6 +174,7 @@ class ParentViewController: UIViewController {
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
+        print("update places")
         updateMap()
         let places = groups.flatMap({ $0.places })
         itineraryController.updateScheduler(places)
