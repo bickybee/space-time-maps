@@ -10,9 +10,12 @@ import UIKit
 
 typealias TimeDict = [ PlacePair : TimeInterval ]
 
-struct PlacePair : Hashable {
+struct PlacePair : Hashable, CustomStringConvertible {
     var startID : String
     var endID : String
+    var description: String {
+        return "PlacePair(startID: \"\(startID)\", endID: \"\(endID)\")"
+    }
 }
 
 protocol Schedulable {

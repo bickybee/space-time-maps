@@ -55,15 +55,15 @@ class QueryService {
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
         pingCount += 1
         print("pings to distance matrix API: \(pingCount)")
-        runQuery(url: url) {data in
-            let results = self.dataToTimeDict(data, origins, destinations)
-            callback(results)
-        }
+        callback(Utils.starterPlaceDict)
+//        runQuery(url: url) {data in
+//            let results = self.dataToTimeDict(data, origins, destinations)
+//            callback(results)
+//        }
     }
 
     
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
-        
         
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in

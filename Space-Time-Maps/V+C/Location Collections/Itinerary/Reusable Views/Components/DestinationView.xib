@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DestinationView" customModule="Space_Time_Maps" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="c6g-mt-HAz" id="RiG-dv-AdT"/>
+                <outlet property="durationLabel" destination="84n-Y0-meJ" id="9Ug-KL-eJp"/>
+                <outlet property="nameLabel" destination="GkK-8v-1xe" id="o0S-kf-hBt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="c6g-mt-HAz">
+            <rect key="frame" x="0.0" y="0.0" width="264" height="81"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GkK-8v-1xe" userLabel="Destination">
+                    <rect key="frame" x="10" y="10" width="244" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="12" id="rxI-sk-sIK"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duration" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="84n-Y0-meJ">
+                    <rect key="frame" x="220" y="27" width="34" height="9.6666666666666643"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                    <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="84n-Y0-meJ" secondAttribute="bottom" constant="5" id="H2K-vq-a6m"/>
+                <constraint firstItem="84n-Y0-meJ" firstAttribute="top" secondItem="GkK-8v-1xe" secondAttribute="bottom" priority="750" constant="5" id="O4d-sz-R7t"/>
+                <constraint firstItem="GkK-8v-1xe" firstAttribute="top" secondItem="c6g-mt-HAz" secondAttribute="top" priority="750" constant="10" id="OYg-pb-NXN"/>
+                <constraint firstItem="GkK-8v-1xe" firstAttribute="leading" secondItem="c6g-mt-HAz" secondAttribute="leading" constant="10" id="TAH-jE-RU4"/>
+                <constraint firstAttribute="trailing" secondItem="GkK-8v-1xe" secondAttribute="trailing" constant="10" id="Z2L-4S-SPE"/>
+                <constraint firstAttribute="trailing" secondItem="84n-Y0-meJ" secondAttribute="trailing" constant="10" id="iVK-Wo-LQs"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="9Of-dD-CfX"/>
+            <point key="canvasLocation" x="221.73913043478262" y="-8.5597826086956523"/>
+        </view>
+    </objects>
+</document>

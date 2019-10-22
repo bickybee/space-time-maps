@@ -10,7 +10,7 @@
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
 		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
-		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
+		982D579323203F8300E183F3 /* DestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestinationCell.swift */; };
 		982D579423203F8300E183F3 /* DestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579223203F8300E183F3 /* DestCell.xib */; };
 		982D5797232050C500E183F3 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5795232050C500E183F3 /* GroupCell.swift */; };
 		982D5798232050C500E183F3 /* GroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5796232050C500E183F3 /* GroupCell.xib */; };
@@ -24,6 +24,8 @@
 		988530B7234E3A3E00B22888 /* PlaceCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		98BC857A230C3A83001D14BE /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8579230C3A83001D14BE /* Timing.swift */; };
+		98D05C08235CF08C0073D9AF /* DestinationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98D05C07235CF08C0073D9AF /* DestinationView.xib */; };
+		98D05C0A235CF5ED0073D9AF /* DestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D05C09235CF5ED0073D9AF /* DestinationView.swift */; };
 		98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */; };
 		98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */; };
 		98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA68230EFD4400769BB5 /* LocationCell.swift */; };
@@ -44,10 +46,13 @@
 		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
 		98E9B96C230B0B0E0032FBB7 /* PassThroughViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */; };
 		98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */; };
+		98ECFCB3235D04ED0005046D /* RouteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98ECFCB2235D04ED0005046D /* RouteView.xib */; };
+		98ECFCB5235D10090005046D /* IBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCB4235D10090005046D /* IBView.swift */; };
+		98ECFCB7235D14FD0005046D /* PaddedDestinationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98ECFCB6235D14FD0005046D /* PaddedDestinationView.xib */; };
+		98ECFCB9235D19F00005046D /* PaddedDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCB8235D19F00005046D /* PaddedDestinationView.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
-		B62AFCBF22E50E1700B7D2CD /* DestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */; };
 		B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */; };
 		B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */; };
 		B64B992D22E15D4A007793BA /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64B992C22E15D4A007793BA /* Place.swift */; };
@@ -67,7 +72,7 @@
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
-		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
+		982D579123203F8300E183F3 /* DestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationCell.swift; sourceTree = "<group>"; };
 		982D579223203F8300E183F3 /* DestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestCell.xib; sourceTree = "<group>"; };
 		982D5795232050C500E183F3 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
 		982D5796232050C500E183F3 /* GroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupCell.xib; sourceTree = "<group>"; };
@@ -81,6 +86,8 @@
 		988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCreationViewController.swift; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		98BC8579230C3A83001D14BE /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
+		98D05C07235CF08C0073D9AF /* DestinationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestinationView.xib; sourceTree = "<group>"; };
+		98D05C09235CF5ED0073D9AF /* DestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationView.swift; sourceTree = "<group>"; };
 		98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
 		98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceCell.xib; sourceTree = "<group>"; };
 		98DEBA68230EFD4400769BB5 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
@@ -101,10 +108,13 @@
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughViews.swift; sourceTree = "<group>"; };
 		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
+		98ECFCB2235D04ED0005046D /* RouteView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RouteView.xib; sourceTree = "<group>"; };
+		98ECFCB4235D10090005046D /* IBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBView.swift; sourceTree = "<group>"; };
+		98ECFCB6235D14FD0005046D /* PaddedDestinationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaddedDestinationView.xib; sourceTree = "<group>"; };
+		98ECFCB8235D19F00005046D /* PaddedDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedDestinationView.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
-		B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationCell.swift; sourceTree = "<group>"; };
 		B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryViewController.swift; sourceTree = "<group>"; };
 		B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacePaletteViewController.swift; sourceTree = "<group>"; };
 		B64B992C22E15D4A007793BA /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
@@ -140,16 +150,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		982D578A231EE5E300E183F3 /* Cells */ = {
+		982D578A231EE5E300E183F3 /* Reusable Views */ = {
 			isa = PBXGroup;
 			children = (
+				98D05C06235CF04B0073D9AF /* Components */,
 				982D579D232162FC00E183F3 /* Xibs */,
-				982D579123203F8300E183F3 /* DestCell.swift */,
+				982D579123203F8300E183F3 /* DestinationCell.swift */,
 				982D5795232050C500E183F3 /* GroupCell.swift */,
 				982D57992320AB3C00E183F3 /* RouteCell.swift */,
 				982D57A02321863600E183F3 /* NilCell.swift */,
 			);
-			path = Cells;
+			path = "Reusable Views";
 			sourceTree = "<group>";
 		};
 		982D579D232162FC00E183F3 /* Xibs */ = {
@@ -166,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				98DEBA68230EFD4400769BB5 /* LocationCell.swift */,
-				B62AFCBE22E50E1700B7D2CD /* DestinationCell.swift */,
 				982D5786231EE5DE00E183F3 /* OneOfCell.swift */,
 				98DEF0D423066372003DE1CB /* OldLegCell.swift */,
 				98127E6D23199DCD0030C44B /* OldGroupCell.swift */,
@@ -189,7 +199,7 @@
 		98BC856F230B71DC001D14BE /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
-				982D578A231EE5E300E183F3 /* Cells */,
+				982D578A231EE5E300E183F3 /* Reusable Views */,
 				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
 				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
@@ -203,11 +213,9 @@
 		98BC8570230B71EC001D14BE /* Place Palette */ = {
 			isa = PBXGroup;
 			children = (
+				98D05C05235CEFFF0073D9AF /* Reusable Views */,
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
 				98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */,
-				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
-				98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */,
-				98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */,
 				988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */,
 			);
 			path = "Place Palette";
@@ -226,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				98DEF0B823046371003DE1CB /* DraggableCollectionViewController.swift */,
+				98ECFCB4235D10090005046D /* IBView.swift */,
 				98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */,
 				98BC856F230B71DC001D14BE /* Itinerary */,
 				98BC8570230B71EC001D14BE /* Place Palette */,
@@ -260,6 +269,27 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		98D05C05235CEFFF0073D9AF /* Reusable Views */ = {
+			isa = PBXGroup;
+			children = (
+				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
+				98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */,
+				98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */,
+			);
+			path = "Reusable Views";
+			sourceTree = "<group>";
+		};
+		98D05C06235CF04B0073D9AF /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				98D05C07235CF08C0073D9AF /* DestinationView.xib */,
+				98D05C09235CF5ED0073D9AF /* DestinationView.swift */,
+				98ECFCB6235D14FD0005046D /* PaddedDestinationView.xib */,
+				98ECFCB8235D19F00005046D /* PaddedDestinationView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		AFD388B64024ED9215659E5A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -289,6 +319,7 @@
 				987704282326AB62009E1A63 /* Route.swift */,
 				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
 				98DEBA70230F7EE700769BB5 /* ScheduleBlocks.swift */,
+				98ECFCB2235D04ED0005046D /* RouteView.xib */,
 				98BC8579230C3A83001D14BE /* Timing.swift */,
 			);
 			path = M;
@@ -393,12 +424,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
+				98ECFCB7235D14FD0005046D /* PaddedDestinationView.xib in Resources */,
 				982D579423203F8300E183F3 /* DestCell.xib in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
+				98D05C08235CF08C0073D9AF /* DestinationView.xib in Resources */,
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
+				98ECFCB3235D04ED0005046D /* RouteView.xib in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
 				982D5798232050C500E183F3 /* GroupCell.xib in Resources */,
 			);
@@ -477,7 +511,6 @@
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
 				98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */,
-				B62AFCBF22E50E1700B7D2CD /* DestinationCell.swift in Sources */,
 				98DEBA71230F7EE700769BB5 /* ScheduleBlocks.swift in Sources */,
 				98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */,
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
@@ -493,7 +526,7 @@
 				982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
-				982D579323203F8300E183F3 /* DestCell.swift in Sources */,
+				982D579323203F8300E183F3 /* DestinationCell.swift in Sources */,
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
@@ -503,8 +536,10 @@
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */,
+				98ECFCB5235D10090005046D /* IBView.swift in Sources */,
 				987704292326AB62009E1A63 /* Route.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
+				98D05C0A235CF5ED0073D9AF /* DestinationView.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
@@ -512,6 +547,7 @@
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
 				982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
+				98ECFCB9235D19F00005046D /* PaddedDestinationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

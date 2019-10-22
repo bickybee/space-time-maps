@@ -50,16 +50,16 @@ class ItineraryLayout: UICollectionViewLayout {
         
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         
-        var width = contentWidth * 0.7
+        var width = contentWidth
         let height = CGFloat(duration) * hourHeight
         let relativeHour = CGFloat(startHour) - timelineStartHour
         let y = relativeHour * hourHeight// - startOffset
-        var x = contentWidth * 0.15
+        var x : CGFloat = 0.0
         
         if indexPath.section == 2 {
             attributes.zIndex = -1
-            x = 0.0
-            width = contentWidth
+//            x = 0.0
+//            width = contentWidth
         }
         
         let frame = CGRect(x: x, y: y, width: width, height: height)

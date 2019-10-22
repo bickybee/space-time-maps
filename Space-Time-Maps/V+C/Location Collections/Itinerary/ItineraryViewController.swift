@@ -13,7 +13,6 @@ class ItineraryViewController: DraggableContentViewController {
     // CollectionView Cell constants
     private let locationReuseIdentifier = "locationCell"
     private let legReuseIdentifier = "legCell"
-    private let oneOfReuseIdentifier = "oneOfCell"
     private let groupReuseIdentifier = "groupCell"
     private let nilReuseIdentifier = "nilCell"
     
@@ -48,6 +47,7 @@ class ItineraryViewController: DraggableContentViewController {
     
     override func viewDidLayoutSubviews() {
         timelineController.setSidebarWidth(collectionView.frame.minX)
+
     }
     
     func setupCollectionView() {
@@ -156,7 +156,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let index = indexPath.item
         let destination = itinerary.destinations[index]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestinationCell
         cell.configureWith(destination)
         cell.isUserInteractionEnabled = false
 //        addDragRecognizerTo(draggable: cell)
