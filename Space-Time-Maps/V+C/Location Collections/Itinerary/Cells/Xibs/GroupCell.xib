@@ -22,53 +22,18 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BQr-AJ-0iu" userLabel="ContainerView">
                         <rect key="frame" x="0.0" y="0.0" width="279" height="124"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEE-XJ-i6x">
-                                <rect key="frame" x="249" y="52" width="20" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="n3o-8y-7Px"/>
-                                    <constraint firstAttribute="width" constant="20" id="wQA-PP-LYY"/>
-                                </constraints>
-                                <state key="normal" title="⇨">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KPl-Zg-Bdn">
+                                <rect key="frame" x="241" y="0.0" width="30" height="124"/>
+                                <state key="normal" title="!!!">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                             </button>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="LcZ-hx-sF9">
-                                <rect key="frame" x="0.0" y="99" width="279" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="i37-Md-1JI"/>
-                                </constraints>
-                            </pageControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CRO-Cc-V5W">
-                                <rect key="frame" x="10" y="52" width="20" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="cEN-Qh-rbG"/>
-                                    <constraint firstAttribute="height" constant="20" id="vI3-iP-ald"/>
-                                </constraints>
-                                <state key="normal" title="⇦">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jnw-fx-dba">
-                                <rect key="frame" x="17" y="109" width="49.5" height="10"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="10" id="mk0-4p-kap"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="jnw-fx-dba" firstAttribute="leading" secondItem="BQr-AJ-0iu" secondAttribute="leading" constant="17" id="0zs-a6-lm0"/>
-                            <constraint firstItem="CRO-Cc-V5W" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="Bc8-K2-slh"/>
-                            <constraint firstAttribute="bottom" secondItem="LcZ-hx-sF9" secondAttribute="bottom" constant="-5" id="Iku-C0-NfB"/>
-                            <constraint firstItem="CRO-Cc-V5W" firstAttribute="leading" secondItem="BQr-AJ-0iu" secondAttribute="leading" constant="10" id="cye-DC-ZEK"/>
-                            <constraint firstAttribute="trailing" secondItem="JEE-XJ-i6x" secondAttribute="trailing" constant="10" id="jDU-wC-pRD"/>
-                            <constraint firstItem="LcZ-hx-sF9" firstAttribute="width" secondItem="BQr-AJ-0iu" secondAttribute="width" id="kOU-uN-WEV"/>
-                            <constraint firstItem="LcZ-hx-sF9" firstAttribute="centerX" secondItem="BQr-AJ-0iu" secondAttribute="centerX" id="mRx-sz-Dhr"/>
-                            <constraint firstItem="JEE-XJ-i6x" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="mwm-3C-Hko"/>
-                            <constraint firstAttribute="bottom" secondItem="jnw-fx-dba" secondAttribute="bottom" constant="5" id="p4Q-Nm-FXs"/>
+                            <constraint firstItem="KPl-Zg-Bdn" firstAttribute="height" secondItem="BQr-AJ-0iu" secondAttribute="height" id="dLn-rq-nzD"/>
+                            <constraint firstAttribute="trailing" secondItem="KPl-Zg-Bdn" secondAttribute="trailing" constant="8" id="e9K-jW-OG2"/>
+                            <constraint firstItem="KPl-Zg-Bdn" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="gD5-mu-kwX"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -83,11 +48,8 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="279" height="124"/>
             <connections>
+                <outlet property="button" destination="KPl-Zg-Bdn" id="SNw-SE-nwY"/>
                 <outlet property="containerView" destination="BQr-AJ-0iu" id="ueC-gi-Qug"/>
-                <outlet property="nameLabel" destination="jnw-fx-dba" id="vgt-Ka-Kva"/>
-                <outlet property="nextBtn" destination="JEE-XJ-i6x" id="BSf-K5-GEi"/>
-                <outlet property="optionControl" destination="LcZ-hx-sF9" id="Duf-O4-4SA"/>
-                <outlet property="prevBtn" destination="CRO-Cc-V5W" id="dEq-6a-ZJI"/>
             </connections>
             <point key="canvasLocation" x="216.66666666666669" y="109.15178571428571"/>
         </collectionViewCell>

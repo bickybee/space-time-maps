@@ -202,12 +202,13 @@ class AsManyOfBlock : OptionBlock {
         }
         
         // Only take best 5
-        if validPermTimes.count > 5 {
-            validPermTimes.sort(by: { $0.0 <= $1.0 } )
-        }
-        
-        let topFive = validPermTimes.prefix(5)
-        let validPerms = topFive.map( { $0.1 })
+//        if validPermTimes.count > 5 {
+//            validPermTimes.sort(by: { $0.0 <= $1.0 } )
+//        }
+//
+//        let topFive = validPermTimes.prefix(5)
+        validPermTimes.sort(by: { $0.0 <= $1.0 } )
+        let validPerms = validPermTimes.map( { $0.1 })
         options = validPerms
 
     }

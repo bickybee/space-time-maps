@@ -18,7 +18,7 @@ struct Coordinate {
 
 class Place : NSObject {
     
-    static private let defaultTimeSpent = TimeInterval.from(hours: 1.0)
+    static private let defaultTimeSpent = TimeInterval.from(hours: 0.5)
     
     let name: String
     let coordinate: Coordinate

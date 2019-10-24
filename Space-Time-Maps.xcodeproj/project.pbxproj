@@ -44,6 +44,11 @@
 		98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B969230AFE720032FBB7 /* TimelineViewController.swift */; };
 		98E9B96C230B0B0E0032FBB7 /* PassThroughViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */; };
 		98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */; };
+		98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBA2360BBE30005046D /* OptionsViewController.swift */; };
+		98ECFCBD2360CAAB0005046D /* OptionsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */; };
+		98ECFCBF2361F7D60005046D /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */; };
+		98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC02361FCE40005046D /* TimelineUtils.swift */; };
+		98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC22361FDCC0005046D /* Timeline.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -101,6 +106,11 @@
 		98E9B969230AFE720032FBB7 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		98E9B96B230B0B0E0032FBB7 /* PassThroughViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassThroughViews.swift; sourceTree = "<group>"; };
 		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
+		98ECFCBA2360BBE30005046D /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsLayout.swift; sourceTree = "<group>"; };
+		98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewExtensions.swift; sourceTree = "<group>"; };
+		98ECFCC02361FCE40005046D /* TimelineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineUtils.swift; sourceTree = "<group>"; };
+		98ECFCC22361FDCC0005046D /* Timeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeline.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +192,7 @@
 				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
 				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
 				982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */,
+				98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -189,13 +200,12 @@
 		98BC856F230B71DC001D14BE /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
+				98ECFCC62361FEC80005046D /* Util */,
+				98ECFCC52361FEB20005046D /* Timeline */,
+				98ECFCC42361FEA60005046D /* Options */,
 				982D578A231EE5E300E183F3 /* Cells */,
-				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
-				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
-				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
 				98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */,
-				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
 			);
 			path = Itinerary;
 			sourceTree = "<group>";
@@ -260,6 +270,33 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		98ECFCC42361FEA60005046D /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				98ECFCBA2360BBE30005046D /* OptionsViewController.swift */,
+				98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */,
+			);
+			path = Options;
+			sourceTree = "<group>";
+		};
+		98ECFCC52361FEB20005046D /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+				98E9B969230AFE720032FBB7 /* TimelineViewController.swift */,
+				98DEF0A222FCA6C3003DE1CB /* TimelineView.swift */,
+			);
+			path = Timeline;
+			sourceTree = "<group>";
+		};
+		98ECFCC62361FEC80005046D /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				98E9B9472308D1800032FBB7 /* Scheduler.swift */,
+				98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		AFD388B64024ED9215659E5A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +315,7 @@
 				98DEF0D62306661B003DE1CB /* ColorUtils.swift */,
 				98DEF0B323039788003DE1CB /* Utils.swift */,
 				987C1C1A234FA6B700FC3174 /* Combinatorics.swift */,
+				98ECFCC02361FCE40005046D /* TimelineUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -290,6 +328,7 @@
 				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
 				98DEBA70230F7EE700769BB5 /* ScheduleBlocks.swift */,
 				98BC8579230C3A83001D14BE /* Timing.swift */,
+				98ECFCC22361FDCC0005046D /* Timeline.swift */,
 			);
 			path = M;
 			sourceTree = "<group>";
@@ -494,7 +533,10 @@
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
 				982D579323203F8300E183F3 /* DestCell.swift in Sources */,
+				98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */,
+				98ECFCBD2360CAAB0005046D /* OptionsLayout.swift in Sources */,
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
+				98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
 				987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */,
@@ -508,6 +550,8 @@
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
+				98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */,
+				98ECFCBF2361F7D60005046D /* UICollectionViewExtensions.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
 				982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */,

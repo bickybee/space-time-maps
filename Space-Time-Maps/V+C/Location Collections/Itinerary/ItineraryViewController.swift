@@ -22,6 +22,8 @@ class ItineraryViewController: DraggableContentViewController {
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
     var timelineController: TimelineViewController!
+    var optionView : UIView?
+    var optionsVC = OptionsViewController()
 
     // Itinerary editing
     var editingSession : ItineraryEditingSession?
@@ -187,16 +189,53 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
         
-        cell.nextBtn.tag = index
-        cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
-        cell.prevBtn.tag = index
-        cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
-        cell.configureWith(block)
+//        cell.nextBtn.tag = index
+//        cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
+//        cell.prevBtn.tag = index
+//        cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
+//        cell.configureWith(block)
+        cell.button.tag = index
+        cell.button.addTarget(self, action: #selector(seeOptions), for: .touchUpInside)
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
             addDragRecognizerTo(draggable: cell)
         }
         
         return cell
+    }
+    
+    @objc func seeOptions(_ sender: UIButton) {
+        let blockIndex = sender.tag
+        
+        guard let newView = setupOptionViewForBlockIndex(blockIndex) else { return }
+        collectionView.addSubview(newView)
+        optionView = newView
+        
+    }
+    
+    func setupOptionViewForBlockIndex(_ blockIndex: Int) -> UIView? {
+        
+        guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return nil }
+        let enteringLeg = itinerary.route.legEndingAt(block.destinations![0].place)
+        let exitingLeg = itinerary.route.legStartingAt(block.destinations!.last!.place)
+        let startTime = enteringLeg != nil ? enteringLeg!.timing.start : block.timing.start
+        let endTime = exitingLeg != nil ? exitingLeg!.timing.end : block.timing.end
+        
+        let minY = timelineController.yFromTime(startTime)
+        let maxY = timelineController.yFromTime(endTime)
+        let frame = CGRect(x: 0, y: minY, width: collectionView.frame.width, height: maxY - minY)
+        
+        let newOptionView = UIView(frame: frame)
+        newOptionView.tag = blockIndex
+        newOptionView.backgroundColor = UIColor.red
+        
+        optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
+        optionsVC.optionBlock = block
+        optionsVC.hourHeight = timelineController.hourHeight
+        
+        newOptionView.addSubview(optionsVC.view)
+        optionsVC.didMove(toParent: self)
+        return newOptionView
+        
     }
         
     @objc func prevOption(_ sender: UIButton) {
@@ -397,10 +436,20 @@ extension ItineraryViewController: TimelineViewDelegate {
     
     func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartHour: CGFloat) {
         collectionView.reloadData()
+        if let ov = optionView {
+            ov.removeFromSuperview()
+            optionView = setupOptionViewForBlockIndex(ov.tag)!
+            collectionView.addSubview(optionView!)
+        }
     }
     
     func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateHourHeight: CGFloat) {
         collectionView.reloadData()
+        if let ov = optionView {
+            ov.removeFromSuperview()
+            optionView = setupOptionViewForBlockIndex(ov.tag)!
+            collectionView.addSubview(optionView!)
+        }
     }
     
 }

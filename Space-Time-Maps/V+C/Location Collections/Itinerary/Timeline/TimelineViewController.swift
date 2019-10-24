@@ -71,9 +71,7 @@ class TimelineViewController: UIViewController {
             guard let previousY = previousPanLocation?.y else { return }
             let dy = (previousY - location.y) * panMultiplier
             
-            
             shiftTimeline(by: dy)
-            
             previousPanLocation = location
             
         case .ended,
@@ -151,6 +149,12 @@ extension TimelineViewController {
         let roundedHour = Utils.ceilHour(hour)
         
         return roundedHour
+    }
+    
+    public func yFromTime(_ seconds: TimeInterval) -> CGFloat {
+        let hour = CGFloat(seconds.inHours())
+        let y = (hour - startHour) * hourHeight
+        return y
     }
     
 }
