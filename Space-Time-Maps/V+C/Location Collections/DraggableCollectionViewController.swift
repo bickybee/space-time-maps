@@ -174,7 +174,6 @@ protocol DragDelegate : AnyObject {
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
-    func cellForIndex(_ indexPath: IndexPath) -> UIView?
 }
 
 // Get object associated with dragging cell from the delegate

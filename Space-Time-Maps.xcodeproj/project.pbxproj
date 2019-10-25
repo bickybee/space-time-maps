@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
-		982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
 		982D579423203F8300E183F3 /* DestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579223203F8300E183F3 /* DestCell.xib */; };
 		982D5797232050C500E183F3 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5795232050C500E183F3 /* GroupCell.swift */; };
 		982D5798232050C500E183F3 /* GroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D5796232050C500E183F3 /* GroupCell.xib */; };
-		982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D57992320AB3C00E183F3 /* RouteCell.swift */; };
-		982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579A2320AB3C00E183F3 /* RouteCell.xib */; };
+		982D579C2320AB3C00E183F3 /* TravelTimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 982D579A2320AB3C00E183F3 /* TravelTimeCell.xib */; };
 		982D57A12321863600E183F3 /* NilCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D57A02321863600E183F3 /* NilCell.swift */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
@@ -46,9 +44,13 @@
 		98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */; };
 		98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBA2360BBE30005046D /* OptionsViewController.swift */; };
 		98ECFCBD2360CAAB0005046D /* OptionsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */; };
-		98ECFCBF2361F7D60005046D /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */; };
 		98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC02361FCE40005046D /* TimelineUtils.swift */; };
 		98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC22361FDCC0005046D /* Timeline.swift */; };
+		98ECFCCA23623D750005046D /* OldItineraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC923623D750005046D /* OldItineraryViewController.swift */; };
+		98ECFCCC236248420005046D /* ItineraryCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCCB236248420005046D /* ItineraryCollectionViewController.swift */; };
+		98ECFCCE23625E4A0005046D /* TravelTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCCD23625E4A0005046D /* TravelTimeCell.swift */; };
+		98ECFCD023625ED60005046D /* RouteLineCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98ECFCCF23625ED60005046D /* RouteLineCell.xib */; };
+		98ECFCD2236268A80005046D /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCD1236268A80005046D /* UIKitExtensions.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -70,14 +72,12 @@
 		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
-		982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
 		982D579223203F8300E183F3 /* DestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DestCell.xib; sourceTree = "<group>"; };
 		982D5795232050C500E183F3 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
 		982D5796232050C500E183F3 /* GroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupCell.xib; sourceTree = "<group>"; };
-		982D57992320AB3C00E183F3 /* RouteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCell.swift; sourceTree = "<group>"; };
-		982D579A2320AB3C00E183F3 /* RouteCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RouteCell.xib; sourceTree = "<group>"; };
+		982D579A2320AB3C00E183F3 /* TravelTimeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TravelTimeCell.xib; sourceTree = "<group>"; };
 		982D57A02321863600E183F3 /* NilCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NilCell.swift; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
@@ -108,9 +108,13 @@
 		98E9B96D230B51010032FBB7 /* ItineraryEditingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryEditingSession.swift; sourceTree = "<group>"; };
 		98ECFCBA2360BBE30005046D /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsLayout.swift; sourceTree = "<group>"; };
-		98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewExtensions.swift; sourceTree = "<group>"; };
 		98ECFCC02361FCE40005046D /* TimelineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineUtils.swift; sourceTree = "<group>"; };
 		98ECFCC22361FDCC0005046D /* Timeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeline.swift; sourceTree = "<group>"; };
+		98ECFCC923623D750005046D /* OldItineraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldItineraryViewController.swift; sourceTree = "<group>"; };
+		98ECFCCB236248420005046D /* ItineraryCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryCollectionViewController.swift; sourceTree = "<group>"; };
+		98ECFCCD23625E4A0005046D /* TravelTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeCell.swift; sourceTree = "<group>"; };
+		98ECFCCF23625ED60005046D /* RouteLineCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RouteLineCell.xib; sourceTree = "<group>"; };
+		98ECFCD1236268A80005046D /* UIKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
@@ -156,8 +160,8 @@
 				982D579D232162FC00E183F3 /* Xibs */,
 				982D579123203F8300E183F3 /* DestCell.swift */,
 				982D5795232050C500E183F3 /* GroupCell.swift */,
-				982D57992320AB3C00E183F3 /* RouteCell.swift */,
 				982D57A02321863600E183F3 /* NilCell.swift */,
+				98ECFCCD23625E4A0005046D /* TravelTimeCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -166,8 +170,9 @@
 			isa = PBXGroup;
 			children = (
 				982D579223203F8300E183F3 /* DestCell.xib */,
-				982D579A2320AB3C00E183F3 /* RouteCell.xib */,
+				982D579A2320AB3C00E183F3 /* TravelTimeCell.xib */,
 				982D5796232050C500E183F3 /* GroupCell.xib */,
+				98ECFCCF23625ED60005046D /* RouteLineCell.xib */,
 			);
 			path = Xibs;
 			sourceTree = "<group>";
@@ -191,8 +196,7 @@
 				989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */,
 				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
 				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
-				982D5780231DEF8D00E183F3 /* UIButtonExtensions.swift */,
-				98ECFCBE2361F7D60005046D /* UICollectionViewExtensions.swift */,
+				98ECFCD1236268A80005046D /* UIKitExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -206,6 +210,8 @@
 				982D578A231EE5E300E183F3 /* Cells */,
 				B62AFCC022E5225700B7D2CD /* ItineraryViewController.swift */,
 				98DEF0A822FDE03D003DE1CB /* ItineraryLayout.swift */,
+				98ECFCC923623D750005046D /* OldItineraryViewController.swift */,
+				98ECFCCB236248420005046D /* ItineraryCollectionViewController.swift */,
 			);
 			path = Itinerary;
 			sourceTree = "<group>";
@@ -432,11 +438,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
+				98ECFCD023625ED60005046D /* RouteLineCell.xib in Resources */,
 				982D579423203F8300E183F3 /* DestCell.xib in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
-				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
+				982D579C2320AB3C00E183F3 /* TravelTimeCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
 				982D5798232050C500E183F3 /* GroupCell.xib in Resources */,
@@ -513,10 +520,12 @@
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				982D5797232050C500E183F3 /* GroupCell.swift in Sources */,
+				98ECFCD2236268A80005046D /* UIKitExtensions.swift in Sources */,
 				B6A625EA22DF6CBD0099D65C /* QueryService.swift in Sources */,
 				98DEF0A922FDE03D003DE1CB /* ItineraryLayout.swift in Sources */,
 				98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */,
 				B62AFCBF22E50E1700B7D2CD /* DestinationCell.swift in Sources */,
+				98ECFCCE23625E4A0005046D /* TravelTimeCell.swift in Sources */,
 				98DEBA71230F7EE700769BB5 /* ScheduleBlocks.swift in Sources */,
 				98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */,
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
@@ -529,8 +538,8 @@
 				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
 				988530B7234E3A3E00B22888 /* PlaceCreationViewController.swift in Sources */,
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
-				982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
+				98ECFCCA23623D750005046D /* OldItineraryViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
 				982D579323203F8300E183F3 /* DestCell.swift in Sources */,
 				98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */,
@@ -545,16 +554,15 @@
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */,
+				98ECFCCC236248420005046D /* ItineraryCollectionViewController.swift in Sources */,
 				987704292326AB62009E1A63 /* Route.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
 				98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */,
-				98ECFCBF2361F7D60005046D /* UICollectionViewExtensions.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
-				982D5781231DEF8D00E183F3 /* UIButtonExtensions.swift in Sources */,
 				989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

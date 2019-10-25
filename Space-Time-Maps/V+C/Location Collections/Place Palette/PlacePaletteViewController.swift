@@ -356,10 +356,7 @@ extension PlacePaletteViewController: DragDelegate {
         collectionView.reloadItems(at: [reloadIndexPath])
         
     }
-    
-    func cellForIndex(_ indexPath: IndexPath) -> UIView? {
-        return nil
-    }
+
     
     func setupPlaceholderView(from uiView: UIView) -> UIView? {
         guard let snapshot = uiView.snapshotView(afterScreenUpdates: false) else { return nil }

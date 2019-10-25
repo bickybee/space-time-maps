@@ -62,6 +62,12 @@ class ItineraryLayout: UICollectionViewLayout {
             width = contentWidth
         }
         
+        if indexPath.section == 3 {
+            attributes.zIndex = -2
+            x = 0.0
+            width = contentWidth
+        }
+        
         let frame = CGRect(x: x, y: y, width: width, height: height)
         
         // Add to cache
@@ -99,3 +105,4 @@ protocol ItineraryLayoutDelegate: AnyObject {
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView:UICollectionView, timingForEventAtIndexPath indexPath: IndexPath) -> Timing
 }
+
