@@ -22,7 +22,7 @@ class RouteCell: UICollectionViewCell {
     
     private func setup() {
         
-        let width = routeLine.bounds.width
+        let width = routeLine.frame.width
         let height : CGFloat = 0.0
         let x : CGFloat = 0.0
         let y = routeLine.bounds.size.height / 2.0
@@ -41,7 +41,7 @@ class RouteCell: UICollectionViewCell {
     
     private func configureDurationWithHeight(_ height: CGFloat) {
         
-        let width = routeLine.bounds.width
+        let width = routeLine.frame.width
         let x : CGFloat = 0
         let y = (routeLine.bounds.size.height / 2.0) - (height / 2.0)
         let frame = CGRect(x: x, y: y, width: width, height: height)
@@ -52,7 +52,7 @@ class RouteCell: UICollectionViewCell {
     
     func configureWith(timing: Timing, duration: TimeInterval, hourHeight: CGFloat, gradient: [UIColor]) {
         let height = CGFloat(duration.inHours()) * hourHeight
-        let width = routeLine.bounds.width
+        let width = routeLine.frame.width
         let x : CGFloat = 0
         let y = (CGFloat(timing.duration.inHours()) * hourHeight - height) / 2.0
         let frame = CGRect(x: x, y: y, width: width, height: height)

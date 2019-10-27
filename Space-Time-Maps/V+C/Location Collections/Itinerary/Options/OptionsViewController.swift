@@ -12,6 +12,7 @@ class OptionsViewController: UIViewController {
     
     private let locationReuseIdentifier = "locationCell"
     private let legReuseIdentifier = "legCell"
+    private let nilReuseIdentifier = "nilCell"
     
     weak var collectionView: UICollectionView!
     var itineraries: [Itinerary]?
@@ -49,6 +50,7 @@ class OptionsViewController: UIViewController {
         self.collectionView.delegate = self
         
         self.collectionView.register(MiniTimelineCell.self, forCellWithReuseIdentifier: "MiniTimelineCell")
+        self.collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -94,7 +96,7 @@ extension OptionsViewController: UICollectionViewDataSource {
         guard let itineraries = itineraries else { return 0 }
         
         if isMainCollectionView(collectionView) {
-            return itineraries.count
+            return itineraries.count + 2
         } else {
             let whichOption = collectionView.tag
             if section == 0 { // dests
@@ -109,11 +111,16 @@ extension OptionsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isMainCollectionView(collectionView) {
+            if ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1)) {
+                return collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
+            }
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MiniTimelineCell", for: indexPath) as! MiniTimelineCell
             cell.timelineView.delegate = self
             cell.timelineView.dataSource = self
-            cell.timelineView.tag = indexPath.item
+            cell.timelineView.tag = indexPath.item - 1 // Because of nil cell to start
+            print(indexPath)
+            print(indexPath.item - 1)
             
             let destNib = UINib(nibName: "DestCell", bundle: nil)
             let routeNib = UINib(nibName: "RouteCell", bundle: nil)
@@ -165,6 +172,10 @@ extension OptionsViewController: UICollectionViewDataSource {
 extension OptionsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        if ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1)) {
+            return CGSize(width: collectionView.frame.width * 0.25, height: collectionView.frame.height)
+        }
         return CGSize(width: collectionView.frame.width * 0.5, height: collectionView.frame.height)
     }
     
