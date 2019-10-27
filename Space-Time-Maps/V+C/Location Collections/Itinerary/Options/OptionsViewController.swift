@@ -10,8 +10,11 @@ import UIKit
 
 class OptionsViewController: UIViewController {
     
+    private let locationReuseIdentifier = "locationCell"
+    private let legReuseIdentifier = "legCell"
+    
     weak var collectionView: UICollectionView!
-    var optionBlock: OptionBlock?
+    var itineraries: [Itinerary]?
     var hourHeight: CGFloat?
     
 
@@ -41,7 +44,7 @@ class OptionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.collectionView.backgroundColor = .white
+        self.collectionView.backgroundColor = .clear
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         
@@ -80,17 +83,27 @@ extension OptionsViewController: UIScrollViewDelegate {
 extension OptionsViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        if isMainCollectionView(collectionView) {
+            return 1
+        } else {
+            return 2
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let optionBlock = optionBlock else { return 0 }
+        guard let itineraries = itineraries else { return 0 }
+        
         if isMainCollectionView(collectionView) {
-            return optionBlock.options.count
+            return itineraries.count
         } else {
             let whichOption = collectionView.tag
-            print(optionBlock.options[whichOption].count)
-            return optionBlock.options[whichOption].count
+            if section == 0 { // dests
+                return itineraries[whichOption].schedule.count
+            } else { // legs! TODO!
+                print(itineraries[whichOption].route)
+                return itineraries[whichOption].route.count
+            }
+            
         }
     }
     
@@ -100,6 +113,13 @@ extension OptionsViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MiniTimelineCell", for: indexPath) as! MiniTimelineCell
             cell.timelineView.delegate = self
             cell.timelineView.dataSource = self
+            cell.timelineView.tag = indexPath.item
+            
+            let destNib = UINib(nibName: "DestCell", bundle: nil)
+            let routeNib = UINib(nibName: "RouteCell", bundle: nil)
+            cell.timelineView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
+            cell.timelineView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
+            
             let layout = cell.timelineView!.collectionViewLayout as! ItineraryLayout
             layout.delegate = self
             cell.timelineView.reloadData()
@@ -107,12 +127,37 @@ extension OptionsViewController: UICollectionViewDataSource {
             
         } else {
             
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath)
-            cell.backgroundColor = ColorUtils.randomColor()
-            return cell
+            let section = indexPath.section
+            if section == 0 {
+                return setupDestinationCell(with: indexPath, for: collectionView)
+            } else {
+                return setupLegCell(with: indexPath, for: collectionView)
+            }
             
         }
         
+    }
+    
+    func setupDestinationCell(with indexPath: IndexPath, for cv: UICollectionView) -> UICollectionViewCell {
+        
+        let index = indexPath.item
+        let destination = itineraries![cv.tag].destinations[index]
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
+        cell.configureWith(destination)
+        cell.isUserInteractionEnabled = false
+        return cell
+        
+    }
+    
+    func setupLegCell(with indexPath: IndexPath, for cv: UICollectionView) -> UICollectionViewCell {
+        
+        let index = indexPath.item
+        let leg = itineraries![cv.tag].route.legs[index]
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
+        let gradient = [leg.startPlace.color, leg.endPlace.color]
+        
+        cell.configureWith(timing: leg.timing, duration: leg.travelTiming.duration, hourHeight: hourHeight!, gradient: gradient)
+        return cell
     }
     
 }
@@ -127,7 +172,9 @@ extension OptionsViewController: UICollectionViewDelegateFlowLayout {
 
 extension OptionsViewController: ItineraryLayoutDelegate {
     func timelineStartHour(of collectionView: UICollectionView) -> CGFloat {
-        return CGFloat(optionBlock!.timing.start.inHours())
+        guard let itineraries = itineraries else { return 0 }
+        
+        return CGFloat(min(itineraries[0].schedule[0].timing.start.inHours(), itineraries[0].route.legs[0].timing.start.inHours()))
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
@@ -136,14 +183,11 @@ extension OptionsViewController: ItineraryLayoutDelegate {
     
     func collectionView(_ collectionView: UICollectionView, timingForEventAtIndexPath indexPath: IndexPath) -> Timing {
         
-        guard let optionBlock = optionBlock else { return Timing(start: 0, duration: 0) }
-        
         let optionIndex = collectionView.tag
-        if let asManyOf = optionBlock as? AsManyOfBlock {
-            let event = asManyOf.scheduledOptions![optionIndex][indexPath.item]
-            return event.timing
+        if indexPath.section == 0 {
+            return itineraries![optionIndex].schedule[indexPath.item].timing
         } else {
-            return optionBlock.timing
+            return itineraries![optionIndex].route.legs[indexPath.item].timing
         }
         
     }
@@ -168,7 +212,7 @@ class MiniTimelineCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.contentView.backgroundColor = .lightGray
+        self.contentView.backgroundColor = .clear
         setupTimelineView()
     }
     
@@ -197,7 +241,7 @@ class MiniTimelineCell: UICollectionViewCell {
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
-        collectionView.backgroundColor = .red
+        collectionView.backgroundColor = .clear
         timelineView = collectionView
         
     }

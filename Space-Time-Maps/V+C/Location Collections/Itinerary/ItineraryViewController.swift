@@ -188,12 +188,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-        
-//        cell.nextBtn.tag = index
-//        cell.nextBtn.addTarget(self, action: #selector(nextOption(_:)), for: .touchUpInside)
-//        cell.prevBtn.tag = index
-//        cell.prevBtn.addTarget(self, action: #selector(prevOption(_:)), for: .touchUpInside)
-//        cell.configureWith(block)
         cell.button.tag = index
         cell.button.addTarget(self, action: #selector(seeOptions), for: .touchUpInside)
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
@@ -226,15 +220,73 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let newOptionView = UIView(frame: frame)
         newOptionView.tag = blockIndex
-        newOptionView.backgroundColor = UIColor.red
+        newOptionView.backgroundColor = UIColor.clear
         
+        addChild(optionsVC)
         optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
-        optionsVC.optionBlock = block
-        optionsVC.hourHeight = timelineController.hourHeight
-        
         newOptionView.addSubview(optionsVC.view)
         optionsVC.didMove(toParent: self)
+        optionsVC.hourHeight = timelineController.hourHeight
+        let bgSnapshotFrame = collectionView.convert(newOptionView.frame, to: timelineController.view)
+        optionsVC.view.backgroundColor = UIColor.init(patternImage: timelineController.view.snapshot(of: bgSnapshotFrame, afterScreenUpdates: false))
+        
+        if optionsVC.itineraries == nil {
+            // Create itineraries from options!!!
+            let itineraries = itinerariesFromOptionsBlockIndex(blockIndex)
+            optionsVC.itineraries = itineraries
+        }
+        
+        
+        
         return newOptionView
+        
+    }
+    
+    func itinerariesFromOptionsBlockIndex(_ blockIndex: Int) -> [Itinerary] {
+        guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return [] }
+        var destinationOptions : [[Destination]]!
+        if block is OneOfBlock {
+            destinationOptions = [block.destinations!]
+        } else if let asManyOf = block as? AsManyOfBlock{
+            destinationOptions = asManyOf.scheduledOptions!
+        }
+        var itineraries = [Itinerary]()
+        let dispatchGroup = DispatchGroup()
+        
+        for o in destinationOptions {
+            print("option")
+            print(o)
+            dispatchGroup.enter()
+            var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
+            if blockIndex > 0 {
+                newItineraryBlocks.insert(itinerary.schedule[blockIndex - 1], at: 0)
+            }
+            if blockIndex < itinerary.schedule.count - 1 {
+                newItineraryBlocks.append(itinerary.schedule[blockIndex + 1])
+            }
+            scheduler.reschedule(blocks: newItineraryBlocks) { schedule, route in
+                let itinerary = Itinerary()
+                if var schedule = schedule {
+                    if blockIndex > 0 {
+                        schedule.removeFirst()
+                    }
+                    if blockIndex < itinerary.schedule.count - 1 {
+                        schedule.removeLast()
+                    }
+                    print("SCHEDULED")
+                    itinerary.schedule = schedule
+                    print(itinerary.destinations)
+                }
+                if let route = route { itinerary.route = route }
+                itineraries.append(itinerary)
+                dispatchGroup.leave()
+            }
+        }
+        
+        dispatchGroup.wait()
+        print("all")
+        print(itineraries.map( {$0.destinations} ))
+        return itineraries
         
     }
         

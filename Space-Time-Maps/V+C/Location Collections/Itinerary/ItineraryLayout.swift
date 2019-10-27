@@ -11,6 +11,7 @@ import UIKit
 class ItineraryLayout: UICollectionViewLayout {
     
     weak var delegate: ItineraryLayoutDelegate!
+    var shouldPadCells: Bool = true
 
     fileprivate var cache = [UICollectionViewLayoutAttributes]()
     fileprivate var contentHeight: CGFloat = 0
@@ -50,25 +51,28 @@ class ItineraryLayout: UICollectionViewLayout {
         
         let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         
-        var width = contentWidth * 0.7
+        // Always true
         let height = CGFloat(duration) * hourHeight
         let relativeHour = CGFloat(startHour) - timelineStartHour
-        let y = relativeHour * hourHeight// - startOffset
-        var x = contentWidth * 0.15
+        let y = relativeHour * hourHeight
+        
+        // Depends on the cell/settings...
+        var width = contentWidth
+        var x: CGFloat = 0.0
         
         if indexPath.section == 2 {
             attributes.zIndex = -1
-            x = 0.0
-            width = contentWidth
+        }
+        
+        else if shouldPadCells {
+            width = contentWidth * 0.7
+            x = contentWidth * 0.15
         }
         
         let frame = CGRect(x: x, y: y, width: width, height: height)
         
         // Add to cache
         attributes.frame = frame
-        
-        
-        
         cache.append(attributes)
         // Update content height
         contentHeight = max(contentHeight, frame.maxY)

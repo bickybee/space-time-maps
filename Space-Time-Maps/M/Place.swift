@@ -94,7 +94,7 @@ class PlaceGroup {
     
 }
 
-class Destination: Schedulable {
+class Destination: NSObject, Schedulable {
     
     var place : Place
     var timing : Timing
@@ -107,6 +107,10 @@ class Destination: Schedulable {
     
     func copy() -> Schedulable {
         return Destination(place: self.place, timing: self.timing)
+    }
+    
+    override var description: String {
+        return "\(self.place.name), timing: \(self.timing)"
     }
 }
 
