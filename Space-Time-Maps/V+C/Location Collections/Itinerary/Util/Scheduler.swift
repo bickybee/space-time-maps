@@ -76,19 +76,13 @@ class Scheduler {
     }
     
     // Changing option in optionBlock
-    func scheduleOptionChange(of blockIndex: Int, direction: Int, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func scheduleOptionChange(of blockIndex: Int, toOption newIndex: Int, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         
         guard var block = blocks[blockIndex] as? OptionBlock,
               let index = block.selectedOption else {
             callback(blocks, Route()); return
         }
-        
-        var newIndex = 0
-        if direction > 0 {
-            newIndex = (index + 1) % (block.options.count)
-        } else {
-            newIndex = (index - 1) >= 0 ? index - 1 : block.options.count - 1
-        }
+
         block.selectedOption = newIndex
         block.isFixed = true
         

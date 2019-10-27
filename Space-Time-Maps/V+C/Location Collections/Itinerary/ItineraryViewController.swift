@@ -220,15 +220,17 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
         let newOptionView = UIView(frame: frame)
         newOptionView.tag = blockIndex
-        newOptionView.backgroundColor = UIColor.clear
+        let bgSnapshotFrame = collectionView.convert(newOptionView.frame, to: timelineController.view)
+        newOptionView.backgroundColor = UIColor.init(patternImage: timelineController.view.snapshot(of: bgSnapshotFrame, afterScreenUpdates: false))
         
         addChild(optionsVC)
         optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
         newOptionView.addSubview(optionsVC.view)
         optionsVC.didMove(toParent: self)
+        optionsVC.delegate = self
+        optionsVC.blockIndex = blockIndex
         optionsVC.hourHeight = timelineController.hourHeight
-        let bgSnapshotFrame = collectionView.convert(newOptionView.frame, to: timelineController.view)
-        optionsVC.view.backgroundColor = UIColor.init(patternImage: timelineController.view.snapshot(of: bgSnapshotFrame, afterScreenUpdates: false))
+        optionsVC.view.backgroundColor = .clear //UIColor.lightGray.withAlphaComponent(0.5)
         
         if optionsVC.itineraries == nil {
             // Create itineraries from options!!!
@@ -246,7 +248,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return [] }
         var destinationOptions : [[Destination]]!
         if block is OneOfBlock {
-            destinationOptions = [block.destinations!]
+            destinationOptions = block.placeGroup.places.map( { [Destination(place: $0, timing: block.timing)] } )
         } else if let asManyOf = block as? AsManyOfBlock{
             destinationOptions = asManyOf.scheduledOptions!
         }
@@ -259,10 +261,12 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             dispatchGroup.enter()
             var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
             if blockIndex > 0 {
-                newItineraryBlocks.insert(itinerary.schedule[blockIndex - 1], at: 0)
+                let prevDest = itinerary.schedule[blockIndex - 1].destinations!.last!
+                newItineraryBlocks.insert(SingleBlock(timing: prevDest.timing, place: prevDest.place), at: 0)
             }
             if blockIndex < itinerary.schedule.count - 1 {
-                newItineraryBlocks.append(itinerary.schedule[blockIndex + 1])
+                let nextDest = itinerary.schedule[blockIndex + 1].destinations!.first!
+                newItineraryBlocks.append(SingleBlock(timing: nextDest.timing, place: nextDest.place))
             }
             scheduler.reschedule(blocks: newItineraryBlocks) { schedule, route in
                 let itinerary = Itinerary()
@@ -288,16 +292,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         print(itineraries.map( {$0.destinations} ))
         return itineraries
         
-    }
-        
-    @objc func prevOption(_ sender: UIButton) {
-        let blockIndex = sender.tag
-        scheduler.scheduleOptionChange(of: blockIndex, direction: -1, in: itinerary.schedule, callback: didEditItinerary)
-    }
-
-    @objc func nextOption(_ sender: UIButton) {
-        let blockIndex = sender.tag
-        scheduler.scheduleOptionChange(of: blockIndex, direction: 1, in: itinerary.schedule, callback: didEditItinerary)
     }
 
 }
@@ -502,6 +496,27 @@ extension ItineraryViewController: TimelineViewDelegate {
             optionView = setupOptionViewForBlockIndex(ov.tag)!
             collectionView.addSubview(optionView!)
         }
+    }
+    
+}
+
+extension ItineraryViewController: OptionsViewControllerDelegate {
+    
+    func optionsViewController(_ optionsViewController: OptionsViewController, shouldDismissWithSelectedOptionIndex index: Int) {
+        optionsViewController.willMove(toParent: nil)
+        optionsViewController.view.removeFromSuperview()
+        optionsViewController.removeFromParent()
+        
+        let blockIndex = optionsViewController.blockIndex
+        var block = itinerary.schedule[blockIndex!] as! OptionBlock
+        block.selectedOption = index
+        
+        optionsViewController.itineraries = nil
+        optionsViewController.blockIndex = nil
+        scheduler.scheduleOptionChange(of: blockIndex!, toOption: index, in: itinerary.schedule, callback: didEditItinerary)
+        
+        optionView?.removeFromSuperview()
+        optionView = nil
     }
     
 }

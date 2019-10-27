@@ -8,20 +8,28 @@
 
 import UIKit
 
+private let locationReuseIdentifier = "locationCell"
+private let legReuseIdentifier = "legCell"
+private let nilReuseIdentifier = "nilCell"
+
 class OptionsViewController: UIViewController {
     
-    private let locationReuseIdentifier = "locationCell"
-    private let legReuseIdentifier = "legCell"
-    private let nilReuseIdentifier = "nilCell"
-    
+    var blockIndex: Int!
+    weak var delegate: OptionsViewControllerDelegate!
     weak var collectionView: UICollectionView!
-    var itineraries: [Itinerary]?
+    weak var dismissButton: UIButton!
     var hourHeight: CGFloat?
+    var itineraries: [Itinerary]? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
 
     override func loadView() {
         super.loadView()
         setupCollectionView()
+        setupDismissButton()
     }
     
     func setupCollectionView() {
@@ -40,6 +48,29 @@ class OptionsViewController: UIViewController {
         collectionView.tag = -1
         self.collectionView = collectionView
         
+    }
+    
+    func setupDismissButton() {
+        
+        let button = UIButton()
+        button.backgroundColor = .darkGray
+        button.layer.zPosition = 10
+        self.view.insertSubview(button, aboveSubview: collectionView)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 20.0),
+            button.heightAnchor.constraint(equalToConstant: 20.0),
+            button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ])
+        button.addTarget(self, action: #selector(didPressDismiss), for: .touchUpInside)
+        self.dismissButton = button
+        
+    }
+    
+    @objc func didPressDismiss(_ sender: UIButton) {
+        let index = collectionView.getCenterCellIndex()! - 1
+        delegate.optionsViewController(self, shouldDismissWithSelectedOptionIndex: index)
     }
     
     override func viewDidLoad() {
@@ -119,16 +150,10 @@ extension OptionsViewController: UICollectionViewDataSource {
             cell.timelineView.delegate = self
             cell.timelineView.dataSource = self
             cell.timelineView.tag = indexPath.item - 1 // Because of nil cell to start
-            print(indexPath)
-            print(indexPath.item - 1)
-            
-            let destNib = UINib(nibName: "DestCell", bundle: nil)
-            let routeNib = UINib(nibName: "RouteCell", bundle: nil)
-            cell.timelineView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
-            cell.timelineView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
             
             let layout = cell.timelineView!.collectionViewLayout as! ItineraryLayout
             layout.delegate = self
+            
             cell.timelineView.reloadData()
             return cell
             
@@ -185,7 +210,14 @@ extension OptionsViewController: ItineraryLayoutDelegate {
     func timelineStartHour(of collectionView: UICollectionView) -> CGFloat {
         guard let itineraries = itineraries else { return 0 }
         
-        return CGFloat(min(itineraries[0].schedule[0].timing.start.inHours(), itineraries[0].route.legs[0].timing.start.inHours()))
+        let firstDest = itineraries[0].schedule[0]
+        if let enteringLeg = itineraries[0].route.legs.first {
+            return CGFloat(min(firstDest.timing.start.inHours(), enteringLeg.timing.start.inHours()))
+        } else {
+            return CGFloat(firstDest.timing.start.inHours())
+        }
+        
+        
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
@@ -251,12 +283,21 @@ class MiniTimelineCell: UICollectionViewCell {
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "MyCell")
+        let destNib = UINib(nibName: "DestCell", bundle: nil)
+        let routeNib = UINib(nibName: "RouteCell", bundle: nil)
+        collectionView.register(routeNib, forCellWithReuseIdentifier: legReuseIdentifier)
+        collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.backgroundColor = .clear
         timelineView = collectionView
         
     }
 
+}
+
+protocol OptionsViewControllerDelegate: AnyObject {
+    
+    func optionsViewController(_ optionsViewController: OptionsViewController, shouldDismissWithSelectedOptionIndex index: Int)
+    
 }
 
 
