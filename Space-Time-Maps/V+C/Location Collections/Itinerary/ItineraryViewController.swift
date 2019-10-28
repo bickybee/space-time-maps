@@ -188,13 +188,23 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-        cell.button.tag = index
-        cell.button.addTarget(self, action: #selector(seeOptions), for: .touchUpInside)
+        cell.optionsButton.tag = index
+        cell.optionsButton.addTarget(self, action: #selector(seeOptions), for: .touchUpInside)
+        cell.lockButton.tag = index
+        cell.lockButton.addTarget(self, action: #selector(lockOption), for: .touchUpInside)
+        cell.lockButton.isSelected = block.isFixed
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
             addDragRecognizerTo(draggable: cell)
         }
         
         return cell
+    }
+    
+    @objc func lockOption(_ sender: UIButton) {
+        let blockIndex = sender.tag
+        var optionBlock = itinerary.schedule[blockIndex] as! OptionBlock
+        optionBlock.isFixed = !optionBlock.isFixed
+        sender.isSelected = optionBlock.isFixed
     }
     
     @objc func seeOptions(_ sender: UIButton) {
@@ -229,6 +239,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         optionsVC.didMove(toParent: self)
         optionsVC.delegate = self
         optionsVC.blockIndex = blockIndex
+        optionsVC.selectedOption = block.selectedOption!
         optionsVC.hourHeight = timelineController.hourHeight
         optionsVC.view.backgroundColor = .clear //UIColor.lightGray.withAlphaComponent(0.5)
         
@@ -237,9 +248,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             let itineraries = itinerariesFromOptionsBlockIndex(blockIndex)
             optionsVC.itineraries = itineraries
         }
-        
-        
-        
+
         return newOptionView
         
     }
@@ -502,21 +511,24 @@ extension ItineraryViewController: TimelineViewDelegate {
 
 extension ItineraryViewController: OptionsViewControllerDelegate {
     
-    func optionsViewController(_ optionsViewController: OptionsViewController, shouldDismissWithSelectedOptionIndex index: Int) {
+    func shouldDismissOptionsViewController(_ optionsViewController: OptionsViewController) {
+
         optionsViewController.willMove(toParent: nil)
         optionsViewController.view.removeFromSuperview()
         optionsViewController.removeFromParent()
         
-        let blockIndex = optionsViewController.blockIndex
-        var block = itinerary.schedule[blockIndex!] as! OptionBlock
-        block.selectedOption = index
-        
         optionsViewController.itineraries = nil
         optionsViewController.blockIndex = nil
-        scheduler.scheduleOptionChange(of: blockIndex!, toOption: index, in: itinerary.schedule, callback: didEditItinerary)
+        optionsViewController.selectedOption = nil
         
         optionView?.removeFromSuperview()
         optionView = nil
+    }
+    
+    func optionsViewController(_ optionsViewController: OptionsViewController, didSelectOptionIndex index: Int) {
+        let blockIndex = optionsViewController.blockIndex
+        scheduler.scheduleOptionChange(of: blockIndex!, toOption: index, in: itinerary.schedule, callback: didEditItinerary)
+        
     }
     
 }

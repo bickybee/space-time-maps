@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import FontAwesome_swift
 
 class GroupCell: UICollectionViewCell {
 
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var optionsButton: UIButton!
+    @IBOutlet weak var lockButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,7 +32,9 @@ class GroupCell: UICollectionViewCell {
 
     func setup() {
         
-        containerView.layer.cornerRadius = 5
+        lockButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
+        lockButton.setTitle(String.fontAwesomeIcon(name: .lockOpen), for: .normal)
+        lockButton.setTitle(String.fontAwesomeIcon(name: .lock), for: .selected)
         
     }
 

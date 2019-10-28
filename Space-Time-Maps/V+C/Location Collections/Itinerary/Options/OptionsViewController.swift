@@ -14,11 +14,12 @@ private let nilReuseIdentifier = "nilCell"
 
 class OptionsViewController: UIViewController {
     
-    var blockIndex: Int!
     weak var delegate: OptionsViewControllerDelegate!
     weak var collectionView: UICollectionView!
-    weak var dismissButton: UIButton!
     var hourHeight: CGFloat?
+    
+    var blockIndex: Int!
+    var selectedOption: Int!
     var itineraries: [Itinerary]? {
         didSet {
             collectionView.reloadData()
@@ -29,7 +30,6 @@ class OptionsViewController: UIViewController {
     override func loadView() {
         super.loadView()
         setupCollectionView()
-        setupDismissButton()
     }
     
     func setupCollectionView() {
@@ -49,30 +49,7 @@ class OptionsViewController: UIViewController {
         self.collectionView = collectionView
         
     }
-    
-    func setupDismissButton() {
-        
-        let button = UIButton()
-        button.backgroundColor = .darkGray
-        button.layer.zPosition = 10
-        self.view.insertSubview(button, aboveSubview: collectionView)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 20.0),
-            button.heightAnchor.constraint(equalToConstant: 20.0),
-            button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-        ])
-        button.addTarget(self, action: #selector(didPressDismiss), for: .touchUpInside)
-        self.dismissButton = button
-        
-    }
-    
-    @objc func didPressDismiss(_ sender: UIButton) {
-        let index = collectionView.getCenterCellIndex()! - 1
-        delegate.optionsViewController(self, shouldDismissWithSelectedOptionIndex: index)
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -84,9 +61,20 @@ class OptionsViewController: UIViewController {
         self.collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        collectionView.scrollToItem(at: IndexPath(item: selectedOption + 1, section: 0), at: .centeredHorizontally, animated: false)
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+    }
+    
+    func isPaddingCell(indexPath: IndexPath) -> Bool {
+        return ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1))
     }
 
 }
@@ -94,7 +82,18 @@ class OptionsViewController: UIViewController {
 extension OptionsViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row + 1)
+        guard !isPaddingCell(indexPath: indexPath) else { return }
+        
+        let centerIndex = collectionView.getCenterCellIndex()!
+        if indexPath.item == centerIndex {
+             // due to padding cells
+            delegate.shouldDismissOptionsViewController(self)
+        } else {
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            let optionIndex = indexPath.item - 1
+            selectedOption = optionIndex
+            delegate.optionsViewController(self, didSelectOptionIndex: optionIndex)
+        }
     }
     
 }
@@ -142,7 +141,7 @@ extension OptionsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isMainCollectionView(collectionView) {
-            if ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1)) {
+            if (isPaddingCell(indexPath: indexPath)) {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
             }
             
@@ -150,9 +149,11 @@ extension OptionsViewController: UICollectionViewDataSource {
             cell.timelineView.delegate = self
             cell.timelineView.dataSource = self
             cell.timelineView.tag = indexPath.item - 1 // Because of nil cell to start
+            cell.timelineView.isUserInteractionEnabled = false
             
             let layout = cell.timelineView!.collectionViewLayout as! ItineraryLayout
             layout.delegate = self
+            layout.shouldPadCells = false
             
             cell.timelineView.reloadData()
             return cell
@@ -198,7 +199,7 @@ extension OptionsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1)) {
+        if (isPaddingCell(indexPath: indexPath)) {
             return CGSize(width: collectionView.frame.width * 0.25, height: collectionView.frame.height)
         }
         return CGSize(width: collectionView.frame.width * 0.5, height: collectionView.frame.height)
@@ -211,10 +212,12 @@ extension OptionsViewController: ItineraryLayoutDelegate {
         guard let itineraries = itineraries else { return 0 }
         
         let firstDest = itineraries[0].schedule[0]
+        let destStart = firstDest.timing.start.inHours()
         if let enteringLeg = itineraries[0].route.legs.first {
-            return CGFloat(min(firstDest.timing.start.inHours(), enteringLeg.timing.start.inHours()))
+            let legStart = enteringLeg.timing.start.inHours()
+            return CGFloat(min(destStart, legStart))
         } else {
-            return CGFloat(firstDest.timing.start.inHours())
+            return CGFloat(destStart)
         }
         
         
@@ -296,8 +299,8 @@ class MiniTimelineCell: UICollectionViewCell {
 
 protocol OptionsViewControllerDelegate: AnyObject {
     
-    func optionsViewController(_ optionsViewController: OptionsViewController, shouldDismissWithSelectedOptionIndex index: Int)
-    
+    func shouldDismissOptionsViewController(_ optionsViewController: OptionsViewController)
+    func optionsViewController(_ optionsViewController: OptionsViewController, didSelectOptionIndex index: Int)
 }
 
 

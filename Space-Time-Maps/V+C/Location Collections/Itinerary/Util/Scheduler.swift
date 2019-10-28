@@ -178,6 +178,18 @@ private extension Scheduler {
     // Returns blocks with destinations and timings set
     func scheduleBlocks(_ blocks: [ScheduleBlock]) -> [ScheduleBlock] {
         
+//        if blocks.count == 1 {
+//            let onlyBlock = blocks[0]
+//            if onlyBlock is SingleBlock {
+//                return blocks
+//            }
+//            let optionBlock = onlyBlock as! OptionBlock
+//            if (optionBlock is OneOfBlock) && (optionBlock.selectedOption != nil) {
+//                return blocks
+//            }
+//
+//        }
+        
         var schedule = [ScheduleBlock]()
         var i = 0
         while (i < blocks.count) {

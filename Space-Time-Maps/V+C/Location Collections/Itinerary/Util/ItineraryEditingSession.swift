@@ -96,6 +96,7 @@ class ItineraryEditingSession: NSObject {
     
     func removeBlock() {
         scheduler.reschedule(blocks: baseBlocks, callback: callback)
+        lastPosition = nil
     }
     
     func end() {

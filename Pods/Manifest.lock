@@ -2,21 +2,24 @@ PODS:
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
-  - GoogleMaps (3.4.0):
-    - GoogleMaps/Maps (= 3.4.0)
-  - GoogleMaps/Base (3.4.0)
-  - GoogleMaps/Maps (3.4.0):
+  - FontAwesome.swift (1.8.2)
+  - GoogleMaps (3.5.0):
+    - GoogleMaps/Maps (= 3.5.0)
+  - GoogleMaps/Base (3.5.0)
+  - GoogleMaps/Maps (3.5.0):
     - GoogleMaps/Base
-  - GooglePlaces (3.4.0):
-    - GoogleMaps/Base (= 3.4.0)
+  - GooglePlaces (3.5.0):
+    - GoogleMaps/Base (= 3.5.0)
 
 DEPENDENCIES:
   - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
+  - FontAwesome.swift
   - GoogleMaps
   - GooglePlaces
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - FontAwesome.swift
     - GoogleMaps
     - GooglePlaces
 
@@ -31,9 +34,10 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
-  GoogleMaps: 67f4a604f80dd6a22d09c2a507a3a395b9f23060
-  GooglePlaces: 7547289e3fffc8980f4a027be99888e29d59b15d
+  FontAwesome.swift: 7938d6a03113ff3f39001bde7f50be8a0903d605
+  GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
+  GooglePlaces: be6f19fe8aa6ff0b5bcccfa1b8805cc977ea1450
 
-PODFILE CHECKSUM: 129dfeb91faf277c8a026355ead409f6115daed2
+PODFILE CHECKSUM: 888ae5d0e0f3b023d16d13eadf3fa88715874b2f
 
 COCOAPODS: 1.7.5
