@@ -188,32 +188,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-        cell.optionsButton.tag = index
-        cell.optionsButton.addTarget(self, action: #selector(seeOptions), for: .touchUpInside)
-        cell.lockButton.tag = index
-        cell.lockButton.addTarget(self, action: #selector(lockOption), for: .touchUpInside)
+        cell.tag = index
+        cell.delegate = self
         cell.lockButton.isSelected = block.isFixed
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
             addDragRecognizerTo(draggable: cell)
         }
         
         return cell
-    }
-    
-    @objc func lockOption(_ sender: UIButton) {
-        let blockIndex = sender.tag
-        var optionBlock = itinerary.schedule[blockIndex] as! OptionBlock
-        optionBlock.isFixed = !optionBlock.isFixed
-        sender.isSelected = optionBlock.isFixed
-    }
-    
-    @objc func seeOptions(_ sender: UIButton) {
-        let blockIndex = sender.tag
-        
-        guard let newView = setupOptionViewForBlockIndex(blockIndex) else { return }
-        collectionView.addSubview(newView)
-        optionView = newView
-        
     }
     
     func setupOptionViewForBlockIndex(_ blockIndex: Int) -> UIView? {
@@ -532,6 +514,33 @@ extension ItineraryViewController: OptionsViewControllerDelegate {
     }
     
 }
+
+extension ItineraryViewController: GroupButtonsDelegate {
+    
+    func didPressLockOnGroupCell(_ cell: GroupCell) {
+        let blockIndex = cell.tag
+        var optionBlock = itinerary.schedule[blockIndex] as! OptionBlock
+        optionBlock.isFixed = !optionBlock.isFixed
+        cell.lockButton.isSelected = optionBlock.isFixed
+    }
+    
+    func didPressOptionsOnGroupCell(_ cell: GroupCell) {
+        let blockIndex = cell.tag
+        guard let newView = setupOptionViewForBlockIndex(blockIndex) else { return }
+        collectionView.addSubview(newView)
+        optionView = newView
+    }
+    
+    func didPressNextOnGroupCell(_ cell: GroupCell) {
+        let blockIndex = cell.tag
+        let block = itinerary.schedule[blockIndex] as! OptionBlock
+        let oldIndex = block.selectedOption!
+        let newIndex = (oldIndex + 1) % block.options.count
+        scheduler.scheduleOptionChange(of: blockIndex, toOption: newIndex, in: itinerary.schedule, callback: didEditItinerary)
+    }
+    
+}
+
 
 // MARK: - Self delegate protocol
 protocol ItineraryViewControllerDelegate : AnyObject {

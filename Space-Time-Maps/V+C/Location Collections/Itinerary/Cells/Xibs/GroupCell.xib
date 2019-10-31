@@ -22,28 +22,60 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BQr-AJ-0iu" userLabel="ContainerView">
                         <rect key="frame" x="0.0" y="0.0" width="279" height="124"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KPl-Zg-Bdn">
-                                <rect key="frame" x="241" y="0.0" width="30" height="124"/>
-                                <state key="normal" title="-&gt;">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0SZ-kT-05x">
-                                <rect key="frame" x="8" y="47" width="30" height="30"/>
+                                <rect key="frame" x="10" y="47" width="30" height="30"/>
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="🔓">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="titleShadowColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="didPressLock:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Vhm-GO-7H9"/>
+                                </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eZ0-DC-gYc" userLabel="Right Button View">
+                                <rect key="frame" x="239" y="0.0" width="30" height="124"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KPl-Zg-Bdn">
+                                        <rect key="frame" x="0.0" y="62" width="30" height="62"/>
+                                        <state key="normal" title="...">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="didPressOptions:" destination="gTV-IL-0wX" eventType="touchUpInside" id="dNs-96-uUX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiM-Yp-U7H">
+                                        <rect key="frame" x="0.0" y="0.0" width="30" height="62"/>
+                                        <state key="normal" title="-&gt;">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="didPressNext:" destination="gTV-IL-0wX" eventType="touchUpInside" id="mPB-hA-HJ8"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="fiM-Yp-U7H" firstAttribute="top" secondItem="eZ0-DC-gYc" secondAttribute="top" id="3jf-fK-LCY"/>
+                                    <constraint firstAttribute="bottom" secondItem="KPl-Zg-Bdn" secondAttribute="bottom" id="63s-Jx-yLL"/>
+                                    <constraint firstAttribute="trailing" secondItem="KPl-Zg-Bdn" secondAttribute="trailing" id="JMt-Dv-ZVt"/>
+                                    <constraint firstItem="fiM-Yp-U7H" firstAttribute="leading" secondItem="eZ0-DC-gYc" secondAttribute="leading" id="LSz-GT-PMh"/>
+                                    <constraint firstAttribute="width" constant="30" id="ZG8-uE-O2J"/>
+                                    <constraint firstAttribute="trailing" secondItem="fiM-Yp-U7H" secondAttribute="trailing" id="dMW-5y-XSQ"/>
+                                    <constraint firstItem="fiM-Yp-U7H" firstAttribute="height" secondItem="eZ0-DC-gYc" secondAttribute="height" multiplier="0.5" id="ef6-Qh-Jif"/>
+                                    <constraint firstItem="KPl-Zg-Bdn" firstAttribute="height" secondItem="eZ0-DC-gYc" secondAttribute="height" multiplier="0.5" id="tLM-g6-P9w"/>
+                                    <constraint firstItem="KPl-Zg-Bdn" firstAttribute="leading" secondItem="eZ0-DC-gYc" secondAttribute="leading" id="uva-kN-VWk"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="KPl-Zg-Bdn" firstAttribute="height" secondItem="BQr-AJ-0iu" secondAttribute="height" id="dLn-rq-nzD"/>
-                            <constraint firstItem="0SZ-kT-05x" firstAttribute="leading" secondItem="BQr-AJ-0iu" secondAttribute="leading" constant="8" id="dfq-IW-7My"/>
+                            <constraint firstItem="eZ0-DC-gYc" firstAttribute="height" secondItem="BQr-AJ-0iu" secondAttribute="height" id="0O5-w5-4gw"/>
+                            <constraint firstAttribute="trailing" secondItem="eZ0-DC-gYc" secondAttribute="trailing" constant="10" id="aoF-Uw-bfI"/>
+                            <constraint firstItem="0SZ-kT-05x" firstAttribute="leading" secondItem="BQr-AJ-0iu" secondAttribute="leading" constant="10" id="dfq-IW-7My"/>
                             <constraint firstItem="0SZ-kT-05x" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="dpD-Kc-ve4"/>
-                            <constraint firstAttribute="trailing" secondItem="KPl-Zg-Bdn" secondAttribute="trailing" constant="8" id="e9K-jW-OG2"/>
-                            <constraint firstItem="KPl-Zg-Bdn" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="gD5-mu-kwX"/>
+                            <constraint firstItem="eZ0-DC-gYc" firstAttribute="centerY" secondItem="BQr-AJ-0iu" secondAttribute="centerY" id="p7f-Ze-T4Q"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -60,6 +92,7 @@
             <connections>
                 <outlet property="containerView" destination="BQr-AJ-0iu" id="ueC-gi-Qug"/>
                 <outlet property="lockButton" destination="0SZ-kT-05x" id="pVS-Mi-wb3"/>
+                <outlet property="nextButton" destination="fiM-Yp-U7H" id="iGA-uA-nsb"/>
                 <outlet property="optionsButton" destination="KPl-Zg-Bdn" id="SNw-SE-nwY"/>
             </connections>
             <point key="canvasLocation" x="216.66666666666669" y="109.15178571428571"/>
