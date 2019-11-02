@@ -14,6 +14,7 @@ class TimelineViewController: UIViewController {
     @IBOutlet weak var timelineView: TimelineView!
     
     var previousPanLocation : CGPoint?
+    var prevVelocity: CGPoint?
     var panMultiplier: CGFloat = 1.0
     
     weak var delegate: TimelineViewDelegate?
@@ -31,6 +32,12 @@ class TimelineViewController: UIViewController {
             return timelineView.startHour
         } set (newVal) {
             timelineView.startHour = newVal
+        }
+    }
+    
+    var visibleHours : CGFloat {
+        get {
+            return timelineView.frame.height / hourHeight
         }
     }
     
@@ -62,6 +69,8 @@ class TimelineViewController: UIViewController {
     }
     
     @objc func panTime(gesture: UIPanGestureRecognizer) {
+        
+        guard gesture.numberOfTouches == 1 else { return }
         let location = gesture.location(in: view)
         
         switch gesture.state {
@@ -70,13 +79,37 @@ class TimelineViewController: UIViewController {
         case .changed:
             guard let previousY = previousPanLocation?.y else { return }
             let dy = (previousY - location.y) * panMultiplier
-            
             shiftTimeline(by: dy)
             previousPanLocation = location
+            prevVelocity = gesture.velocity(in: view)
             
-        case .ended,
-             .cancelled:
+        case .ended:
+            let v0 = prevVelocity!
+            let vy0 = v0.y
+            let a: CGFloat  = vy0 > 0 ? -100 : 100.00
+            let steps: CGFloat = vy0 / (-a)
+            let distance: CGFloat = (vy0 * steps) + (a * (steps * steps)) / 2
+
+            var currentStep: CGFloat = 0.0
+            let timer = Timer.init(timeInterval: 0.1, repeats: true, block: { timer in
+                print("step")
+                currentStep += 1.0
+                let dy = vy0 * currentStep + (a * (currentStep * currentStep))/2.0
+                self.shiftTimeline(by: dy)
+                if currentStep > CGFloat(steps) {
+                    timer.invalidate()
+                }
+            })
+
+            timer.fire()
+            
             previousPanLocation = nil
+            prevVelocity = nil
+        
+            
+        case .cancelled:
+            previousPanLocation = nil
+            prevVelocity = nil
             
         default:
             break
@@ -117,6 +150,8 @@ class TimelineViewController: UIViewController {
                     newHourHeight = hourHeight
                 }
             }
+            let delta = (hourHeight - newHourHeight) * visibleHours
+            shiftTimeline(by: -delta/2.0)
             hourHeight = newHourHeight
             gestureRecognizer.scale = 1.0
             
@@ -129,6 +164,14 @@ class TimelineViewController: UIViewController {
         // TODO
     }
 
+}
+
+extension TimelineViewController : UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
 }
 
 // For external access

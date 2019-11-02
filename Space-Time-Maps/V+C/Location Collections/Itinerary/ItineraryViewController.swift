@@ -72,7 +72,22 @@ class ItineraryViewController: DraggableContentViewController {
         collectionView.backgroundColor = .clear
         
         showDraggingView = false
-        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinchLocationCell)))
+        collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinch)))
+        collectionView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action:#selector(scroll)));
+    }
+    
+    @objc func scroll(_ sender: UIPanGestureRecognizer) {
+        timelineController.panTime(gesture: sender)
+    }
+    
+    @objc func pinch (_ sender: UIPinchGestureRecognizer) {
+    
+        if editingSession != nil {
+            pinchLocationCell(gesture: sender)
+        } else {
+            timelineController.pinchTime(sender)
+        }
+    
     }
     
     func computeRoute() {
