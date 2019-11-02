@@ -306,7 +306,7 @@ extension PlacePaletteViewController: DragDataDelegate {
 
 extension PlacePaletteViewController: DragDelegate {
 
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         guard object as? Place != nil else { return }
         
@@ -318,7 +318,7 @@ extension PlacePaletteViewController: DragDelegate {
         collectionView.reloadData()
     }
     
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         guard let place = object as? Place else { return }
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
@@ -349,7 +349,7 @@ extension PlacePaletteViewController: DragDelegate {
         }
     }
     
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
 
         guard object as? Place != nil else { return }
         let reloadIndexPath = draggingIndexPath!
@@ -394,6 +394,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
             UInt(GMSPlaceField.coordinate.rawValue)
                 | UInt(GMSPlaceField.placeID.rawValue)
                 | UInt(GMSPlaceField.name.rawValue)
+                | UInt(GMSPlaceField.openingHours.rawValue)
                 | UInt(GMSPlaceField.formattedAddress.rawValue))!
         autocompleteController.placeFields = fields
         

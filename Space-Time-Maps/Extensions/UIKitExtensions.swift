@@ -35,6 +35,7 @@ extension UIView {
             drawHierarchy(in: bounds, afterScreenUpdates: afterScreenUpdates)
         }
     }
+    
 }
 
 extension UICollectionView {
@@ -66,6 +67,31 @@ extension UICollectionView {
         
         return closestCellIndex
         
+    }
+    
+}
+
+extension UICollectionViewCell {
+    
+    func addShadow() {
+        contentView.layer.cornerRadius = 6.0
+        contentView.layer.borderWidth = 1.0
+        contentView.layer.borderColor = UIColor.clear.cgColor
+        contentView.layer.masksToBounds = true
+
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 2.0)
+        layer.shadowRadius = 6.0
+        layer.shadowOpacity = 1.0
+        layer.masksToBounds = false
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius).cgPath
+        layer.backgroundColor = UIColor.clear.cgColor
+    }
+    
+    func removeShadow() {
+        self.layer.masksToBounds = true
+        self.layer.shadowOpacity = 0
+        self.layer.shadowRadius = 0
     }
     
 }

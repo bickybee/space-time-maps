@@ -157,16 +157,19 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let section = indexPath.section
+        var cell : UICollectionViewCell!
         switch section {
         case 0:
-            return setupDestinationCell(with: indexPath)
+            cell = setupDestinationCell(with: indexPath)
         case 1:
-            return setupLegCell(with: indexPath)
+            cell = setupLegCell(with: indexPath)
         case 2:
-            return setupBlockCell(with: indexPath)
+            cell = setupBlockCell(with: indexPath)
         default:
-            return UICollectionViewCell()
+            cell = UICollectionViewCell()
         }
+        
+        return cell
     }
     
     func setupDestinationCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -176,7 +179,12 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
         cell.configureWith(destination)
         cell.isUserInteractionEnabled = false
-//        addDragRecognizerTo(draggable: cell)
+        cell.removeShadow()
+        if let editingSession = editingSession, let movingBlockIndex = editingSession.lastPosition  {
+            if indexOfBlockContainingDestination(at: index)! == movingBlockIndex {
+                cell.addShadow()
+            }
+        }
         return cell
         
     }
@@ -194,18 +202,26 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func setupBlockCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let index = indexPath.item
-        guard let block = itinerary.schedule[index] as? OptionBlock else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
-            if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
-                addDragRecognizerTo(draggable: cell)
+        var cell: UICollectionViewCell!
+        
+        if let block = itinerary.schedule[index] as? OptionBlock {
+            let blockCell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
+            blockCell.tag = index
+            blockCell.delegate = self
+            blockCell.lockButton.isSelected = block.isFixed
+            cell = blockCell
+            
+            cell.removeShadow()
+            if let editingSession = editingSession, let movingBlockIndex = editingSession.lastPosition  {
+                if index == movingBlockIndex {
+                    cell.addShadow()
+                }
             }
-            return cell
+            
+        } else {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
         }
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
-        cell.tag = index
-        cell.delegate = self
-        cell.lockButton.isSelected = block.isFixed
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
             addDragRecognizerTo(draggable: cell)
         }
@@ -306,7 +322,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
     
-    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         guard let block = blockFromObject(object) else { return }
         var editingBlocks = itinerary.schedule
@@ -318,9 +334,10 @@ extension ItineraryViewController : DragDelegate {
         }
         
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        collectionView.reloadData()
     }
     
-    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
@@ -343,10 +360,11 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
-    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         editingSession = nil
         previousTouchHour = nil
+        collectionView.reloadData()
         
     }
     
@@ -427,22 +445,29 @@ extension ItineraryViewController: DragDataDelegate {
     // this is bad i think?? lol TODO make not bad!
     func blockOfDestination(at index: Int) -> ScheduleBlock? {
         
+        if let blockIndex = indexOfBlockContainingDestination(at: index) {
+            return itinerary.schedule[blockIndex]
+        }
+        return nil
+        
+    }
+    
+    func indexOfBlockContainingDestination(at index: Int) -> Int? {
         var count = 0
         
-        for block in itinerary.schedule {
+        for (i, block) in itinerary.schedule.enumerated() {
             
             if let destinations = block.destinations {
                 count += destinations.count
             }
             
             if count > index {
-                return block
+                return i
             }
 
         }
         
         return nil
-        
     }
     
 }

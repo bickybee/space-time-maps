@@ -28,7 +28,8 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     
     func addDragRecognizerTo(draggable: UIView) {
         
-        let dragRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragObject))
+        let dragRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dragObject))
+        dragRecognizer.minimumPressDuration = 0.2
         dragRecognizer.delegate = self
         draggable.addGestureRecognizer(dragRecognizer)
         
@@ -44,7 +45,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     }
     
     
-    @objc func dragObject(_ gesture: UIPanGestureRecognizer) {
+    @objc func dragObject(_ gesture: UILongPressGestureRecognizer) {
         
         switch gesture.state {
         case .began:
@@ -63,7 +64,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
 
     }
     
-    func didBeginDrag(_ gesture: UIPanGestureRecognizer) {
+    func didBeginDrag(_ gesture: UILongPressGestureRecognizer) {
         
         // Set up session
         guard setupDraggableFrom(gesture: gesture),
@@ -76,7 +77,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         
     }
     
-    func didContinueDrag(_ gesture: UIPanGestureRecognizer) {
+    func didContinueDrag(_ gesture: UILongPressGestureRecognizer) {
         
         // Ensures no nils
         guard isDraggingSessionSetup() else { return }
@@ -90,7 +91,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         dragDelegate?.draggableContentViewController(self, didContinueDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
     }
     
-    func didEndDrag(_ gesture: UIPanGestureRecognizer) {
+    func didEndDrag(_ gesture: UILongPressGestureRecognizer) {
         
         // Ensures no nils
         guard isDraggingSessionSetup() else { return }
@@ -108,7 +109,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         
     }
     
-    func setupDraggableFrom(gesture: UIPanGestureRecognizer) -> Bool {
+    func setupDraggableFrom(gesture: UILongPressGestureRecognizer) -> Bool {
         
         // Traverse view hierarchy lol
         guard let draggableView = gesture.view else { return false }
@@ -171,9 +172,9 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
 // Let delegate handle any further actions associated with dragging the cell
 protocol DragDelegate : AnyObject {
         
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UIPanGestureRecognizer)
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
     func cellForIndex(_ indexPath: IndexPath) -> UIView?
 }
 
