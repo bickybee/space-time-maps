@@ -60,7 +60,7 @@ class ItineraryLayout: UICollectionViewLayout {
         var width = contentWidth
         var x: CGFloat = 0.0
         
-        if indexPath.section == 2 {
+        if indexPath.section >= 2 {
             attributes.zIndex = -1
         }
         

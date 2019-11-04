@@ -406,10 +406,49 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
-        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!)
+        let openTiming = openHoursTimingFromGMSOpeningHours(place.openingHours)
+        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, openHours: openTiming)
         self.placeToAdd = newPlace
         dismiss(animated: true, completion: nil)
         performSegue(withIdentifier: "addPlace", sender: nil)
+    }
+    
+    func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {
+        
+        // Check if no opening hours, or open 24hrs
+        guard let hours = hours, let periods = hours.periods else { return nil }
+        if periods.count == 1 {
+            if periods[0].closeEvent == nil {
+                return nil
+            }
+        }
+        
+        let today = Date()
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: today)
+        
+        var startTime = 0.0
+        var endTime = 24.5
+        
+        // otherwise
+        for period in periods {
+            print(period.openEvent.day)
+            print(period.openEvent.day.rawValue)
+            if Int(period.openEvent.day.rawValue) == weekday {
+                let openTime = period.openEvent.time
+                startTime = TimeInterval.from(hours: Int(openTime.hour)) + TimeInterval.from(minutes: Int(openTime.minute))
+            }
+            if Int(period.closeEvent!.day.rawValue) == weekday {
+                let closeTime = period.closeEvent!.time
+                endTime = TimeInterval.from(hours: Int(closeTime.hour)) + TimeInterval.from(minutes: Int(closeTime.minute))
+            }
+        }
+        
+        if endTime < startTime {
+            endTime = 24.5
+        }
+        
+        return Timing(start: startTime, end: endTime)
     }
     
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {

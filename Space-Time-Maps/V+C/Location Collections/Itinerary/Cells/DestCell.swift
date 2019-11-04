@@ -37,21 +37,19 @@ class DestCell: UICollectionViewCell {
         containerView.layer.masksToBounds = true;
     }
     
-    func configureWith(name: String, duration: TimeInterval) {
-        
-        nameLabel.text = name
-        durationLabel.text = Utils.secondsToString(seconds: duration)
-        
-    }
-    
-    func configureWith(_ destination: Destination) {
+    func configureWith(_ destination: Destination, _ isCurrentlyDragging: Bool) {
         
         nameLabel.text = destination.place.name
         durationLabel.text = Utils.secondsToString(seconds: destination.timing.duration)
         containerView.backgroundColor = destination.place.color
-        
+        isUserInteractionEnabled = false
+        if isCurrentlyDragging {
+            addShadow()
+        }
     }
     
-    
+    override func prepareForReuse() {
+         removeShadow()
+    }
 
 }

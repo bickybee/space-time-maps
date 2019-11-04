@@ -13,9 +13,9 @@ class ItineraryViewController: DraggableContentViewController {
     // CollectionView Cell constants
     private let locationReuseIdentifier = "locationCell"
     private let legReuseIdentifier = "legCell"
-    private let oneOfReuseIdentifier = "oneOfCell"
     private let groupReuseIdentifier = "groupCell"
     private let nilReuseIdentifier = "nilCell"
+    private let hoursReuseIdentifier = "hoursCell"
     
     private let scheduler = Scheduler()
     
@@ -65,6 +65,7 @@ class ItineraryViewController: DraggableContentViewController {
         collectionView.register(destNib, forCellWithReuseIdentifier: locationReuseIdentifier)
         collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
+        collectionView.register(HoursCell.self, forCellWithReuseIdentifier: hoursReuseIdentifier)
 
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -136,7 +137,14 @@ class ItineraryViewController: DraggableContentViewController {
 extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 4
+    }
+    
+    func shouldShowHoursOfOperation() -> Bool {
+        if let editingSession = editingSession {
+            return editingSession.movingBlock.destinations != nil
+        }
+        return false
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -148,6 +156,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             return itinerary.route.count
         case 2:
             return itinerary.schedule.count
+        case 3:
+            return shouldShowHoursOfOperation() ? 2 : 0
         default:
             return 0
         }
@@ -165,10 +175,19 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             cell = setupLegCell(with: indexPath)
         case 2:
             cell = setupBlockCell(with: indexPath)
+        case 3:
+            cell = setupHoursCell(with: indexPath)
         default:
             cell = UICollectionViewCell()
         }
         
+        return cell
+    }
+    
+    func setupHoursCell(with indexPath: IndexPath) -> UICollectionViewCell {
+        let movingBlock = editingSession!.movingBlock
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: hoursReuseIdentifier, for: indexPath) as! HoursCell
+        cell.configureWith(movingBlock.destinations![0])
         return cell
     }
     
@@ -177,14 +196,13 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let index = indexPath.item
         let destination = itinerary.destinations[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
-        cell.configureWith(destination)
-        cell.isUserInteractionEnabled = false
-        cell.removeShadow()
+        var currentlyDragging = false
         if let editingSession = editingSession, let movingBlockIndex = editingSession.lastPosition  {
             if indexOfBlockContainingDestination(at: index)! == movingBlockIndex {
-                cell.addShadow()
+                currentlyDragging = true
             }
         }
+        cell.configureWith(destination, currentlyDragging)
         return cell
         
     }
@@ -208,15 +226,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             let blockCell = collectionView.dequeueReusableCell(withReuseIdentifier: groupReuseIdentifier, for: indexPath) as! GroupCell
             blockCell.tag = index
             blockCell.delegate = self
-            blockCell.lockButton.isSelected = block.isFixed
-            cell = blockCell
-            
-            cell.removeShadow()
+            var currentlyDragging = false
             if let editingSession = editingSession, let movingBlockIndex = editingSession.lastPosition  {
                 if index == movingBlockIndex {
-                    cell.addShadow()
+                    currentlyDragging = true
                 }
             }
+            blockCell.configureWith(block, currentlyDragging)
+            cell = blockCell
             
         } else {
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: nilReuseIdentifier, for: indexPath) as! NilCell
@@ -278,8 +295,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let dispatchGroup = DispatchGroup()
         
         for o in destinationOptions {
-            print("option")
-            print(o)
+
             dispatchGroup.enter()
             var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
             if blockIndex > 0 {
@@ -485,8 +501,19 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
     }
     
     func collectionView(_ collectionView:UICollectionView, timingForEventAtIndexPath indexPath: IndexPath) -> Timing {
-        guard let event = eventFor(indexPath: indexPath) else { return Timing() }
-        return event.timing
+        if indexPath.section < 3 {
+            guard let event = eventFor(indexPath: indexPath) else { return Timing() }
+            return event.timing
+        } else { // HOURS OF OPERATION!!!
+            guard shouldShowHoursOfOperation() else { return Timing() }
+            guard let hours = editingSession!.movingBlock.destinations![0].place.openHours else { return Timing() }
+            
+            if indexPath.item == 0 {
+                return Timing(start: TimeInterval.from(hours: 0), end: hours.start)
+            } else {
+                return Timing(start: hours.end, end: TimeInterval.from(hours: 24.5))
+            }
+        }
     }
     
     func eventFor(indexPath: IndexPath) -> Schedulable? {

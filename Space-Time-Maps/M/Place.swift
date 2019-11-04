@@ -25,21 +25,28 @@ class Place : NSObject {
     let placeID: String
     let color: UIColor
     var timeSpent: TimeInterval
+    let openHours: Timing?
     
     override var description : String {
         return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""
     }
     
-    init(name: String, coordinate: Coordinate, placeID: String, timeSpent: TimeInterval) {
+    init(name: String, coordinate: Coordinate, placeID: String, timeSpent: TimeInterval, openHours: Timing?) {
         self.name = name
         self.coordinate = coordinate
         self.placeID = placeID
         self.color = ColorUtils.randomColor()
         self.timeSpent = timeSpent
+        self.openHours = openHours
+
     }
     
     convenience init(name: String, coordinate: Coordinate, placeID: String) {
-        self.init(name: name, coordinate: coordinate, placeID: placeID, timeSpent: Place.defaultTimeSpent)
+        self.init(name: name, coordinate: coordinate, placeID: placeID, timeSpent: Place.defaultTimeSpent, openHours: nil)
+    }
+    
+    convenience init(name: String, coordinate: Coordinate, placeID: String, openHours: Timing?) {
+        self.init(name: name, coordinate: coordinate, placeID: placeID, timeSpent: Place.defaultTimeSpent, openHours: openHours)
     }
     
     static func == (lhs: Place, rhs: Place) -> Bool {

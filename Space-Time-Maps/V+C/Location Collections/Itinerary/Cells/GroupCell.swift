@@ -43,6 +43,13 @@ class GroupCell: UICollectionViewCell {
         lockButton.setTitle(String.fontAwesomeIcon(name: .lockOpen), for: .normal)
         lockButton.setTitle(String.fontAwesomeIcon(name: .lock), for: .selected)
     }
+    
+    func configureWith(_ block: OptionBlock, _ isCurrentlyDragging: Bool) {
+        lockButton.isSelected = block.isFixed
+        if isCurrentlyDragging {
+            addShadow()
+        }
+    }
 
     @IBAction func didPressLock(_ sender: Any) {
         delegate?.didPressLockOnGroupCell(self)
@@ -54,6 +61,10 @@ class GroupCell: UICollectionViewCell {
     
     @IBAction func didPressOptions(_ sender: Any) {
         delegate?.didPressOptionsOnGroupCell(self)
+    }
+    
+    override func prepareForReuse() {
+        removeShadow()
     }
     
 }

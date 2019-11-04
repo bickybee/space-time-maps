@@ -176,7 +176,7 @@ extension OptionsViewController: UICollectionViewDataSource {
         let index = indexPath.item
         let destination = itineraries![cv.tag].destinations[index]
         let cell = cv.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
-        cell.configureWith(destination)
+        cell.configureWith(destination, false)
         cell.isUserInteractionEnabled = false
         return cell
         
