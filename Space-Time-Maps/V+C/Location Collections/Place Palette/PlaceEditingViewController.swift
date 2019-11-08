@@ -8,9 +8,9 @@
 
 import UIKit
 
-class PlaceCreationViewController: UIViewController {
+class PlaceEditingViewController: UIViewController {
     
-    weak var delegate : PlaceCreationDelegate?
+    weak var delegate : PlaceEditingDelegate?
     var place : Place!
     
     @IBOutlet weak var backBtn: UIButton!
@@ -28,16 +28,16 @@ class PlaceCreationViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func addPlace(_ sender: Any) {
+    @IBAction func finishEditingPlace(_ sender: Any) {
         place.timeSpent = timePicker.countDownDuration
-        delegate?.createPlace(place)
+        delegate?.finishedEditingPlace(place)
         self.dismiss(animated: true, completion: nil)
     }
 
 }
 
-protocol PlaceCreationDelegate: AnyObject {
+protocol PlaceEditingDelegate: AnyObject {
     
-    func createPlace(_ newPlace: Place)
+    func finishedEditingPlace(_ editedPlace: Place)
     
 }

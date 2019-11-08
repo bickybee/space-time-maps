@@ -52,15 +52,15 @@ class QueryService {
     
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
-//        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
+        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
         pingCount += 1
         print("pings to distance matrix API: \(pingCount)")
         callback(Utils.starterPlaceDict)
-//        runQuery(url: url) {data in
-//            let results = self.dataToTimeDict(data, origins, destinations)
-//            callback(results)
-//        }
-    }
+        runQuery(url: url) {data in
+            let results = self.dataToTimeDict(data, origins, destinations)
+            callback(results)
+        }
+    } 
 
     
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {

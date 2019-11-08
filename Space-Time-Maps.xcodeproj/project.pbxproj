@@ -21,9 +21,10 @@
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
 		987704292326AB62009E1A63 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987704282326AB62009E1A63 /* Route.swift */; };
 		987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C1C1A234FA6B700FC3174 /* Combinatorics.swift */; };
-		988530B7234E3A3E00B22888 /* PlaceCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */; };
+		988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		98BC857A230C3A83001D14BE /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8579230C3A83001D14BE /* Timing.swift */; };
+		98CB07BC236F3E9500C7EC77 /* HoursCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB07BB236F3E9500C7EC77 /* HoursCell.swift */; };
 		98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */; };
 		98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */; };
 		98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98DEBA68230EFD4400769BB5 /* LocationCell.swift */; };
@@ -82,9 +83,10 @@
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		987704282326AB62009E1A63 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		987C1C1A234FA6B700FC3174 /* Combinatorics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinatorics.swift; sourceTree = "<group>"; };
-		988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCreationViewController.swift; sourceTree = "<group>"; };
+		988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceEditingViewController.swift; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		98BC8579230C3A83001D14BE /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
+		98CB07BB236F3E9500C7EC77 /* HoursCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoursCell.swift; sourceTree = "<group>"; };
 		98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
 		98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceCell.xib; sourceTree = "<group>"; };
 		98DEBA68230EFD4400769BB5 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				982D5795232050C500E183F3 /* GroupCell.swift */,
 				982D57992320AB3C00E183F3 /* RouteCell.swift */,
 				982D57A02321863600E183F3 /* NilCell.swift */,
+				98CB07BB236F3E9500C7EC77 /* HoursCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -215,7 +218,7 @@
 				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
 				98D0D1DC2322F0B8004DC6DE /* PlaceCell.swift */,
 				98D0D1DD2322F0B8004DC6DE /* PlaceCell.xib */,
-				988530B6234E3A3E00B22888 /* PlaceCreationViewController.swift */,
+				988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */,
 			);
 			path = "Place Palette";
 			sourceTree = "<group>";
@@ -396,7 +399,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = vicky;
 				TargetAttributes = {
 					B6B5A5AA22C7CB3200CE4301 = {
@@ -517,6 +520,7 @@
 				98DEBA6D230F398000769BB5 /* GroupHeaderView.swift in Sources */,
 				B62AFCBF22E50E1700B7D2CD /* DestinationCell.swift in Sources */,
 				98DEBA71230F7EE700769BB5 /* ScheduleBlocks.swift in Sources */,
+				98CB07BC236F3E9500C7EC77 /* HoursCell.swift in Sources */,
 				98DEBA69230EFD4400769BB5 /* LocationCell.swift in Sources */,
 				98E9B96E230B51010032FBB7 /* ItineraryEditingSession.swift in Sources */,
 				B62AFCC122E5225700B7D2CD /* ItineraryViewController.swift in Sources */,
@@ -526,7 +530,7 @@
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
 				98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */,
 				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
-				988530B7234E3A3E00B22888 /* PlaceCreationViewController.swift in Sources */,
+				988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */,
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
 				982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
@@ -593,6 +597,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -600,6 +605,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -650,6 +656,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -657,6 +664,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

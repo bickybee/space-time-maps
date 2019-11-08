@@ -12,6 +12,8 @@ import GoogleMaps
 
 class ParentViewController: UIViewController {
     
+    var initialPlacesLoaded = false
+    
     // Child view controllers
     var placePaletteController : PlacePaletteViewController!
     var itineraryController : ItineraryViewController!
@@ -35,7 +37,10 @@ class ParentViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         updateMap()
         print("layout subviews")
-        itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}))
+        if !initialPlacesLoaded {
+            itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}))
+            initialPlacesLoaded = true
+        }
     }
     
     // Pass pinches down to itinerary

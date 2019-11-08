@@ -98,7 +98,7 @@ class PlacePaletteViewController: DraggableContentViewController {
             
         } else if segue.identifier == "addPlace" {
             
-            guard let placeCreationController = segue.destination as? PlaceCreationViewController else { return }
+            guard let placeCreationController = segue.destination as? PlaceEditingViewController else { return }
             guard let place = placeToAdd else { return }
             placeCreationController.place = place
             placeCreationController.delegate = self
@@ -130,12 +130,25 @@ extension PlacePaletteViewController: GroupCreationDelegate {
     
 }
 
-extension PlacePaletteViewController: PlaceCreationDelegate {
+extension PlacePaletteViewController: PlaceEditingDelegate {
     
-    func createPlace(_ newPlace: Place) {
-        groups[0].append(newPlace)
+    func finishedEditingPlace(_ editedPlace: Place) {
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
+    }
+    
+    @objc func tapEditPlace(_ sender: UIButton) {
+        let sendingCell = sender.superview!.superview!.superview! as! UICollectionViewCell
+        let indexPath = collectionView.indexPath(for: sendingCell)!
+        placeToAdd = groups[indexPath.section][indexPath.item]
+        performSegue(withIdentifier: "addPlace", sender: nil)
+    }
+    
+    @objc func tapDeletePlace(_ sender: UIButton) {
+        let sendingCell = sender.superview!.superview!.superview! as! UICollectionViewCell
+        let indexPath = collectionView.indexPath(for: sendingCell)!
+        groups[indexPath.section].remove(at: indexPath.item)
+        collectionView.deleteItems(at: [indexPath])
     }
     
 }
@@ -160,6 +173,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PlaceCell
         guard let group = groups[safe: indexPath.section] else { return cell }
+
         
         // Placeholder cell?
         if isPlaceholder(indexPath) {
@@ -198,7 +212,11 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         if (cell.gestureRecognizers == nil) || (cell.gestureRecognizers?.count == 0) {
             addDragRecognizerTo(draggable: cell)
         }
-        print(cell.gestureRecognizers?.count)
+        cell.editBtn.alpha = inEditingMode ? 1 : 0
+        cell.editBtn.addTarget(self, action: #selector(tapEditPlace(_:)), for: .touchUpInside)
+        
+        cell.deleteBtn.alpha = inEditingMode ? 1 : 0
+        cell.deleteBtn.addTarget(self, action: #selector(tapDeletePlace(_:)), for: .touchUpInside)
         
         return cell
         
@@ -402,15 +420,14 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         present(autocompleteController, animated: true, completion: nil)
         
     }
-    
+
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let openTiming = openHoursTimingFromGMSOpeningHours(place.openingHours)
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, openHours: openTiming)
-        self.placeToAdd = newPlace
-        dismiss(animated: true, completion: nil)
-        performSegue(withIdentifier: "addPlace", sender: nil)
+        groups[0].append(newPlace)
+        collectionView.reloadData()
     }
     
     func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {

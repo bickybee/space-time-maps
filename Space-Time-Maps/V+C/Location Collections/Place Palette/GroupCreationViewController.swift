@@ -26,30 +26,31 @@ class GroupCreationViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func create(_ sender: Any) {
-        var text : String
+    @IBAction func create(_ sender: Any) {        
+        delegate?.createGroup(name: getName(), kind: getKind())
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func getName() -> String {
         if let name = nameField.text {
-            text = name == "" ? "Group" : name
+            return name == "" ? "Group" : name
         } else {
-            text = "Group"
+            return "Group"
         }
-        
-        var kind : PlaceGroup.Kind
+    }
+    
+    func getKind() -> PlaceGroup.Kind {
         let selection = kindField.selectedSegmentIndex
         switch selection {
         case 0:
-            kind = .none
+            return .none
         case 1:
-            kind = .oneOf
+            return .oneOf
         case 2:
-            kind = .asManyOf
+            return .asManyOf
         default:
-            kind = .none
+            return .none
         }
-        
-        delegate?.createGroup(name: text, kind: kind)
-        
-        self.dismiss(animated: true, completion: nil)
     }
 
 }

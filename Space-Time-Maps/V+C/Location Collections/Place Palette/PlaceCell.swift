@@ -15,6 +15,7 @@ class PlaceCell: UICollectionViewCell {
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var editBtn: UIButton!
+    @IBOutlet weak var deleteBtn: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,6 +40,12 @@ class PlaceCell: UICollectionViewCell {
         containerView.layer.shadowOpacity = 0.5;
         containerView.layer.masksToBounds = true
         self.layer.masksToBounds = true
+        
+        editBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
+        editBtn.setTitle(String.fontAwesomeIcon(name: .edit), for: .normal)
+        
+        deleteBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
+        deleteBtn.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
     }
     
     func configureWith(name: String, duration: TimeInterval) {
