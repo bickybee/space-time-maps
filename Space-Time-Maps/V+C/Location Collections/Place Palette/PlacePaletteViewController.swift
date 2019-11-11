@@ -33,6 +33,7 @@ class PlacePaletteViewController: DraggableContentViewController {
     }
     
     var placeToAdd : Place?
+    var groupToEdit : PlaceGroup?
     
     var groupsBeforeEditing = [PlaceGroup]()
     var midDrag = false
@@ -57,11 +58,14 @@ class PlacePaletteViewController: DraggableContentViewController {
     func setupCollectionView() {
         
         let placeNib = UINib(nibName: "PlaceCell", bundle: nil)
+        let headerNib = UINib(nibName: "GroupHeaderView", bundle: nil)
         collectionView.register(placeNib, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(headerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = true
         searchButton.isEnabled = false
+        collectionView.delaysContentTouches = false
         self.dragDataDelegate = self
         
         setupCellWidth()
@@ -95,6 +99,9 @@ class PlacePaletteViewController: DraggableContentViewController {
             
             guard let groupCreationController = segue.destination as? GroupCreationViewController else { return }
             groupCreationController.delegate = self
+            if let groupToEdit = groupToEdit {
+                groupCreationController.editingGroup = groupToEdit
+            }
             
         } else if segue.identifier == "addPlace" {
             
@@ -117,16 +124,39 @@ extension PlacePaletteViewController: GroupCreationDelegate {
     
     func createGroup(name: String, kind: PlaceGroup.Kind) {
         
-        collectionView.performBatchUpdates({
-            
-            let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
-            collectionView.insertSections(IndexSet(integer: groups.endIndex))
-            groups.append(newGroup)
-            
-        }, completion: nil)
+        if let editedGroup = groupToEdit {
+            editedGroup.name = name
+            editedGroup.kind = kind
+            collectionView.reloadData()
+        } else {
+            collectionView.performBatchUpdates({
+                
+                let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
+                collectionView.insertSections(IndexSet(integer: groups.endIndex))
+                groups.append(newGroup)
+                
+            }, completion: nil)
+        }
         
     }
     
+    @objc func tapEditGroup(_ sender: UIButton) {
+        let header = sender.superview! as! UICollectionReusableView
+        let index = header.tag
+        groupToEdit = groups[index]
+        performSegue(withIdentifier: "createGroup", sender: nil)
+    }
+    
+    @objc func tapDeleteGroup(_ sender: UIButton) {
+        let header = sender.superview! as! UICollectionReusableView
+        let index = header.tag
+        collectionView.performBatchUpdates({
+   
+            collectionView.deleteSections(IndexSet(integer: index))
+            groups.remove(at: index)
+            
+        }, completion: nil)
+    }
     
 }
 
@@ -246,7 +276,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         
         if kind == UICollectionView.elementKindSectionHeader {
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
-                                                                                   withReuseIdentifier: "groupHeader",
+                                                                                   withReuseIdentifier: "header",
                                                                                    for: indexPath) as? GroupHeaderView else { fatalError("Invalid view type") }
             return sectionHeaderFrom(headerView, indexPath)
         }
@@ -263,7 +293,14 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         headerView.label.text = group.name
         headerView.tag = indexPath.section
         headerView.gestureRecognizers?.forEach(headerView.removeGestureRecognizer)
-        if !inEditingMode {
+        headerView.editBtn.addTarget(self, action: #selector(tapEditGroup(_:)), for: .touchUpInside)
+        headerView.deleteBtn.addTarget(self, action: #selector(tapDeleteGroup(_:)), for: .touchUpInside)
+        if inEditingMode {
+            headerView.editBtn.alpha = 1.0
+            headerView.deleteBtn.alpha = 1.0
+        } else {
+            headerView.editBtn.alpha = 0.0
+            headerView.deleteBtn.alpha = 0.0
             addDragRecognizerTo(draggable: headerView)
         }
         return headerView

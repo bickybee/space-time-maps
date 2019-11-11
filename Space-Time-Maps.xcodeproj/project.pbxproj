@@ -19,6 +19,7 @@
 		982D57A12321863600E183F3 /* NilCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D57A02321863600E183F3 /* NilCell.swift */; };
 		9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9833A6E722EFB48100AABF20 /* Itinerary.swift */; };
 		983F22C622EF87420012EF5C /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 983F22C522EF87420012EF5C /* Keys.plist */; };
+		9855603123776D5100E969A7 /* GroupHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9855603023776D5100E969A7 /* GroupHeaderView.xib */; };
 		987704292326AB62009E1A63 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987704282326AB62009E1A63 /* Route.swift */; };
 		987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C1C1A234FA6B700FC3174 /* Combinatorics.swift */; };
 		988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */; };
@@ -81,6 +82,7 @@
 		982D57A02321863600E183F3 /* NilCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NilCell.swift; sourceTree = "<group>"; };
 		9833A6E722EFB48100AABF20 /* Itinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Itinerary.swift; sourceTree = "<group>"; };
 		983F22C522EF87420012EF5C /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		9855603023776D5100E969A7 /* GroupHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupHeaderView.xib; sourceTree = "<group>"; };
 		987704282326AB62009E1A63 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		987C1C1A234FA6B700FC3174 /* Combinatorics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinatorics.swift; sourceTree = "<group>"; };
 		988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceEditingViewController.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 		98BC8570230B71EC001D14BE /* Place Palette */ = {
 			isa = PBXGroup;
 			children = (
+				9855603023776D5100E969A7 /* GroupHeaderView.xib */,
 				B62AFCC222E5228900B7D2CD /* PlacePaletteViewController.swift */,
 				98DEBA6E230F69B600769BB5 /* GroupCreationViewController.swift */,
 				98DEBA6C230F398000769BB5 /* GroupHeaderView.swift */,
@@ -436,6 +439,7 @@
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
+				9855603123776D5100E969A7 /* GroupHeaderView.xib in Resources */,
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,

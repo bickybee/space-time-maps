@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kWF-JP-3wc">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,26 +13,26 @@
             <objects>
                 <viewController id="kWF-JP-3wc" customClass="ParentViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9oo-Zw-Aem">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0v-a2-Sla" userLabel="Itinerary">
-                                <rect key="frame" x="0.0" y="315" width="450" height="285"/>
+                                <rect key="frame" x="0.0" y="359" width="310.5" height="503"/>
                                 <connections>
                                     <segue destination="q2t-3V-v5v" kind="embed" id="iCH-Ie-O3q"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXj-Tg-eL1" userLabel="Place Palette">
-                                <rect key="frame" x="450" y="315" width="150" height="285"/>
+                                <rect key="frame" x="310.5" y="359" width="103.5" height="503"/>
                                 <connections>
                                     <segue destination="0gj-fn-l7y" kind="embed" id="me2-TH-vZj"/>
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wbw-O3-WyC" userLabel="Route Overview">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="65"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QZK-UO-X47">
-                                        <rect key="frame" x="8" y="18" width="240" height="30"/>
+                                        <rect key="frame" x="8" y="18" width="165.5" height="30"/>
                                         <segments>
                                             <segment title="Car"/>
                                             <segment title="Walk"/>
@@ -41,25 +43,25 @@
                                         </connections>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Travel Time:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mi4-sJ-wpX">
-                                        <rect key="frame" x="296" y="38" width="59" height="12"/>
+                                        <rect key="frame" x="221.5" y="38" width="59" height="12"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Time:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWA-Pa-p1t">
-                                        <rect key="frame" x="301" y="18" width="53.5" height="12"/>
+                                        <rect key="frame" x="226.5" y="18" width="53.5" height="12"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0h 0m" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3u-kg-SMN" userLabel="TotalTime">
-                                        <rect key="frame" x="372.5" y="18" width="31" height="12"/>
+                                        <rect key="frame" x="298" y="18" width="31" height="12"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0h 0m" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGD-dU-kzQ" userLabel="TravelTime">
-                                        <rect key="frame" x="373" y="38" width="31" height="12"/>
+                                        <rect key="frame" x="298.5" y="38" width="31" height="12"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -87,7 +89,7 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Bk-6M-Rcq" userLabel="Map">
-                                <rect key="frame" x="0.0" y="65" width="600" height="250"/>
+                                <rect key="frame" x="0.0" y="109" width="414" height="250"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="250" id="iIV-OF-r5Y"/>
                                 </constraints>
@@ -136,7 +138,7 @@
             <objects>
                 <viewController id="ww7-Vp-gll" customClass="MapViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NBt-nG-tlI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="TG7-18-4Y3"/>
@@ -151,17 +153,17 @@
             <objects>
                 <viewController id="q2t-3V-v5v" customClass="ItineraryViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xA4-oa-yz8">
-                        <rect key="frame" x="0.0" y="0.0" width="281.5" height="352"/>
+                        <rect key="frame" x="0.0" y="0.0" width="310.5" height="503"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNK-lT-KjN" userLabel="Timeline">
-                                <rect key="frame" x="0.0" y="0.0" width="281.5" height="352"/>
+                                <rect key="frame" x="0.0" y="44" width="310.5" height="459"/>
                                 <connections>
                                     <segue destination="ImL-qE-Gvw" kind="embed" id="lte-p8-zur"/>
                                 </connections>
                             </containerView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-aK-nXc">
-                                <rect key="frame" x="56.5" y="0.0" width="225" height="352"/>
+                                <rect key="frame" x="62" y="44" width="248.5" height="459"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewLayout key="collectionViewLayout" id="2fr-Po-gLr" customClass="ItineraryLayout" customModule="Space_Time_Maps" customModuleProvider="target"/>
                                 <cells>
@@ -213,7 +215,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vyY-Li-GSm">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                                <rect key="frame" x="0.0" y="44" width="300" height="456"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="voH-lY-QXh">
                                     <size key="itemSize" width="50" height="50"/>
@@ -334,7 +336,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name (optional)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sla-fU-Tdo">
-                                <rect key="frame" x="50" y="116" width="200" height="34"/>
+                                <rect key="frame" x="50" y="160" width="200" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="DiS-8D-WoU"/>
                                 </constraints>
@@ -342,13 +344,13 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Uv-5p-3b0">
-                                <rect key="frame" x="100" y="267" width="100" height="30"/>
+                                <rect key="frame" x="100" y="311" width="100" height="30"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="A8b-Nl-WbC"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Create Group">
+                                <state key="normal" title="Done">
                                     <color key="titleColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -356,7 +358,7 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="06S-uh-gAy">
-                                <rect key="frame" x="14" y="194" width="272" height="32"/>
+                                <rect key="frame" x="14" y="238" width="272" height="32"/>
                                 <segments>
                                     <segment title="None"/>
                                     <segment title="One Of"/>
@@ -365,7 +367,7 @@
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4u5-pb-23U">
-                                <rect key="frame" x="8" y="0.0" width="30" height="30"/>
+                                <rect key="frame" x="8" y="44" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="bjK-Qh-WiS"/>
                                 </constraints>
@@ -374,8 +376,8 @@
                                     <action selector="dismiss:" destination="kC4-Ue-WdU" eventType="touchUpInside" id="AUV-S9-SjU"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a New Group" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEU-4n-f5y">
-                                <rect key="frame" x="72.5" y="78" width="155" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Options" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEU-4n-f5y">
+                                <rect key="frame" x="94" y="122" width="112" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -417,7 +419,7 @@
             <objects>
                 <viewController id="h5y-sg-Dck" customClass="PlaceEditingViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3NW-NX-Kg6">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="446"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nt6-BC-h19">
@@ -502,11 +504,11 @@
             <objects>
                 <viewController id="ImL-qE-Gvw" customClass="TimelineViewController" customModule="Space_Time_Maps" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="J3K-AL-jXp" userLabel="View" customClass="View">
-                        <rect key="frame" x="0.0" y="0.0" width="281.5" height="352"/>
+                        <rect key="frame" x="0.0" y="0.0" width="310.5" height="459"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Krg-5c-QpC" userLabel="Timeline" customClass="TimelineView" customModule="Space_Time_Maps" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="281.5" height="352"/>
+                                <rect key="frame" x="0.0" y="0.0" width="310.5" height="459"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>

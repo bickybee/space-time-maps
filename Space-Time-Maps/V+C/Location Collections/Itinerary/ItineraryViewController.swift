@@ -71,6 +71,7 @@ class ItineraryViewController: DraggableContentViewController {
         collectionView.dataSource = self
         collectionView.isScrollEnabled = false
         collectionView.backgroundColor = .clear
+        collectionView.delaysContentTouches = false
         
         showDraggingView = false
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinch)))

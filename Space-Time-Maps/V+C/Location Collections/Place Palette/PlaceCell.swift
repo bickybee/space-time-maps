@@ -17,6 +17,12 @@ class PlaceCell: UICollectionViewCell {
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var deleteBtn: UIButton!
     
+    override var isHighlighted: Bool {
+        didSet {
+            containerView.backgroundColor = isHighlighted ? containerView.backgroundColor?.withAlphaComponent(0.5) : containerView.backgroundColor?.withAlphaComponent(1.0)
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         setup()
@@ -31,9 +37,7 @@ class PlaceCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
+    
     
     private func setup() {
         containerView.layer.cornerRadius = 5;

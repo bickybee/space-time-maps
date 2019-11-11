@@ -11,6 +11,13 @@ import UIKit
 class GroupHeaderView: UICollectionReusableView {
         
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var editBtn: UIButton!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setup()
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,7 +26,6 @@ class GroupHeaderView: UICollectionReusableView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setup()
     }
     
     private func setup() {
@@ -27,6 +33,12 @@ class GroupHeaderView: UICollectionReusableView {
         self.layer.shadowOffset = CGSize(width: 0, height: -1)
         self.layer.shadowRadius = 0;
         self.layer.shadowOpacity = 0.5;
+        
+        editBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
+        editBtn.setTitle(String.fontAwesomeIcon(name: .edit), for: .normal)
+        
+        deleteBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
+        deleteBtn.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
     }
     
     override func layoutSubviews() {

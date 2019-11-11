@@ -13,6 +13,12 @@ class DestCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
+    
+    override var isHighlighted: Bool {
+        didSet {
+            containerView.backgroundColor = isHighlighted ? containerView.backgroundColor?.withAlphaComponent(0.5) : containerView.backgroundColor?.withAlphaComponent(1.0)
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()

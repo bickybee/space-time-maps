@@ -57,8 +57,10 @@ class Place : NSObject {
 
 class PlaceGroup {
     
-    enum Kind : String {
-        case asManyOf, oneOf, none
+    enum Kind : Int {
+        case none = 0
+        case oneOf = 1
+        case asManyOf = 2
     }
     
     var name : String

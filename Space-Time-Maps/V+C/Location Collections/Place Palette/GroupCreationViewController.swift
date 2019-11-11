@@ -11,6 +11,7 @@ import UIKit
 class GroupCreationViewController: UIViewController {
 
     weak var delegate : GroupCreationDelegate?
+    var editingGroup : PlaceGroup?
 
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var kindField: UISegmentedControl!
@@ -19,6 +20,10 @@ class GroupCreationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let groupToEdit = editingGroup {
+            nameField.text = groupToEdit.name
+            kindField.selectedSegmentIndex = groupToEdit.kind.rawValue
+        }
 
     }
     
@@ -41,16 +46,7 @@ class GroupCreationViewController: UIViewController {
     
     func getKind() -> PlaceGroup.Kind {
         let selection = kindField.selectedSegmentIndex
-        switch selection {
-        case 0:
-            return .none
-        case 1:
-            return .oneOf
-        case 2:
-            return .asManyOf
-        default:
-            return .none
-        }
+        return PlaceGroup.Kind(rawValue: selection)!
     }
 
 }
