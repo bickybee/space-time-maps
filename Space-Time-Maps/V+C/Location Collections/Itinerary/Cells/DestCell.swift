@@ -48,7 +48,7 @@ class DestCell: UICollectionViewCell {
         nameLabel.text = destination.place.name
         durationLabel.text = Utils.secondsToString(seconds: destination.timing.duration)
         containerView.backgroundColor = destination.place.color
-        isUserInteractionEnabled = false
+        isUserInteractionEnabled = true
         if isCurrentlyDragging {
             addShadow()
         }

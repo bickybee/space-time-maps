@@ -45,8 +45,16 @@ class ItineraryViewController: DraggableContentViewController {
         self.dragDataDelegate = self as DragDataDelegate
         
         setupCollectionView()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
 
     }
+    
+    @objc func scrollToPlaceWithName(_ notification: Notification) {
+        let placeName = notification.object! as! String
+        guard let index = itinerary.blockIndexOfPlaceWithName(placeName) else { return }
+        collectionView.scrollToItem(at: IndexPath(item: index, section: 2), at: .centeredVertically, animated: true)
+    }
+
     
     override func viewDidLayoutSubviews() {
         timelineController.setSidebarWidth(collectionView.frame.minX)
@@ -203,9 +211,18 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                 currentlyDragging = true
             }
         }
+        if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
+            cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapDestination)))
+        }
+        cell.tag = index
         cell.configureWith(destination, currentlyDragging)
         return cell
         
+    }
+    
+    @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
+        let placeName = itinerary.destinations[sender.view!.tag].place.name
+        NotificationCenter.default.post(name: .didTapDestination, object: placeName)
     }
     
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -615,4 +632,8 @@ protocol ItineraryViewControllerDelegate : AnyObject {
     
     func itineraryViewController(_ itineraryViewController: ItineraryViewController, didUpdateItinerary: Itinerary)
     
+}
+
+extension Notification.Name {
+    static let didTapDestination = Notification.Name("didTapDestination")
 }

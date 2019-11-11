@@ -17,6 +17,8 @@ class MapViewController: UIViewController {
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
     
+    var markers = [GMSMarker]()
+    
     weak var delegate : MapViewControllerDelegate?
 
     override func viewDidLoad() {
@@ -43,11 +45,17 @@ class MapViewController: UIViewController {
         
         // Subscribe to location updates
         NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDest), name: .didTapDestination, object: nil)
         
         // Set our view to be the map
         view = mapView
-        //refreshMarkup()
-        
+    }
+    
+    @objc func onDidTapDest(_ notification: Notification) {
+        let placeName = notification.object as! String
+        guard let marker = markers.first(where:{ $0.title! == placeName } ) else { return }
+        mapView.selectedMarker = marker
+        mapView.moveCameraTo(latitude: marker.position.latitude, longitude: marker.position.longitude)
     }
     
     // Parent should respond to user input, eventually trickle down only what should be rendered
@@ -65,15 +73,15 @@ class MapViewController: UIViewController {
         let destinationMarkers = MapUtils.markersForPlaceGroups(placeGroups)
         
         // Wrap map to markers
-        let allMarkers = destinationMarkers
-        mapView.wrapBoundsTo(markers: allMarkers)
+        markers = destinationMarkers
+        mapView.wrapBoundsTo(markers: markers)
         
         // Get polylines for route legs
         if let legs = routeLegs {
             let polylines = MapUtils.polylinesForRouteLegs(legs)
-            allOverlays = allMarkers + polylines
+            allOverlays = markers + polylines
         } else {
-            allOverlays = allMarkers
+            allOverlays = markers
         }
         
         // Add all overlays to map
@@ -105,4 +113,13 @@ extension MapViewController : GMSMapViewDelegate {
         delegate?.mapViewController(self, didUpdateBounds: bounds)
     }
     
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        NotificationCenter.default.post(name: Notification.Name.didTapMarker, object: marker.title)
+        return false
+    }
+    
+}
+
+extension Notification.Name {
+    static let didTapMarker = Notification.Name("didTapMarker")
 }
