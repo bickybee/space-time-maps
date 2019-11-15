@@ -184,7 +184,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 2:
             return itinerary.schedule.count
         case 3:
-            return shouldShowHoursOfOperation() ? 2 : 0
+            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.destinations!.count * 2 : 0
         case 4:
             return 1
         default:
@@ -561,9 +561,10 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
             return event.timing
         } else { // HOURS OF OPERATION!!!
             guard shouldShowHoursOfOperation() else { return Timing() }
-            guard let hours = editingSession!.movingBlock.destinations![0].place.openHours else { return Timing() }
+            let indexOfDest = indexPath.item / 2 // integer division
+            guard let hours = editingSession!.movingBlock.destinations![indexOfDest].place.openHours else { return Timing() }
             
-            if indexPath.item == 0 {
+            if indexPath.item % 2 == 0 {
                 return Timing(start: TimeInterval.from(hours: 0), end: hours.start)
             } else {
                 return Timing(start: hours.end, end: TimeInterval.from(hours: 24.5))
