@@ -16,7 +16,7 @@ class DestCell: UICollectionViewCell {
     
     override var isHighlighted: Bool {
         didSet {
-            containerView.backgroundColor = isHighlighted ? containerView.backgroundColor?.withAlphaComponent(0.5) : containerView.backgroundColor?.withAlphaComponent(1.0)
+            containerView.backgroundColor = isHighlighted ? containerView.backgroundColor?.withAlphaComponent(0.95) : containerView.backgroundColor?.withAlphaComponent(1.0)
         }
     }
 

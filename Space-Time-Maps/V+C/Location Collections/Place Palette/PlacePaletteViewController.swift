@@ -465,6 +465,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, openHours: openTiming)
         groups[0].append(newPlace)
         collectionView.reloadData()
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
     }
     
     func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {

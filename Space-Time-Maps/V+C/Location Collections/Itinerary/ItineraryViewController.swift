@@ -16,8 +16,10 @@ class ItineraryViewController: DraggableContentViewController {
     private let groupReuseIdentifier = "groupCell"
     private let nilReuseIdentifier = "nilCell"
     private let hoursReuseIdentifier = "hoursCell"
+    private let timelineReuseIdentifier = "timelineCell"
     
     private let scheduler = Scheduler()
+    private let hourHeight = 50.0
     
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
@@ -46,19 +48,13 @@ class ItineraryViewController: DraggableContentViewController {
         
         setupCollectionView()
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
+        timelineController = TimelineViewController()
+        self.addChild(timelineController)
+        timelineController.didMove(toParent: self)
+        timelineController.delegate = self
 
     }
-    
-    @objc func scrollToPlaceWithName(_ notification: Notification) {
-        let placeName = notification.object! as! String
-        guard let index = itinerary.blockIndexOfPlaceWithName(placeName) else { return }
-        collectionView.scrollToItem(at: IndexPath(item: index, section: 2), at: .centeredVertically, animated: true)
-    }
 
-    
-    override func viewDidLayoutSubviews() {
-        timelineController.setSidebarWidth(collectionView.frame.minX)
-    }
     
     func setupCollectionView() {
         
@@ -74,31 +70,29 @@ class ItineraryViewController: DraggableContentViewController {
         collectionView.register(groupNib, forCellWithReuseIdentifier: groupReuseIdentifier)
         collectionView.register(NilCell.self, forCellWithReuseIdentifier: nilReuseIdentifier)
         collectionView.register(HoursCell.self, forCellWithReuseIdentifier: hoursReuseIdentifier)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: timelineReuseIdentifier)
 
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.isScrollEnabled = false
+        collectionView.isScrollEnabled = true
         collectionView.backgroundColor = .clear
         collectionView.delaysContentTouches = false
         
         showDraggingView = false
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinch)))
-        collectionView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action:#selector(scroll)));
+
     }
-    
-    @objc func scroll(_ sender: UIPanGestureRecognizer) {
-        timelineController.panTime(gesture: sender)
-    }
-    
-    @objc func pinch (_ sender: UIPinchGestureRecognizer) {
-    
-        if editingSession != nil {
-            pinchLocationCell(gesture: sender)
-        } else {
-            timelineController.pinchTime(sender)
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let timelineVC = segue.destination as? TimelineViewController {
+            
+            timelineVC.delegate = self
+            timelineController = timelineVC
+            
         }
-    
     }
+    
+// MARK:- Updates & Interaction
     
     func computeRoute() {
         // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
@@ -115,13 +109,22 @@ class ItineraryViewController: DraggableContentViewController {
         scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let timelineVC = segue.destination as? TimelineViewController {
-            
-            timelineVC.delegate = self
-            timelineController = timelineVC
-            
+    @objc func pinch (_ sender: UIPinchGestureRecognizer) {
+    
+        if editingSession != nil {
+            pinchLocationCell(gesture: sender)
+        } else {
+            let startingContentHeight = timelineController.hourHeight * 24.5
+            let centerFrac = (collectionView.contentOffset.y + (collectionView.frame.height / 2.0)) / startingContentHeight
+            timelineController.pinchTime(sender)
+            collectionView.collectionViewLayout.invalidateLayout()
+            let endingContentHeight = timelineController.hourHeight * 24.5
+            let newCenter = endingContentHeight * centerFrac
+            let newOffset = newCenter - (collectionView.frame.height / 2.0)
+            collectionView.contentOffset.y = newOffset
+            timelineController.offset = newOffset
         }
+    
     }
     
     @objc func pinchLocationCell(gesture: UIPinchGestureRecognizer) {
@@ -139,14 +142,25 @@ class ItineraryViewController: DraggableContentViewController {
         }
         
     }
+    
+    @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
+        let placeName = itinerary.destinations[sender.view!.tag].place.name
+        NotificationCenter.default.post(name: .didTapDestination, object: placeName)
+    }
+    
+    @objc func scrollToPlaceWithName(_ notification: Notification) {
+        let placeName = notification.object! as! String
+        guard let index = itinerary.blockIndexOfPlaceWithName(placeName) else { return }
+        collectionView.scrollToItem(at: IndexPath(item: index, section: 2), at: .centeredVertically, animated: true)
+    }
 
 }
 
 // MARK: - CollectionView delegate methods
-extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
+extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
+        return 5
     }
     
     func shouldShowHoursOfOperation() -> Bool {
@@ -154,6 +168,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             return editingSession.movingBlock.destinations != nil
         }
         return false
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        timelineController.offset = collectionView.contentOffset.y
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -167,6 +185,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             return itinerary.schedule.count
         case 3:
             return shouldShowHoursOfOperation() ? 2 : 0
+        case 4:
+            return 1
         default:
             return 0
         }
@@ -186,6 +206,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             cell = setupBlockCell(with: indexPath)
         case 3:
             cell = setupHoursCell(with: indexPath)
+        case 4:
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: timelineReuseIdentifier, for: indexPath)
+            if !cell.contentView.subviews.contains(timelineController.view) {
+                cell.contentView.addSubview(timelineController.view)
+                timelineController.view.frame = cell.contentView.frame
+                timelineController.view.setNeedsDisplay()
+            }
+            cell.isUserInteractionEnabled = false
         default:
             cell = UICollectionViewCell()
         }
@@ -193,6 +221,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         return cell
     }
     
+    
+// MARK: - Cell setup
     func setupHoursCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let movingBlock = editingSession!.movingBlock
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: hoursReuseIdentifier, for: indexPath) as! HoursCell
@@ -212,17 +242,16 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             }
         }
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
-            cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapDestination)))
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDestination))
+            tapGesture.numberOfTapsRequired = 1
+            tapGesture.delegate = self
+            cell.addGestureRecognizer(tapGesture)
+            addDragRecognizerTo(draggable: cell)
         }
         cell.tag = index
         cell.configureWith(destination, currentlyDragging)
         return cell
         
-    }
-    
-    @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
-        let placeName = itinerary.destinations[sender.view!.tag].place.name
-        NotificationCenter.default.post(name: .didTapDestination, object: placeName)
     }
     
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -264,6 +293,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         return cell
     }
     
+// MARK: - OptionView setup
     func setupOptionViewForBlockIndex(_ blockIndex: Int) -> UIView? {
         
         guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return nil }
@@ -272,30 +302,35 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         let startTime = enteringLeg != nil ? enteringLeg!.timing.start : block.timing.start
         let endTime = exitingLeg != nil ? exitingLeg!.timing.end : block.timing.end
         
-        let minY = timelineController.yFromTime(startTime)
-        let maxY = timelineController.yFromTime(endTime)
-        let frame = CGRect(x: 0, y: minY, width: collectionView.frame.width, height: maxY - minY)
+        let offsetHour = timelineController.hourInTimeline(forY: collectionView.contentOffset.y)
+        let offsetTime = TimeInterval.from(hours: offsetHour)
+        let minY = timelineController.yFromTime(startTime - offsetTime/2.0)
+        let maxY = timelineController.yFromTime(endTime - offsetTime/2.0)
+        let minX = timelineController.timelineView.sidebarWidth
+        let frame = CGRect(x: minX, y: minY, width: collectionView.frame.width - minX, height: maxY - minY)
         
         let newOptionView = UIView(frame: frame)
         newOptionView.tag = blockIndex
         let bgSnapshotFrame = collectionView.convert(newOptionView.frame, to: timelineController.view)
         newOptionView.backgroundColor = UIColor.init(patternImage: timelineController.view.snapshot(of: bgSnapshotFrame, afterScreenUpdates: false))
         
-        addChild(optionsVC)
         optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
-        newOptionView.addSubview(optionsVC.view)
-        optionsVC.didMove(toParent: self)
         optionsVC.delegate = self
         optionsVC.blockIndex = blockIndex
         optionsVC.selectedOption = block.selectedOption!
         optionsVC.hourHeight = timelineController.hourHeight
-        optionsVC.view.backgroundColor = .clear //UIColor.lightGray.withAlphaComponent(0.5)
+        optionsVC.timelineOffset = -(startTime)
+        optionsVC.view.backgroundColor = .clear
         
         if optionsVC.itineraries == nil {
             // Create itineraries from options!!!
             let itineraries = itinerariesFromOptionsBlockIndex(blockIndex)
             optionsVC.itineraries = itineraries
         }
+        
+        addChild(optionsVC)
+        newOptionView.addSubview(optionsVC.view)
+        optionsVC.didMove(toParent: self)
 
         return newOptionView
         
@@ -377,7 +412,7 @@ extension ItineraryViewController : DragDelegate {
         guard let editingSession = editingSession else { return }
         let location = gesture.location(in: collectionView)
         
-        if !collectionView.frame.contains(location) {
+        if !collectionView.bounds.contains(location) {
             if previousTouchHour != nil {
                 editingSession.removeBlock()
                 previousTouchHour = nil
@@ -387,6 +422,7 @@ extension ItineraryViewController : DragDelegate {
         
         let y = gesture.location(in: view).y
         let hour = timelineController.roundedHourInTimeline(forY: y)
+        print(hour)
         if hour != previousTouchHour {
             editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
@@ -452,6 +488,7 @@ extension ItineraryViewController : DragDelegate {
     
 }
 
+// MARK:- Drag Data Delegate
 extension ItineraryViewController: DragDataDelegate {
     
     func objectFor(draggable: UIView) -> Any? {
@@ -507,11 +544,11 @@ extension ItineraryViewController: DragDataDelegate {
 }
 
 
-// MARK: - Custom CollectionView Layout delegate methods
+// MARK: - Layout Delegate
 extension ItineraryViewController : ItineraryLayoutDelegate {
     
-    func timelineStartHour(of collectionView: UICollectionView) -> CGFloat {
-        return timelineController.startHour
+    func timelineSidebarWidth(of collectionView: UICollectionView) -> CGFloat {
+        return timelineController.timelineView.sidebarWidth
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
@@ -553,19 +590,11 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
     }
 }
 
+//MARK:- Timeline Delegate
 // Reload collection when there are changes to the timeline (timeline panning, timeline pinching)
 extension ItineraryViewController: TimelineViewDelegate {
-    
-    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateStartHour: CGFloat) {
-        collectionView.reloadData()
-        if let ov = optionView {
-            ov.removeFromSuperview()
-            optionView = setupOptionViewForBlockIndex(ov.tag)!
-            collectionView.addSubview(optionView!)
-        }
-    }
-    
-    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateHourHeight: CGFloat) {
+
+    func timelineViewController(_ timelineViewController: TimelineViewController, didUpdateHourHeightBy delta: CGFloat) {
         collectionView.reloadData()
         if let ov = optionView {
             ov.removeFromSuperview()
@@ -576,6 +605,7 @@ extension ItineraryViewController: TimelineViewDelegate {
     
 }
 
+//MARK:- OptionsView Delegate
 extension ItineraryViewController: OptionsViewControllerDelegate {
     
     func shouldDismissOptionsViewController(_ optionsViewController: OptionsViewController) {
@@ -600,6 +630,7 @@ extension ItineraryViewController: OptionsViewControllerDelegate {
     
 }
 
+//MARK:- Group Cell Buttons Delegate
 extension ItineraryViewController: GroupButtonsDelegate {
     
     func didPressLockOnGroupCell(_ cell: GroupCell) {
@@ -627,7 +658,7 @@ extension ItineraryViewController: GroupButtonsDelegate {
 }
 
 
-// MARK: - Self delegate protocol
+// MARK: - Self Delegate Protocol
 protocol ItineraryViewControllerDelegate : AnyObject {
     
     func itineraryViewController(_ itineraryViewController: ItineraryViewController, didUpdateItinerary: Itinerary)

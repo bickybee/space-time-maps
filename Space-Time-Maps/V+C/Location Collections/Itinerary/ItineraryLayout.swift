@@ -41,41 +41,53 @@ class ItineraryLayout: UICollectionViewLayout {
     
     func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
         
-        // Get data from delegate
-        let timelineStartHour = delegate.timelineStartHour(of: collectionView)
-        let eventTiming = delegate.collectionView(collectionView, timingForEventAtIndexPath: indexPath)
-        let hourHeight = delegate.hourHeight(of: collectionView)
-        
-        let startHour = eventTiming.start.inHours()
-        let duration = eventTiming.duration.inHours()
-        
-        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-        
-        // Always true
-        let height = CGFloat(duration) * hourHeight
-        let relativeHour = CGFloat(startHour) - timelineStartHour
-        let y = relativeHour * hourHeight
-        
-        // Depends on the cell/settings...
-        var width = contentWidth
-        var x: CGFloat = 0.0
-        
-        if indexPath.section >= 2 {
-            attributes.zIndex = -1
+        if indexPath.section == 4 {
+            
+            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+            let hourHeight = delegate.hourHeight(of: collectionView)
+            attributes.frame = CGRect(x: 0, y: 0, width: contentWidth, height: 24.5 * hourHeight)
+            attributes.zIndex = -10
+            cache.append(attributes)
+            contentHeight = 24.5 * hourHeight 
+        } else {
+            
+            // Get data from delegate
+            let eventTiming = delegate.collectionView(collectionView, timingForEventAtIndexPath: indexPath)
+            let hourHeight = delegate.hourHeight(of: collectionView)
+            let minX = delegate.timelineSidebarWidth(of: collectionView)
+            
+            let startHour = eventTiming.start.inHours()
+            let duration = eventTiming.duration.inHours()
+            
+            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+            
+            // Always true
+            let height = CGFloat(duration) * hourHeight
+            let relativeHour = CGFloat(startHour)
+            let y = relativeHour * hourHeight
+            
+            // Depends on the cell/settings...
+            var width = contentWidth - minX
+            var x: CGFloat = minX
+            
+            if indexPath.section >= 2 {
+                attributes.zIndex = -1
+            }
+            
+            else if shouldPadCells {
+                width = contentWidth * 0.8 - minX
+                x += contentWidth * 0.1
+            }
+            
+            let frame = CGRect(x: x, y: y, width: width, height: height)
+            
+            // Add to cache
+            attributes.frame = frame
+            cache.append(attributes)
+            // Update content height
+    //        contentHeight = max(contentHeight, frame.maxY)
+    
         }
-        
-        else if shouldPadCells {
-            width = contentWidth * 0.7
-            x = contentWidth * 0.15
-        }
-        
-        let frame = CGRect(x: x, y: y, width: width, height: height)
-        
-        // Add to cache
-        attributes.frame = frame
-        cache.append(attributes)
-        // Update content height
-        contentHeight = max(contentHeight, frame.maxY)
 
     }
     
@@ -99,7 +111,7 @@ class ItineraryLayout: UICollectionViewLayout {
 }
 
 protocol ItineraryLayoutDelegate: AnyObject {
-    func timelineStartHour(of collectionView: UICollectionView) -> CGFloat
+    func timelineSidebarWidth(of collectionView: UICollectionView) -> CGFloat
     func hourHeight(of collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView:UICollectionView, timingForEventAtIndexPath indexPath: IndexPath) -> Timing
 }

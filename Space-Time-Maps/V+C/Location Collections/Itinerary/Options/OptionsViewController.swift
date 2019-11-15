@@ -17,6 +17,7 @@ class OptionsViewController: UIViewController {
     weak var delegate: OptionsViewControllerDelegate!
     weak var collectionView: UICollectionView!
     var hourHeight: CGFloat?
+    var timelineOffset: TimeInterval = 0.0
     
     var blockIndex: Int!
     var selectedOption: Int!
@@ -154,7 +155,7 @@ extension OptionsViewController: UICollectionViewDataSource {
             let layout = cell.timelineView!.collectionViewLayout as! ItineraryLayout
             layout.delegate = self
             layout.shouldPadCells = false
-            
+
             cell.timelineView.reloadData()
             return cell
             
@@ -208,19 +209,8 @@ extension OptionsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension OptionsViewController: ItineraryLayoutDelegate {
-    func timelineStartHour(of collectionView: UICollectionView) -> CGFloat {
-        guard let itineraries = itineraries else { return 0 }
-        
-        let firstDest = itineraries[0].schedule[0]
-        let destStart = firstDest.timing.start.inHours()
-        if let enteringLeg = itineraries[0].route.legs.first {
-            let legStart = enteringLeg.timing.start.inHours()
-            return CGFloat(min(destStart, legStart))
-        } else {
-            return CGFloat(destStart)
-        }
-        
-        
+    func timelineSidebarWidth(of collectionView: UICollectionView) -> CGFloat {
+        return 0.0
     }
     
     func hourHeight(of collectionView: UICollectionView) -> CGFloat {
@@ -231,9 +221,9 @@ extension OptionsViewController: ItineraryLayoutDelegate {
         
         let optionIndex = collectionView.tag
         if indexPath.section == 0 {
-            return itineraries![optionIndex].schedule[indexPath.item].timing
+            return itineraries![optionIndex].schedule[indexPath.item].timing.offsetBy(timelineOffset)
         } else {
-            return itineraries![optionIndex].route.legs[indexPath.item].timing
+            return itineraries![optionIndex].route.legs[indexPath.item].timing.offsetBy(timelineOffset)
         }
         
     }

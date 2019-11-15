@@ -31,6 +31,7 @@ class RouteCell: UICollectionViewCell {
         durationLine = UIView(frame: frame)
         durationLine.backgroundColor = .red
         routeLine.addSubview(durationLine)
+        self.isUserInteractionEnabled = false
     }
 
     

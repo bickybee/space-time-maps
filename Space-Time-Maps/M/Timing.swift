@@ -59,5 +59,9 @@ struct Timing {
         return self.contains(timing.start) || self.contains(timing.end)
     }
     
+    func offsetBy(_ time: TimeInterval) -> Timing {
+        return Timing(start: self.start + time, end: self.end + time)
+    }
+    
     
 }
