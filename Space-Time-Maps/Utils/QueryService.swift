@@ -50,6 +50,10 @@ class QueryService {
         dataTask.resume()
     }
     
+    func getTimeAlongRoute(_ route: Route, travelMode: TravelMode, callback: @escaping(TimeDict?) -> ()) {
+        
+    }
+    
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }

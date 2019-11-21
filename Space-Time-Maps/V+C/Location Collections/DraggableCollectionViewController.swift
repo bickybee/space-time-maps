@@ -26,12 +26,13 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         super.viewDidLoad()
     }
     
-    func addDragRecognizerTo(draggable: UIView) {
+    func addDragRecognizerTo(draggable: UIView) -> UILongPressGestureRecognizer {
         
         let dragRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dragObject))
         dragRecognizer.minimumPressDuration = 0.2
         dragRecognizer.delegate = self
         draggable.addGestureRecognizer(dragRecognizer)
+        return dragRecognizer
         
     }
     
@@ -41,6 +42,8 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
             return true
         } else if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UITapGestureRecognizer != nil {
             return true
+        } else if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UISwipeGestureRecognizer != nil {
+        return true
         }
         else {
             return false

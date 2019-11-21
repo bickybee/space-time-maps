@@ -51,16 +51,57 @@ struct Timing {
         self.duration = duration
     }
     
+    func equals(_ timing: Timing) -> Bool {
+        return self.start == timing.start && self.end == timing.end
+    }
+    
     func contains(_ time: TimeInterval) -> Bool {
+        return (start < time) && (end > time)
+    }
+    
+    func containsInclusive(_ time: TimeInterval) -> Bool {
         return (start <= time) && (end >= time)
     }
     
+    func fullyContains(_ timing: Timing) -> Bool {
+        return (start <= timing.start) && (end >= timing.end)
+    }
+    
     func intersects(_ timing: Timing) -> Bool {
-        return self.contains(timing.start) || self.contains(timing.end)
+        return self.equals(timing)
+            || self.contains(timing.start)
+            || self.contains(timing.end)
+            || timing.contains(self.start)
+            || timing.contains(self.end)
     }
     
     func offsetBy(_ time: TimeInterval) -> Timing {
         return Timing(start: self.start + time, end: self.end + time)
+    }
+    
+    func withStartShiftedTo(_ startTime: TimeInterval) -> Timing {
+        return Timing(start: startTime, end: self.end + (startTime - self.start))
+    }
+    
+    func withEndShiftedTo(_ endTime: TimeInterval) -> Timing {
+        return Timing(start: self.start + (endTime - self.end), end: endTime)
+    }
+    
+    func intersectionWith(_ timing: Timing) -> Timing? {
+        guard self.intersects(timing) else { return nil }
+        // Start by assuming they intersect entirely, thus returning self
+        var intersection = Timing(start: self.start, end: self.end)
+        // If self contains the other interval's start, we shift the start time of the intersection
+        if self.contains(timing.start) {
+            intersection.start = timing.start
+        }
+        // If self contains the other interval's start, we shift the end time of the intersection
+        if self.contains(timing.end) {
+            intersection.end = timing.end
+        }
+        
+        intersection.duration = intersection.end - intersection.start
+        return intersection
     }
     
     

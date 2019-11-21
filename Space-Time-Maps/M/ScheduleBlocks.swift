@@ -14,25 +14,33 @@ import Foundation
 protocol ScheduleBlock : Schedulable {
     
     var timing : Timing { get set }
-    var destinations: [Destination]? { get }
-    
+    var destinations: [Destination] { get }
+    var places : [Place] { get }
+    func copy() -> ScheduleBlock
 }
 
 class SingleBlock : ScheduleBlock {
     
     var timing : Timing
     var place : Place
+    var places : [Place] {
+        return [place]
+    }
     
     var destination : Destination {
         return Destination(place: place, timing: timing)
     }
-    var destinations: [Destination]? {
+    var destinations: [Destination] {
         return [destination]
     }
     
     init(timing: Timing, place: Place) {
         self.timing = timing
         self.place = place
+    }
+    
+    func copy() -> ScheduleBlock {
+        return SingleBlock(timing: timing, place: place)
     }
     
 }
@@ -46,11 +54,13 @@ protocol OptionBlock : ScheduleBlock {
     var options: [[Int]] { get } // lists of indices into placegroup
     var optionPlaceIDs: [[String]] { get } // convenience
     
+    var optionCount: Int { get }
     var selectedOption: Int? { get set }
     
-    var destinations: [Destination]? { get } // result of selected option
+    var destinations: [Destination] { get } // result of selected option
     var name: String { get }
     var isFixed : Bool { get set }
+    
 }
 
 // lotsa code duplication to follow but that's ok, FIXE later
@@ -59,6 +69,9 @@ class OneOfBlock : OptionBlock {
 
     var timing: Timing // applying timing to destinatino, no longer true tho
     var placeGroup : PlaceGroup
+    var places : [Place] {
+        return placeGroup.places
+    }
     var selectedOption: Int?
     var options : [[Int]]
     var isFixed : Bool
@@ -77,8 +90,8 @@ class OneOfBlock : OptionBlock {
         }
         
     }
-    var destinations: [Destination]? {
-        return destination != nil ? [destination!] : nil
+    var destinations: [Destination] {
+        return destination != nil ? [destination!] : []
     }
     var optionCount : Int {
         return placeGroup.count
@@ -94,11 +107,24 @@ class OneOfBlock : OptionBlock {
         self.isFixed = false
     }
     
+    func copy() -> ScheduleBlock {
+        
+        let theCopy = OneOfBlock(placeGroup: self.placeGroup, timing: self.timing)
+        theCopy.options = self.options
+        theCopy.selectedOption = self.selectedOption
+        theCopy.isFixed = self.isFixed
+        
+        return theCopy
+    }
+    
 }
 
 class AsManyOfBlock : OptionBlock {
     
     var placeGroup: PlaceGroup
+    var places : [Place] {
+        return placeGroup.places
+    }
     var timing: Timing {
         willSet(newTiming) {
             let delta = newTiming.start - timing.start
@@ -106,20 +132,23 @@ class AsManyOfBlock : OptionBlock {
         }
     }
     
+    // BEST options...
     var options: [[Int]] // indices into placeGroup
     
     var optionPlaceIDs: [[String]] {
         return options.map( { $0.map( { placeGroup[$0].placeID } ) } )
     }
     
+    var allOptions: [[[Int]]] //lol
+ 
     var scheduledOptions: [[Destination]]?
     
     var selectedOption: Int?
-    var destinations: [Destination]? {
-        return selectedOption != nil ? scheduledOptions![selectedOption!] : nil
+    var destinations: [Destination] {
+        return selectedOption != nil && scheduledOptions != nil ? scheduledOptions![selectedOption!] : []
     }
     var optionCount: Int {
-        return options.count
+        return scheduledOptions?.count ?? 0
     }
     var name : String {
         return placeGroup.name
@@ -131,11 +160,32 @@ class AsManyOfBlock : OptionBlock {
         self.timing = timing
         self.isFixed = false
         
-        let indices = Array(placeGroup.places.indices)
-        var p = [[Int]]()
-        Combinatorics.permute(indices, indices.count - 1, &p)
+//        let indices = Array(placeGroup.places.indices)
+//        var p = [[Int]]()
+//        Combinatorics.permute(indices, indices.count - 1, &p)
+//
+        self.options = [[Int]]()
+        self.allOptions = [[[Int]]]()
+        for _ in placeGroup.places.indices {
+            self.allOptions.append([[Int]]())
+        }
+    }
+    
+    convenience init(placeGroup: PlaceGroup, timing: Timing, timeDict: TimeDict) {
+        self.init(placeGroup: placeGroup, timing: timing)
+        self.setPermutationsUsing(timeDict)
+    }
+    
+    func copy() -> ScheduleBlock {
         
-        self.options = p
+        let theCopy = AsManyOfBlock(placeGroup: self.placeGroup, timing: self.timing)
+        theCopy.options = self.options
+        theCopy.allOptions = self.allOptions
+        theCopy.selectedOption = self.selectedOption
+        theCopy.scheduledOptions = self.scheduledOptions.map { $0.map{ $0.map{ $0.copy() } }} as! [[Destination]]?
+        theCopy.isFixed = self.isFixed
+        
+        return theCopy
     }
     
     func shiftDestinationsBy(_ dT: TimeInterval) {
@@ -164,56 +214,55 @@ class AsManyOfBlock : OptionBlock {
     func setPermutationsUsing(_ timeDict: TimeDict) {
         
         // Keep track of valid terms and their total times
-        var validPermTimes = [ ( TimeInterval, [Int] )]()
         
         // First try permutations that include ALL places, then decrease number of places (subset size) if none fit, etc.
         var trialPerms = defaultPermutations()
         var subsetSize = placeGroup.count
+        let numSubsetLevels = placeGroup.count - 1
         
         // Let's gooo
-        var optionFound = false
-        while (!optionFound) {
+        for level in 0 ... numSubsetLevels {
+            
+            trialPerms = Combinatorics.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
+            
+            var validPermTimes = [ ( TimeInterval, [Int] )]()
+//            var timeAvailable = timing.duration
             
             // Sum up all the times for each perm and see if it fits in the asManyOf block
             for perm in trialPerms {
                 var timeNeeded = TimeInterval(0)
                 for (i, placeIndex) in perm.enumerated() {
-                    timeNeeded += placeGroup[placeIndex].timeSpent
+                    let place = placeGroup[placeIndex]
+                    // Time spent at place
+                    timeNeeded += place.timeSpent
+                    // Time spent getting from this place to the next
                     if (i < perm.count - 1) {
-                        timeNeeded += timeDict[PlacePair(startID: placeGroup[placeIndex].placeID, endID: placeGroup[perm[i + 1]].placeID)]!
+                        let nextPlace = placeGroup[perm[i + 1]]
+                        timeNeeded += timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID)]!
                     }
                 }
                 
-                if timeNeeded <= timing.duration {
-                    validPermTimes.append( (timeNeeded, perm) )
-                }
+                validPermTimes.append( (timeNeeded, perm) )
             }
             
-            if validPermTimes.count > 0 {
-                // Were any perms valid? If so, we're good to go
-                optionFound = true
-            } else if subsetSize > 1 {
-                // Otherwise, try a smaller subset of places
-                subsetSize -= 1
-                trialPerms = Combinatorics.subsetPermutations(input: Array(placeGroup.places.indices), size: subsetSize)
-            } else {
-                break
-            }
+            validPermTimes.sort(by: { $0.0 <= $1.0 } )
+            let validPerms = validPermTimes.map( { $0.1 })
+            allOptions[level] = validPerms
+            
+            subsetSize -= 1
+            
+//            } else if subsetSize > 1 {
+//                // Otherwise, try a smaller subset of places
+//
+//            } else {
+//                break
+//            }
         }
         
-        // Only take best 5
-//        if validPermTimes.count > 5 {
-//            validPermTimes.sort(by: { $0.0 <= $1.0 } )
-//        }
-//
-//        let topFive = validPermTimes.prefix(5)
-        validPermTimes.sort(by: { $0.0 <= $1.0 } )
-        let validPerms = validPermTimes.map( { $0.1 })
-        options = validPerms
+//        validPermTimes.sort(by: { $0.0 <= $1.0 } )
+//        let validPerms = validPermTimes.map( { $0.1 })
+//        options = validPerms
 
     }
-
-    
-    
     
 }

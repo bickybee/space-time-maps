@@ -26,6 +26,12 @@ class Place : NSObject {
     let color: UIColor
     var timeSpent: TimeInterval
     let openHours: Timing?
+    var closedHours: [Timing]? {
+        guard let open = self.openHours else { return nil }
+        let closed1 = Timing(start: 0.0, end: open.start)
+        let closed2 = Timing(start: open.end, end: TimeInterval.from(hours:24.5))
+        return [closed1, closed2]
+    }
     
     override var description : String {
         return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""

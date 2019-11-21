@@ -15,7 +15,7 @@ class Scheduler {
     
     private let qs = QueryService()
     private var legCache = [LegData]()
-    private var timeDict = TimeDict()
+    var timeDict = TimeDict()
     var travelMode : TravelMode = .driving
     
     // Reschedule everything!
@@ -55,15 +55,15 @@ class Scheduler {
         
          // Only applicable if it's an asManyOf
         if let asManyOf = block as? AsManyOfBlock {
-            if asManyOf.options.count == 0 {
+            if asManyOf.scheduledOptions == nil {
                 needsRescheduling = true
             } else {
-                let originalPermLength = asManyOf.destinations!.count
+                let originalPermLength = asManyOf.destinations.count
                 asManyOf.setPermutationsUsing(timeDict)
                 let newPermLength = asManyOf.options[0].count //SO BAD!!!! FIXME
                 scheduleOptionsForBlock(asManyOf, with: timeDict)
                 
-                needsRescheduling = originalPermLength != newPermLength
+                needsRescheduling = true//originalPermLength != newPermLength
             }
         }
         
@@ -178,18 +178,6 @@ private extension Scheduler {
     // Returns blocks with destinations and timings set
     func scheduleBlocks(_ blocks: [ScheduleBlock]) -> [ScheduleBlock] {
         
-//        if blocks.count == 1 {
-//            let onlyBlock = blocks[0]
-//            if onlyBlock is SingleBlock {
-//                return blocks
-//            }
-//            let optionBlock = onlyBlock as! OptionBlock
-//            if (optionBlock is OneOfBlock) && (optionBlock.selectedOption != nil) {
-//                return blocks
-//            }
-//
-//        }
-        
         var schedule = [ScheduleBlock]()
         var i = 0
         while (i < blocks.count) {
@@ -258,29 +246,33 @@ private extension Scheduler {
         // First set perms of asManyOf blocks lol TODO: put this somewhere where it makes more sense
         for b in blocks {
             if let asManyOf = b as? AsManyOfBlock {
-                asManyOf.setPermutationsUsing(timeDict)
+                self.scheduleOptionsForBlock(asManyOf, with: timeDict)
             }
         }
         
         // Calculate the best combination of options
         let optionCombinations = self.optionCombinationsFor(blocks)
-        let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
-        let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
-        let minScore = scores.min()
-        let iMin = scores.firstIndex(of: minScore!)!
-        let bestOption = optionCombinations[iMin] // Contains ideal option index for each block
-        
-        // Select the option for each block
-        for i in blocks.indices {
+        if optionCombinations.count > 0 {
+            let placeIDCombinations = self.placeIDCombinationsFor(blocks, indexCombinations: optionCombinations)
+            let scores = self.optionScores(placeIDCombinations, from: timeDict, before: before, after: after)
+            let minScore = scores.min()
+            let iMin = scores.firstIndex(of: minScore!)!
+            let bestOption = optionCombinations[iMin] // Contains ideal option index for each block
             
-            var block = blocks[i]
-            
-            if let asManyOf = block as? AsManyOfBlock {
-                self.scheduleOptionsForBlock(asManyOf, with: timeDict)
+            // Select the option for each block
+            for i in blocks.indices {
+                
+                var block = blocks[i]
+                block.selectedOption = bestOption[i]
+                
             }
-            
-            block.selectedOption = bestOption[i]
-            
+        } else {
+            for i in blocks.indices {
+                           
+               var block = blocks[i]
+               block.selectedOption = nil
+               
+           }
         }
         
         callback(blocks)
@@ -290,16 +282,92 @@ private extension Scheduler {
     func scheduleOptionsForBlock(_ block: AsManyOfBlock, with timings: TimeDict) {
         
         var options = [[Destination]]()
+        var permsToKeep = [Int]()
+        var optionLevel = 0
+        var foundOption = false
         
-        for perm in block.options {
+        while !foundOption && optionLevel < block.allOptions.count {
             
-            let places = perm.map( { block.placeGroup[$0] } )
-            let destinations = evenlyDispersedDestinations(from: places, within: block.timing)
-            options.append(destinations)
+            for (i, perm)in block.allOptions[optionLevel].enumerated() {
+                        
+                let places = perm.map( { block.placeGroup[$0] } )
+                if let destinations = squishedDestinations(from: places, within: block.timing) {
+                    options.append(destinations)
+                    permsToKeep.append(i)
+                }
+            }
+            if options.count > 0 {
+                foundOption = true
+            } else {
+                optionLevel += 1
+            }
+        }
+    
+        
+        block.options = permsToKeep.map{block.allOptions[optionLevel][$0]}
+        block.scheduledOptions = options
+    }
+    
+    // Only returns if it's possible to make the schedule
+    func squishedDestinations(from places: [Place], within timing: Timing) -> [Destination]? {
+        var currentTime = timing.start
+        var destinations = [Destination]()
+        
+        for (i, place) in places.enumerated() {
+            var destTiming = Timing(start: currentTime, duration: place.timeSpent)
+            if let closedHours = place.closedHours {
+                // If the start intersects, shift block forward in time
+                if closedHours[0].contains(destTiming.start) {
+                    destTiming = destTiming.withStartShiftedTo(closedHours[0].end)
+                } else if closedHours[1].contains(destTiming.start) {
+                    destTiming = destTiming.withStartShiftedTo(closedHours[1].end)
+                }
+                // Now check if the end intersects, then we're screwed
+                if closedHours[0].contains(destTiming.end) {
+                    return nil
+                } else if closedHours[1].contains(destTiming.end) {
+                    return nil
+                }
+            }
             
+            // If we passed the end of the block, also screwed
+            if destTiming.end > timing.end {
+                return nil
+            }
+            
+            // All good? Append this dest!
+            destinations.append(Destination(place: place, timing: destTiming))
+            // Update current time for next dest
+            currentTime = destTiming.end
+            if i < (places.count - 1) {
+                let nextPlace = places[i + 1]
+                let legTime = timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID)]!
+                currentTime += legTime
+            }
         }
         
-        block.scheduledOptions = options
+        //NOW WORK BACKWARDS! to disperse evenly.
+//        var endTime = timing.end
+//        for i in destinations.indices.reversed().dropLast() {
+//            var dest = destinations[i]
+//            if let closedHours = dest.place.closedHours {
+//                // Move the dest down as far as possible
+//                if closedHours[0].contains(endTime) {
+//                    dest.timing = dest.timing.withEndShiftedTo(closedHours[0].start)
+//                } else if closedHours[1].contains(endTime) {
+//                    dest.timing = dest.timing.withEndShiftedTo(closedHours[1].start)
+//                } else {
+//                    dest.timing = dest.timing.withEndShiftedTo(endTime)
+//                }
+//            } else {
+//                dest.timing = dest.timing.withEndShiftedTo(endTime)
+//            }
+//            // Calculate next ideal end time
+//            let prevDest = destinations[i - 1]
+//            endTime = dest.timing.start - (dest.timing.start - prevDest.timing.end) / 2.0 + prevDest.timing.duration / 2.0
+//        }
+////
+        return destinations
     }
     
     func evenlyDispersedDestinations(from places: [Place], within timing: Timing) -> [Destination] {
@@ -333,10 +401,10 @@ private extension Scheduler {
     // Spread destinations of selected option evenly in optionBlock
     func evenlyDisperseBlock(_ optionBlock: OptionBlock, in route: Route) {
         
-        guard let destinations = optionBlock.destinations, destinations.count >= 2 else { return }
+        guard optionBlock.destinations.count >= 2 else { return }
         
-        let timeBounds = timeBoundsOf(destinations, within: optionBlock.timing, in: route)
-        evenlyDisperseDestinations(destinations, within: optionBlock.timing, in: route)
+        let timeBounds = timeBoundsOf(optionBlock.destinations, within: optionBlock.timing, in: route)
+        evenlyDisperseDestinations(optionBlock.destinations, within: optionBlock.timing, in: route)
         
     }
     
@@ -405,8 +473,10 @@ private extension Scheduler {
     func optionCombinationsFor(_ blocks: [OptionBlock]) -> [Combination<Int>] {
         
         var output = [Combination<Int>]()
-        let options = blocks.map( { Array<Int>(0 ... $0.options.count - 1) } )
-        Combinatorics.combinations(options, &output, [], 0, options.count - 1)
+        let options = blocks.compactMap( { ($0.optionCount > 0) ? Array<Int>(0 ... $0.optionCount - 1) : nil } )
+        if options.count > 0 {
+            Combinatorics.combinations(options, &output, [], 0, options.count - 1)
+        }
         return output
         
     }

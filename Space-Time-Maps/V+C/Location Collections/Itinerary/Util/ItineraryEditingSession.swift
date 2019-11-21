@@ -23,6 +23,7 @@ class ItineraryEditingSession: NSObject {
     // This is what gets modified!
     var movingBlock : ScheduleBlock // Block being edited/moved around
     var lastPosition : Int?
+    var overlapsClosedHoursOfPlaces = [TimeInterval]()
     
     var scheduler : Scheduler
     
@@ -35,40 +36,79 @@ class ItineraryEditingSession: NSObject {
         self.callback = callback
         self.lastPosition = index
         self.scheduler = scheduler
+        
+        super.init()
+        self.overlapsClosedHoursOfPlaces = intersectsClosedHours(movingBlock)
     }
     
     func moveBlock(toTime time: TimeInterval){
         
         // Make this time the "middle" of the block
-        movingBlock.timing.start = time - movingBlock.timing.duration / 2
-        movingBlock.timing.end = time + movingBlock.timing.duration / 2
+        var movedBlock = movingBlock.copy()
+        movedBlock.timing.start = time - movedBlock.timing.duration / 2
+        movedBlock.timing.end = time + movedBlock.timing.duration / 2
+        let closedHoursIntersections = intersectsClosedHours(movedBlock)
         
-        if intersectsOtherBlocks(movingBlock) {
-            removeBlock()
+        // If we're about to hit another block or hit closed hours for a singleBlock, just stay put...
+        if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
+            if let position = lastPosition {
+                print("intersecting other block")
+                var modifiedBlocks = baseBlocks
+                modifiedBlocks.insert(movingBlock, at: position)
+                print(movingBlock.timing)
+                print(movedBlock.timing)
+                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
+            } else {
+                removeBlock()
+            }
+
         } else {
+            print("not intersecting other block")
         
             // Create new schedule
             var modifiedBlocks = baseBlocks
             var insertAt = modifiedBlocks.endIndex
             for (i, block) in modifiedBlocks.enumerated() {
                 
-                if block.timing.start >= movingBlock.timing.start {
+                if block.timing.start >= movedBlock.timing.start {
                     insertAt = i
                     break
                 }
                 
             }
             
+            // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
             let changedOrder = (insertAt != lastPosition)
-            modifiedBlocks.insert(movingBlock, at: insertAt)
+            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
+            overlapsClosedHoursOfPlaces = closedHoursIntersections
+            modifiedBlocks.insert(movedBlock, at: insertAt)
+            movingBlock = movedBlock
             lastPosition = insertAt
             
-            if changedOrder {
+            // Callback to check intersections with route legs after new route is created lol
+//            let theCallback : ([ScheduleBlock]?, Route?) -> () = { blocks, route in
+//                if let route = route {
+//                    if self.intersectsLegs(movedBlock, in: route), let lastPosition = self.lastPosition {
+//                        var modifiedBlocks = self.baseBlocks
+//                        modifiedBlocks.insert(self.movingBlock, at: lastPosition)
+//                        self.callback(modifiedBlocks, route)
+//                    } else {
+//                        self.movingBlock = movedBlock
+//                        self.lastPosition = insertAt
+//                        self.callback(blocks, route)
+//                    }
+//                }
+//            }
+
+            if changedOrder || changedClosedHoursIntersections {
+                print("reschedule")
                 scheduler.reschedule(blocks: modifiedBlocks, callback: callback)
-            } else {
+            } else { // Otherwise just shift, no reschedule
+                print("shift")
                 scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
             }
         }
+        
         
     }
     
@@ -105,20 +145,54 @@ class ItineraryEditingSession: NSObject {
     
     func intersectsOtherBlocks(_ block: ScheduleBlock) -> Bool {
         
-        guard let destinations = block.destinations else { return false }
+        guard block.destinations.count > 0 else { return false }
         
-        for dest in destinations {
-            for b in baseBlocks {
-                guard let bDests = b.destinations else { continue }
-                for d in bDests {
-                    if d.timing.intersects(dest.timing) {
-                        return true
-                    }
+//        for dest in block.destinations {
+//            for b in baseBlocks {
+//                guard b.destinations.count > 0 else { continue }
+//                for d in b.destinations {
+//                    if d.timing.intersects(dest.timing) {
+//                        return true
+//                    }
+//                }
+//            }
+//        }
+        
+        for b in baseBlocks {
+            guard b.destinations.count > 0 else { continue }
+            for d in b.destinations {
+                if d.timing.intersects(block.timing) {
+                    return true
                 }
             }
         }
         
         return false
+    }
+    
+    func intersectsLegs(_ block: ScheduleBlock, in route: Route) -> Bool {
+        
+        guard block.destinations.count > 0 else { return false }
+        
+        for dest in block.destinations {
+            for leg in route.legs {
+                if dest.timing.intersects(leg.travelTiming) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func intersectsClosedHours(_ block: ScheduleBlock) -> [TimeInterval] {
+        
+        var placesIntersectingClosedHours = Array.init(repeating: 0.0, count: block.places.count)
+        for (i, place) in block.places.enumerated() {
+            guard let closedHours = place.closedHours else { continue }
+            placesIntersectingClosedHours[i] += block.timing.intersectionWith(closedHours[0])?.duration ?? 0.0
+            placesIntersectingClosedHours[i] += block.timing.intersectionWith(closedHours[1])?.duration ?? 0.0
+        }
+        return  placesIntersectingClosedHours
     }
 
 }

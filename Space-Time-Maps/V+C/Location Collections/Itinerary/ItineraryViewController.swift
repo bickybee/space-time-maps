@@ -164,10 +164,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     func shouldShowHoursOfOperation() -> Bool {
-        if let editingSession = editingSession {
-            return editingSession.movingBlock.destinations != nil
-        }
-        return false
+        return editingSession != nil
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -184,7 +181,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 2:
             return itinerary.schedule.count
         case 3:
-            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.destinations!.count * 2 : 0
+            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
         case 4:
             return 1
         default:
@@ -226,7 +223,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func setupHoursCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let movingBlock = editingSession!.movingBlock
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: hoursReuseIdentifier, for: indexPath) as! HoursCell
-        cell.configureWith(movingBlock.destinations![0])
+        cell.configureWith(movingBlock.places[indexPath.item / 2])
         return cell
     }
     
@@ -246,12 +243,24 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             tapGesture.numberOfTapsRequired = 1
             tapGesture.delegate = self
             cell.addGestureRecognizer(tapGesture)
-            addDragRecognizerTo(draggable: cell)
+            let dragRecognizer = addDragRecognizerTo(draggable: cell)
+            
+            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDestination))
+            swipeGesture.direction = .up
+            swipeGesture.numberOfTouchesRequired = 1
+            swipeGesture.delegate = self
+            swipeGesture.require(toFail: dragRecognizer)
+            cell.addGestureRecognizer(swipeGesture)
+            
         }
         cell.tag = index
         cell.configureWith(destination, currentlyDragging)
         return cell
         
+    }
+    
+    @objc func didSwipeDestination(_ gesture: UISwipeGestureRecognizer) {
+        print("swipe!")
     }
     
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -297,8 +306,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     func setupOptionViewForBlockIndex(_ blockIndex: Int) -> UIView? {
         
         guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return nil }
-        let enteringLeg = itinerary.route.legEndingAt(block.destinations![0].place)
-        let exitingLeg = itinerary.route.legStartingAt(block.destinations!.last!.place)
+        let enteringLeg = itinerary.route.legEndingAt(block.destinations[0].place)
+        let exitingLeg = itinerary.route.legStartingAt(block.destinations.last!.place)
         let startTime = enteringLeg != nil ? enteringLeg!.timing.start : block.timing.start
         let endTime = exitingLeg != nil ? exitingLeg!.timing.end : block.timing.end
         
@@ -352,11 +361,11 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             dispatchGroup.enter()
             var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
             if blockIndex > 0 {
-                let prevDest = itinerary.schedule[blockIndex - 1].destinations!.last!
+                let prevDest = itinerary.schedule[blockIndex - 1].destinations.last!
                 newItineraryBlocks.insert(SingleBlock(timing: prevDest.timing, place: prevDest.place), at: 0)
             }
             if blockIndex < itinerary.schedule.count - 1 {
-                let nextDest = itinerary.schedule[blockIndex + 1].destinations!.first!
+                let nextDest = itinerary.schedule[blockIndex + 1].destinations.first!
                 newItineraryBlocks.append(SingleBlock(timing: nextDest.timing, place: nextDest.place))
             }
             scheduler.reschedule(blocks: newItineraryBlocks) { schedule, route in
@@ -398,8 +407,11 @@ extension ItineraryViewController : DragDelegate {
         var index : Int?
         
         if draggableContentViewController is ItineraryViewController {
-            editingBlocks.remove(at: indexPath.item)
+            print(indexPath.item)
             index = indexPath.item
+            editingBlocks.remove(at: indexPath.item)
+            //FIX: crashing when moving singleblocks among other kinds of blocks
+            
         }
         
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
@@ -407,6 +419,7 @@ extension ItineraryViewController : DragDelegate {
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
+
         
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
@@ -422,7 +435,6 @@ extension ItineraryViewController : DragDelegate {
         
         let y = gesture.location(in: view).y
         let hour = timelineController.roundedHourInTimeline(forY: y)
-        print(hour)
         if hour != previousTouchHour {
             editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
             previousTouchHour = hour
@@ -473,7 +485,7 @@ extension ItineraryViewController : DragDelegate {
             } else if let group = object as? PlaceGroup {
                 switch group.kind {
                 case .asManyOf:
-                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)))
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), timeDict: scheduler.timeDict)
                 case .oneOf,
                      .none:
                     return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))
@@ -508,7 +520,12 @@ extension ItineraryViewController: DragDataDelegate {
     
     func indexPathFor(draggable: UIView) -> IndexPath? {
         guard let draggable = draggable as? UICollectionViewCell,
-              let indexPath = collectionView.indexPath(for: draggable) else { return nil}
+              var indexPath = collectionView.indexPath(for: draggable),
+              let obj = eventFor(indexPath: indexPath) else { return nil }
+        
+        if indexPath.section == 0 {
+            return IndexPath(item: indexOfBlockContainingDestination(at: indexPath.item)!, section: indexPath.section)
+        }
         
         return indexPath
     }
@@ -528,9 +545,7 @@ extension ItineraryViewController: DragDataDelegate {
         
         for (i, block) in itinerary.schedule.enumerated() {
             
-            if let destinations = block.destinations {
-                count += destinations.count
-            }
+            count += block.destinations.count
             
             if count > index {
                 return i
@@ -540,7 +555,19 @@ extension ItineraryViewController: DragDataDelegate {
         
         return nil
     }
-    
+//
+//    func destinationIndexForSingleBlock(at index: Int) -> Int {
+//        var count = 0
+//
+//        for i in 0...index {
+//
+//            count += itinerary.schedule[i].destinations.count
+//        }
+//
+//        return count - 1
+//
+//    }
+//
 }
 
 
@@ -562,7 +589,7 @@ extension ItineraryViewController : ItineraryLayoutDelegate {
         } else { // HOURS OF OPERATION!!!
             guard shouldShowHoursOfOperation() else { return Timing() }
             let indexOfDest = indexPath.item / 2 // integer division
-            guard let hours = editingSession!.movingBlock.destinations![indexOfDest].place.openHours else { return Timing() }
+            guard let hours = editingSession!.movingBlock.places[indexOfDest].openHours else { return Timing() }
             
             if indexPath.item % 2 == 0 {
                 return Timing(start: TimeInterval.from(hours: 0), end: hours.start)
@@ -652,7 +679,7 @@ extension ItineraryViewController: GroupButtonsDelegate {
         let blockIndex = cell.tag
         let block = itinerary.schedule[blockIndex] as! OptionBlock
         let oldIndex = block.selectedOption!
-        let newIndex = (oldIndex + 1) % block.options.count
+        let newIndex = (oldIndex + 1) % block.optionCount
         scheduler.scheduleOptionChange(of: blockIndex, toOption: newIndex, in: itinerary.schedule, callback: didEditItinerary)
     }
     

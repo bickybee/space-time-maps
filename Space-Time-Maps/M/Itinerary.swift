@@ -43,7 +43,7 @@ class Itinerary {
     
     func blockIndexOfPlaceWithName(_ name: String) -> Int? {
         for (i, block) in schedule.enumerated() {
-            if block.destinations!.contains(where: { $0.place.name == name } ) {
+            if block.destinations.contains(where: { $0.place.name == name } ) {
                 return i
             }
         }

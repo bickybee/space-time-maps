@@ -49,7 +49,6 @@
 		98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBA2360BBE30005046D /* OptionsViewController.swift */; };
 		98ECFCBD2360CAAB0005046D /* OptionsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */; };
 		98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC02361FCE40005046D /* TimelineUtils.swift */; };
-		98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98ECFCC22361FDCC0005046D /* Timeline.swift */; };
 		B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB522E4D16400B7D2CD /* MapViewController.swift */; };
 		B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCB722E4DA4100B7D2CD /* LocationService.swift */; };
 		B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */; };
@@ -112,7 +111,6 @@
 		98ECFCBA2360BBE30005046D /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		98ECFCBC2360CAAB0005046D /* OptionsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsLayout.swift; sourceTree = "<group>"; };
 		98ECFCC02361FCE40005046D /* TimelineUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineUtils.swift; sourceTree = "<group>"; };
-		98ECFCC22361FDCC0005046D /* Timeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeline.swift; sourceTree = "<group>"; };
 		B62AFCB522E4D16400B7D2CD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B62AFCB722E4DA4100B7D2CD /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		B62AFCBC22E5051400B7D2CD /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
@@ -331,7 +329,6 @@
 				9833A6E722EFB48100AABF20 /* Itinerary.swift */,
 				98DEBA70230F7EE700769BB5 /* ScheduleBlocks.swift */,
 				98BC8579230C3A83001D14BE /* Timing.swift */,
-				98ECFCC22361FDCC0005046D /* Timeline.swift */,
 			);
 			path = M;
 			sourceTree = "<group>";
@@ -540,7 +537,6 @@
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
 				B62AFCB822E4DA4100B7D2CD /* LocationService.swift in Sources */,
 				982D579323203F8300E183F3 /* DestCell.swift in Sources */,
-				98ECFCC32361FDCC0005046D /* Timeline.swift in Sources */,
 				98ECFCBD2360CAAB0005046D /* OptionsLayout.swift in Sources */,
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */,

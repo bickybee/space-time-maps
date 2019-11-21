@@ -33,8 +33,8 @@ class HoursCell: UICollectionViewCell {
         }
     }
     
-    func configureWith(_ destination: Destination) {
-        backgroundColor = destination.place.color.withAlphaComponent(0.1)
+    func configureWith(_ place: Place) {
+        backgroundColor = place.color.withAlphaComponent(0.1)
     }
     
 }
