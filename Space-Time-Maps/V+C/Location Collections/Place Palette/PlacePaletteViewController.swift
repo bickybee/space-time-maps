@@ -178,8 +178,10 @@ extension PlacePaletteViewController: PlaceEditingDelegate {
     @objc func tapDeletePlace(_ sender: UIButton) {
         let sendingCell = sender.superview!.superview!.superview! as! UICollectionViewCell
         let indexPath = collectionView.indexPath(for: sendingCell)!
+        let place = groups[indexPath.section][indexPath.item]
         groups[indexPath.section].remove(at: indexPath.item)
         collectionView.deleteItems(at: [indexPath])
+        delegate?.placePaletteViewController(self, didRemovePlace: place, fromGroups: groups)
     }
     
 }
@@ -466,7 +468,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, openHours: openTiming)
         groups[0].append(newPlace)
         collectionView.reloadData()
-        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
+        delegate?.placePaletteViewController(self, didAddPlace: newPlace, toGroups: groups)
     }
     
     func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {
@@ -532,6 +534,8 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 protocol PlacePaletteViewControllerDelegate : AnyObject {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup])
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any)
     
 }

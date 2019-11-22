@@ -111,6 +111,55 @@ class MapUtils {
         
     }
     
+    public static func ticksForRouteLegs (_ legs: [Leg]) -> [GMSCircle] {
+        guard legs.count > 0 else { return [] }
+        var circles = [GMSCircle]()
+        
+        for leg in legs {
+            let locations = locationsAlongLeg(leg, ofDistance: 100)
+            for loc in locations {
+                circles.append(GMSCircle.init(position: loc, radius: 50))
+            }
+        }
+        return circles
+    }
+    
+    // Distance in metres
+    public static func locationsAlongLeg(_ leg: Leg, ofDistance metres: CLLocationDistance) -> [CLLocationCoordinate2D] {
+        let path = GMSPath(fromEncodedPath: leg.polyline)!
+        var locations = [CLLocationCoordinate2D]()
+        let coord0 = path.coordinate(at: 0)
+        var lastLoc = CLLocation(latitude: coord0.latitude, longitude: coord0.longitude)
+        
+        for i in 1..<path.count() {
+            let coord = path.coordinate(at: UInt(i))
+            let loc = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+            let diff = loc.distance(from: lastLoc)
+            if diff >= metres {
+                locations.append(coord)
+                lastLoc = loc
+            }
+            
+        }
+        
+        print(locations.count)
+        print(path.length(of: .geodesic))
+        
+        return locations
+    }
+
+    func locationAlongPath(_ path: GMSPath, at index: Double) -> CLLocation {
+        let i0 = UInt(floor(index))
+        let i1 = UInt(ceil(index))
+        let c0 = path.coordinate(at: i0)
+        let c1 = path.coordinate(at: i1)
+        let frac = index - Double(i0)
+        let lat = c0.latitude + (c1.latitude - c0.latitude) * frac
+        let lon = c0.longitude + (c1.longitude - c0.longitude) * frac
+        return CLLocation(latitude: lat, longitude: lon)
+    }
+
+    
 }
 
 private extension MapUtils {
@@ -132,7 +181,7 @@ private extension MapUtils {
         polyline.strokeWidth = strokeWidth
         return polyline
     }
-    
+        
     static func gradientStyleForPolyline(startFraction: Double, endFraction: Double) -> [GMSStyleSpan] {
         let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
         let style = GMSStrokeStyle.gradient(from: gradient.0, to: gradient.1)

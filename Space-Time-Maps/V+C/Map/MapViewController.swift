@@ -33,6 +33,7 @@ class MapViewController: UIViewController {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.isMyLocationEnabled = true
         mapView.delegate = self
+        mapView.setMinZoom(mapView.minZoom, maxZoom: Float(16.0))
         
         //Style map w/ json file
         do {
@@ -79,7 +80,8 @@ class MapViewController: UIViewController {
         // Get polylines for route legs
         if let legs = routeLegs {
             let polylines = MapUtils.polylinesForRouteLegs(legs)
-            allOverlays = markers + polylines
+//            let circles = MapUtils.ticksForRouteLegs(legs)
+            allOverlays = markers + polylines// + circles
         } else {
             allOverlays = markers
         }
@@ -92,6 +94,7 @@ class MapViewController: UIViewController {
     @objc func onDidUpdateLocation(_ notification: Notification) {
         if let location = notification.userInfo?["location"] as? CLLocation {
             mapView.moveCameraTo(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+
         } else {
             print("Could not unwrap notification")
         }

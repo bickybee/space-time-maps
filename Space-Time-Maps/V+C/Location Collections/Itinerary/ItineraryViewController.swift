@@ -104,6 +104,10 @@ class ItineraryViewController: DraggableContentViewController {
         scheduler.updatePlaces(places)
     }
     
+    func updateSchedulerWithPlace(_ place: Place, in places: [Place]) {
+        scheduler.updateTimeDictWithPlace(place, in: places)
+    }
+    
     func updateScheduler(_ travelMode: TravelMode) {
         scheduler.travelMode = travelMode
         scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))

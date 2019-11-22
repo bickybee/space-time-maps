@@ -178,6 +178,18 @@ class ParentViewController: UIViewController {
 }
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup]) {
+        print("add place")
+        updateMap()
+        let places = groups.flatMap({ $0.places })
+        itineraryController.updateSchedulerWithPlace(place, in: places)
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup]) {
+        print("removed places")
+        updateMap()
+    }
+    
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         print("update places")

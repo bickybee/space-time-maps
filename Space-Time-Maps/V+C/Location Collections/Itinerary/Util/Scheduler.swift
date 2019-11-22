@@ -114,6 +114,20 @@ class Scheduler {
         }
     }
     
+    func updateTimeDictWithPlace(_ place: Place, in places: [Place]) {
+ 
+        qs.getTimeDictFor(origins: [place], destinations: places, travelMode: travelMode) { timeDict in
+            guard let dict = timeDict else { return }
+            self.timeDict.merge(dict) { (current, _) in current }
+        }
+        
+        qs.getTimeDictFor(origins: places, destinations: [place], travelMode: travelMode) { timeDict in
+            guard let dict = timeDict else { return }
+            self.timeDict.merge(dict) { (current, _) in current }
+        }
+        
+    }
+    
     
 }
 

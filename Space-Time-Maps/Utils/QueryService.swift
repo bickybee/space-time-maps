@@ -50,32 +50,42 @@ class QueryService {
         dataTask.resume()
     }
     
-    func getTimeAlongRoute(_ route: Route, travelMode: TravelMode, callback: @escaping(TimeDict?) -> ()) {
-        
-    }
-    
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
         pingCount += 1
         print("pings to distance matrix API: \(pingCount)")
-        callback(Utils.starterPlaceDict)
         runQuery(url: url) {data in
             let results = self.dataToTimeDict(data, origins, destinations)
             callback(results)
         }
-    } 
-
+    }
     
+//    func getTimesFor(origins: [Coordinate], destinations: [Coordinate], travelMode: TravelMode, callback: @escaping ([TimeInterval]?) -> ()) {
+//        //dict [placeIDa + placeIDb] = time btwn them
+//        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
+//        pingCount += 1
+//        print("pings to distance matrix API: \(pingCount)")
+//        runQuery(url: url) {data in
+//            let times = self.dataToTimeAlongLeg(data)
+//            let results = times.map({   })
+//            callback(results)
+//        }
+//    }
+//
+//
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
-        
-//        callback(nil)
+
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
             let leg =  self.dataToLeg(data, from: start, to: end, by: travelMode)
+//            let locations = self.locationsAlongLeg(leg!, ofDistance: 500)
+//            self.getTimesFor(origins: [locations[0]], destinations: locations, travelMode: travelMode) { times in
+//                let leg.timesOnPath =
+//            }
             callback(leg)
         }
-        
+
     }
     
     func dataToLeg(_ data: Data, from start: Destination, to end: Destination, by travelMode: TravelMode) -> LegData? {
@@ -119,12 +129,72 @@ class QueryService {
         return dict
     }
     
+    func dataToTimeAlongLeg(_ data: Data) -> [TimeInterval]? {
+        let decoder = JSONDecoder()
+        var timeAlongLeg : [TimeInterval]?
+        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
+            print(errorResponseObject.errorMessage)
+            timeAlongLeg = nil
+        } else if let matrixResponseObject = try? decoder.decode(MatrixResponseObject.self, from: data) {
+            // Parse out data
+            timeAlongLeg = [TimeInterval]()
+            for row in matrixResponseObject.rows{
+                for elem in row.elements {
+                    // Should be 1D!
+                    timeAlongLeg!.append(TimeInterval(elem.duration.value))
+                }
+            }
+        }
+        
+        return timeAlongLeg
+    }
+    
+//    func locationsAlongLeg(_ leg: LegData, ofDistance metres: CLLocationDistance) -> [Coordinate] {
+//        let path = GMSPath(fromEncodedPath: leg.polyline)!
+//        var locations = [Coordinate]()
+//        let coord0 = path.coordinate(at: 0)
+//        var lastLoc = CLLocation(latitude: coord0.latitude, longitude: coord0.longitude)
+//
+//        for i in 1..<path.count() {
+//            let coord = path.coordinate(at: UInt(i))
+//            let loc = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+//            let diff = loc.distance(from: lastLoc)
+//            if diff >= metres {
+//                locations.append(Coordinate(lat: coord.latitude, lon: coord.longitude))
+//                lastLoc = loc
+//            }
+//
+//        }
+//
+//        print(locations.count)
+//        print(path.length(of: .geodesic))
+//
+//        return locations
+//    }
+    
     func queryURLFor(origins: [Place], destinations: [Place], travelMode: TravelMode) -> URL? {
         
         guard var urlComponents = URLComponents(string: gmapsMatrixURLString) else { return nil }
         
         let originsString = batchPlaceIDStringFrom(places: origins)
         let destinationsString = batchPlaceIDStringFrom(places: destinations)
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name:"origins", value:originsString),
+            URLQueryItem(name:"destinations", value:destinationsString),
+            URLQueryItem(name:"mode", value: travelMode.rawValue),
+            URLQueryItem(name:"key", value: self.apiKey)
+        ]
+        
+        return urlComponents.url
+    }
+    
+    func queryURLFor(origins: [Coordinate], destinations: [Coordinate], travelMode: TravelMode) -> URL? {
+        
+        guard var urlComponents = URLComponents(string: gmapsMatrixURLString) else { return nil }
+        
+        let originsString = batchCoordinateStringsFrom(coords: origins)
+        let destinationsString = batchCoordinateStringsFrom(coords: destinations)
         
         urlComponents.queryItems = [
             URLQueryItem(name:"origins", value:originsString),
@@ -160,6 +230,17 @@ class QueryService {
         for (index, place) in places.enumerated() {
             str += "place_id:" + place.placeID
             if index < places.endIndex {
+                str += "|"
+            }
+        }
+        return str
+    }
+    
+    func batchCoordinateStringsFrom(coords: [Coordinate]) -> String {
+        var str = ""
+        for (index, c) in coords.enumerated() {
+            str += "\(c.lat), \(c.lon)"
+            if index < coords.endIndex {
                 str += "|"
             }
         }
