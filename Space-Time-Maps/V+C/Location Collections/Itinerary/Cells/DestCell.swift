@@ -46,7 +46,7 @@ class DestCell: UICollectionViewCell {
     func configureWith(_ destination: Destination, _ isCurrentlyDragging: Bool) {
         
         nameLabel.text = destination.place.name
-        durationLabel.text = Utils.secondsToString(seconds: destination.timing.duration)
+        durationLabel.text = Utils.secondsToRelativeTimeString(seconds: destination.timing.duration)
         containerView.backgroundColor = destination.place.color
         isUserInteractionEnabled = true
         if isCurrentlyDragging {

@@ -24,7 +24,7 @@ class Utils {
     
     static let starterPlaceDict : TimeDict = [PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 647.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 1246.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 361.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 872.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 0.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 756.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 0.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 0.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1048.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 984.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 1095.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 1523.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 0.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 909.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 848.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 0.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 580.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 575.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 864.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 880.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 786.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 717.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 727.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 966.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1027.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 364.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 635.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1024.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 664.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 0.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 685.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 1069.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 697.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 1686.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 859.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 538.0]
     
-    static func secondsToString(seconds: TimeInterval) -> String {
+    static func secondsToRelativeTimeString(seconds: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         
         formatter.allowedUnits = [.hour, .minute]
@@ -32,6 +32,27 @@ class Utils {
         let formattedString = formatter.string(from: seconds) ?? "error"
         
         return formattedString
+    }
+    
+    static func secondsToAbsoluteTimeString(_ seconds: TimeInterval) -> String {
+        let hours = seconds.inHours()
+        var hour = floor(hours)
+        let minutes = (hours - hour) * 60.0
+        
+        var midday : String
+        if hour >= 12 {
+            if hour != 12 {
+                hour -= 12
+            }
+            midday = "PM"
+        } else {
+            midday = "PM"
+        }
+        
+        let hourString = "\(Int(hour))"
+        let minString = minutes < 10 ? "0\(Int(minutes))" : "\(Int(minutes))"
+        let timeString = hourString + ":" + minString + midday
+        return timeString
     }
     
     static func currentTime() -> Double? {

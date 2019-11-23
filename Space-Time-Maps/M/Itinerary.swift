@@ -50,5 +50,19 @@ class Itinerary {
         return nil
     }
     
+    func intersectsWithTime(_ time: TimeInterval) -> Schedulable? {
+        for dest in destinations {
+            if dest.timing.containsInclusive(time) {
+                return dest
+            }
+        }
+        for leg in route.legs {
+            if leg.timing.containsInclusive(time) {
+                return leg
+            }
+        }
+        return nil
+    }
+    
 }
 

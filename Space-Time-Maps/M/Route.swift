@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GoogleMaps
 
 struct LegData {
     
@@ -35,6 +36,7 @@ class Leg : Schedulable {
     var startPlace : Place
     var endPlace : Place
     var polyline : String
+    var coords : [Coordinate]
     var travelTiming : Timing
     var timing : Timing {
         didSet {
@@ -48,6 +50,13 @@ class Leg : Schedulable {
         self.polyline = polyline
         self.timing = timing
         self.travelTiming = travelTiming
+        self.coords = [Coordinate]()
+        
+        let path = GMSPath(fromEncodedPath: polyline)!
+        for i in 0...path.count()-1 {
+            let coord = path.coordinate(at: i)
+            coords.append(Coordinate(lat: coord.latitude, lon: coord.longitude))
+        }
     }
     
     convenience init (data: LegData, timing: Timing) {

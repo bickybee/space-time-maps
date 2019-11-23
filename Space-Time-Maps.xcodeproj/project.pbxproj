@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
+		98138C142389957C00928590 /* GMSTimeMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98138C132389957C00928590 /* GMSTimeMarker.swift */; };
 		982D5781231DEF8D00E183F3 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
@@ -70,6 +71,7 @@
 		19DF7DEBD537715D15CDB31E /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.debug.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
+		98138C132389957C00928590 /* GMSTimeMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSTimeMarker.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 			children = (
 				B62AFCB522E4D16400B7D2CD /* MapViewController.swift */,
 				98DEF0BE2305F3E5003DE1CB /* MapUtils.swift */,
+				98138C132389957C00928590 /* GMSTimeMarker.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -529,6 +532,7 @@
 				B62AFCC322E5228900B7D2CD /* PlacePaletteViewController.swift in Sources */,
 				9833A6E822EFB48100AABF20 /* Itinerary.swift in Sources */,
 				B64B992D22E15D4A007793BA /* Place.swift in Sources */,
+				98138C142389957C00928590 /* GMSTimeMarker.swift in Sources */,
 				98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */,
 				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
 				988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */,

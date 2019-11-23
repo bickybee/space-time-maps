@@ -29,6 +29,15 @@ class TimelineViewController: UIViewController {
             timelineView.hourHeight = newVal
         }
     }
+    
+    var sidebarWidth : CGFloat {
+        get {
+            return timelineView.sidebarWidth
+        } set (newVal) {
+            timelineView.sidebarWidth = newVal
+        }
+    }
+    
     var startHour : CGFloat = 0.0
     
     var visibleHours : CGFloat {
@@ -50,10 +59,6 @@ class TimelineViewController: UIViewController {
     
     func renderTimeline() {
         timelineView.setNeedsDisplay()
-    }
-    
-    func setSidebarWidth( _ width: CGFloat) {
-        timelineView.sidebarWidth = width
     }
     
     @objc func setCurrentTime() {

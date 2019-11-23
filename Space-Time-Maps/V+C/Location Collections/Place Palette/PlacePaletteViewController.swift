@@ -388,20 +388,10 @@ extension PlacePaletteViewController: DragDelegate {
             collectionView.performBatchUpdates({
                 midDrag = true
                 
-                // if moving into an empty section, first delete the placeholder cell
-//                let movingToEmptyGroup = (groups[insertAt.section].count == 0)
-//                if movingToEmptyGroup { collectionView.deleteItems(at: [insertAt])}
-//                print("moving to empty group: \(movingToEmptyGroup)")
-                
                 groups = groupsBeforeEditing.map({ $0.copy() })
                 groups[insertAt.section].insert(place, at: insertAt.item)
                 collectionView.moveItem(at: draggingIndexPath!, to: insertAt)
                 draggingIndexPath = insertAt
-                
-                // if moving the only item out of the empty section, insert the placeholder cell
-//                let emptyingGroup = (insertAt.section != indexPath.section) && (groups[indexPath.section].count == 0)
-//                if emptyingGroup { collectionView.insertItems(at: [indexPath]) }
-//                print("emptying group: \(emptyingGroup)")
                 
             }, completion: { success in self.midDrag = false })
         }

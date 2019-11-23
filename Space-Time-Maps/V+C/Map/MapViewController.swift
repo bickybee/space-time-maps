@@ -16,8 +16,10 @@ class MapViewController: UIViewController {
     var mapView : GMSMapView!
     let defaultLocation = CLLocation(latitude: 43.6532, longitude: -79.3832) // Toronto
     let defaultZoom: Float = 13.0
+    var overlays = [GMSOverlay]()
     
     var markers = [GMSMarker]()
+    var timeQueryMarker : GMSTimeMarker?
     
     weak var delegate : MapViewControllerDelegate?
 
@@ -46,12 +48,12 @@ class MapViewController: UIViewController {
         
         // Subscribe to location updates
         NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDest), name: .didTapDestination, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDest), name: .didTapMarker, object: nil)
         
         // Set our view to be the map
         view = mapView
     }
-    
+
     @objc func onDidTapDest(_ notification: Notification) {
         let placeName = notification.object as! String
         guard let marker = markers.first(where:{ $0.title! == placeName } ) else { return }
@@ -87,6 +89,7 @@ class MapViewController: UIViewController {
         }
         
         // Add all overlays to map
+        overlays = allOverlays
         mapView.add(overlays: allOverlays)
     }
     
@@ -100,6 +103,68 @@ class MapViewController: UIViewController {
         }
     }
 
+}
+
+extension MapViewController : TimeQueryDelegate {
+    func didMakeTimeQuery(time: TimeInterval, schedulable: Schedulable?) {
+        if let dest = schedulable as? Destination {
+            // Update marker
+            if let marker = timeQueryMarker {
+                marker.pos = dest.place.coordinate
+                marker.time = time
+                marker.color = .green
+            } else {
+                let marker = GMSTimeMarker.markerWithPosition(dest.place.coordinate, time: time)
+                marker.color = .green
+                marker.map = mapView
+                overlays.append(marker)
+                timeQueryMarker = marker
+            }
+        } else if let leg = schedulable as? Leg {
+            // Find position in leg
+            var position : Coordinate
+            var color : UIColor
+            if leg.travelTiming.containsInclusive(time) {
+                position = leg.coords[leg.coords.count / 2]
+                color = .green
+            } else if Timing(start: leg.timing.start, end: leg.travelTiming.start).containsInclusive(time) {
+                position = leg.coords[0]
+                color = .gray
+            } else {
+                position = leg.coords[leg.coords.count - 1]
+                color = .gray
+            }
+            // Update marker
+            if let marker = timeQueryMarker {
+                marker.pos = position
+                marker.time = time
+                marker.color = color
+            } else {
+                let marker = GMSTimeMarker.markerWithPosition(position, time: time)
+                marker.color = color
+                marker.map = mapView
+                overlays.append(marker)
+                timeQueryMarker = marker
+            }
+        } else {
+            removeTimeQueryMarker()
+        }
+    }
+
+    func didEndTimeQuery() {
+        removeTimeQueryMarker()
+    }
+    
+    func removeTimeQueryMarker() {
+        if let marker = timeQueryMarker {
+            overlays.removeAll(where: { $0 is GMSTimeMarker} )
+            mapView.clear()
+            mapView.add(overlays: overlays)
+            marker.map = nil
+            timeQueryMarker = nil
+        }
+    }
+    
 }
 
 protocol MapViewControllerDelegate : AnyObject {

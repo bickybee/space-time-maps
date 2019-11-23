@@ -62,7 +62,7 @@ class RouteCell: UICollectionViewCell {
         durationLine.frame = frame
         durationLine.backgroundColor = colors
         
-        let timeString = Utils.secondsToString(seconds: duration)
+        let timeString = Utils.secondsToRelativeTimeString(seconds: duration)
         timeLabel.text = timeString
     }
     

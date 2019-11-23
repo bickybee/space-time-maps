@@ -162,11 +162,16 @@ class ParentViewController: UIViewController {
             if let placePaletteController = placePaletteController {
                 placePaletteController.dragDelegate = itineraryVC as DragDelegate
             }
+            if let mapVC = mapController {
+                itineraryVC.timeQueryDelegate = mapVC as! TimeQueryDelegate
+            }
             itineraryVC.delegate = self
             itineraryController = itineraryVC
             
         } else if let mapVC = segue.destination as? MapViewController {
-            
+            if let itineraryVC = itineraryController {
+                itineraryVC.timeQueryDelegate = mapVC as! TimeQueryDelegate
+            }
             mapVC.delegate = self
             mapController = mapVC
             updateMap()

@@ -77,7 +77,7 @@ class LegCell: UICollectionViewCell {
         lineView.frame = CGRect(x: gX, y: 0, width: gradientWidth, height: contentView.frame.size.height)
         lineView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
         
-        let timeString = Utils.secondsToString(seconds: duration)
+        let timeString = Utils.secondsToRelativeTimeString(seconds: duration)
         self.timeLabel.text = timeString
         self.layoutSubviews()
     }

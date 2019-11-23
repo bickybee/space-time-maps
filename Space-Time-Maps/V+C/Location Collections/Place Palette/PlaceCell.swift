@@ -55,14 +55,14 @@ class PlaceCell: UICollectionViewCell {
     func configureWith(name: String, duration: TimeInterval) {
         
         nameLabel.text = name
-        durationLabel.text = Utils.secondsToString(seconds: duration)
+        durationLabel.text = Utils.secondsToRelativeTimeString(seconds: duration)
         
     }
     
     func configureWith(_ place: Place) {
         
         nameLabel.text = place.name
-        durationLabel.text = Utils.secondsToString(seconds: place.timeSpent)
+        durationLabel.text = Utils.secondsToRelativeTimeString(seconds: place.timeSpent)
         containerView.backgroundColor = place.color
         
     }

@@ -63,8 +63,10 @@ class TimelineView: UIView {
         for num in 0...numHourTicks {
             var hour = firstHour + num
             var midday : String
-            if hour > 12 {
-                hour -= 12
+            if hour >= 12 {
+                if hour != 12 {
+                    hour -= 12
+                }
                 midday = "PM"
             } else {
                 midday = "AM"

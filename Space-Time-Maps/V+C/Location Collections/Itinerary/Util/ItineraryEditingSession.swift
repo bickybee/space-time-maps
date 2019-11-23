@@ -52,18 +52,14 @@ class ItineraryEditingSession: NSObject {
         // If we're about to hit another block or hit closed hours for a singleBlock, just stay put...
         if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
             if let position = lastPosition {
-                print("intersecting other block")
                 var modifiedBlocks = baseBlocks
                 modifiedBlocks.insert(movingBlock, at: position)
-                print(movingBlock.timing)
-                print(movedBlock.timing)
                 scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
             } else {
                 removeBlock()
             }
 
         } else {
-            print("not intersecting other block")
         
             // Create new schedule
             var modifiedBlocks = baseBlocks

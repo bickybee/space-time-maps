@@ -133,7 +133,6 @@ extension OptionsViewController: UICollectionViewDataSource {
             if section == 0 { // dests
                 return itineraries[whichOption].schedule.count
             } else { // legs! TODO!
-                print(itineraries[whichOption].route)
                 return itineraries[whichOption].route.count
             }
             

@@ -24,6 +24,8 @@ class ItineraryViewController: DraggableContentViewController {
     // Child views
     @IBOutlet weak var collectionView: UICollectionView!
     var timelineController: TimelineViewController!
+    var timeQuerySidebar: UIView!
+    var timeQueryLine: UIView?
     var optionView : UIView?
     var optionsVC = OptionsViewController()
 
@@ -34,6 +36,7 @@ class ItineraryViewController: DraggableContentViewController {
 
     // Delegate (subscribes to itinerary updates)
     weak var delegate : ItineraryViewControllerDelegate?
+    weak var timeQueryDelegate : TimeQueryDelegate?
     
     // Collection view data source!
     var itinerary = Itinerary()
@@ -41,22 +44,20 @@ class ItineraryViewController: DraggableContentViewController {
     
     // MARK: - Setup
     override func viewDidLoad() {
+        // self
         super.viewDidLoad()
-        
         self.dragDelegate = self as DragDelegate
         self.dragDataDelegate = self as DragDataDelegate
+        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
         
         setupCollectionView()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
-        timelineController = TimelineViewController()
-        self.addChild(timelineController)
-        timelineController.didMove(toParent: self)
-        timelineController.delegate = self
-
+        setupTimeline()
+        setupTimeQuerySidebar()
+    
     }
 
-    
     func setupCollectionView() {
+        
         
         if let layout = collectionView?.collectionViewLayout as? ItineraryLayout {
             layout.delegate = self
@@ -82,17 +83,55 @@ class ItineraryViewController: DraggableContentViewController {
         collectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action:#selector(pinch)))
 
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let timelineVC = segue.destination as? TimelineViewController {
-            
-            timelineVC.delegate = self
-            timelineController = timelineVC
-            
-        }
+    
+    func setupTimeline() {
+        
+        timelineController = TimelineViewController()
+        self.addChild(timelineController)
+        timelineController.didMove(toParent: self)
+        timelineController.delegate = self
+        
+    }
+    
+    func setupTimeQuerySidebar() {
+        
+        let timeSidebarFrame = CGRect(x: 0, y: 0, width: timelineController.sidebarWidth, height: collectionView.frame.height)
+        timeQuerySidebar = UIView(frame: timeSidebarFrame)
+        timeQuerySidebar.backgroundColor = .clear
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(queryTime))
+        longPress.minimumPressDuration = 0.0
+        timeQuerySidebar.addGestureRecognizer(longPress)
+        view.addSubview(timeQuerySidebar)
     }
     
 // MARK:- Updates & Interaction
+    
+    @objc func queryTime(_ gesture: UILongPressGestureRecognizer) {
+        
+        let y = gesture.location(in: timeQuerySidebar).y
+        let time = timelineController.hourInTimeline(forY: y)
+        let roundedTime = timelineController.roundedHourInTimeline(forY: y)
+        let roundedY = timelineController.yFromTime(TimeInterval.from(hours:roundedTime))
+        let schedulable = itinerary.intersectsWithTime(TimeInterval.from(hours: roundedTime))
+        
+        switch gesture.state {
+        case .began:
+            print(roundedY)
+            let frame = CGRect(x: 0, y: roundedY - 4, width: view.frame.width, height: 10)
+            timeQueryLine = UIView(frame: frame)
+            timeQueryLine!.backgroundColor = UIColor.blue.withAlphaComponent(0.25)
+            view.addSubview(timeQueryLine!)
+            timeQueryDelegate?.didMakeTimeQuery(time: TimeInterval.from(hours: roundedTime), schedulable: schedulable)
+        case .changed:
+            timeQueryLine!.frame = CGRect(x: 0, y: roundedY - 4, width: view.frame.width, height: 10)
+            timeQueryDelegate?.didMakeTimeQuery(time: TimeInterval.from(hours: roundedTime), schedulable: schedulable)
+        default:
+            timeQueryLine!.removeFromSuperview()
+            timeQueryLine = nil
+            timeQueryDelegate?.didEndTimeQuery()
+        }
+        
+    }
     
     func computeRoute() {
         // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
@@ -381,9 +420,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                     if blockIndex < itinerary.schedule.count - 1 {
                         schedule.removeLast()
                     }
-                    print("SCHEDULED")
                     itinerary.schedule = schedule
-                    print(itinerary.destinations)
                 }
                 if let route = route { itinerary.route = route }
                 itineraries.append(itinerary)
@@ -392,8 +429,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         }
         
         dispatchGroup.wait()
-        print("all")
-        print(itineraries.map( {$0.destinations} ))
         return itineraries
         
     }
@@ -689,7 +724,6 @@ extension ItineraryViewController: GroupButtonsDelegate {
     
 }
 
-
 // MARK: - Self Delegate Protocol
 protocol ItineraryViewControllerDelegate : AnyObject {
     
@@ -697,6 +731,14 @@ protocol ItineraryViewControllerDelegate : AnyObject {
     
 }
 
+// MARK: - Time Query Delegate Protocol
+protocol TimeQueryDelegate : AnyObject {
+    func didMakeTimeQuery(time: TimeInterval, schedulable: Schedulable?)
+    func didEndTimeQuery()
+}
+
 extension Notification.Name {
     static let didTapDestination = Notification.Name("didTapDestination")
+    static let didMakeTimeQuery = Notification.Name("didMakeTimeQuery")
+    static let didEndTimeQuery = Notification.Name("didEndTimeQuery")
 }

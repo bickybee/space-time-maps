@@ -45,7 +45,7 @@ class LocationCell: UICollectionViewCell {
     func configureWith(name: String, duration: TimeInterval) {
         
         nameLabel.text = name
-        durationLabel.text = Utils.secondsToString(seconds: duration)
+        durationLabel.text = Utils.secondsToRelativeTimeString(seconds: duration)
         
     }
     
