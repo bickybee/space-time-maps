@@ -18,13 +18,14 @@ struct Coordinate {
 
 class Place : NSObject {
     
-    static private let defaultTimeSpent = TimeInterval.from(hours: 0.5)
+    static private let defaultTimeSpent = TimeInterval.from(hours: 1.0)
     
     let name: String
     let coordinate: Coordinate
     let placeID: String
     let color: UIColor
     var timeSpent: TimeInterval
+    var itineraryIndex : Int?
     let openHours: Timing?
     var closedHours: [Timing]? {
         guard let open = self.openHours else { return nil }
@@ -44,7 +45,6 @@ class Place : NSObject {
         self.color = ColorUtils.randomColor()
         self.timeSpent = timeSpent
         self.openHours = openHours
-
     }
     
     convenience init(name: String, coordinate: Coordinate, placeID: String) {

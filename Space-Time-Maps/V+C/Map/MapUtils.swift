@@ -11,14 +11,26 @@ import GoogleMaps
 
 class MapUtils {
     
+    private static var paragraphStyle : NSMutableParagraphStyle {
+        var style = NSMutableParagraphStyle()
+        style.alignment = .center
+        return style
+    }
+    
+    private static let stringAttributes = [
+        NSAttributedString.Key.paragraphStyle: paragraphStyle,
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24.0),
+        NSAttributedString.Key.foregroundColor: UIColor.white
+    ]
+    
     // Weirdly separated dest vs. non-dest functions cuz of weird dumb implementation decisions elsewhere lol
     
-    public static func markersForPlaceGroups(_ placeGroups : [PlaceGroup]) -> [GMSMarker] {
+    public static func markersForPlacesIn(_ placeGroups : [PlaceGroup], _ itinerary: Itinerary) -> [GMSMarker] {
         
         var markers = [GMSMarker]()
         
-        for (i, group) in placeGroups.enumerated() {
-            markers.append(contentsOf: markersForPlaces(group.places, withShadow: i == 0 ? nil : .black))
+        for group in placeGroups {
+            markers.append(contentsOf: markersForPlaces(group.places, itinerary))
         }
         
         return markers
@@ -26,19 +38,21 @@ class MapUtils {
 
     
     // Destination places get coloured via gradient
-    public static func markersForPlaces(_ places : [Place], withShadow shadowColor: UIColor? ) -> [GMSMarker] {
+    public static func markersForPlaces(_ places : [Place], _ itinerary: Itinerary) -> [GMSMarker] {
         
         guard places.count > 0 else { return [] }
         var markers = [GMSMarker]()
         let maxIndex = places.count - 1
         
         for index in 0...maxIndex {
+            let place = places[index]
             let marker = markerFor(place: places[index])
-            let colour = places[index].color
-//            let iconView = shadowColor != nil ? UIImageView(image: shadowedIcon(with: colour, shadowColor: .black)) : UIImageView(image: nonShadowedIcon(with: colour))
-//            marker.iconView = iconView
-            let icon = GMSMarker.markerImage(with: colour)
-            marker.icon = icon
+            let colour = place.color
+            if let itineraryIndex = itinerary.destIndexOfPlaceWithName(place.name) {
+                marker.icon = MapUtils.numberedIcon(with: colour, number: itineraryIndex + 1)
+            } else {
+                marker.icon = GMSMarker.markerImage(with: colour)
+            }
             markers.append(marker)
         }
         
@@ -57,6 +71,25 @@ class MapUtils {
         
         let drawSize = CGRect(x: 3, y: 4, width: size.width - 6, height: size.height - 8)
         topImage.draw(in: drawSize)
+        
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    private static func numberedIcon(with color: UIColor, number: Int) -> UIImage {
+        let markerImage = GMSMarker.markerImage(with: color)
+        
+        let size = CGSize(width: markerImage.size.width, height: markerImage.size.height)
+        UIGraphicsBeginImageContext(size)
+        
+        let markerSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        markerImage.draw(in: markerSize)
+
+        print(number.description)
+        let str = NSAttributedString(string:(number).description, attributes: MapUtils.stringAttributes)
+        str.draw(in: markerSize)
         
         let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
@@ -168,8 +201,6 @@ private extension MapUtils {
     
     static func markerFor(place: Place) -> GMSMarker {
         let marker = GMSMarker()
-        marker.layer.borderWidth = 2
-        marker.layer.borderColor = UIColor.red.cgColor
         marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
         marker.title = place.name
         return marker

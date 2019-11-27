@@ -38,9 +38,9 @@ class GMSTimeMarker : GMSMarker {
         let frame = CGRect(x: 0, y: 0, width: 50, height: 25)
         let overlayView = UIView(frame: frame)
         let label = UILabel(frame: frame)
-        overlayView.backgroundColor = .green
         overlayView.addSubview(label)
-        label.textColor = .black
+        overlayView.backgroundColor = .black
+        label.textColor = .white
         label.text = Utils.secondsToAbsoluteTimeString(time)
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true

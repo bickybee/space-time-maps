@@ -67,27 +67,24 @@ class MapViewController: UIViewController {
 //    }
     
     // Refresh all map markup
-    func refreshMarkup(placeGroups: [PlaceGroup], routeLegs: [Leg]?) {
+    func refreshMarkup(placeGroups: [PlaceGroup], itinerary: Itinerary) {
+        
+        let routeLegs = itinerary.route.legs
         
         // Setup fresh map
         mapView.clear()
         var allOverlays : [GMSOverlay]
         
-        let destinationMarkers = MapUtils.markersForPlaceGroups(placeGroups)
+        let destinationMarkers = MapUtils.markersForPlacesIn(placeGroups, itinerary)
         
         // Wrap map to markers
         markers = destinationMarkers
         mapView.wrapBoundsTo(markers: markers)
         
         // Get polylines for route legs
-        if let legs = routeLegs {
-            let polylines = MapUtils.polylinesForRouteLegs(legs)
-//            let circles = MapUtils.ticksForRouteLegs(legs)
-            allOverlays = markers + polylines// + circles
-        } else {
-            allOverlays = markers
-        }
-        
+        let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
+        allOverlays = markers + polylines// + circles
+
         // Add all overlays to map
         overlays = allOverlays
         mapView.add(overlays: allOverlays)
@@ -112,10 +109,10 @@ extension MapViewController : TimeQueryDelegate {
             if let marker = timeQueryMarker {
                 marker.pos = dest.place.coordinate
                 marker.time = time
-                marker.color = .green
+                marker.color = dest.place.color
             } else {
                 let marker = GMSTimeMarker.markerWithPosition(dest.place.coordinate, time: time)
-                marker.color = .green
+                marker.color = dest.place.color
                 marker.map = mapView
                 overlays.append(marker)
                 timeQueryMarker = marker
@@ -126,7 +123,7 @@ extension MapViewController : TimeQueryDelegate {
             var color : UIColor
             if leg.travelTiming.containsInclusive(time) {
                 position = leg.coords[leg.coords.count / 2]
-                color = .green
+                color = .darkGray
             } else if Timing(start: leg.timing.start, end: leg.travelTiming.start).containsInclusive(time) {
                 position = leg.coords[0]
                 color = .gray

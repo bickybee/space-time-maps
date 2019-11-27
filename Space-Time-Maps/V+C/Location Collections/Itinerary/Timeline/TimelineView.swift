@@ -30,7 +30,7 @@ class TimelineView: UIView {
     private let lineWidth : CGFloat = 1
     private let stringAttributes = [
         NSAttributedString.Key.paragraphStyle: NSParagraphStyle(),
-        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 8.0),
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10.0),
         NSAttributedString.Key.foregroundColor: UIColor.lightGray
     ]
     
@@ -74,7 +74,7 @@ class TimelineView: UIView {
             let str = NSAttributedString(string:(hour).description + midday, attributes: stringAttributes)
             let x : CGFloat = sidebarWidth / 2.0 - tickOverflow
             let y = CGFloat(num) * hourHeight + startOffset + lineWidth / 2
-            let point = CGPoint(x: x, y: y - 4.0)
+            let point = CGPoint(x: x, y: y - 6.0)
             str.draw(at: point)
         }
     }

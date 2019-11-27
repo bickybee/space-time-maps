@@ -129,7 +129,7 @@ class ParentViewController: UIViewController {
         let itineraryLegs = itinerary.route.legs
         
         // Send data to map
-        mapController.refreshMarkup(placeGroups: groups, routeLegs: itineraryLegs)
+        mapController.refreshMarkup(placeGroups: groups, itinerary: itinerary)
 
     }
     

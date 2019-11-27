@@ -50,6 +50,15 @@ class Itinerary {
         return nil
     }
     
+    func destIndexOfPlaceWithName(_ name: String) -> Int? {
+        for (i, dest) in destinations.enumerated() {
+            if dest.place.name == name {
+                return i
+            }
+        }
+        return nil
+    }
+    
     func intersectsWithTime(_ time: TimeInterval) -> Schedulable? {
         for dest in destinations {
             if dest.timing.containsInclusive(time) {
