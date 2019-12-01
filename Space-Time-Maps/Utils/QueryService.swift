@@ -16,22 +16,20 @@ class QueryService {
     let dispatchGroup = DispatchGroup()
     let gmapsDirectionsURLString = "https://maps.googleapis.com/maps/api/directions/json"
     let gmapsMatrixURLString = "https://maps.googleapis.com/maps/api/distancematrix/json"
-    var apiKey: String
+    let mapboxIsochroneURLString = "https://api.mapbox.com/isochrone/v1/mapbox/"
+    var apiKey: String!
+    var mapboxToken: String!
     
     var pingCount = 0
     
     init() {
-        var keys: NSDictionary?
+        var keys: NSDictionary!
         if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
             keys = NSDictionary(contentsOfFile: path)
         }
         
-        if let dict = keys {
-            let key = dict["apiKey"] as? String
-            apiKey = key!
-        } else {
-            apiKey = ""
-        }
+        apiKey = keys["apiKey"] as? String
+        mapboxToken = keys["mapboxToken"] as? String
     }
     
     func runQuery(url: URL, callback: @escaping (Data) -> ()) {
@@ -60,20 +58,7 @@ class QueryService {
             callback(results)
         }
     }
-    
-//    func getTimesFor(origins: [Coordinate], destinations: [Coordinate], travelMode: TravelMode, callback: @escaping ([TimeInterval]?) -> ()) {
-//        //dict [placeIDa + placeIDb] = time btwn them
-//        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
-//        pingCount += 1
-//        print("pings to distance matrix API: \(pingCount)")
-//        runQuery(url: url) {data in
-//            let times = self.dataToTimeAlongLeg(data)
-//            let results = times.map({   })
-//            callback(results)
-//        }
-//    }
-//
-//
+
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
 
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
@@ -87,6 +72,8 @@ class QueryService {
         }
 
     }
+    
+//    func getIsochronesFor(origin: Place, )
     
     func dataToLeg(_ data: Data, from start: Destination, to end: Destination, by travelMode: TravelMode) -> LegData? {
         
@@ -171,6 +158,24 @@ class QueryService {
 //
 //        return locations
 //    }
+    
+    func queryURLFor(origin: Place, contourIntervals: [TimeInterval], travelMode: TravelMode) -> URL? {
+
+        // travelmodes are slightly diff for mapbox (bicycling != cycling)
+        let profileString = (travelMode == .bicycling ? "cycling" : travelMode.rawValue) + "/"
+        let coordString = "\(origin.coordinate.lon),\(origin.coordinate.lat)"
+        let pathString = mapboxIsochroneURLString  + profileString + coordString
+        
+        guard var urlComponents = URLComponents(string: pathString) else { return nil }
+        var contourString = "\(contourIntervals[0])"
+        contourIntervals.forEach{ contourString += ",\($0)" }
+        urlComponents.queryItems = [
+            URLQueryItem(name:"contour_minutes", value: contourString),
+            URLQueryItem(name:"access_token", value: self.mapboxToken)
+        ]
+        
+        return urlComponents.url
+    }
     
     func queryURLFor(origins: [Place], destinations: [Place], travelMode: TravelMode) -> URL? {
         

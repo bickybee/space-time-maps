@@ -454,6 +454,7 @@ extension ItineraryViewController : DragDelegate {
         }
         
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+        timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: collectionView.frame, afterScreenUpdates: true)))
         collectionView.reloadData()
     }
     
@@ -483,6 +484,7 @@ extension ItineraryViewController : DragDelegate {
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
+        timelineController.removeShadow()
         editingSession = nil
         previousTouchHour = nil
         collectionView.reloadData()

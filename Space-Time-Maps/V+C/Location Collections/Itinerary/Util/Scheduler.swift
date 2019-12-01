@@ -18,7 +18,19 @@ class Scheduler {
     var timeDict = TimeDict()
     var travelMode : TravelMode = .driving
     
-    // Reschedule everything!
+    func reschedule(blocks: [ScheduleBlock], movingIndex: Int, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+        
+        guard blocks.count > 0 else {
+            callback(blocks, Route()); return
+        }
+        
+        let scheduledBlocks = scheduleBlocks(blocks, movingIndex)
+        let route = routeFromBlocks(scheduledBlocks)
+        
+        callback(scheduledBlocks, route)
+    }
+    
+
     func reschedule(blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         
         guard blocks.count > 0 else {
@@ -189,6 +201,170 @@ private extension Scheduler {
 private extension Scheduler {
     
     
+    // MARK: - New scheduling code -> involves "pushing", requires identification of MOVING BLOCK -> other blocks get pushed by this block
+    // SO MUCH CODE DUPLICATION :-)
+    
+    //ASSUMING FORWARD
+    func newTimingForFutureBlock(_ block: ScheduleBlock, _ priorDest: Destination?) -> Timing? {
+        // Depending on time between places, might need to change timing of scheduleBlock
+        guard let dest = block.destinations.first, let priorDest = priorDest else { return nil }
+        
+        let travelTimeNeeded = timeDict[PlacePair(startID: priorDest.place.placeID, endID: dest.place.placeID)]!
+        let minStartTime = priorDest.timing.end + travelTimeNeeded
+        if minStartTime > dest.timing.start {
+            return Timing(start: minStartTime, duration: block.timing.duration)
+        }
+        return nil
+    }
+    
+    func newTimingForPastBlock(_ block: ScheduleBlock, _ priorDest: Destination?) -> Timing? {
+        // Depending on time between places, might need to change timing of scheduleBlock
+        
+        guard let dest = block.destinations.first, let priorDest = priorDest else { return nil }
+        
+        let travelTimeNeeded = timeDict[PlacePair(startID: dest.place.placeID, endID: priorDest.place.placeID)]!
+        let maxEndTime = priorDest.timing.start - travelTimeNeeded
+        if maxEndTime < dest.timing.end {
+            return Timing(end: maxEndTime, duration: block.timing.duration)
+        }
+        return nil
+    }
+    
+    func scheduleBlocksBackwards(_ blocks: [ScheduleBlock], from startIndex: Int) -> [ScheduleBlock] {
+        var schedule = [ScheduleBlock]()
+        var priorDest : Destination?
+        var i = startIndex
+        while (i >= 0) {
+            
+            var block = blocks[i]
+            
+            if !block.isPusher {
+                if let newTiming = newTimingForPastBlock(block, priorDest) {
+                    block.timing = newTiming
+                }
+            }
+            
+            // Single block scheduled as-is
+            if let singleBlock = block as? SingleBlock {
+                schedule.insert(singleBlock, at: 0)
+                priorDest = singleBlock.destinations.last
+                i -= 1
+                continue
+            }
+            
+            // Fixed option block scheduled as-is
+            let optionBlock = block as! OptionBlock
+            if optionBlock.isFixed {
+                schedule.insert(optionBlock, at: 0)
+                priorDest = optionBlock.destinations.last
+                i -= 1
+                continue
+            }
+                
+            // Otherwise requires further calculations
+            // How many un-fixed option blocks are there in a row? Will need to consider them all together.
+            let range = rangeOfOptionBlockChain(in: blocks, backwardsFrom: i)
+            let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
+            
+            // Are there destinations leading into/out of this set of option blocks?
+            let before = blocks[safe: range.lowerBound] as? SingleBlock
+            let after = blocks[safe: i + 1] as? SingleBlock
+            
+            // Async...
+            let dispatchGroup = DispatchGroup()
+            dispatchGroup.enter()
+            
+            scheduleOptionBlocks(optionBlocks, before: before, after: after) { blocks in
+                schedule.append(contentsOf: optionBlocks)
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.wait()
+            
+            // Continue past the option block group
+            i =  range.lowerBound - 1
+            priorDest = blocks[i + 1].destinations.last
+        }
+        return schedule
+    }
+    
+    func scheduleBlocksForwards(_ blocks: [ScheduleBlock], from startIndex: Int) -> [ScheduleBlock] {
+        var schedule = [ScheduleBlock]()
+        var priorDest : Destination?
+        var i = startIndex
+        while (i < blocks.count) {
+            
+            var block = blocks[i]
+            
+            if !block.isPusher {
+                if let newTiming = newTimingForFutureBlock(block, priorDest) {
+                    block.timing = newTiming
+                }
+            }
+            
+            // Single block scheduled as-is
+            if let singleBlock = block as? SingleBlock {
+                schedule.append(singleBlock)
+                priorDest = singleBlock.destinations.last
+                i += 1
+                continue
+            }
+            
+            // Fixed option block scheduled as-is
+            let optionBlock = block as! OptionBlock
+            if optionBlock.isFixed {
+                schedule.append(optionBlock)
+                priorDest = optionBlock.destinations.last
+                i += 1
+                continue
+            }
+                
+            // Otherwise requires further calculations
+            // How many un-fixed option blocks are there in a row? Will need to consider them all together.
+            let range = rangeOfOptionBlockChain(in: blocks, forwardsFrom: i)
+            let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
+            
+            // Are there destinations leading into/out of this set of option blocks?
+            let before = blocks[safe: i - 1] as? SingleBlock
+            let after = blocks[safe: range.upperBound + 1] as? SingleBlock
+            
+            // Async...
+            let dispatchGroup = DispatchGroup()
+            dispatchGroup.enter()
+            
+            scheduleOptionBlocks(optionBlocks, before: before, after: after) { blocks in
+                schedule.append(contentsOf: optionBlocks)
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.wait()
+            
+            // Continue past the option block group
+            i =  range.upperBound + 1
+            priorDest = blocks[i - 1].destinations.last
+        }
+        return schedule
+    }
+    
+    func scheduleBlocks(_ blocks: [ScheduleBlock], _ movingBlockIndex: Int) -> [ScheduleBlock] {
+        
+        var schedule = [ScheduleBlock]()
+        var movingBlock = blocks[movingBlockIndex]
+        movingBlock.isPusher = true
+        
+        let firstScheduledHalf = scheduleBlocksBackwards(blocks, from: movingBlockIndex).dropLast()
+        let secondScheduledHalf = scheduleBlocksForwards(blocks, from: movingBlockIndex)
+        schedule.append(contentsOf: firstScheduledHalf)
+        schedule.append(contentsOf: secondScheduledHalf)
+        
+        movingBlock.isPusher = false
+        return schedule
+        
+    }
+    
+    // MARK: - Old scheduling code -> no "pushing"
+    // Reschedule everything!
+    
     // Returns blocks with destinations and timings set
     func scheduleBlocks(_ blocks: [ScheduleBlock]) -> [ScheduleBlock] {
         
@@ -213,10 +389,9 @@ private extension Scheduler {
                 continue
                 
             }
-                
             // Otherwise requires further calculations
             // How many un-fixed option blocks are there in a row? Will need to consider them all together.
-            let range = rangeOfOptionBlockChain(in: blocks, startingAt: i)
+            let range = rangeOfOptionBlockChain(in: blocks, forwardsFrom: i)
             let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
             
             // Are there destinations leading into/out of this set of option blocks?
@@ -540,7 +715,7 @@ private extension Scheduler {
     }
     
     // Returns range of consecutive option blocks
-    func rangeOfOptionBlockChain(in blocks: [ScheduleBlock], startingAt startIndex: Int) -> ClosedRange<Int> {
+    func rangeOfOptionBlockChain(in blocks: [ScheduleBlock], forwardsFrom startIndex: Int) -> ClosedRange<Int> {
         var endIndex : Int?
         var i = startIndex
         while (endIndex == nil) && (i < blocks.count - 1){
@@ -556,6 +731,25 @@ private extension Scheduler {
             }
         }
         let range = startIndex ... (endIndex ?? blocks.count - 1)
+        return range
+    }
+    
+    func rangeOfOptionBlockChain(in blocks: [ScheduleBlock], backwardsFrom startIndex: Int) -> ClosedRange<Int> {
+        var endIndex : Int?
+        var i = startIndex
+        while (endIndex == nil) && (i > 0){
+            if let ob = blocks[i - 1] as? OptionBlock {
+                if !ob.isFixed {
+                    i -= 1
+                } else {
+                    endIndex = i
+                }
+                
+            } else {
+                endIndex = i
+            }
+        }
+        let range = (endIndex ?? 0) ... startIndex
         return range
     }
     

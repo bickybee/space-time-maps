@@ -17,6 +17,7 @@ class ItineraryEditingSession: NSObject {
     
     // These are set upon initialization, don't change after
     var travelMode : TravelMode
+    var originalBaseBlocks : [ScheduleBlock]
     var baseBlocks : [ScheduleBlock] // Ordered list of blocks NOT containing block being edited --> UNCHANGING!
     var callback : ([ScheduleBlock]?, Route?) -> () // TBH this probably shouldn't be set in the construcor, it should be an argument for each public method
     
@@ -31,6 +32,7 @@ class ItineraryEditingSession: NSObject {
         self.movingBlock = block
         self.baseBlocks = blocks
         self.baseBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        self.originalBaseBlocks = self.baseBlocks.map{ $0.copy() }
         
         self.travelMode = travelMode
         self.callback = callback
@@ -50,19 +52,19 @@ class ItineraryEditingSession: NSObject {
         let closedHoursIntersections = intersectsClosedHours(movedBlock)
         
         // If we're about to hit another block or hit closed hours for a singleBlock, just stay put...
-        if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
-            if let position = lastPosition {
-                var modifiedBlocks = baseBlocks
-                modifiedBlocks.insert(movingBlock, at: position)
-                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
-            } else {
-                removeBlock()
-            }
-
-        } else {
+//        if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
+//            if let position = lastPosition {
+//                var modifiedBlocks = baseBlocks
+//                modifiedBlocks.insert(movingBlock, at: position)
+//                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
+//            } else {
+//                removeBlock()
+//            }
+//
+//        } else {
         
             // Create new schedule
-            var modifiedBlocks = baseBlocks
+            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
             var insertAt = modifiedBlocks.endIndex
             for (i, block) in modifiedBlocks.enumerated() {
                 
@@ -74,7 +76,7 @@ class ItineraryEditingSession: NSObject {
             }
             
             // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
-            let changedOrder = (insertAt != lastPosition)
+            let changedOrder = true//(insertAt != lastPosition)
             let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
             overlapsClosedHoursOfPlaces = closedHoursIntersections
             modifiedBlocks.insert(movedBlock, at: insertAt)
@@ -98,12 +100,12 @@ class ItineraryEditingSession: NSObject {
 
             if changedOrder || changedClosedHoursIntersections {
                 print("reschedule")
-                scheduler.reschedule(blocks: modifiedBlocks, callback: callback)
+                scheduler.reschedule(blocks: modifiedBlocks, movingIndex: insertAt, callback: callback)
             } else { // Otherwise just shift, no reschedule
                 print("shift")
                 scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
             }
-        }
+//        }
         
         
     }
@@ -121,7 +123,7 @@ class ItineraryEditingSession: NSObject {
             removeBlock()
         } else {
             // Compute new route with modifications
-            var modifiedBlocks = baseBlocks
+            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
             modifiedBlocks.append(movingBlock)
             modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
             
@@ -131,7 +133,7 @@ class ItineraryEditingSession: NSObject {
     }
     
     func removeBlock() {
-        scheduler.reschedule(blocks: baseBlocks, callback: callback)
+        scheduler.reschedule(blocks: originalBaseBlocks, callback: callback)
         lastPosition = nil
     }
     
@@ -154,7 +156,7 @@ class ItineraryEditingSession: NSObject {
 //            }
 //        }
         
-        for b in baseBlocks {
+        for b in originalBaseBlocks {
             guard b.destinations.count > 0 else { continue }
             for d in b.destinations {
                 if d.timing.intersects(block.timing) {

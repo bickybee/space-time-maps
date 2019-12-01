@@ -12,6 +12,7 @@ class TimelineViewController: UIViewController {
 
     // Our view
     var timelineView = TimelineView()
+    var shadowView : UIView?
     
     var previousPanLocation : CGPoint?
     var prevVelocity: CGPoint?
@@ -67,7 +68,6 @@ class TimelineViewController: UIViewController {
         renderTimeline()
     }
 
-    
     @objc func pinchTime(_ gestureRecognizer : UIPinchGestureRecognizer) {
         
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
@@ -119,6 +119,18 @@ extension TimelineViewController {
         let hour = CGFloat(seconds.inHours())
         let y = hour * hourHeight + offset
         return y
+    }
+    
+    public func addShadowView(from backgroundImage: UIColor) {
+        let snapshotView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        snapshotView.backgroundColor = backgroundImage
+        snapshotView.alpha = 0.25
+        view.addSubview(snapshotView)
+        shadowView = snapshotView
+    }
+    
+    public func removeShadow() {
+        shadowView?.removeFromSuperview()
     }
     
 }

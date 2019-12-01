@@ -16,6 +16,8 @@ protocol ScheduleBlock : Schedulable {
     var timing : Timing { get set }
     var destinations: [Destination] { get }
     var places : [Place] { get }
+    var isPusher : Bool { get set }
+    var isBeingPushed : Bool { get set }
     func copy() -> ScheduleBlock
 }
 
@@ -27,6 +29,9 @@ class SingleBlock : ScheduleBlock {
         return [place]
     }
     
+    var isPusher : Bool
+    var isBeingPushed: Bool
+    
     var destination : Destination {
         return Destination(place: place, timing: timing)
     }
@@ -37,6 +42,8 @@ class SingleBlock : ScheduleBlock {
     init(timing: Timing, place: Place) {
         self.timing = timing
         self.place = place
+        self.isBeingPushed = false
+        self.isPusher = false
     }
     
     func copy() -> ScheduleBlock {
@@ -76,6 +83,9 @@ class OneOfBlock : OptionBlock {
     var options : [[Int]]
     var isFixed : Bool
     
+    var isPusher : Bool
+    var isBeingPushed: Bool
+    
     var optionPlaceIDs: [[String]] {
         return options.map( { $0.map( { placeGroup[$0].placeID } ) } )
     }
@@ -105,6 +115,9 @@ class OneOfBlock : OptionBlock {
         self.timing = timing
         self.options = placeGroup.places.indices.map( { [$0] } )
         self.isFixed = false
+        
+        self.isBeingPushed = false
+        self.isPusher = false
     }
     
     func copy() -> ScheduleBlock {
@@ -131,6 +144,9 @@ class AsManyOfBlock : OptionBlock {
             shiftDestinationsBy(delta)
         }
     }
+    
+    var isPusher : Bool
+    var isBeingPushed: Bool
     
     // BEST options...
     var options: [[Int]] // indices into placeGroup
@@ -159,6 +175,9 @@ class AsManyOfBlock : OptionBlock {
         self.placeGroup = placeGroup
         self.timing = timing
         self.isFixed = false
+        
+        self.isBeingPushed = false
+        self.isPusher = false
         
 //        let indices = Array(placeGroup.places.indices)
 //        var p = [[Int]]()
