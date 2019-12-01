@@ -13,7 +13,7 @@ class Scheduler {
     typealias Permutation<T> = [T] // Possibilities w/ varied orderings
     typealias Combination<T> = [T] // Possibilities w/ unvaried orderings
     
-    private let qs = QueryService()
+    let qs = QueryService()
     private var legCache = [LegData]()
     var timeDict = TimeDict()
     var travelMode : TravelMode = .driving

@@ -489,6 +489,14 @@ extension ItineraryViewController : DragDelegate {
         previousTouchHour = nil
         collectionView.reloadData()
         
+        // lol testing
+        if let someLeg = itinerary.route.legs[safe: 0] {
+            scheduler.qs.getTimeTicksFor(leg: someLeg) { poly in
+                self.itinerary.route.legs[0].ticks = poly
+                self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+            }
+        }
+        
     }
     
     func cellForIndex(_ indexPath: IndexPath) -> UIView? {

@@ -87,7 +87,6 @@ class MapUtils {
         let markerSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         markerImage.draw(in: markerSize)
 
-        print(number.description)
         let str = NSAttributedString(string:(number).description, attributes: MapUtils.stringAttributes)
         str.draw(in: markerSize)
         
@@ -138,6 +137,11 @@ class MapUtils {
             let endColor = leg.endPlace.color
             polyline.spans = [GMSStyleSpan(style: GMSStrokeStyle.gradient(from: startColor, to: endColor))]
             polylines.append(polyline)
+            if let isopath = leg.isochrone?.path {
+                print(isopath.encodedPath())
+                let isopoly = GMSPolyline(path: isopath)
+                polylines.append(isopoly)
+            }
         }
         
         return polylines
@@ -149,18 +153,17 @@ class MapUtils {
         var circles = [GMSCircle]()
         
         for leg in legs {
-            let locations = locationsAlongLeg(leg, ofDistance: 100)
-            for loc in locations {
-                circles.append(GMSCircle.init(position: loc, radius: 50))
+            if let timeTicks = leg.ticks {
+                circles.append(GMSCircle(position: timeTicks[0].coordinate, radius: 50))
             }
         }
         return circles
     }
     
     // Distance in metres
-    public static func locationsAlongLeg(_ leg: Leg, ofDistance metres: CLLocationDistance) -> [CLLocationCoordinate2D] {
+    public static func locationsAlongLeg(_ leg: Leg, ofDistance metres: CLLocationDistance) -> [Coordinate] {
         let path = GMSPath(fromEncodedPath: leg.polyline)!
-        var locations = [CLLocationCoordinate2D]()
+        var locations = [Coordinate]()
         let coord0 = path.coordinate(at: 0)
         var lastLoc = CLLocation(latitude: coord0.latitude, longitude: coord0.longitude)
         
@@ -174,10 +177,7 @@ class MapUtils {
             }
             
         }
-        
-        print(locations.count)
-        print(path.length(of: .geodesic))
-        
+ 
         return locations
     }
 
@@ -201,7 +201,7 @@ private extension MapUtils {
     
     static func markerFor(place: Place) -> GMSMarker {
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: place.coordinate.lat, longitude: place.coordinate.lon)
+        marker.position = place.coordinate
         marker.title = place.name
         return marker
     }

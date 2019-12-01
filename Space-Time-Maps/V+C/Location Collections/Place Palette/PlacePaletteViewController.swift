@@ -381,9 +381,7 @@ extension PlacePaletteViewController: DragDelegate {
         guard let place = object as? Place else { return }
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
         guard groupsBeforeEditing.count > insertAt.section, groupsBeforeEditing[insertAt.section].count >= insertAt.item else { return }
-        
-        print(draggingIndexPath)
-        
+                
         if (!midDrag ){
             collectionView.performBatchUpdates({
                 midDrag = true
@@ -453,9 +451,8 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
 
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        let coordinate = Coordinate(lat: place.coordinate.latitude, lon: place.coordinate.longitude)
         let openTiming = openHoursTimingFromGMSOpeningHours(place.openingHours)
-        let newPlace = Place(name: place.name!, coordinate: coordinate, placeID: place.placeID!, openHours: openTiming)
+        let newPlace = Place(name: place.name!, coordinate: place.coordinate, placeID: place.placeID!, openHours: openTiming)
         groups[0].append(newPlace)
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didAddPlace: newPlace, toGroups: groups)

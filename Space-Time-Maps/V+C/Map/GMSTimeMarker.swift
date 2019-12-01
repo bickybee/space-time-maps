@@ -19,7 +19,7 @@ class GMSTimeMarker : GMSMarker {
     }
     var pos : Coordinate! {
         didSet {
-            self.position = CLLocationCoordinate2D(latitude: pos.lat, longitude: pos.lon)
+            self.position = CLLocationCoordinate2D(latitude: pos.latitude, longitude: pos.longitude)
         }
     }
     var color : UIColor! {
@@ -33,7 +33,7 @@ class GMSTimeMarker : GMSMarker {
         let marker = GMSTimeMarker()
         marker.time = time
         marker.pos = position
-        marker.position = CLLocationCoordinate2D(latitude: position.lat, longitude: position.lon)
+        marker.position = Coordinate(latitude: position.latitude, longitude: position.longitude)
         
         let frame = CGRect(x: 0, y: 0, width: 50, height: 25)
         let overlayView = UIView(frame: frame)

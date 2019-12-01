@@ -69,25 +69,19 @@ class MapViewController: UIViewController {
     // Refresh all map markup
     func refreshMarkup(placeGroups: [PlaceGroup], itinerary: Itinerary) {
         
-        let routeLegs = itinerary.route.legs
-        
         // Setup fresh map
         mapView.clear()
-        var allOverlays : [GMSOverlay]
-        
-        let destinationMarkers = MapUtils.markersForPlacesIn(placeGroups, itinerary)
-        
         // Wrap map to markers
-        markers = destinationMarkers
+        markers = MapUtils.markersForPlacesIn(placeGroups, itinerary)
         mapView.wrapBoundsTo(markers: markers)
         
-        // Get polylines for route legs
-        let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
-        allOverlays = markers + polylines// + circles
-
-        // Add all overlays to map
-        overlays = allOverlays
-        mapView.add(overlays: allOverlays)
+        let routeLegs = itinerary.route.legs
+        mapView.add(overlays: MapUtils.polylinesForRouteLegs(routeLegs))
+        mapView.add(overlays: MapUtils.ticksForRouteLegs(routeLegs))
+        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
+        print(ticks[safe: 0])
+        print(ticks.count)
+        mapView.add(overlays: markers)
     }
     
     // Respond to notification updates by displaying current location on the map

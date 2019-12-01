@@ -5,7 +5,40 @@
 
 import Foundation
 
-// MARK: - Welcome
+// MARK: - IsochroneResponseObject
+struct IsochroneResponseObject: Codable {
+    let features: [Feature]
+    let type: String
+}
+
+// MARK: - Feature
+struct Feature: Codable {
+    let properties: Properties
+    let type: String
+    let geometry: Geometry
+}
+
+// MARK: - Geometry
+struct Geometry: Codable {
+    let coordinates: [[Double]]
+    let type: String
+}
+
+// MARK: - Properties
+struct Properties: Codable {
+    let propertiesFillOpacity: Double
+    let color, fill, fillColor: String
+    let contour: Int
+    let opacity, fillOpacity: Double
+
+    enum CodingKeys: String, CodingKey {
+        case propertiesFillOpacity = "fillOpacity"
+        case color, fill, fillColor, contour, opacity
+        case fillOpacity = "fill-opacity"
+    }
+}
+
+// MARK: - MatrixResponseObject
 struct MatrixResponseObject: Codable {
     let status: String
     let originAddresses, destinationAddresses: [String]
@@ -30,6 +63,7 @@ struct Element: Codable {
     let duration, distance: Distance
 }
 
+// MARK: - ErrorResponseObject
 struct ErrorResponseObject: Codable {
     let errorMessage: String
     let routes: [JSONAny]
@@ -41,6 +75,7 @@ struct ErrorResponseObject: Codable {
     }
 }
 
+// MARK: - RouteResponseObject
 struct RouteResponseObject: Codable {
     let geocodedWaypoints: [GeocodedWaypoint]
     let routes: [GRoute]

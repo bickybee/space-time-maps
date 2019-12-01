@@ -12,9 +12,8 @@ import MobileCoreServices
 
 // Simply a location
 
-struct Coordinate {
-    var lat, lon: Double
-}
+typealias Coordinate = CLLocationCoordinate2D
+
 
 class Place : NSObject {
     

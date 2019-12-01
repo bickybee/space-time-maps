@@ -9,6 +9,11 @@
 import Foundation
 import GoogleMaps
 
+struct TimeTick {
+    var time : TimeInterval
+    var coordinate : CLLocationCoordinate2D
+}
+
 struct LegData {
     
     var startPlace : Place
@@ -38,30 +43,35 @@ class Leg : Schedulable {
     var polyline : String
     var coords : [Coordinate]
     var travelTiming : Timing
+    var travelMode : TravelMode
     var timing : Timing {
         didSet {
             travelTiming = Leg.computeTravelTiming(with: travelTiming.duration, within: timing)
         }
     }
     
-    init (startPlace: Place, endPlace: Place, polyline: String, timing: Timing, travelTiming: Timing) {
+    var ticks : [TimeTick]?
+    var isochrone : GMSPolygon?
+    
+    init (startPlace: Place, endPlace: Place, polyline: String, timing: Timing, travelTiming: Timing, travelMode: TravelMode) {
         self.startPlace = startPlace
         self.endPlace = endPlace
         self.polyline = polyline
         self.timing = timing
         self.travelTiming = travelTiming
         self.coords = [Coordinate]()
+        self.travelMode = travelMode
         
         let path = GMSPath(fromEncodedPath: polyline)!
         for i in 0...path.count()-1 {
             let coord = path.coordinate(at: i)
-            coords.append(Coordinate(lat: coord.latitude, lon: coord.longitude))
+            coords.append(coord)
         }
     }
     
     convenience init (data: LegData, timing: Timing) {
         let travelTiming = Leg.computeTravelTiming(with: data.duration, within: timing)
-        self.init(startPlace: data.startPlace, endPlace: data.endPlace, polyline: data.polyline, timing: timing, travelTiming: travelTiming)
+        self.init(startPlace: data.startPlace, endPlace: data.endPlace, polyline: data.polyline, timing: timing, travelTiming: travelTiming, travelMode: data.travelMode)
     }
     
     private static func computeTravelTiming(with duration: TimeInterval, within availableTiming: Timing) -> Timing {
@@ -72,7 +82,7 @@ class Leg : Schedulable {
     
     
     func copy() -> Schedulable {
-        return Leg(startPlace: self.startPlace, endPlace: self.endPlace, polyline: self.polyline, timing: self.timing, travelTiming: self.travelTiming)
+        return Leg(startPlace: self.startPlace, endPlace: self.endPlace, polyline: self.polyline, timing: self.timing, travelTiming: self.travelTiming, travelMode: self.travelMode)
     }
     
 }

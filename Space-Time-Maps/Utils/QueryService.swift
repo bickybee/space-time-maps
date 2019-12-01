@@ -64,16 +64,65 @@ class QueryService {
         guard let url = queryURLFor(start: start, end: end, travelMode: travelMode) else { return }
         runQuery(url: url) {data in
             let leg =  self.dataToLeg(data, from: start, to: end, by: travelMode)
-//            let locations = self.locationsAlongLeg(leg!, ofDistance: 500)
-//            self.getTimesFor(origins: [locations[0]], destinations: locations, travelMode: travelMode) { times in
-//                let leg.timesOnPath =
-//            }
             callback(leg)
         }
 
     }
     
-//    func getIsochronesFor(origin: Place, )
+    func getTimeTicksFor(leg: Leg, callback: @escaping([TimeTick]) -> ()) {
+        getIsochronesFor(origin: leg.startPlace, contourIntervals: [600], travelMode: leg.travelMode) { isochrones in
+            var timeTicks = [TimeTick]()
+            if let isochrones = isochrones, let path = GMSPath(fromEncodedPath: leg.polyline){
+                DispatchQueue.main.async {
+                    for (i, isochrone) in isochrones.enumerated() {
+                        let polygon = GMSPolygon(path: isochrone)
+                        print(GMSGeometryContainsLocation(leg.startPlace.coordinate, polygon.path!, true))
+                        if let intersection = self.intersectionBetween(path, isochrone) {
+                            timeTicks.append(TimeTick(time: 0, coordinate: intersection))
+                        }
+                    }
+                    callback(timeTicks)
+                }
+            }
+        }
+    }
+    
+    
+    func intersectionBetween(_ path: GMSPath, _ isochrone: GMSPath) -> Coordinate? {
+        var intersection : Coordinate?
+        var i : UInt = 0
+        let polygon = GMSPolygon(path: isochrone)
+        // first point outside the polygon indicates we've past the intersection
+        while i < path.count() {
+            let point = path.coordinate(at: i)
+            if GMSGeometryContainsLocation(point, polygon.path!, true) {
+                intersection = path.coordinate(at: i)
+                i += 1
+            } else {
+                return intersection
+            }
+        }
+        return nil
+    }
+
+    
+    func getIsochronesFor(origin: Place, contourIntervals: [TimeInterval], travelMode: TravelMode, callback: @escaping ([GMSPath]?) -> ()) {
+        guard let url = queryURLFor(origin: origin, contourIntervals: contourIntervals, travelMode: travelMode) else { return }
+                runQuery(url: url) {data in
+                    if let lineStrings =  self.dataToLineStrings(data) {
+                        let isochrones = lineStrings.map { (line: [Coordinate]) -> GMSPath in
+                            let isopath = GMSMutablePath()
+                            for coord in line {
+                                isopath.add(coord)
+                            }
+                            print(isopath.encodedPath())
+                            return isopath
+                        }
+                        callback(isochrones)
+                    }
+                }
+        }
+    
     
     func dataToLeg(_ data: Data, from start: Destination, to end: Destination, by travelMode: TravelMode) -> LegData? {
         
@@ -82,7 +131,6 @@ class QueryService {
         var leg : LegData?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
             print(errorResponseObject.errorMessage)
-            leg = nil
         } else if let routeResponseObject = try? decoder.decode(RouteResponseObject.self, from: data) {
             // Parse out data into Route object
             let firstRouteOption = routeResponseObject.routes[0]
@@ -93,6 +141,26 @@ class QueryService {
         
         return leg
         
+    }
+    
+    func dataToLineStrings(_ data: Data) -> [[Coordinate]]? {
+        let decoder = JSONDecoder()
+        var lineStrings : [[Coordinate]]?
+        if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
+            print(errorResponseObject.errorMessage)
+        } else if let isochroneResponseObject = try? decoder.decode(IsochroneResponseObject.self, from: data) {
+            lineStrings = [[Coordinate]]()
+            // Parse out data
+            for feature in isochroneResponseObject.features {
+                var line = [Coordinate]()
+                for coord in feature.geometry.coordinates {
+                    line.append(Coordinate(latitude: coord[1], longitude: coord[0]))
+                }
+                lineStrings!.append(line)
+            }
+        }
+        
+        return lineStrings
     }
     
     func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place]) -> TimeDict? {
@@ -163,14 +231,13 @@ class QueryService {
 
         // travelmodes are slightly diff for mapbox (bicycling != cycling)
         let profileString = (travelMode == .bicycling ? "cycling" : travelMode.rawValue) + "/"
-        let coordString = "\(origin.coordinate.lon),\(origin.coordinate.lat)"
-        let pathString = mapboxIsochroneURLString  + profileString + coordString
-        
-        guard var urlComponents = URLComponents(string: pathString) else { return nil }
-        var contourString = "\(contourIntervals[0])"
-        contourIntervals.forEach{ contourString += ",\($0)" }
+        guard var urlComponents = URLComponents(string: mapboxIsochroneURLString + profileString) else { return nil }
+        let coordString = "\(origin.coordinate.longitude),\(origin.coordinate.latitude)"
+        urlComponents.path += coordString
+        var contourString = "\(Int(contourIntervals[0].inMinutes()))"
+        contourIntervals.dropFirst().forEach{ contourString += ",\(Int($0.inMinutes()))" }
         urlComponents.queryItems = [
-            URLQueryItem(name:"contour_minutes", value: contourString),
+            URLQueryItem(name:"contours_minutes", value: contourString),
             URLQueryItem(name:"access_token", value: self.mapboxToken)
         ]
         
@@ -244,7 +311,7 @@ class QueryService {
     func batchCoordinateStringsFrom(coords: [Coordinate]) -> String {
         var str = ""
         for (index, c) in coords.enumerated() {
-            str += "\(c.lat), \(c.lon)"
+            str += "\(c.latitude), \(c.longitude)"
             if index < coords.endIndex {
                 str += "|"
             }
