@@ -40,6 +40,7 @@ class GMSTimeMarker : GMSMarker {
         let label = UILabel(frame: frame)
         overlayView.addSubview(label)
         overlayView.backgroundColor = .black
+        overlayView.layer.cornerRadius = 5
         label.textColor = .white
         label.text = Utils.secondsToAbsoluteTimeString(time)
         label.textAlignment = .center

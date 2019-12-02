@@ -74,14 +74,23 @@ class TimelineViewController: UIViewController {
             
             var newHourHeight = hourHeight * gestureRecognizer.scale
             gestureRecognizer.scale = 1.0
+            setHourHeight(newHourHeight)
             
-            if newHourHeight > 25 && newHourHeight < 200 {
-                hourHeight = newHourHeight
-                delegate?.timelineViewController(self, didUpdateHourHeightBy: 0)
-                view.frame.size.height = hourHeight * 24.5
-                renderTimeline()
-            }
-            
+        }
+    }
+    
+    func zoomToEncompassDuration(_ duration: TimeInterval, inViewHeight viewHeight: CGFloat) {
+        let hours = duration.inHours()
+        let newHourHeight = viewHeight / CGFloat(hours)
+        setHourHeight(newHourHeight)
+    }
+    
+    func setHourHeight(_ newHourHeight: CGFloat) {
+        if newHourHeight > 25 && newHourHeight < 200 {
+            hourHeight = newHourHeight
+            delegate?.timelineViewController(self, didUpdateHourHeightBy: 0)
+            view.frame.size.height = hourHeight * 24.5
+            renderTimeline()
         }
     }
 

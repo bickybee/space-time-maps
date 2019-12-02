@@ -41,7 +41,7 @@ class ItineraryLayout: UICollectionViewLayout {
     
     func cacheAttributesForCellAt(indexPath: IndexPath, in collectionView: UICollectionView) {
         
-        if indexPath.section == 4 {
+        if indexPath.section == 3 {
             
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             let hourHeight = delegate.hourHeight(of: collectionView)

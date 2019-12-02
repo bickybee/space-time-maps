@@ -13,10 +13,14 @@ class Scheduler {
     typealias Permutation<T> = [T] // Possibilities w/ varied orderings
     typealias Combination<T> = [T] // Possibilities w/ unvaried orderings
     
-    let qs = QueryService()
+    var qs : QueryService!
     private var legCache = [LegData]()
     var timeDict = TimeDict()
     var travelMode : TravelMode = .driving
+    
+    init(_ queryService: QueryService) {
+        qs = queryService
+    }
     
     func reschedule(blocks: [ScheduleBlock], movingIndex: Int, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         

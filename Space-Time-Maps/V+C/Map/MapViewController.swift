@@ -103,10 +103,10 @@ extension MapViewController : TimeQueryDelegate {
             if let marker = timeQueryMarker {
                 marker.pos = dest.place.coordinate
                 marker.time = time
-                marker.color = dest.place.color
+                marker.color = dest.place.color.withAlphaComponent(0.8)
             } else {
                 let marker = GMSTimeMarker.markerWithPosition(dest.place.coordinate, time: time)
-                marker.color = dest.place.color
+                marker.color = dest.place.color.withAlphaComponent(0.8)
                 marker.map = mapView
                 overlays.append(marker)
                 timeQueryMarker = marker
@@ -116,14 +116,15 @@ extension MapViewController : TimeQueryDelegate {
             var position : Coordinate
             var color : UIColor
             if leg.travelTiming.containsInclusive(time) {
-                position = leg.coords[leg.coords.count / 2]
-                color = .darkGray
+                let timeTick = leg.getNearestTick(to: time)
+                position = timeTick.coordinate
+                color = timeTick.color ?? UIColor.darkGray.withAlphaComponent(0.8)
             } else if Timing(start: leg.timing.start, end: leg.travelTiming.start).containsInclusive(time) {
-                position = leg.coords[0]
-                color = .gray
+                position = leg.startPlace.coordinate
+                color = UIColor.lightGray.withAlphaComponent(0.8)
             } else {
-                position = leg.coords[leg.coords.count - 1]
-                color = .gray
+                position = leg.endPlace.coordinate
+                color = UIColor.lightGray.withAlphaComponent(0.8)
             }
             // Update marker
             if let marker = timeQueryMarker {

@@ -34,28 +34,6 @@ class ColorUtils {
         return color
     }
 
-    static func colorFor(fraction: Double) -> UIColor {
-
-        return colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(fraction))
-
-    }
-
-    static func gradientFor(startFraction: Double, endFraction: Double) -> UIColorGradient {
-
-        let start = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(startFraction))
-        let end = colorAlongGradient(start: startColor, middle: middleColor, end: endColor, fraction: CGFloat(endFraction))
-        return (start, end)
-
-    }
-
-}
-
-private extension ColorUtils {
-
-    static let startColor = UIColor.green
-    static let middleColor = UIColor.yellow
-    static let endColor = UIColor.red
-
     // Point along 3-color gradient
     static func colorAlongGradient(start: UIColor, middle: UIColor, end: UIColor, fraction: CGFloat) -> UIColor {
 

@@ -12,6 +12,7 @@ import GoogleMaps
 struct TimeTick {
     var time : TimeInterval
     var coordinate : CLLocationCoordinate2D
+    var color : UIColor?
 }
 
 struct LegData {
@@ -72,6 +73,29 @@ class Leg : Schedulable {
     convenience init (data: LegData, timing: Timing) {
         let travelTiming = Leg.computeTravelTiming(with: data.duration, within: timing)
         self.init(startPlace: data.startPlace, endPlace: data.endPlace, polyline: data.polyline, timing: timing, travelTiming: travelTiming, travelMode: data.travelMode)
+    }
+    
+    func getNearestTick(to time: TimeInterval) -> TimeTick {
+        guard let timeTicks = ticks, timeTicks.count > 0 else { return TimeTick(time: travelTiming.start, coordinate: startPlace.coordinate, color: startPlace.color) }
+        
+        var nearestTick = timeTicks[0]
+        var smallestDiff = abs(time - nearestTick.time)
+        for tick in timeTicks.dropFirst() {
+            let diff = abs(time - tick.time)
+            if diff < smallestDiff {
+                nearestTick = tick
+                smallestDiff = diff
+            }
+        }
+        nearestTick.color = getColorOfTick(nearestTick)
+        return nearestTick
+    }
+    
+    func getColorOfTick(_ tick: TimeTick) -> UIColor {
+        let startColor = startPlace.color
+        let endColor = endPlace.color
+        let fraction = (tick.time - travelTiming.start) / travelTiming.duration
+        return ColorUtils.colorAlongGradient(start: startColor, end: endColor, fraction: CGFloat(fraction))
     }
     
     private static func computeTravelTiming(with duration: TimeInterval, within availableTiming: Timing) -> Timing {

@@ -138,7 +138,6 @@ class MapUtils {
             polyline.spans = [GMSStyleSpan(style: GMSStrokeStyle.gradient(from: startColor, to: endColor))]
             polylines.append(polyline)
             if let isopath = leg.isochrone?.path {
-                print(isopath.encodedPath())
                 let isopoly = GMSPolyline(path: isopath)
                 polylines.append(isopoly)
             }
@@ -154,7 +153,7 @@ class MapUtils {
         
         for leg in legs {
             if let timeTicks = leg.ticks {
-                circles.append(GMSCircle(position: timeTicks[0].coordinate, radius: 50))
+                timeTicks.forEach{ circles.append(GMSCircle(position: $0.coordinate, radius: 200)) }
             }
         }
         return circles
@@ -212,11 +211,6 @@ private extension MapUtils {
         polyline.strokeWidth = strokeWidth
         return polyline
     }
-        
-    static func gradientStyleForPolyline(startFraction: Double, endFraction: Double) -> [GMSStyleSpan] {
-        let gradient = ColorUtils.gradientFor(startFraction: startFraction, endFraction: endFraction)
-        let style = GMSStrokeStyle.gradient(from: gradient.0, to: gradient.1)
-        return [GMSStyleSpan(style: style)]
-    }
+    
     
 }

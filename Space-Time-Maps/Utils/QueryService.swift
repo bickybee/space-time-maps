@@ -13,7 +13,6 @@ import ChameleonFramework
 class QueryService {
         
     let session = URLSession(configuration: .default)
-    let dispatchGroup = DispatchGroup()
     let gmapsDirectionsURLString = "https://maps.googleapis.com/maps/api/directions/json"
     let gmapsMatrixURLString = "https://maps.googleapis.com/maps/api/distancematrix/json"
     let mapboxIsochroneURLString = "https://api.mapbox.com/isochrone/v1/mapbox/"
@@ -54,6 +53,10 @@ class QueryService {
         pingCount += 1
         print("pings to distance matrix API: \(pingCount)")
         runQuery(url: url) {data in
+            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
+            {
+                print(JSONString)
+            }
             let results = self.dataToTimeDict(data, origins, destinations)
             callback(results)
         }
@@ -67,24 +70,6 @@ class QueryService {
             callback(leg)
         }
 
-    }
-    
-    func getTimeTicksFor(leg: Leg, callback: @escaping([TimeTick]) -> ()) {
-        getIsochronesFor(origin: leg.startPlace, contourIntervals: [600], travelMode: leg.travelMode) { isochrones in
-            var timeTicks = [TimeTick]()
-            if let isochrones = isochrones, let path = GMSPath(fromEncodedPath: leg.polyline){
-                DispatchQueue.main.async {
-                    for (i, isochrone) in isochrones.enumerated() {
-                        let polygon = GMSPolygon(path: isochrone)
-                        print(GMSGeometryContainsLocation(leg.startPlace.coordinate, polygon.path!, true))
-                        if let intersection = self.intersectionBetween(path, isochrone) {
-                            timeTicks.append(TimeTick(time: 0, coordinate: intersection))
-                        }
-                    }
-                    callback(timeTicks)
-                }
-            }
-        }
     }
     
     
@@ -106,7 +91,7 @@ class QueryService {
     }
 
     
-    func getIsochronesFor(origin: Place, contourIntervals: [TimeInterval], travelMode: TravelMode, callback: @escaping ([GMSPath]?) -> ()) {
+    func getIsochronesFor(origin: Coordinate, contourIntervals: [TimeInterval], travelMode: TravelMode, callback: @escaping ([GMSPath]?) -> ()) {
         guard let url = queryURLFor(origin: origin, contourIntervals: contourIntervals, travelMode: travelMode) else { return }
                 runQuery(url: url) {data in
                     if let lineStrings =  self.dataToLineStrings(data) {
@@ -115,10 +100,11 @@ class QueryService {
                             for coord in line {
                                 isopath.add(coord)
                             }
-                            print(isopath.encodedPath())
                             return isopath
                         }
                         callback(isochrones)
+                    } else {
+                        callback(nil)
                     }
                 }
         }
@@ -227,12 +213,12 @@ class QueryService {
 //        return locations
 //    }
     
-    func queryURLFor(origin: Place, contourIntervals: [TimeInterval], travelMode: TravelMode) -> URL? {
+    func queryURLFor(origin: Coordinate, contourIntervals: [TimeInterval], travelMode: TravelMode) -> URL? {
 
         // travelmodes are slightly diff for mapbox (bicycling != cycling)
         let profileString = (travelMode == .bicycling ? "cycling" : travelMode.rawValue) + "/"
         guard var urlComponents = URLComponents(string: mapboxIsochroneURLString + profileString) else { return nil }
-        let coordString = "\(origin.coordinate.longitude),\(origin.coordinate.latitude)"
+        let coordString = "\(origin.longitude),\(origin.latitude)"
         urlComponents.path += coordString
         var contourString = "\(Int(contourIntervals[0].inMinutes()))"
         contourIntervals.dropFirst().forEach{ contourString += ",\(Int($0.inMinutes()))" }

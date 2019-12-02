@@ -18,7 +18,8 @@ class ItineraryViewController: DraggableContentViewController {
     private let hoursReuseIdentifier = "hoursCell"
     private let timelineReuseIdentifier = "timelineCell"
     
-    private let scheduler = Scheduler()
+    private var scheduler : Scheduler!
+    private var timeTickService : TimeTickService!
     private let hourHeight = 50.0
     
     // Child views
@@ -50,10 +51,17 @@ class ItineraryViewController: DraggableContentViewController {
         self.dragDataDelegate = self as DragDataDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
         
+        setupServices()
         setupCollectionView()
         setupTimeline()
         setupTimeQuerySidebar()
     
+    }
+    
+    func setupServices() {
+        let qs = QueryService()
+        scheduler = Scheduler(qs)
+        timeTickService = TimeTickService(qs)
     }
 
     func setupCollectionView() {
@@ -224,9 +232,9 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 2:
             return itinerary.schedule.count
         case 3:
-            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
-        case 4:
             return 1
+        case 4:
+            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
         default:
             return 0
         }
@@ -245,8 +253,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 2:
             cell = setupBlockCell(with: indexPath)
         case 3:
-            cell = setupHoursCell(with: indexPath)
-        case 4:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: timelineReuseIdentifier, for: indexPath)
             if !cell.contentView.subviews.contains(timelineController.view) {
                 cell.contentView.addSubview(timelineController.view)
@@ -254,6 +260,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                 timelineController.view.setNeedsDisplay()
             }
             cell.isUserInteractionEnabled = false
+        case 4:
+            cell = setupHoursCell(with: indexPath)
         default:
             cell = UICollectionViewCell()
         }
@@ -460,42 +468,71 @@ extension ItineraryViewController : DragDelegate {
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
 
-        
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
         let location = gesture.location(in: collectionView)
         
+        // Either remove cell
         if !collectionView.bounds.contains(location) {
             if previousTouchHour != nil {
                 editingSession.removeBlock()
                 previousTouchHour = nil
             }
-            return
+
+        } else {
+            // Or move cell
+            let y = gesture.location(in: view).y
+            let hour = timelineController.roundedHourInTimeline(forY: y)
+            if hour != previousTouchHour {
+                editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
+                previousTouchHour = hour
+            }
         }
-        
-        let y = gesture.location(in: view).y
-        let hour = timelineController.roundedHourInTimeline(forY: y)
-        if hour != previousTouchHour {
-            editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
-            previousTouchHour = hour
+        // Resize if cells go off screen
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        var totalNumCells = 0
+        // Excluding hours of op cells...
+        for i in 0..<collectionView.numberOfSections - 1 {
+            totalNumCells += collectionView.numberOfItems(inSection: i)
         }
-        
+        var visibleCells = collectionView.indexPathsForVisibleItems.filter{ $0.section != 4}
+        if visibleCells.count < totalNumCells {
+            print("should zoom")
+        }
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         timelineController.removeShadow()
+        timelineController.view.layoutIfNeeded()
         editingSession = nil
         previousTouchHour = nil
         collectionView.reloadData()
+
         
-        // lol testing
-        if let someLeg = itinerary.route.legs[safe: 0] {
-            scheduler.qs.getTimeTicksFor(leg: someLeg) { poly in
-                self.itinerary.route.legs[0].ticks = poly
-                self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+      // lol testing time tick isochrone stuff
+        for leg in itinerary.route.legs {
+            
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self = self else {
+                  return
+                }
+              // get ticks
+              self.timeTickService.getTimeTicksForLeg(leg) { ticks in
+                  leg.ticks = ticks
+                    DispatchQueue.main.async { [weak self] in
+                      guard let self = self else {
+                        return
+                      }
+                      self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
+                        print("done")
+                    }
+                  
+              }
             }
-        }
+      }
+            
         
     }
     
@@ -604,19 +641,6 @@ extension ItineraryViewController: DragDataDelegate {
         
         return nil
     }
-//
-//    func destinationIndexForSingleBlock(at index: Int) -> Int {
-//        var count = 0
-//
-//        for i in 0...index {
-//
-//            count += itinerary.schedule[i].destinations.count
-//        }
-//
-//        return count - 1
-//
-//    }
-//
 }
 
 
