@@ -125,13 +125,13 @@ class ItineraryViewController: DraggableContentViewController {
         switch gesture.state {
         case .began:
             print(roundedY)
-            let frame = CGRect(x: 0, y: y - 4, width: view.frame.width, height: 10)
+            let frame = CGRect(x: 0, y: y - 2, width: view.frame.width, height: 4)
             timeQueryLine = UIView(frame: frame)
-            timeQueryLine!.backgroundColor = UIColor.blue.withAlphaComponent(0.25)
+            timeQueryLine!.backgroundColor = UIColor.darkGray.withAlphaComponent(0.25)
             view.addSubview(timeQueryLine!)
             timeQueryDelegate?.didMakeTimeQuery(time: TimeInterval.from(hours: roundedTime), schedulable: schedulable)
         case .changed:
-            timeQueryLine!.frame = CGRect(x: 0, y: y - 4, width: view.frame.width, height: 10)
+            timeQueryLine!.frame = CGRect(x: 0, y: y - 2, width: view.frame.width, height: 4)
             timeQueryDelegate?.didMakeTimeQuery(time: TimeInterval.from(hours: roundedTime), schedulable: schedulable)
         default:
             timeQueryLine!.removeFromSuperview()

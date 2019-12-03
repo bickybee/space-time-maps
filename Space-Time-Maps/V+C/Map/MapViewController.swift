@@ -76,12 +76,10 @@ class MapViewController: UIViewController {
         mapView.wrapBoundsTo(markers: markers)
         
         let routeLegs = itinerary.route.legs
-        mapView.add(overlays: MapUtils.polylinesForRouteLegs(routeLegs))
-        mapView.add(overlays: MapUtils.ticksForRouteLegs(routeLegs))
+        let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
         let ticks = MapUtils.ticksForRouteLegs(routeLegs)
-        print(ticks[safe: 0])
-        print(ticks.count)
-        mapView.add(overlays: markers)
+        overlays = markers + polylines + ticks
+        mapView.add(overlays: overlays)
     }
     
     // Respond to notification updates by displaying current location on the map
@@ -103,10 +101,10 @@ extension MapViewController : TimeQueryDelegate {
             if let marker = timeQueryMarker {
                 marker.pos = dest.place.coordinate
                 marker.time = time
-                marker.color = dest.place.color.withAlphaComponent(0.8)
+                marker.color = dest.place.color
             } else {
                 let marker = GMSTimeMarker.markerWithPosition(dest.place.coordinate, time: time)
-                marker.color = dest.place.color.withAlphaComponent(0.8)
+                marker.color = dest.place.color
                 marker.map = mapView
                 overlays.append(marker)
                 timeQueryMarker = marker
@@ -118,13 +116,13 @@ extension MapViewController : TimeQueryDelegate {
             if leg.travelTiming.containsInclusive(time) {
                 let timeTick = leg.getNearestTick(to: time)
                 position = timeTick.coordinate
-                color = timeTick.color ?? UIColor.darkGray.withAlphaComponent(0.8)
+                color = timeTick.color ?? UIColor.darkGray
             } else if Timing(start: leg.timing.start, end: leg.travelTiming.start).containsInclusive(time) {
                 position = leg.startPlace.coordinate
-                color = UIColor.lightGray.withAlphaComponent(0.8)
+                color = UIColor.lightGray
             } else {
                 position = leg.endPlace.coordinate
-                color = UIColor.lightGray.withAlphaComponent(0.8)
+                color = UIColor.lightGray
             }
             // Update marker
             if let marker = timeQueryMarker {

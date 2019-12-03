@@ -24,7 +24,7 @@ class GMSTimeMarker : GMSMarker {
     }
     var color : UIColor! {
         didSet {
-            self.iconView?.backgroundColor? = color
+            self.iconView?.backgroundColor? = color.withAlphaComponent(0.8)
         }
     }
     
