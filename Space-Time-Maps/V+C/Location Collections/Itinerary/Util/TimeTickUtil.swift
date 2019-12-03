@@ -76,6 +76,8 @@ class TimeTickService {
 
     func relativeTimesFor(_ leg: Leg, fromIsochroneTimes times: [TimeInterval]) -> [TimeInterval] {
         
+        guard times.count > 0 else { return [] }
+        
         let offset = leg.travelTiming.start
         var relativeTimes = [TimeInterval]()
         relativeTimes.append(times[0] - offset)

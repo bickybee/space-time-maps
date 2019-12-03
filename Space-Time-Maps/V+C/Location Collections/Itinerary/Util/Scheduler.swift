@@ -221,10 +221,11 @@ private extension Scheduler {
         return nil
     }
     
+    // FIXME
     func newTimingForPastBlock(_ block: ScheduleBlock, _ priorDest: Destination?) -> Timing? {
         // Depending on time between places, might need to change timing of scheduleBlock
         
-        guard let dest = block.destinations.first, let priorDest = priorDest else { return nil }
+        guard let dest = block.destinations.last, let priorDest = priorDest else { return nil }
         
         let travelTimeNeeded = timeDict[PlacePair(startID: dest.place.placeID, endID: priorDest.place.placeID)]!
         let maxEndTime = priorDest.timing.start - travelTimeNeeded
@@ -236,22 +237,28 @@ private extension Scheduler {
     
     func scheduleBlocksBackwards(_ blocks: [ScheduleBlock], from startIndex: Int) -> [ScheduleBlock] {
         var schedule = [ScheduleBlock]()
-        var priorDest : Destination?
+        var priorDest = blocks[startIndex].destinations.first
         var i = startIndex
+        
+        // first push blocks
+        for i in (0...i).reversed() {
+            var block = blocks[i]
+            if !block.isPusher {
+                if let newTiming = newTimingForPastBlock(block, priorDest) {
+                    block.timing = newTiming
+                    priorDest = block.destinations.first
+                }
+            }
+        }
+        
+        // then schedule them
         while (i >= 0) {
             
             var block = blocks[i]
             
-            if !block.isPusher {
-                if let newTiming = newTimingForPastBlock(block, priorDest) {
-                    block.timing = newTiming
-                }
-            }
-            
             // Single block scheduled as-is
             if let singleBlock = block as? SingleBlock {
                 schedule.insert(singleBlock, at: 0)
-                priorDest = singleBlock.destinations.last
                 i -= 1
                 continue
             }
@@ -260,7 +267,6 @@ private extension Scheduler {
             let optionBlock = block as! OptionBlock
             if optionBlock.isFixed {
                 schedule.insert(optionBlock, at: 0)
-                priorDest = optionBlock.destinations.last
                 i -= 1
                 continue
             }
@@ -287,29 +293,34 @@ private extension Scheduler {
             
             // Continue past the option block group
             i =  range.lowerBound - 1
-            priorDest = blocks[i + 1].destinations.last
         }
+        
+        schedule.sort(by: { $0.timing.start < $1.timing.start })
         return schedule
     }
     
     func scheduleBlocksForwards(_ blocks: [ScheduleBlock], from startIndex: Int) -> [ScheduleBlock] {
         var schedule = [ScheduleBlock]()
-        var priorDest : Destination?
+        var priorDest = blocks[startIndex].destinations.last
         var i = startIndex
-        while (i < blocks.count) {
-            
+        
+        for i in (i..<blocks.count) {
             var block = blocks[i]
-            
             if !block.isPusher {
                 if let newTiming = newTimingForFutureBlock(block, priorDest) {
                     block.timing = newTiming
+                    priorDest = block.destinations.last
                 }
             }
+        }
+        
+        while (i < blocks.count) {
             
+            var block = blocks[i]
+
             // Single block scheduled as-is
             if let singleBlock = block as? SingleBlock {
                 schedule.append(singleBlock)
-                priorDest = singleBlock.destinations.last
                 i += 1
                 continue
             }
@@ -318,7 +329,6 @@ private extension Scheduler {
             let optionBlock = block as! OptionBlock
             if optionBlock.isFixed {
                 schedule.append(optionBlock)
-                priorDest = optionBlock.destinations.last
                 i += 1
                 continue
             }
@@ -345,8 +355,9 @@ private extension Scheduler {
             
             // Continue past the option block group
             i =  range.upperBound + 1
-            priorDest = blocks[i - 1].destinations.last
         }
+        
+        schedule.sort(by: { $0.timing.start < $1.timing.start })
         return schedule
     }
     
@@ -356,8 +367,13 @@ private extension Scheduler {
         var movingBlock = blocks[movingBlockIndex]
         movingBlock.isPusher = true
         
-        let firstScheduledHalf = scheduleBlocksBackwards(blocks, from: movingBlockIndex).dropLast()
-        let secondScheduledHalf = scheduleBlocksForwards(blocks, from: movingBlockIndex)
+        var firstScheduledHalf = scheduleBlocksBackwards(blocks, from: movingBlockIndex)
+        var secondScheduledHalf = scheduleBlocksForwards(blocks, from: movingBlockIndex)
+        if firstScheduledHalf.count > secondScheduledHalf.count {
+            firstScheduledHalf.popLast()
+        } else {
+            secondScheduledHalf.remove(at: 0)
+        }
         schedule.append(contentsOf: firstScheduledHalf)
         schedule.append(contentsOf: secondScheduledHalf)
         
@@ -454,10 +470,11 @@ private extension Scheduler {
             
             // Select the option for each block
             for i in blocks.indices {
-                
-                var block = blocks[i]
-                block.selectedOption = bestOption[i]
-                
+                // If the block is part of this option, set it
+                if bestOption.indices.contains(i) {
+                    var block = blocks[i]
+                    block.selectedOption = bestOption[i]
+                }
             }
         } else {
             for i in blocks.indices {
