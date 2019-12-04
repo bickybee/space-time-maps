@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,17 +11,17 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="PlaceCell" customModule="Space_Time_Maps" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="241" height="58"/>
+            <rect key="frame" x="0.0" y="0.0" width="120" height="58"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="241" height="58"/>
+                <rect key="frame" x="0.0" y="0.0" width="120" height="58"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kqu-Wp-sI1">
-                        <rect key="frame" x="0.0" y="0.0" width="241" height="58"/>
+                        <rect key="frame" x="0.0" y="0.0" width="120" height="58"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Mf-1H-oPR" userLabel="Destination">
-                                <rect key="frame" x="10" y="10" width="221" height="12"/>
+                                <rect key="frame" x="10" y="10" width="100" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="12" id="IAL-cJ-lk5"/>
                                 </constraints>
@@ -39,21 +39,23 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qFB-Qv-DIS">
-                                <rect key="frame" x="195" y="14" width="30" height="30"/>
+                                <rect key="frame" x="90" y="24" width="20" height="20"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="bcO-tC-XFl"/>
-                                    <constraint firstAttribute="width" constant="30" id="hqh-c0-kko"/>
+                                    <constraint firstAttribute="height" constant="20" id="bcO-tC-XFl"/>
+                                    <constraint firstAttribute="width" constant="20" id="hqh-c0-kko"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="✏️">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zpF-jz-OjN">
-                                <rect key="frame" x="160" y="14" width="30" height="30"/>
+                                <rect key="frame" x="65" y="24" width="20" height="20"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="bno-hI-aD3"/>
-                                    <constraint firstAttribute="height" constant="30" id="f4m-GU-03c"/>
+                                    <constraint firstAttribute="width" constant="20" id="bno-hI-aD3"/>
+                                    <constraint firstAttribute="height" constant="20" id="f4m-GU-03c"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="🗑">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -61,14 +63,14 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="qFB-Qv-DIS" firstAttribute="centerY" secondItem="Kqu-Wp-sI1" secondAttribute="centerY" id="3Pr-RW-DpM"/>
+                            <constraint firstItem="qFB-Qv-DIS" firstAttribute="centerY" secondItem="Kqu-Wp-sI1" secondAttribute="centerY" constant="5" id="3Pr-RW-DpM"/>
                             <constraint firstItem="Wfm-Bi-uFw" firstAttribute="top" secondItem="3Mf-1H-oPR" secondAttribute="bottom" constant="5" id="Ctv-hL-LuE"/>
                             <constraint firstAttribute="trailing" secondItem="3Mf-1H-oPR" secondAttribute="trailing" constant="10" id="FEZ-Lw-57i"/>
                             <constraint firstItem="qFB-Qv-DIS" firstAttribute="leading" secondItem="zpF-jz-OjN" secondAttribute="trailing" constant="5" id="OGg-MC-04L"/>
-                            <constraint firstItem="zpF-jz-OjN" firstAttribute="centerY" secondItem="Kqu-Wp-sI1" secondAttribute="centerY" id="RJX-xS-EV6"/>
+                            <constraint firstItem="zpF-jz-OjN" firstAttribute="centerY" secondItem="Kqu-Wp-sI1" secondAttribute="centerY" constant="5" id="RJX-xS-EV6"/>
                             <constraint firstItem="3Mf-1H-oPR" firstAttribute="leading" secondItem="Kqu-Wp-sI1" secondAttribute="leading" constant="10" id="SDe-14-MyQ"/>
                             <constraint firstItem="3Mf-1H-oPR" firstAttribute="top" secondItem="Kqu-Wp-sI1" secondAttribute="top" priority="750" constant="10" id="W75-HG-JYf"/>
-                            <constraint firstAttribute="trailing" secondItem="qFB-Qv-DIS" secondAttribute="trailing" constant="16" id="faT-QA-p1b"/>
+                            <constraint firstAttribute="trailing" secondItem="qFB-Qv-DIS" secondAttribute="trailing" constant="10" id="faT-QA-p1b"/>
                             <constraint firstItem="Wfm-Bi-uFw" firstAttribute="leading" secondItem="Kqu-Wp-sI1" secondAttribute="leading" constant="10" id="wh0-5b-mKj"/>
                         </constraints>
                     </view>
@@ -81,7 +83,7 @@
                 <constraint firstAttribute="trailing" secondItem="Kqu-Wp-sI1" secondAttribute="trailing" id="hxR-d3-Cx0"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
-            <size key="customSize" width="241" height="58"/>
+            <size key="customSize" width="120" height="58"/>
             <connections>
                 <outlet property="containerView" destination="Kqu-Wp-sI1" id="fhb-E4-P2H"/>
                 <outlet property="deleteBtn" destination="zpF-jz-OjN" id="jeU-WQ-WN8"/>
@@ -89,7 +91,7 @@
                 <outlet property="editBtn" destination="qFB-Qv-DIS" id="2qC-AP-Mw1"/>
                 <outlet property="nameLabel" destination="3Mf-1H-oPR" id="vVV-4S-2Vm"/>
             </connections>
-            <point key="canvasLocation" x="163.04347826086959" y="108.48214285714285"/>
+            <point key="canvasLocation" x="75.362318840579718" y="108.48214285714285"/>
         </collectionViewCell>
     </objects>
 </document>

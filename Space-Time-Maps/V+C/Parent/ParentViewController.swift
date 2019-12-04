@@ -89,7 +89,6 @@ class ParentViewController: UIViewController {
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
-                palette.setupCellWidth()
                 palette.collectionView.reloadData()
                 
             })
@@ -107,7 +106,6 @@ class ParentViewController: UIViewController {
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
                 self.view.layoutIfNeeded()
-                palette.setupCellWidth()
                 palette.collectionView.reloadData()
                 
             })

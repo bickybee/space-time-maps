@@ -41,7 +41,9 @@ class PlacePaletteViewController: DraggableContentViewController {
     
     // CollectionView cell
     private let cellHeight : CGFloat = 50.0
-    private var cellWidth : CGFloat!
+    private var cellWidth : CGFloat {
+        return inEditingMode ? (collectionView.bounds.width / 2.0) - (cellInsets.left + cellInsets.right) : (collectionView.bounds.width) - (cellInsets.left + cellInsets.right)
+    }
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     private let cellInsets = UIEdgeInsets(top: 5, left: 8, bottom: 10, right: 8)
 
@@ -64,11 +66,11 @@ class PlacePaletteViewController: DraggableContentViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = true
+        
         searchButton.isEnabled = false
         collectionView.delaysContentTouches = false
         self.dragDataDelegate = self
-        
-        setupCellWidth()
+ 
     }
     
     func setupButtons() {
@@ -83,10 +85,6 @@ class PlacePaletteViewController: DraggableContentViewController {
 //        groups.append(contentsOf: defaultPlaceGroups)
         groups.append(PlaceGroup(name:"default", places: [], kind: .none))
         
-    }
-    
-    func setupCellWidth() {
-        self.cellWidth = collectionView.bounds.width - (sectionInsets.left + sectionInsets.right)
     }
     
     @IBAction func searchClicked(_ sender: Any) {
@@ -225,6 +223,14 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         return placeCellFrom(cell, place)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("select")
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        print("deselect")
+    }
+    
     func placeholderCellFrom(_ cell: PlaceCell) -> PlaceCell {
         cell.contentView.alpha = 0.0
         cell.backgroundColor = .clear
@@ -262,7 +268,6 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        setupCellWidth()
         if isPlaceholder(indexPath) {
             return CGSize(width:cellWidth, height:cellHeight * 0.2)
         } else {
