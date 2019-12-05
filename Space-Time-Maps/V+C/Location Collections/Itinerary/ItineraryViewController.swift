@@ -143,12 +143,13 @@ class ItineraryViewController: DraggableContentViewController {
     
     func computeRoute() {
         // This is called when the mode of transport changes, but needs to be fixed because it won't update asManyOf blocks if they change to no longer fit their dests...
-        scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary)
+        // picking an arbitrary movingIndex to avoid conflicts / enforce block pushing!
+        scheduler.reschedule(blocks: itinerary.schedule, movingIndex:0, callback: didEditItinerary)
         
     }
     
-    func updateScheduler(_ places: [Place]) {
-        scheduler.updatePlaces(places)
+    func updateScheduler(_ places: [Place], _ callback: (() -> ())?) {
+        scheduler.updateTimeDict(places, callback)
     }
     
     func updateSchedulerWithPlace(_ place: Place, in places: [Place]) {
@@ -157,7 +158,6 @@ class ItineraryViewController: DraggableContentViewController {
     
     func updateScheduler(_ travelMode: TravelMode) {
         scheduler.travelMode = travelMode
-        scheduler.reschedule(blocks: itinerary.schedule, callback: didEditItinerary(blocks:route:))
     }
     
     @objc func pinch (_ sender: UIPinchGestureRecognizer) {
@@ -446,6 +446,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // MARK: - PlacePalette Drag Delegate
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {
+        print("boop")
+    }
+    
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
@@ -571,7 +575,7 @@ extension ItineraryViewController : DragDelegate {
             } else if let group = object as? PlaceGroup {
                 switch group.kind {
                 case .asManyOf:
-                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), timeDict: scheduler.timeDict)
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
                 case .oneOf,
                      .none:
                     return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))

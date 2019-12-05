@@ -57,7 +57,7 @@ class QueryService {
             {
                 print(JSONString)
             }
-            let results = self.dataToTimeDict(data, origins, destinations)
+            let results = self.dataToTimeDict(data, origins, destinations, travelMode)
             callback(results)
         }
     }
@@ -149,7 +149,7 @@ class QueryService {
         return lineStrings
     }
     
-    func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place]) -> TimeDict? {
+    func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place], _ travelMode: TravelMode) -> TimeDict? {
         let decoder = JSONDecoder()
         var dict : TimeDict?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
@@ -162,7 +162,7 @@ class QueryService {
             let destIDs = destinations.map( { $0.placeID })
             for (i, row) in matrixResponseObject.rows.enumerated() {
                 for (j, elem) in row.elements.enumerated() {
-                    let key = PlacePair(startID: originIDs[i], endID: destIDs[j])
+                    let key = PlacePair(startID: originIDs[i], endID: destIDs[j], travelMode: travelMode)
                     dict![key] = TimeInterval(elem.duration.value)
                 }
             }

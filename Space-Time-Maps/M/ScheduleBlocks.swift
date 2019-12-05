@@ -190,9 +190,9 @@ class AsManyOfBlock : OptionBlock {
         }
     }
     
-    convenience init(placeGroup: PlaceGroup, timing: Timing, timeDict: TimeDict) {
+    convenience init(placeGroup: PlaceGroup, timing: Timing, timeDict: TimeDict, travelMode: TravelMode) {
         self.init(placeGroup: placeGroup, timing: timing)
-        self.setPermutationsUsing(timeDict)
+        self.setPermutationsUsing(timeDict, travelMode)
     }
     
     func copy() -> ScheduleBlock {
@@ -230,7 +230,7 @@ class AsManyOfBlock : OptionBlock {
     }
     
     // Find out which combination of places actually fits in the overall timeblock
-    func setPermutationsUsing(_ timeDict: TimeDict) {
+    func setPermutationsUsing(_ timeDict: TimeDict, _ travelMode: TravelMode) {
         
         // Keep track of valid terms and their total times
         
@@ -257,7 +257,7 @@ class AsManyOfBlock : OptionBlock {
                     // Time spent getting from this place to the next
                     if (i < perm.count - 1) {
                         let nextPlace = placeGroup[perm[i + 1]]
-                        timeNeeded += timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID)]!
+                        timeNeeded += timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
                     }
                 }
                 

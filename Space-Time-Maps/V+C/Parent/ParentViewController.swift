@@ -38,7 +38,7 @@ class ParentViewController: UIViewController {
         updateMap()
         print("layout subviews")
         if !initialPlacesLoaded {
-            itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}))
+            itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}), nil)
             initialPlacesLoaded = true
         }
     }
@@ -66,7 +66,9 @@ class ParentViewController: UIViewController {
                 travelMode = .driving
             }
             itineraryController.updateScheduler(travelMode)
-            itineraryController.computeRoute()
+            itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places})) {
+                self.itineraryController.computeRoute()
+            }
         }
     }
     
@@ -198,7 +200,7 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
         print("update places")
         updateMap()
         let places = groups.flatMap({ $0.places })
-        itineraryController.updateScheduler(places)
+        itineraryController.updateScheduler(places, nil)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {

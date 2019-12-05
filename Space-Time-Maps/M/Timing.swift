@@ -13,6 +13,7 @@ typealias TimeDict = [ PlacePair : TimeInterval ]
 struct PlacePair : Hashable {
     var startID : String
     var endID : String
+    var travelMode: TravelMode
 }
 
 protocol Schedulable {
