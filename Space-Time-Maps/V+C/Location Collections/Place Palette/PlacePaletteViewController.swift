@@ -154,7 +154,9 @@ extension PlacePaletteViewController: GroupCreationDelegate {
             collectionView.deleteSections(IndexSet(integer: index))
             groups.remove(at: index)
             
-        }, completion: nil)
+        }, completion: { success in
+            self.collectionView.reloadData()
+        })
     }
     
 }
@@ -368,6 +370,10 @@ extension PlacePaletteViewController: DragDataDelegate {
 }
 
 extension PlacePaletteViewController: DragDelegate {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {
+        //
+    }
+    
 
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         

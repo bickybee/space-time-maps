@@ -77,8 +77,8 @@ class MapViewController: UIViewController {
         
         let routeLegs = itinerary.route.legs
         let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
-        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
-        overlays = markers + polylines + ticks
+//        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
+        overlays = markers + polylines// + ticks
         mapView.add(overlays: overlays)
     }
     
