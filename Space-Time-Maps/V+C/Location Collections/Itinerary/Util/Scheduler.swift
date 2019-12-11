@@ -61,7 +61,7 @@ class Scheduler {
     }
     
     // Need to check if the pinch causes rescheduling changes
-    func schedulePinch(of block: ScheduleBlock, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func schedulePinch(of block: ScheduleBlock, withIndex index: Int, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         
         guard blocks.count > 0 else {
             callback(blocks, Route()); return
@@ -86,9 +86,37 @@ class Scheduler {
         if needsRescheduling {
             self.reschedule(blocks: blocks, callback: callback)
         } else {
-            self.scheduleShift(blocks: blocks, callback: callback)
+            
+            let theCallback : ([ScheduleBlock]?, Route?) -> () = { shiftedBlocks, route in
+                if let route = route, let shiftedBlocks = shiftedBlocks {
+                    if self.intersectsLegs(block, in: route){
+                        self.reschedule(blocks: shiftedBlocks, movingIndex: index, callback: callback)
+                    } else {
+                        callback(shiftedBlocks, route)
+                    }
+                } else {
+                    callback(shiftedBlocks, route)
+                    callback(shiftedBlocks, route)
+                }
+            }
+            
+            self.scheduleShift(blocks: blocks, callback: theCallback)
         }
         
+    }
+    
+    func intersectsLegs(_ block: ScheduleBlock, in route: Route) -> Bool {
+        
+        guard block.destinations.count > 0 else { return false }
+        
+        for dest in block.destinations {
+            for leg in route.legs {
+                if dest.timing.intersects(leg.travelTiming) {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     // Changing option in optionBlock
@@ -383,6 +411,8 @@ private extension Scheduler {
         return schedule
     }
     
+    
+    
     func scheduleBlocks(_ blocks: [ScheduleBlock], _ movingBlockIndex: Int) -> [ScheduleBlock] {
         
         var schedule = [ScheduleBlock]()
@@ -523,7 +553,7 @@ private extension Scheduler {
             for (i, perm)in block.allOptions[optionLevel].enumerated() {
                         
                 let places = perm.map( { block.placeGroup[$0] } )
-                if let destinations = squishedDestinations(from: places, within: block.timing) {
+                if let destinations = evenlyDispersedDestinations(from: places, within: block.timing) {
                     options.append(destinations)
                     permsToKeep.append(i)
                 }
@@ -602,7 +632,7 @@ private extension Scheduler {
         return destinations
     }
     
-    func evenlyDispersedDestinations(from places: [Place], within timing: Timing) -> [Destination] {
+    func evenlyDispersedDestinations(from places: [Place], within timing: Timing) -> [Destination]? {
         
         var extraTime = timing.duration
         var destinations = [Destination]()

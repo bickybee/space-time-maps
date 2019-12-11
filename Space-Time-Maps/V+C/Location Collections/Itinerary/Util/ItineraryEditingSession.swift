@@ -101,6 +101,7 @@ class ItineraryEditingSession: NSObject {
             if changedOrder || changedClosedHoursIntersections {
                 print("reschedule")
                 scheduler.reschedule(blocks: modifiedBlocks, movingIndex: insertAt, callback: callback)
+                
             } else { // Otherwise just shift, no reschedule
                 print("shift")
                 scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
@@ -119,16 +120,11 @@ class ItineraryEditingSession: NSObject {
         movingBlock.timing.duration = duration
         movingBlock.timing.end = movingBlock.timing.start + movingBlock.timing.duration
         
-        if intersectsOtherBlocks(movingBlock) {
-            removeBlock()
-        } else {
-            // Compute new route with modifications
-            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
-            modifiedBlocks.append(movingBlock)
-            modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
-            
-            scheduler.schedulePinch(of: movingBlock, in: modifiedBlocks, callback: callback)
-        }
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        
+        scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
         
     }
     
@@ -141,20 +137,9 @@ class ItineraryEditingSession: NSObject {
         moveBlock(toTime: movingBlock.timing.start)
     }
     
-    func intersectsOtherBlocks(_ block: ScheduleBlock) -> Bool {
+    func causesIntersection(_ block: ScheduleBlock) -> Bool {
         
         guard block.destinations.count > 0 else { return false }
-        
-//        for dest in block.destinations {
-//            for b in baseBlocks {
-//                guard b.destinations.count > 0 else { continue }
-//                for d in b.destinations {
-//                    if d.timing.intersects(dest.timing) {
-//                        return true
-//                    }
-//                }
-//            }
-//        }
         
         for b in originalBaseBlocks {
             guard b.destinations.count > 0 else { continue }
