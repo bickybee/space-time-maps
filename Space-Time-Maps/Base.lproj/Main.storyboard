@@ -17,13 +17,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0v-a2-Sla" userLabel="Itinerary">
-                                <rect key="frame" x="0.0" y="359" width="310.5" height="503"/>
+                                <rect key="frame" x="0.0" y="309" width="310.5" height="553"/>
                                 <connections>
                                     <segue destination="q2t-3V-v5v" kind="embed" id="iCH-Ie-O3q"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXj-Tg-eL1" userLabel="Place Palette">
-                                <rect key="frame" x="310.5" y="359" width="103.5" height="503"/>
+                                <rect key="frame" x="310.5" y="309" width="103.5" height="553"/>
                                 <connections>
                                     <segue destination="0gj-fn-l7y" kind="embed" id="me2-TH-vZj"/>
                                 </connections>
@@ -89,9 +89,9 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Bk-6M-Rcq" userLabel="Map">
-                                <rect key="frame" x="0.0" y="109" width="414" height="250"/>
+                                <rect key="frame" x="0.0" y="109" width="414" height="200"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="iIV-OF-r5Y"/>
+                                    <constraint firstAttribute="height" constant="200" id="iIV-OF-r5Y"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="ww7-Vp-gll" kind="embed" id="spY-gK-A7k"/>

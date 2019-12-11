@@ -232,7 +232,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 2:
             return itinerary.schedule.count
         case 3:
-            return 1 
+            return 1
         case 4:
             return 0//shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
         default:
@@ -466,7 +466,8 @@ extension ItineraryViewController : DragDelegate {
         }
         
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
-        timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: collectionView.frame, afterScreenUpdates: true)))
+        let snapshotFrame = CGRect(x: 0, y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height)
+        timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: snapshotFrame, afterScreenUpdates: true)), withFrame: snapshotFrame)
         collectionView.reloadData()
     }
     

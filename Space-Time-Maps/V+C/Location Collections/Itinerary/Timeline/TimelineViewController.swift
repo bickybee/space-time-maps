@@ -130,8 +130,8 @@ extension TimelineViewController {
         return y
     }
     
-    public func addShadowView(from backgroundImage: UIColor) {
-        let snapshotView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+    public func addShadowView(from backgroundImage: UIColor, withFrame frame: CGRect) {
+        let snapshotView = UIView(frame: frame)//CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         snapshotView.backgroundColor = backgroundImage
         snapshotView.alpha = 0.25
         view.addSubview(snapshotView)
