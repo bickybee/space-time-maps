@@ -84,18 +84,18 @@ class Scheduler {
         }
         
         if needsRescheduling {
-            self.reschedule(blocks: blocks, callback: callback)
+            self.reschedule(blocks: blocks, movingIndex: index, callback: callback)
         } else {
             
+            // want to check route intersections post-shift, so set up a middle-man callback...
             let theCallback : ([ScheduleBlock]?, Route?) -> () = { shiftedBlocks, route in
                 if let route = route, let shiftedBlocks = shiftedBlocks {
-                    if self.intersectsLegs(block, in: route){
+                    if self.causesIntersection(block, withBlocks: shiftedBlocks, orWithroute: route) {
                         self.reschedule(blocks: shiftedBlocks, movingIndex: index, callback: callback)
                     } else {
                         callback(shiftedBlocks, route)
                     }
                 } else {
-                    callback(shiftedBlocks, route)
                     callback(shiftedBlocks, route)
                 }
             }
@@ -105,9 +105,7 @@ class Scheduler {
         
     }
     
-    func intersectsLegs(_ block: ScheduleBlock, in route: Route) -> Bool {
-        
-        guard block.destinations.count > 0 else { return false }
+    func causesIntersection(_ block: ScheduleBlock, withBlocks blocks: [ScheduleBlock], orWithroute route: Route) -> Bool {
         
         for dest in block.destinations {
             for leg in route.legs {
@@ -116,6 +114,16 @@ class Scheduler {
                 }
             }
         }
+        
+        for b in blocks {
+            guard b.destinations.count > 0 else { continue }
+            for d in b.destinations {
+                if d.timing.intersects(block.timing) {
+                    return true
+                }
+            }
+        }
+        
         return false
     }
     
@@ -647,6 +655,10 @@ private extension Scheduler {
             }
         }
         
+        if extraTime < 0 {
+            return nil
+        }
+        
         var time = timing.start
         let timeBetweenDests = extraTime / Double((places.count - 1))
         for (i, place) in places.enumerated() {
@@ -655,6 +667,11 @@ private extension Scheduler {
             destinations.append(dest)
             
             time = destTiming.end + timeBetweenDests
+            if i < (places.count - 1) {
+                let nextPlace = places[i + 1]
+                let legTime = timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                time += legTime
+            }
         }
         
         return destinations

@@ -137,7 +137,7 @@ class ItineraryEditingSession: NSObject {
         moveBlock(toTime: movingBlock.timing.start)
     }
     
-    func causesIntersection(_ block: ScheduleBlock) -> Bool {
+    func intersectsBlocks(_ block: ScheduleBlock) -> Bool {
         
         guard block.destinations.count > 0 else { return false }
         
