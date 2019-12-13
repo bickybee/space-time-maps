@@ -32,15 +32,42 @@ class ParentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidStartContentDrag), name: .didStartContentDrag, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidEndContentDrag), name: .didEndContentDrag, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(onDidContinueContentDrag), name: .didContinueContentDrag, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
-        updateMap()
         if !initialPlacesLoaded {
             itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}), nil)
+            updateMap()
+            fitMapToAllMarkers()
             initialPlacesLoaded = true
         }
     }
+    
+    @objc func onDidStartContentDrag(_ notification: Notification) {
+        var places = [Place]()
+        if let block = notification.object as? ScheduleBlock {
+            places = block.places
+        } else if let place = notification.object as? Place {
+            places = [place]
+        } else if let placeGroup = notification.object as? PlaceGroup {
+            places = placeGroup.places
+        }
+        
+        mapController!.currentDraggingPlaces = places
+        updateMap()
+    }
+    
+    @objc func onDidEndContentDrag(_ notification: Notification) {
+        mapController!.currentDraggingPlaces = []
+        updateMap()
+    }
+    
+//    @objc func onDidContinueContentDrag(_ notification: Notification) {
+//        mapController!.currentDraggingPlaces = []
+//    }
     
     // Pass pinches down to itinerary
     @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
@@ -134,6 +161,10 @@ class ParentViewController: UIViewController {
 
     }
     
+    func fitMapToAllMarkers() {
+        mapController.fitToAllMarkers()
+    }
+    
     func updateTransportTimeLabel() {
         let duration = itineraryController.itinerary.duration
         let travelTime = itineraryController.itinerary.route.travelTime
@@ -176,6 +207,7 @@ class ParentViewController: UIViewController {
             mapVC.delegate = self
             mapController = mapVC
             updateMap()
+            fitMapToAllMarkers()
             
         }
     }
@@ -199,7 +231,6 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         print("update places")
-        updateMap()
         let places = groups.flatMap({ $0.places })
         itineraryController.updateScheduler(places, nil)
     }

@@ -17,20 +17,38 @@ class MapUtils {
         return style
     }
     
-    private static let stringAttributes = [
+    private static var shadowStyle : NSShadow {
+        var shadow = NSShadow()
+        shadow.shadowColor = UIColor.darkGray
+        shadow.shadowBlurRadius = 5.0
+        return shadow
+    }
+    
+    private static let numStringAttr = [
         NSAttributedString.Key.paragraphStyle: paragraphStyle,
-        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24.0),
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20.0),
         NSAttributedString.Key.foregroundColor: UIColor.white
     ]
     
+    private static let markerStringAttr = [
+        NSAttributedString.Key.paragraphStyle: paragraphStyle,
+        NSAttributedString.Key.font: UIFont.fontAwesome(ofSize: 30.0, style: .solid),
+    ]
+    
+    private static let bgMarkerStringAttr = [
+        NSAttributedString.Key.paragraphStyle: paragraphStyle,
+        NSAttributedString.Key.font: UIFont.fontAwesome(ofSize: 40.0, style: .solid),
+    ]
+
+    
     // Weirdly separated dest vs. non-dest functions cuz of weird dumb implementation decisions elsewhere lol
     
-    public static func markersForPlacesIn(_ placeGroups : [PlaceGroup], _ itinerary: Itinerary) -> [GMSMarker] {
+    public static func markersForPlacesIn(_ placeGroups : [PlaceGroup], _ itinerary: Itinerary, _ dragging: [Place]) -> [GMSMarker] {
         
         var markers = [GMSMarker]()
         
         for group in placeGroups {
-            markers.append(contentsOf: markersForPlaces(group.places, itinerary))
+            markers.append(contentsOf: markersForPlaces(group.places, itinerary, dragging))
         }
         
         return markers
@@ -38,7 +56,7 @@ class MapUtils {
 
     
     // Destination places get coloured via gradient
-    public static func markersForPlaces(_ places : [Place], _ itinerary: Itinerary) -> [GMSMarker] {
+    public static func markersForPlaces(_ places : [Place], _ itinerary: Itinerary, _ dragging: [Place]) -> [GMSMarker] {
         
         guard places.count > 0 else { return [] }
         var markers = [GMSMarker]()
@@ -49,28 +67,40 @@ class MapUtils {
             let marker = markerFor(place: places[index])
             let colour = place.color
             if let itineraryIndex = itinerary.destIndexOfPlaceWithName(place.name) {
-                marker.icon = MapUtils.numberedIcon(with: colour, number: itineraryIndex + 1)
+                if dragging.contains(place) {
+                    marker.icon = MapUtils.numberedShadowedIcon(with: colour, number: itineraryIndex + 1)
+                } else {
+                    marker.icon = MapUtils.numberedIcon(with: colour, number: itineraryIndex + 1)
+                }
+                marker.zIndex = 2
             } else {
-                marker.icon = GMSMarker.markerImage(with: colour)
+                if dragging.contains(place) {
+                    marker.icon = circleShadowedIcon(with: colour)
+                } else {
+                    marker.icon = circleIcon(with: colour)
+                }
+                marker.groundAnchor = CGPoint(x: 0.5, y: 0.5)
+                marker.zIndex = 1
             }
             markers.append(marker)
         }
         
         return markers
     }
+
     
-    private static func shadowedIcon(with color: UIColor, shadowColor: UIColor) -> UIImage {
-        let bottomImage = GMSMarker.markerImage(with: shadowColor)
-        let topImage = GMSMarker.markerImage(with: color)
+    private static func numberedIcon(with color: UIColor, number: Int) -> UIImage {
         
-        let size = CGSize(width: topImage.size.width * 1.1, height: topImage.size.height * 1.1)
+        let size = CGSize(width: 33, height: 33)
         UIGraphicsBeginImageContext(size)
         
-        let shadowSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        bottomImage.draw(in: shadowSize, blendMode: .normal, alpha: 0.75)
         
-        let drawSize = CGRect(x: 3, y: 4, width: size.width - 6, height: size.height - 8)
-        topImage.draw(in: drawSize)
+        let attr = MapUtils.markerStringAttr.merging([NSAttributedString.Key.foregroundColor: color], uniquingKeysWith: {a, b in return a})
+        let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
+        let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
+        let rect = CGRect(x: 1, y: 1, width: 32, height: 32)
+        markerStr.draw(in: rect)
+        numStr.draw(in: rect)
         
         let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
@@ -78,7 +108,59 @@ class MapUtils {
         return newImage
     }
     
-    private static func numberedIcon(with color: UIColor, number: Int) -> UIImage {
+    private static func numberedShadowedIcon(with color: UIColor, number: Int) -> UIImage {
+        
+        let size = CGSize(width: 40, height: 40)
+        UIGraphicsBeginImageContext(size)
+        
+        let bgAttr = MapUtils.bgMarkerStringAttr.merging([NSAttributedString.Key.foregroundColor: color.withAlphaComponent(0.5)], uniquingKeysWith: {a, b in return a})
+        let attr = MapUtils.markerStringAttr.merging([NSAttributedString.Key.foregroundColor: color], uniquingKeysWith: {a, b in return a})
+        let bgMarkerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: bgAttr)
+        let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
+        let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
+        let bgRect = CGRect(x: 0, y: 0, width: 40, height: 40)
+        let rect = CGRect(x: 4, y: 4, width: 32, height: 32)
+        bgMarkerStr.draw(in: bgRect)
+        markerStr.draw(in: rect)
+        numStr.draw(in: rect)
+        
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    private static func circleIcon(with color: UIColor) -> UIImage {
+        
+        let size = CGSize(width: 15, height:15)
+        UIGraphicsBeginImageContext(size)
+        let ctx = UIGraphicsGetCurrentContext()!
+        let rect = CGRect(x:0, y:0, width:15, height:15)
+        ctx.setFillColor(color.cgColor)
+        ctx.fillEllipse(in: rect)
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    private static func circleShadowedIcon(with color: UIColor) -> UIImage {
+       let size = CGSize(width: 25, height:25)
+        UIGraphicsBeginImageContext(size)
+        let ctx = UIGraphicsGetCurrentContext()!
+        let bgRect = CGRect(x:0, y:0, width:25, height:25)
+        let rect = CGRect(x:5, y:5, width:15, height:15)
+        ctx.setFillColor(color.withAlphaComponent(0.5).cgColor)
+        ctx.fillEllipse(in: bgRect)
+        ctx.setFillColor(color.cgColor)
+        ctx.fillEllipse(in: rect)
+        let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    private static func numberedGMSIcon(with color: UIColor, number: Int) -> UIImage {
         let markerImage = GMSMarker.markerImage(with: color)
         
         let size = CGSize(width: markerImage.size.width, height: markerImage.size.height)
@@ -87,7 +169,7 @@ class MapUtils {
         let markerSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         markerImage.draw(in: markerSize)
 
-        let str = NSAttributedString(string:(number).description, attributes: MapUtils.stringAttributes)
+        let str = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
         str.draw(in: markerSize)
         
         let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
@@ -119,6 +201,7 @@ class MapUtils {
         
         for place in places {
             let marker = markerFor(place: place)
+            
             marker.icon = GMSMarker.markerImage(with: .lightGray)
             markers.append(marker)
         }

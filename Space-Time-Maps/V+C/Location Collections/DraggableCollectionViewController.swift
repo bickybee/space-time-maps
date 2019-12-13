@@ -79,6 +79,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
               setupDraggingIndex() else { return }
         
         // Ping delegate
+        NotificationCenter.default.post(name: .didStartContentDrag, object: draggingObject!)
         dragDelegate?.draggableContentViewController(self, didBeginDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
         
     }
@@ -94,6 +95,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         let dy = location.y
         draggingView!.center = CGPoint(x: dx, y: dy)
         // Ping delegate
+        NotificationCenter.default.post(name: .didContinueContentDrag, object: draggingObject!)
         dragDelegate?.draggableContentViewController(self, didContinueDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
     }
     
@@ -103,6 +105,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         guard isDraggingSessionSetup() else { return }
         
         // Ping delegate
+        NotificationCenter.default.post(name: .didEndContentDrag, object: draggingObject!)
         dragDelegate?.draggableContentViewController(self, didEndDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
         
         // Clean up dragging session
@@ -192,4 +195,11 @@ protocol DragDataDelegate : AnyObject {
     
 }
 
+extension Notification.Name {
+    
+    static let didStartContentDrag = Notification.Name("didStartContentDrag")
+    static let didContinueContentDrag = Notification.Name("didContinueContentDrag")
+    static let didEndContentDrag = Notification.Name("didEndContentDrag")
+    
+}
 

@@ -16,6 +16,15 @@ typealias UIColorGradient = (UIColor, UIColor)
 class ColorUtils {
     
     static private var usedColors = [UIColor]()
+    static private let excludeColors = [
+        UIColor.flatBlack(),
+        UIColor.flatWhite(),
+        UIColor.flatPowderBlue(),
+        UIColor.flatWatermelon(),
+        UIColor.flatPurple(),
+        UIColor.flatMint(),
+        UIColor.flatSand()
+    ]
     
     static func randomColor() -> UIColor {
         let color = RandomFlatColorWithShade(.dark)
