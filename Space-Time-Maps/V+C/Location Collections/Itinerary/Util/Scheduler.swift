@@ -48,16 +48,31 @@ class Scheduler {
     }
     
     // Just changing positions of blocks, no re-ordering.
-    func scheduleShift(blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+    func scheduleShift(blocks: [ScheduleBlock], movingBlockIndex: Int, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         
         guard blocks.count > 0 else {
             callback(blocks, Route()); return
         }
         
         // Don't actually need to reschedule blocks, just the route!
-        let route = routeFromBlocks(blocks)
+        pushBlocks(blocks, movingBlockIndex)
+        var route = routeFromBlocks(blocks)
         
         callback(blocks, route)
+    }
+    
+    func intersectsLegs(_ block: ScheduleBlock, in route: Route?) -> Bool {
+        
+        guard let route = route, block.destinations.count > 0 else { return false }
+        
+        for dest in block.destinations {
+            for leg in route.legs {
+                if dest.timing.intersects(leg.travelTiming) {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     // Need to check if the pinch causes rescheduling changes
@@ -100,7 +115,7 @@ class Scheduler {
                 }
             }
             
-            self.scheduleShift(blocks: blocks, callback: theCallback)
+            self.scheduleShift(blocks: blocks, movingBlockIndex: index, callback: theCallback)
         }
         
     }
@@ -148,7 +163,7 @@ class Scheduler {
         
         dispatchGroup.enter()
         
-        scheduleShift(blocks: blocks) { blocks, route in
+        scheduleShift(blocks: blocks, movingBlockIndex: blockIndex) { blocks, route in
             callback(blocks, route)
             dispatchGroup.leave()
         }
@@ -419,25 +434,63 @@ private extension Scheduler {
         return schedule
     }
     
+    func pushBlocksBackwards(_ blocks: [ScheduleBlock], from startIndex: Int) {
+       var priorDest = blocks[startIndex].destinations.first
+       
+       for i in (0...startIndex).reversed() {
+           var block = blocks[i]
+           if !block.isPusher {
+               if let newTiming = newTimingForPastBlock(block, priorDest) {
+                   block.timing = newTiming
+                   priorDest = block.destinations.first
+               } else {
+                break
+            }
+           }
+       }
+    }
+    
+    func pushBlocksForwards(_ blocks: [ScheduleBlock], from startIndex: Int) {
+        var priorDest = blocks[startIndex].destinations.last
+        
+        for i in (startIndex..<blocks.count) {
+            var block = blocks[i]
+            if !block.isPusher {
+                if let newTiming = newTimingForFutureBlock(block, priorDest) {
+                    block.timing = newTiming
+                    priorDest = block.destinations.last
+                } else {
+                    break
+                }
+            }
+        }
+    }
+    
+    func pushBlocks(_ blocks: [ScheduleBlock], _ movingBlockIndex: Int) {
+        var movingBlock = blocks[movingBlockIndex]
+        movingBlock.isPusher = true
+        pushBlocksForwards(blocks, from: movingBlockIndex)
+        pushBlocksBackwards(blocks, from: movingBlockIndex)
+        movingBlock.isPusher = false
+    }
     
     
     func scheduleBlocks(_ blocks: [ScheduleBlock], _ movingBlockIndex: Int) -> [ScheduleBlock] {
         
-        var schedule = [ScheduleBlock]()
-        var movingBlock = blocks[movingBlockIndex]
-        movingBlock.isPusher = true
         
-        var firstScheduledHalf = scheduleBlocksBackwards(blocks, from: movingBlockIndex)
-        var secondScheduledHalf = scheduleBlocksForwards(blocks, from: movingBlockIndex)
-        if firstScheduledHalf.count > secondScheduledHalf.count {
-            firstScheduledHalf.popLast()
-        } else {
-            secondScheduledHalf.remove(at: 0)
-        }
-        schedule.append(contentsOf: firstScheduledHalf)
-        schedule.append(contentsOf: secondScheduledHalf)
         
-        movingBlock.isPusher = false
+//        var firstScheduledHalf = scheduleBlocksBackwards(blocks, from: movingBlockIndex)
+//        var secondScheduledHalf = scheduleBlocksForwards(blocks, from: movingBlockIndex)
+//        if firstScheduledHalf.count > secondScheduledHalf.count {
+//            firstScheduledHalf.popLast()
+//        } else {
+//            secondScheduledHalf.remove(at: 0)
+//        }
+//        schedule.append(contentsOf: firstScheduledHalf)
+//        schedule.append(contentsOf: secondScheduledHalf)
+
+        let schedule = scheduleBlocks(blocks)
+        pushBlocks(schedule, movingBlockIndex)
         return schedule
         
     }
@@ -477,9 +530,9 @@ private extension Scheduler {
             var before : SingleBlock?
             // Are there destinations leading into/out of this set of option blocks?
             if let beforeFixed = blocks[safe: i - 1] as? OptionBlock, let beforeDest = beforeFixed.destinations.last, beforeFixed.isFixed {
-                    before = SingleBlock(timing: beforeDest.timing, place: beforeDest.place)
+                before = SingleBlock(timing: beforeDest.timing, place: beforeDest.place)
             } else {
-                let beforeDest = blocks[safe: i - 1] as? SingleBlock
+                before = blocks[safe: i - 1] as? SingleBlock
             }
             
             let after = blocks[safe: range.upperBound + 1] as? SingleBlock
@@ -535,7 +588,7 @@ private extension Scheduler {
             let bestOption = optionCombinations[iMin] // Contains ideal option index for each block
             
             // Select the option for each block
-            for i in blocks.indices {
+            for i in blocks.indices { // this should change, doesn't
                 // If the block is part of this option, set it
                 if bestOption.indices.contains(i) {
                     var block = blocks[i]

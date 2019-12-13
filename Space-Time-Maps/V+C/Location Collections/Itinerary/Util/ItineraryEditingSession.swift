@@ -76,9 +76,9 @@ class ItineraryEditingSession: NSObject {
             }
             
             // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
-            let changedOrder = true//(insertAt != lastPosition)
-            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
-            overlapsClosedHoursOfPlaces = closedHoursIntersections
+            let changedOrder = (insertAt != lastPosition)
+//            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
+//            overlapsClosedHoursOfPlaces = closedHoursIntersections
             modifiedBlocks.insert(movedBlock, at: insertAt)
             movingBlock = movedBlock
             lastPosition = insertAt
@@ -98,13 +98,13 @@ class ItineraryEditingSession: NSObject {
 //                }
 //            }
 
-            if changedOrder || changedClosedHoursIntersections {
+        if changedOrder {//|| changedClosedHoursIntersections {
                 print("reschedule")
                 scheduler.reschedule(blocks: modifiedBlocks, movingIndex: insertAt, callback: callback)
                 
             } else { // Otherwise just shift, no reschedule
                 print("shift")
-                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
+                scheduler.scheduleShift(blocks: modifiedBlocks, movingBlockIndex: insertAt, callback: callback)
             }
 //        }
         

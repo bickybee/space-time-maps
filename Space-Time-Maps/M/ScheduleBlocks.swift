@@ -169,7 +169,11 @@ class AsManyOfBlock : OptionBlock {
     var name : String {
         return placeGroup.name
     }
-    var isFixed: Bool
+    var isFixed: Bool {
+        didSet {
+            print("fixed")
+        }
+    }
     
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
