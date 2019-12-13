@@ -247,11 +247,11 @@
                                 </collectionReusableView>
                             </collectionView>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fyw-DJ-Da2">
-                                <rect key="frame" x="50" y="450" width="50" height="50"/>
+                                <rect key="frame" x="40" y="460" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="cIE-LH-cPe"/>
-                                    <constraint firstAttribute="height" constant="50" id="quC-VP-oq8"/>
+                                    <constraint firstAttribute="width" constant="40" id="cIE-LH-cPe"/>
+                                    <constraint firstAttribute="height" constant="40" id="quC-VP-oq8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="+place">
@@ -262,11 +262,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kzn-pD-kSj" userLabel="Group">
-                                <rect key="frame" x="0.0" y="450" width="50" height="50"/>
+                                <rect key="frame" x="0.0" y="460" width="40" height="40"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="KKL-5p-fJk"/>
-                                    <constraint firstAttribute="width" constant="50" id="gha-Vx-NkB"/>
+                                    <constraint firstAttribute="height" constant="40" id="KKL-5p-fJk"/>
+                                    <constraint firstAttribute="width" constant="40" id="gha-Vx-NkB"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="+group">
@@ -277,11 +277,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fA6-Yn-9mj" userLabel="Enlarge">
-                                <rect key="frame" x="250" y="450" width="50" height="50"/>
+                                <rect key="frame" x="260" y="460" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="eF4-qM-jwj"/>
-                                    <constraint firstAttribute="height" constant="50" id="uEu-Hn-rmC"/>
+                                    <constraint firstAttribute="width" constant="40" id="eF4-qM-jwj"/>
+                                    <constraint firstAttribute="height" constant="40" id="uEu-Hn-rmC"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="edit">

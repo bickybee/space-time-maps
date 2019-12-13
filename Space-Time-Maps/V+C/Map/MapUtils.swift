@@ -91,14 +91,14 @@ class MapUtils {
     
     private static func numberedIcon(with color: UIColor, number: Int) -> UIImage {
         
-        let size = CGSize(width: 33, height: 33)
+        let size = CGSize(width: 32, height: 32)
         UIGraphicsBeginImageContext(size)
         
         
         let attr = MapUtils.markerStringAttr.merging([NSAttributedString.Key.foregroundColor: color], uniquingKeysWith: {a, b in return a})
         let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
         let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
-        let rect = CGRect(x: 1, y: 1, width: 32, height: 32)
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         markerStr.draw(in: rect)
         numStr.draw(in: rect)
         
@@ -118,7 +118,7 @@ class MapUtils {
         let bgMarkerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: bgAttr)
         let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
         let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
-        let bgRect = CGRect(x: 0, y: 0, width: 40, height: 40)
+        let bgRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         let rect = CGRect(x: 4, y: 4, width: 32, height: 32)
         bgMarkerStr.draw(in: bgRect)
         markerStr.draw(in: rect)

@@ -58,6 +58,11 @@ class ItineraryViewController: DraggableContentViewController {
     
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        // default start time
+        collectionView.setContentOffset(CGPoint(x: 0, y: 380.0), animated: false)
+    }
+    
     func setupServices() {
         let qs = QueryService()
         scheduler = Scheduler(qs)
@@ -576,7 +581,7 @@ extension ItineraryViewController : DragDelegate {
             } else if let group = object as? PlaceGroup {
                 switch group.kind {
                 case .asManyOf:
-                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2.5)), timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
                 case .oneOf,
                      .none:
                     return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1a-oE-BBe">
-                    <rect key="frame" x="16" y="41" width="97" height="21"/>
+                    <rect key="frame" x="10" y="41" width="97" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -48,7 +48,7 @@
                 <constraint firstItem="za3-th-oWH" firstAttribute="leading" secondItem="yGZ-8n-rwc" secondAttribute="trailing" constant="5" id="G0X-gD-wec"/>
                 <constraint firstItem="Io6-ar-oUE" firstAttribute="trailing" secondItem="za3-th-oWH" secondAttribute="trailing" constant="22" id="G4P-no-fy5"/>
                 <constraint firstItem="yGZ-8n-rwc" firstAttribute="centerY" secondItem="FBR-YF-fEr" secondAttribute="centerY" id="bh7-Hu-r44"/>
-                <constraint firstItem="Y1a-oE-BBe" firstAttribute="leading" secondItem="Io6-ar-oUE" secondAttribute="leading" constant="16" id="znm-qv-JCO"/>
+                <constraint firstItem="Y1a-oE-BBe" firstAttribute="leading" secondItem="Io6-ar-oUE" secondAttribute="leading" constant="10" id="znm-qv-JCO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="Io6-ar-oUE"/>
