@@ -53,10 +53,10 @@ class QueryService {
         pingCount += 1
         print("pings to distance matrix API: \(pingCount)")
         runQuery(url: url) {data in
-            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
-            {
-                print(JSONString)
-            }
+//            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
+//            {
+//                print(JSONString)
+//            }
             let results = self.dataToTimeDict(data, origins, destinations, travelMode)
             callback(results)
         }

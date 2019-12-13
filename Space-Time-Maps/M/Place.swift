@@ -34,7 +34,7 @@ class Place : NSObject {
     }
     
     override var description : String {
-        return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\""
+        return "Place(name: \"\(name)\", coordinate: \(coordinate), placeID: \"\(placeID)\")"
     }
     
     init(name: String, coordinate: Coordinate, placeID: String, timeSpent: TimeInterval, openHours: Timing?) {

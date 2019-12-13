@@ -13,7 +13,7 @@ class Utils {
     
     private static let roundHourTo : Double = 0.25
     
-    private static let starterPlaces : [Place] = [
+    static let starterPlaces : [Place] = [
         Place(name: "Gladstone Hotel", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"),
         Place(name: "Art Gallery of Ontario", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
         Place(name: "Casa Loma", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
@@ -22,7 +22,50 @@ class Utils {
         Place(name: "The Selby", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w")
     ]
     
-//    static let starterPlaceDict : TimeDict = [PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 647.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 1246.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 361.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 872.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 0.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 756.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 0.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 0.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1048.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 984.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 1095.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 1523.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 0.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 909.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 848.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 0.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 580.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 575.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 864.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 880.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 786.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 717.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 727.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 966.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1027.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJ8f_In4s0K4gRRK-KutieqXA"): 364.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJs6Elz500K4gRT1jWAsHIfGE"): 635.0, PlacePair(startID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 1024.0, PlacePair(startID: "ChIJ8f_In4s0K4gRRK-KutieqXA", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 664.0, PlacePair(startID: "ChIJwScp6qo1K4gRcuheo9LY6ZI", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 0.0, PlacePair(startID: "ChIJs6Elz500K4gRT1jWAsHIfGE", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 685.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 1069.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"): 697.0, PlacePair(startID: "ChIJsXBSVKTM1IkRtVcT_EMpDho", endID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"): 1686.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"): 859.0, PlacePair(startID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w", endID: "ChIJsXBSVKTM1IkRtVcT_EMpDho"): 538.0]
+    static let tutorialPlaceGroups1 : [PlaceGroup] = [
+        PlaceGroup(name: "", places:
+            [Place(name: "Gladstone Hotel", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"),
+            Place(name: "Art Gallery of Ontario", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
+            Place(name: "Casa Loma", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE")
+        ],
+                   kind: .none)
+    ]
+    
+    static let tutorialPlaceGroups2 : [PlaceGroup] = [
+        PlaceGroup(name: "", places:
+            [Place(name: "The Selby", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"),
+        ],
+                   kind: .none),
+        PlaceGroup(name: "one of", places:
+            [Place(name: "Christie Pits Park", coordinate: Coordinate(latitude: 43.6645888, longitude: -79.4206809), placeID: "ChIJ8f_In4s0K4gRRK-KutieqXA"),
+            Place(name: "Evergreen Brick Works", coordinate: Coordinate(latitude: 43.6846206, longitude: -79.3654466), placeID: "ChIJsXBSVKTM1IkRtVcT_EMpDho")
+        ],
+                   kind: .oneOf),
+        PlaceGroup(name: "as many of", places:
+            [Place(name: "Art Gallery of Ontario", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
+            Place(name: "Casa Loma", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
+            Place(name: "Gladstone Hotel", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI")
+            
+        ],
+                   kind: .asManyOf),
+    ]
+    
+    static let taskPlaceGroups : [PlaceGroup] = [
+        PlaceGroup(name: "", places:
+            [Place(name: "Home", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"),
+             Place(name: "Karine’s", coordinate: Coordinate(latitude: 43.6537184, longitude: -79.3909035), placeID: "ChIJReTjXM80K4gRRJolJCumgyM"),
+             Place(name: "Saving Grace", coordinate: Coordinate(latitude: 43.6509022, longitude: -79.4123894), placeID: "ChIJQTNua-U0K4gRbpvCyW4X6ZA"),
+             Place(name: "Avenue Arts School", coordinate: Coordinate(latitude: 43.6853238, longitude: -79.4012777), placeID: "ChIJWRmtuF0zK4gRsuS06pUdC84"),
+             Place(name: "Blue Banana Market", coordinate: Coordinate(latitude: 43.65565, longitude: -79.402675), placeID: "ChIJ3QAWAcI0K4gRRk03JfzJW5Q"),
+             Place(name: "Curry's Artists' Materials", coordinate: Coordinate(latitude: 43.6542514, longitude: -79.39086189999999), placeID: "ChIJp8b9Uc80K4gRByff6aH-jFk"),
+             Place(name: "Rexall Pharmacy", coordinate: Coordinate(latitude: 43.6577013, longitude: -79.40038009999999), placeID: "ChIJZ1kGVcA0K4gRlJeJPAwWkVc"),
+             Place(name: "Toronto Public Library - Sanderson Branch", coordinate: Coordinate(latitude: 43.652106, longitude: -79.4056243), placeID: "ChIJV7V8AVLL1IkRQnQgsM9HkDc"),
+             Place(name: "John's House", coordinate: Coordinate(latitude: 43.6660011, longitude: -79.4112152), placeID: "ChIJs6TFeJE0K4gRCAPffqYPbsQ")
+        ],
+                   kind: .none)
+    ]
+    
+
     
     static func secondsToRelativeTimeString(seconds: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
@@ -90,6 +133,11 @@ class Utils {
         groups.append(places2)
         
         return groups
+    }
+    
+    static func getTaskPlaceGroups() -> [PlaceGroup] {
+        
+        return taskPlaceGroups
     }
     
     static func floorHour(_ hour: Double) -> Double {

@@ -474,8 +474,14 @@ private extension Scheduler {
             let range = rangeOfOptionBlockChain(in: blocks, forwardsFrom: i)
             let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
             
+            var before : SingleBlock?
             // Are there destinations leading into/out of this set of option blocks?
-            let before = blocks[safe: i - 1] as? SingleBlock
+            if let beforeFixed = blocks[safe: i - 1] as? OptionBlock, let beforeDest = beforeFixed.destinations.last, beforeFixed.isFixed {
+                    before = SingleBlock(timing: beforeDest.timing, place: beforeDest.place)
+            } else {
+                let beforeDest = blocks[safe: i - 1] as? SingleBlock
+            }
+            
             let after = blocks[safe: range.upperBound + 1] as? SingleBlock
             
             // Async...

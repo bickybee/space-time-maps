@@ -234,7 +234,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         case 3:
             return 1
         case 4:
-            return 0//shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
+            return shouldShowHoursOfOperation() ? editingSession!.movingBlock.places.count * 2 : 0
         default:
             return 0
         }

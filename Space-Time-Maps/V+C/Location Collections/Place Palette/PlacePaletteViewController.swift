@@ -80,10 +80,13 @@ class PlacePaletteViewController: DraggableContentViewController {
     }
     
     func setupPlaces() {
+
         
-//        let defaultPlaceGroups = Utils.defaultPlacesGroups()//[PlaceGroup(name: "places", places: [], kind: .none)]
-//        groups.append(contentsOf: defaultPlaceGroups)
-        groups.append(PlaceGroup(name:"default", places: [], kind: .none))
+        groups.append(contentsOf: Utils.taskPlaceGroups)
+//        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
+//        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
+//        groups.append(PlaceGroup(name:"default", places: [], kind: .none))
+        
         
     }
     
@@ -111,6 +114,11 @@ class PlacePaletteViewController: DraggableContentViewController {
             
         }
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
     }
     
     @objc func enlargePressed(_ sender: Any) {

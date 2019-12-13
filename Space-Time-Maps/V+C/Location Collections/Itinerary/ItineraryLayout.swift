@@ -75,8 +75,8 @@ class ItineraryLayout: UICollectionViewLayout {
             }
             
             else if shouldPadCells {
-                width = contentWidth * 0.8 - minX
-                x += contentWidth * 0.1
+                width = contentWidth * 0.7 - minX
+                x += contentWidth * 0.15
             }
             
             let frame = CGRect(x: x, y: y, width: width, height: height)

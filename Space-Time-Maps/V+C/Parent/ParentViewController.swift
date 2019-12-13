@@ -36,7 +36,6 @@ class ParentViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         updateMap()
-        print("layout subviews")
         if !initialPlacesLoaded {
             itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}), nil)
             initialPlacesLoaded = true
@@ -90,6 +89,7 @@ class ParentViewController: UIViewController {
                 self.paletteBigWidth.priority = .defaultHigh + 1
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
+                palette.enlargeButton.setTitle("done", for: .normal)
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
                 
@@ -107,6 +107,7 @@ class ParentViewController: UIViewController {
                 self.paletteBigWidth.priority = .defaultHigh - 1
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
+                palette.enlargeButton.setTitle("edit ", for: .normal)
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
                 
