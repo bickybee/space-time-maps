@@ -49,54 +49,26 @@ class ItineraryEditingSession: NSObject {
         var movedBlock = movingBlock.copy()
         movedBlock.timing.start = time - movedBlock.timing.duration / 2
         movedBlock.timing.end = time + movedBlock.timing.duration / 2
-        let closedHoursIntersections = intersectsClosedHours(movedBlock)
-        
-        // If we're about to hit another block or hit closed hours for a singleBlock, just stay put...
-//        if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
-//            if let position = lastPosition {
-//                var modifiedBlocks = baseBlocks
-//                modifiedBlocks.insert(movingBlock, at: position)
-//                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
-//            } else {
-//                removeBlock()
-//            }
-//
-//        } else {
-        
-            // Create new schedule
-            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
-            var insertAt = modifiedBlocks.endIndex
-            for (i, block) in modifiedBlocks.enumerated() {
-                
-                if block.timing.start >= movedBlock.timing.start {
-                    insertAt = i
-                    break
-                }
-                
+
+        // Create new schedule
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        var insertAt = modifiedBlocks.endIndex
+        for (i, block) in modifiedBlocks.enumerated() {
+            
+            if block.timing.start >= movedBlock.timing.start {
+                insertAt = i
+                break
             }
             
-            // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
-            let changedOrder = (insertAt != lastPosition)
+        }
+        
+        // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
+        let changedOrder = true//(insertAt != lastPosition)
 //            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
 //            overlapsClosedHoursOfPlaces = closedHoursIntersections
-            modifiedBlocks.insert(movedBlock, at: insertAt)
-            movingBlock = movedBlock
-            lastPosition = insertAt
-            
-            // Callback to check intersections with route legs after new route is created lol
-//            let theCallback : ([ScheduleBlock]?, Route?) -> () = { blocks, route in
-//                if let route = route {
-//                    if self.intersectsLegs(movedBlock, in: route), let lastPosition = self.lastPosition {
-//                        var modifiedBlocks = self.baseBlocks
-//                        modifiedBlocks.insert(self.movingBlock, at: lastPosition)
-//                        self.callback(modifiedBlocks, route)
-//                    } else {
-//                        self.movingBlock = movedBlock
-//                        self.lastPosition = insertAt
-//                        self.callback(blocks, route)
-//                    }
-//                }
-//            }
+        modifiedBlocks.insert(movedBlock, at: insertAt)
+        movingBlock = movedBlock
+        lastPosition = insertAt
 
         if changedOrder {//|| changedClosedHoursIntersections {
                 print("reschedule")

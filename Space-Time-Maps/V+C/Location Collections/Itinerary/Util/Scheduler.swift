@@ -152,24 +152,7 @@ class Scheduler {
 
         block.selectedOption = newIndex
         block.isFixed = true
-        
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        
-        reschedule(blocks: blocks) { blocks, route in
-            callback(blocks, route)
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        
-        scheduleShift(blocks: blocks, movingBlockIndex: blockIndex) { blocks, route in
-            callback(blocks, route)
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.wait()
-        
+        reschedule(blocks: blocks, movingIndex: blockIndex, callback: callback)
         block.isFixed = false
         
     }
@@ -528,6 +511,7 @@ private extension Scheduler {
             let optionBlocks : [OptionBlock] = Array(blocks[range]).map( { $0 as! OptionBlock } )
             
             var before : SingleBlock?
+            var after : SingleBlock?
             // Are there destinations leading into/out of this set of option blocks?
             if let beforeFixed = blocks[safe: i - 1] as? OptionBlock, let beforeDest = beforeFixed.destinations.last, beforeFixed.isFixed {
                 before = SingleBlock(timing: beforeDest.timing, place: beforeDest.place)
@@ -535,7 +519,11 @@ private extension Scheduler {
                 before = blocks[safe: i - 1] as? SingleBlock
             }
             
-            let after = blocks[safe: range.upperBound + 1] as? SingleBlock
+            if let afterFixed = blocks[safe: range.upperBound + 1] as? OptionBlock, let afterDest = afterFixed.destinations.first, afterFixed.isFixed {
+                after = SingleBlock(timing: afterDest.timing, place: afterDest.place)
+            } else {
+                after = blocks[safe: range.upperBound + 1] as? SingleBlock
+            }
             
             // Async...
             let dispatchGroup = DispatchGroup()
