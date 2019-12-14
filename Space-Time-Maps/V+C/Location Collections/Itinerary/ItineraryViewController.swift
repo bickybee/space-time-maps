@@ -753,6 +753,9 @@ extension ItineraryViewController: GroupButtonsDelegate {
     
     func didPressOptionsOnGroupCell(_ cell: GroupCell) {
         let blockIndex = cell.tag
+        if optionView != nil {
+            shouldDismissOptionsViewController(optionsVC)
+        }
         guard let newView = setupOptionViewForBlockIndex(blockIndex) else { return }
         collectionView.addSubview(newView)
         optionView = newView

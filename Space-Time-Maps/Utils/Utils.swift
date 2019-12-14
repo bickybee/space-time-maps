@@ -57,7 +57,7 @@ class Utils {
              Place(name: "Saving Grace", coordinate: Coordinate(latitude: 43.6509022, longitude: -79.4123894), placeID: "ChIJQTNua-U0K4gRbpvCyW4X6ZA"),
              Place(name: "Avenue Arts School", coordinate: Coordinate(latitude: 43.6853238, longitude: -79.4012777), placeID: "ChIJWRmtuF0zK4gRsuS06pUdC84"),
              Place(name: "Blue Banana Market", coordinate: Coordinate(latitude: 43.65565, longitude: -79.402675), placeID: "ChIJ3QAWAcI0K4gRRk03JfzJW5Q"),
-             Place(name: "Curry's Artists' Materials", coordinate: Coordinate(latitude: 43.6542514, longitude: -79.39086189999999), placeID: "ChIJp8b9Uc80K4gRByff6aH-jFk"),
+             Place(name: "DeSerres", coordinate: Coordinate(latitude: 43.64767370000001, longitude: -79.39621300000002), placeID: "ChIJccHtmds0K4gRL3Z505NJDWI"),
              Place(name: "Rexall Pharmacy", coordinate: Coordinate(latitude: 43.6577013, longitude: -79.40038009999999), placeID: "ChIJZ1kGVcA0K4gRlJeJPAwWkVc"),
              Place(name: "Toronto Public Library - Sanderson Branch", coordinate: Coordinate(latitude: 43.652106, longitude: -79.4056243), placeID: "ChIJV7V8AVLL1IkRQnQgsM9HkDc"),
              Place(name: "John's House", coordinate: Coordinate(latitude: 43.6660011, longitude: -79.4112152), placeID: "ChIJs6TFeJE0K4gRCAPffqYPbsQ")
