@@ -476,7 +476,7 @@ extension ItineraryViewController : DragDelegate {
         collectionView.reloadData()
     }
     
-    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer, andDiff diff: CGPoint) {
 
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
@@ -492,7 +492,8 @@ extension ItineraryViewController : DragDelegate {
         } else {
             // Or move cell
             let y = gesture.location(in: view).y
-            let hour = timelineController.roundedHourInTimeline(forY: y)
+            let dy = y + diff.y
+            let hour = timelineController.roundedHourInTimeline(forY: dy)
             if hour != previousTouchHour {
                 editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
                 previousTouchHour = hour

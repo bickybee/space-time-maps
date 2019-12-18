@@ -395,7 +395,7 @@ extension PlacePaletteViewController: DragDelegate {
         collectionView.reloadData()
     }
     
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer, andDiff diff: CGPoint) {
         
         guard let place = object as? Place else { return }
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }

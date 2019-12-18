@@ -18,6 +18,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
     var draggingIndex : IndexPath?
     var draggable : UIView?
     var draggingView : UIView?
+    var diff : CGPoint?
     
     weak var dragDelegate : DragDelegate?
     weak var dragDataDelegate : DragDataDelegate?
@@ -91,12 +92,12 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         
         // Translate cell
         let location = gesture.location(in: view)
-        let dx = location.x
-        let dy = location.y
+        let dx = location.x + diff!.x
+        let dy = location.y + diff!.y
         draggingView!.center = CGPoint(x: dx, y: dy)
         // Ping delegate
         NotificationCenter.default.post(name: .didContinueContentDrag, object: draggingObject!)
-        dragDelegate?.draggableContentViewController(self, didContinueDragging: draggingObject!, at: draggingIndex!, withGesture: gesture)
+        dragDelegate?.draggableContentViewController(self, didContinueDragging: draggingObject!, at: draggingIndex!, withGesture: gesture, andDiff: diff!)
     }
     
     func didEndDrag(_ gesture: UILongPressGestureRecognizer) {
@@ -124,6 +125,8 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         guard let draggableView = gesture.view else { return false }
 
         // If we're good, set stuff accordingly
+        let touch = gesture.location(in:draggableView)
+        diff = CGPoint(x: (draggableView.bounds.width / 2.0) - touch.x, y: (draggableView.bounds.height / 2.0) - touch.y)
         draggable = draggableView
         
         return true
@@ -182,7 +185,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
 protocol DragDelegate : AnyObject {
         
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer, andDiff diff: CGPoint)
     func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer)
     func cellForIndex(_ indexPath: IndexPath) -> UIView?
 }
