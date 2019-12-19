@@ -220,7 +220,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     func shouldShowHoursOfOperation() -> Bool {
-        return editingSession != nil
+        return false//editingSession != nil
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -551,6 +551,25 @@ extension ItineraryViewController : DragDelegate {
         
         return collectionView.cellForItem(at: indexPath)
         
+    }
+    
+    func updatePlaceGroups(_ groups:[PlaceGroup]) {
+
+        for group in groups {
+            if let i = itinerary.schedule.firstIndex(where: {
+                if let ob = $0 as? OptionBlock {
+                    return ob.placeGroup.id == group.id
+                }
+                return false
+            }) {
+                if let oob = itinerary.schedule[i] as? OneOfBlock {
+                    itinerary.schedule[i] = OneOfBlock(placeGroup: group, timing: oob.timing)
+                } else if let a = itinerary.schedule[i] as? AsManyOfBlock {
+                    itinerary.schedule[i] = AsManyOfBlock(placeGroup: group, timing: a.timing, timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                }
+            }
+        }
+        scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
     }
     
     func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {

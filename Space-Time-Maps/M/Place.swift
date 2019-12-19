@@ -68,6 +68,7 @@ class PlaceGroup {
         case asManyOf = 2
     }
     
+    var id : UUID
     var name : String
     var places : [Place]
     var kind : PlaceGroup.Kind
@@ -79,10 +80,11 @@ class PlaceGroup {
         return places[index]
     }
     
-    init(name: String, places: [Place], kind: PlaceGroup.Kind) {
+    init(name: String, places: [Place], kind: PlaceGroup.Kind, id: UUID) {
         self.name = name
         self.places = places
         self.kind = kind
+        self.id = id
     }
     
     func append(_ place: Place) {
@@ -103,7 +105,7 @@ class PlaceGroup {
     }
     
     func copy() -> PlaceGroup {
-        return PlaceGroup(name: self.name, places: self.places, kind: self.kind)
+        return PlaceGroup(name: self.name, places: self.places, kind: self.kind, id: self.id)
     }
     
 }

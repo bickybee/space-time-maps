@@ -232,7 +232,7 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
         print("update places")
         let places = groups.flatMap({ $0.places })
-        itineraryController.updateScheduler(places, nil)
+        itineraryController.updatePlaceGroups(groups)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {

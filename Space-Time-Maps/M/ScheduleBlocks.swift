@@ -134,7 +134,11 @@ class OneOfBlock : OptionBlock {
 
 class AsManyOfBlock : OptionBlock {
     
-    var placeGroup: PlaceGroup
+    var placeGroup: PlaceGroup {
+        didSet {
+            print("didSet")
+        }
+    }
     var places : [Place] {
         return placeGroup.places
     }

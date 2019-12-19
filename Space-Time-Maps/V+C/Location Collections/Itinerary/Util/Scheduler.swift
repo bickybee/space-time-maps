@@ -47,6 +47,23 @@ class Scheduler {
         callback(scheduledBlocks, route)
     }
     
+    func rescheduleChangedGroups(blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
+        // groups have been changed so recreate group blocks
+        // then reschedule as normal
+        var freshBlocks = [ScheduleBlock]()
+        for block in blocks {
+            if let o = block as? OneOfBlock {
+                freshBlocks.append(OneOfBlock(placeGroup: o.placeGroup, timing: o.timing))
+            } else if let a = block as? AsManyOfBlock {
+                freshBlocks.append(AsManyOfBlock(placeGroup: a.placeGroup, timing: a.timing, timeDict: timeDict, travelMode: travelMode))
+            } else {
+                freshBlocks.append(block)
+            }
+        }
+        
+        reschedule(blocks: freshBlocks, movingIndex: 0, callback: callback)
+    }
+    
     // Just changing positions of blocks, no re-ordering.
     func scheduleShift(blocks: [ScheduleBlock], movingBlockIndex: Int, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         

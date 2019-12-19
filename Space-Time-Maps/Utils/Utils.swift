@@ -28,26 +28,26 @@ class Utils {
             Place(name: "Art Gallery of Ontario", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
             Place(name: "Casa Loma", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE")
         ],
-                   kind: .none)
+                   kind: .none, id: UUID())
     ]
     
     static let tutorialPlaceGroups2 : [PlaceGroup] = [
         PlaceGroup(name: "", places:
             [Place(name: "The Selby", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"),
         ],
-                   kind: .none),
+                   kind: .none, id: UUID()),
         PlaceGroup(name: "one of", places:
             [Place(name: "Christie Pits Park", coordinate: Coordinate(latitude: 43.6645888, longitude: -79.4206809), placeID: "ChIJ8f_In4s0K4gRRK-KutieqXA"),
             Place(name: "Evergreen Brick Works", coordinate: Coordinate(latitude: 43.6846206, longitude: -79.3654466), placeID: "ChIJsXBSVKTM1IkRtVcT_EMpDho")
         ],
-                   kind: .oneOf),
+                   kind: .oneOf, id: UUID()),
         PlaceGroup(name: "as many of", places:
             [Place(name: "Art Gallery of Ontario", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
             Place(name: "Casa Loma", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
             Place(name: "Gladstone Hotel", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI")
             
         ],
-                   kind: .asManyOf),
+                   kind: .asManyOf, id: UUID()),
     ]
     
     static let taskPlaceGroups : [PlaceGroup] = [
@@ -62,7 +62,7 @@ class Utils {
              Place(name: "Toronto Public Library - Sanderson Branch", coordinate: Coordinate(latitude: 43.652106, longitude: -79.4056243), placeID: "ChIJV7V8AVLL1IkRQnQgsM9HkDc"),
              Place(name: "John's House", coordinate: Coordinate(latitude: 43.6660011, longitude: -79.4112152), placeID: "ChIJs6TFeJE0K4gRCAPffqYPbsQ")
         ],
-                   kind: .none)
+                   kind: .none, id: UUID())
     ]
     
 
@@ -123,13 +123,13 @@ class Utils {
         
         var groups = [PlaceGroup]()
         
-        let places0 = PlaceGroup(name: "", places: Array(starterPlaces[0...1]), kind: .none)
+        let places0 = PlaceGroup(name: "", places: Array(starterPlaces[0...1]), kind: .none, id: UUID())
         groups.append(places0)
         
-        let places1 = PlaceGroup(name: "one of", places: Array(starterPlaces[2...3]), kind: .oneOf)
+        let places1 = PlaceGroup(name: "one of", places: Array(starterPlaces[2...3]), kind: .oneOf, id: UUID())
         groups.append(places1)
         
-        let places2 = PlaceGroup(name: "as many of", places: Array(starterPlaces[4...5]), kind: .asManyOf)
+        let places2 = PlaceGroup(name: "as many of", places: Array(starterPlaces[4...5]), kind: .asManyOf, id: UUID())
         groups.append(places2)
         
         return groups

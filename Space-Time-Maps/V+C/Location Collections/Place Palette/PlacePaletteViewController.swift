@@ -138,7 +138,7 @@ extension PlacePaletteViewController: GroupCreationDelegate {
         } else {
             collectionView.performBatchUpdates({
                 
-                let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
+                let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind, id: UUID())
                 collectionView.insertSections(IndexSet(integer: groups.endIndex))
                 groups.append(newGroup)
                 
@@ -420,6 +420,7 @@ extension PlacePaletteViewController: DragDelegate {
         let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
         collectionView.reloadItems(at: [reloadIndexPath])
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
         
     }
     
