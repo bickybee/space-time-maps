@@ -84,8 +84,8 @@ class PlacePaletteViewController: DraggableContentViewController {
         
 //        groups.append(contentsOf: Utils.taskPlaceGroups)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
-        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
-//        groups.append(PlaceGroup(name:"default", places: [], kind: .none))
+//        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
+        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
         
         
     }

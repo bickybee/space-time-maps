@@ -52,15 +52,12 @@ class Utils {
     
     static let taskPlaceGroups : [PlaceGroup] = [
         PlaceGroup(name: "", places:
-            [Place(name: "Home", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"),
-             Place(name: "Karine’s", coordinate: Coordinate(latitude: 43.6537184, longitude: -79.3909035), placeID: "ChIJReTjXM80K4gRRJolJCumgyM"),
-             Place(name: "Saving Grace", coordinate: Coordinate(latitude: 43.6509022, longitude: -79.4123894), placeID: "ChIJQTNua-U0K4gRbpvCyW4X6ZA"),
-             Place(name: "Avenue Arts School", coordinate: Coordinate(latitude: 43.6853238, longitude: -79.4012777), placeID: "ChIJWRmtuF0zK4gRsuS06pUdC84"),
-             Place(name: "Blue Banana Market", coordinate: Coordinate(latitude: 43.65565, longitude: -79.402675), placeID: "ChIJ3QAWAcI0K4gRRk03JfzJW5Q"),
-             Place(name: "DeSerres", coordinate: Coordinate(latitude: 43.64767370000001, longitude: -79.39621300000002), placeID: "ChIJccHtmds0K4gRL3Z505NJDWI"),
-             Place(name: "Rexall Pharmacy", coordinate: Coordinate(latitude: 43.6577013, longitude: -79.40038009999999), placeID: "ChIJZ1kGVcA0K4gRlJeJPAwWkVc"),
-             Place(name: "Toronto Public Library - Sanderson Branch", coordinate: Coordinate(latitude: 43.652106, longitude: -79.4056243), placeID: "ChIJV7V8AVLL1IkRQnQgsM9HkDc"),
-             Place(name: "John's House", coordinate: Coordinate(latitude: 43.6660011, longitude: -79.4112152), placeID: "ChIJs6TFeJE0K4gRCAPffqYPbsQ")
+            [Place(name: "Work", coordinate: Coordinate(latitude: 43.65964259999999, longitude: -79.39766759999999), placeID: "ChIJV8llUcc0K4gRe7a0R0E4WWQ"),
+             Place(name: "The Nucleus", coordinate: Coordinate(latitude: 43.66436580000001, longitude: -79.3923284), placeID: "ChIJA0h1-Lk0K4gRzJsK5QP2H6g"),
+            Place(name: "Paper Bag People", coordinate: Coordinate(latitude: 43.6646697, longitude: -79.411659), placeID: "ChIJ9di0-ZI0K4gRjkogRAt_Gng"),
+             Place(name: "Lunar Garden", coordinate: Coordinate(latitude: 43.6545236, longitude: -79.4014566), placeID: "ChIJ68ICPcI0K4gRDOBbkTJRLUc"),
+             Place(name: "Kaleidoscope", coordinate: Coordinate(latitude: 43.6454767, longitude: -79.4138873), placeID: "ChIJ29zuWfs0K4gRu3X7rsgi-wM"),
+             Place(name: "Wonder World", coordinate: Coordinate(latitude: 43.6534399, longitude: -79.3840901), placeID: "ChIJ81rnZsw0K4gR4CIzkYYawjE")
         ],
                    kind: .none, id: UUID())
     ]
