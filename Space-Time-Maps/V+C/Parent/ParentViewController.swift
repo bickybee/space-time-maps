@@ -19,7 +19,7 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
-    var timePickerController : TimePickerViewController?
+    var timePickerController : TimeEditViewController?
     
     @IBOutlet weak var paletteContainer: UIView!
     @IBOutlet weak var itineraryContainer: UIView!
@@ -169,7 +169,7 @@ class ParentViewController: UIViewController {
     func showTimePickerForBlock(_ block: ScheduleBlock, at index: Int) {
         
         let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
-        let timePickerVC = TimePickerViewController()
+        let timePickerVC = TimeEditViewController()
         timePickerVC.block = block
         timePickerVC.view.frame = frame
         timePickerVC.onUpdatedTimingBlock = itineraryController.editBlockTiming

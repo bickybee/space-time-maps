@@ -8,10 +8,10 @@
 
 import UIKit
 
-class TimePickerViewController: UIViewController {
+class TimeEditViewController: UIViewController {
     
-    @IBOutlet weak var startPicker: UIDatePicker!
-    @IBOutlet weak var endPicker: UIDatePicker!
+    var startPicker: TimePickerController!
+    var endPicker: TimePickerController!
     @IBOutlet weak var doneButton: UIButton!
     
     var block : Schedulable?
@@ -44,18 +44,30 @@ class TimePickerViewController: UIViewController {
     }
     
     func setupPickers() {
-        // make small and remove lines
-        startPicker.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        startPicker.subviews[0].subviews[2].isHidden = true
-        endPicker.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        endPicker.subviews[0].subviews[2].isHidden = true
+        startPicker = TimePickerController()
+        addChild(startPicker)
+        view.insertSubview(startPicker.view, at: 0)
+        startPicker.didMove(toParent: self)
+        
+        startPicker.label.text = "Start Time"
+        startPicker.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2.0)
+        startPicker.delegate = self
+        
+        endPicker = TimePickerController()
+        endPicker.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 2.0)
+        addChild(endPicker)
+        view.insertSubview(endPicker.view, at: 0)
+        
+        endPicker.label.text = "End Time"
+        endPicker.delegate = self
+        endPicker.didMove(toParent: self)
 
         
         // fill with correct info
         if let startDate = startDate, let endDate = endDate {
             
-            startPicker.setDate(startDate, animated: false)
-            endPicker.setDate(endDate, animated: false)
+            startPicker.picker.setDate(startDate, animated: false)
+            endPicker.picker.setDate(endDate, animated: false)
             
             updatePickers()
         }
@@ -68,22 +80,13 @@ class TimePickerViewController: UIViewController {
         view.layer.borderColor = colour.cgColor
     }
     
+    override func viewDidLayoutSubviews() {
+        startPicker.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2.0)
+        endPicker.view.frame = CGRect(x: 0, y: view.bounds.height / 2.0 - 5, width: view.bounds.width , height: view.bounds.height / 2.0)
+    }
+    
     @IBAction func didTapDone(_ sender: Any) {
         onDoneBlock?()
-    }
-    
-    @IBAction func didUpdateStartPicker(_ sender: Any) {
-        // update block, then
-        startDate = startPicker.date
-        onUpdatedTimingBlock?(timingFromPickers())
-        updatePickers()
-    }
-    
-    @IBAction func didUpdateEndPicker(_ sender: Any) {
-        // update block, then
-        endDate = endPicker.date
-        onUpdatedTimingBlock?(timingFromPickers())
-        updatePickers()
     }
     
     func timingFromPickers() -> Timing {
@@ -101,8 +104,8 @@ class TimePickerViewController: UIViewController {
     }
     
     func updatePickers() {
-        startPicker.maximumDate = endDate?.addingTimeInterval(-TimeInterval.from(minutes: 15))
-        endPicker.minimumDate = startDate?.addingTimeInterval(TimeInterval.from(minutes: 15))
+        startPicker.picker.maximumDate = endDate?.addingTimeInterval(-TimeInterval.from(minutes: 15))
+        endPicker.picker.minimumDate = startDate?.addingTimeInterval(TimeInterval.from(minutes: 15))
     }
     
     func colorFromSchedulable() -> UIColor {
@@ -117,14 +120,17 @@ class TimePickerViewController: UIViewController {
         return colour
     }
 
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension TimeEditViewController : TimePickerDelegate {
+    
+    func timePickerController(_ timePickerController: TimePickerController, didUpdateDateTo date: Date) {
+        
+        startDate = startPicker.picker.date
+        endDate = endPicker.picker.date
+        
+        onUpdatedTimingBlock?(timingFromPickers())
+        updatePickers()
     }
-    */
-
+    
 }
