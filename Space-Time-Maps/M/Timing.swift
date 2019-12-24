@@ -105,5 +105,4 @@ struct Timing {
         return intersection
     }
     
-    
 }

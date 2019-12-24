@@ -42,7 +42,7 @@ class DraggableContentViewController: UIViewController, UIGestureRecognizerDeleg
         if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UIPinchGestureRecognizer != nil {
             return true
         } else if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UITapGestureRecognizer != nil {
-            return true
+            return false
         } else if shouldRecognizeSimultaneouslyWithGestureRecognizer as? UISwipeGestureRecognizer != nil {
         return true
         }

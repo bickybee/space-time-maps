@@ -30,6 +30,7 @@ class ItineraryViewController: DraggableContentViewController {
     var optionView : UIView?
     var optionsVC = OptionsViewController()
 
+
     // Itinerary editing
     var editingSession : ItineraryEditingSession?
     var previousTouchHour : Double?
@@ -49,7 +50,7 @@ class ItineraryViewController: DraggableContentViewController {
         super.viewDidLoad()
         self.dragDelegate = self as DragDelegate
         self.dragDataDelegate = self as DragDataDelegate
-        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
         
         setupServices()
         setupCollectionView()
@@ -199,9 +200,17 @@ class ItineraryViewController: DraggableContentViewController {
         
     }
     
+    func editBlockTiming(_ timing: Timing) {
+        guard let editingSession = editingSession else { return }
+        editingSession.changeBlockTiming(timing)
+    }
+    
     @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
-        let placeName = itinerary.destinations[sender.view!.tag].place.name
-        NotificationCenter.default.post(name: .didTapDestination, object: placeName)
+        print("tap")
+        let location = sender.location(ofTouch: 0, in: view)
+        let index = sender.view!.tag
+        let block = itinerary.schedule[index] // only works for dests rn
+        NotificationCenter.default.post(name: .didTapDestination, object: (block, index))
     }
     
     @objc func scrollToPlaceWithName(_ notification: Notification) {
@@ -225,6 +234,21 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         timelineController.offset = collectionView.contentOffset.y
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        var obj : Schedulable!
+        var index : Int!
+        
+        if indexPath.section == 0 {
+            index = indexOfBlockContainingDestination(at: indexPath.item)
+            obj = itinerary.destinations[indexPath.item]
+        } else if indexPath.section == 2 {
+            obj = itinerary.schedule[indexPath.item]
+        }
+
+        NotificationCenter.default.post(name: .didTapDestination, object: (obj, index))
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -451,6 +475,22 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // MARK: - PlacePalette Drag Delegate
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
+    
+    func startEditingSession(withNewBlock block: ScheduleBlock) {
+        let editingBlocks = itinerary.schedule
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: nil, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+    
+    func startEditingSession(withExistingBlock block: ScheduleBlock, atIndex index: Int) {
+        var editingBlocks = itinerary.schedule
+        editingBlocks.remove(at: index)
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+    
+    func endEditingSession() {
+        editingSession = nil
+    }
+    
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {
         print("boop")
     }
@@ -459,18 +499,13 @@ extension ItineraryViewController : DragDelegate {
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         guard let block = blockFromObject(object) else { return }
-        var editingBlocks = itinerary.schedule
-        var index : Int?
-        
+
         if draggableContentViewController is ItineraryViewController {
-            print(indexPath.item)
-            index = indexPath.item
-            editingBlocks.remove(at: indexPath.item)
-            //FIX: crashing when moving singleblocks among other kinds of blocks
-            
+            startEditingSession(withExistingBlock: block, atIndex: indexPath.item)
+        } else {
+            startEditingSession(withNewBlock: block)
         }
         
-        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
         let snapshotFrame = CGRect(x: 0, y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height)
         timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: snapshotFrame, afterScreenUpdates: true)), withFrame: snapshotFrame)
         collectionView.reloadData()
@@ -517,10 +552,12 @@ extension ItineraryViewController : DragDelegate {
         
         timelineController.removeShadow()
         timelineController.view.layoutIfNeeded()
-        editingSession = nil
         previousTouchHour = nil
         collectionView.reloadData()
+        
+        print("end press")
 
+        endEditingSession()
         
       // lol testing time tick isochrone stuff
         for leg in itinerary.route.legs {

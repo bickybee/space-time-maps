@@ -19,6 +19,8 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
+    var timePickerController : TimePickerViewController?
+    
     @IBOutlet weak var paletteContainer: UIView!
     @IBOutlet weak var itineraryContainer: UIView!
     
@@ -29,11 +31,13 @@ class ParentViewController: UIViewController {
     @IBOutlet weak var paletteSmallWidth: NSLayoutConstraint!
     @IBOutlet weak var paletteBigWidth: NSLayoutConstraint!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
         NotificationCenter.default.addObserver(self, selector: #selector(onDidStartContentDrag), name: .didStartContentDrag, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onDidEndContentDrag), name: .didEndContentDrag, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDestination), name: .didTapDestination, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(onDidContinueContentDrag), name: .didContinueContentDrag, object: nil)
     }
     
@@ -144,6 +148,48 @@ class ParentViewController: UIViewController {
             palette.dragDelegate = self.itineraryController
         }
     
+    }
+    
+    @objc func onDidTapDestination(_ notification: Notification) {
+        
+        guard let obj = notification.object as? (ScheduleBlock, Int) else { return }
+        
+        let block = obj.0
+        let index = obj.1
+
+        if let timePickerVC = timePickerController {
+            timePickerVC.onDoneBlock?()
+            timePickerController = nil
+        }
+
+        showTimePickerForBlock(block, at: index)
+    
+    }
+    
+    func showTimePickerForBlock(_ block: ScheduleBlock, at index: Int) {
+        
+        let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
+        let timePickerVC = TimePickerViewController()
+        timePickerVC.block = block
+        timePickerVC.view.frame = frame
+        timePickerVC.onUpdatedTimingBlock = itineraryController.editBlockTiming
+        timePickerVC.onDoneBlock = {
+            
+            UIView.animate(withDuration: 0.25, animations: {
+                timePickerVC.view.alpha = 0.0
+            }, completion: { success in
+                timePickerVC.dismiss(animated: false, completion: {})
+            })
+            
+            self.itineraryController.endEditingSession()
+        }
+        
+        addChild(timePickerVC)
+        view.addSubview(timePickerVC.view)
+        timePickerVC.didMove(toParent: self)
+        
+        timePickerController = timePickerVC
+        itineraryController.startEditingSession(withExistingBlock: block, atIndex: index)
     }
     
     // Package itinerary and place data to send to map for rendering

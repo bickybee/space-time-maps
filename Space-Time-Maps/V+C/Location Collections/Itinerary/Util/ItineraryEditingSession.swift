@@ -83,6 +83,16 @@ class ItineraryEditingSession: NSObject {
         
     }
     
+    func changeBlockTiming(_ timing: Timing) {
+        movingBlock.timing = timing
+        
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        
+        scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
+    }
+    
     
     func changeBlockDuration(with delta: Double) {
         let duration = movingBlock.timing.duration + delta

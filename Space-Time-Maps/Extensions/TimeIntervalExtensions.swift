@@ -34,4 +34,16 @@ extension TimeInterval {
         return self / 60.0
     }
     
+    func toDate() -> Date? {
+        let totalMinutes = self.inMinutes()
+        let hour = floor(totalMinutes / 60.0)
+        let minute = totalMinutes - (hour * 60)
+        var components = DateComponents()
+        components.hour = Int(hour)
+        components.minute = Int(minute)
+        
+        let calendar = Calendar.current
+        return calendar.date(from: components)
+    }
+    
 }
