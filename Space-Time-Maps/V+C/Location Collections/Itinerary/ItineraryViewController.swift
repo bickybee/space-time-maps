@@ -205,9 +205,14 @@ class ItineraryViewController: DraggableContentViewController {
         editingSession.changeBlockTiming(timing)
     }
     
+    func updateBlockPlaceDuration(_ placeIndex: Int, _ duration: TimeInterval) {
+        guard let editingSession = editingSession else { return }
+        editingSession.changeBlockPlaceDuration(placeIndex, duration)
+    }
+    
+    // not being used
     @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
         print("tap")
-        let location = sender.location(ofTouch: 0, in: view)
         let index = sender.view!.tag
         let block = itinerary.schedule[index] // only works for dests rn
         NotificationCenter.default.post(name: .didTapDestination, object: (block, index))
@@ -238,17 +243,24 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        var obj : Schedulable!
-        var index : Int!
+        var obj : Any!
         
         if indexPath.section == 0 {
-            index = indexOfBlockContainingDestination(at: indexPath.item)
-            obj = itinerary.destinations[indexPath.item]
+            let blockIndex = indexOfBlockContainingDestination(at: indexPath.item)!
+            let block = itinerary.schedule[blockIndex]
+            if block is SingleBlock {
+                obj = (block, blockIndex)
+            } else {
+                let dest = itinerary.destinations[indexPath.item]
+                let placeIndex = block.places.firstIndex(where: {$0.name == dest.place.name})!
+                obj = (dest, placeIndex)
+            }
+            startEditingSession(withBlockAtIndex: blockIndex)
         } else if indexPath.section == 2 {
-            obj = itinerary.schedule[indexPath.item]
+            obj = (itinerary.schedule[indexPath.item], indexPath.item)
+            startEditingSession(withBlockAtIndex: indexPath.item)
         }
-
-        NotificationCenter.default.post(name: .didTapDestination, object: (obj, index))
+        NotificationCenter.default.post(name: .didTapDestination, object: obj)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -319,18 +331,11 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             }
         }
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDestination))
-            tapGesture.numberOfTapsRequired = 1
-            tapGesture.delegate = self
-            cell.addGestureRecognizer(tapGesture)
+//            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDestination))
+//            tapGesture.numberOfTapsRequired = 1
+//            tapGesture.delegate = self
+//            cell.addGestureRecognizer(tapGesture)
             let dragRecognizer = addDragRecognizerTo(draggable: cell)
-            
-            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDestination))
-            swipeGesture.direction = .up
-            swipeGesture.numberOfTouchesRequired = 1
-            swipeGesture.delegate = self
-            swipeGesture.require(toFail: dragRecognizer)
-            cell.addGestureRecognizer(swipeGesture)
             
         }
         cell.tag = index
@@ -481,7 +486,8 @@ extension ItineraryViewController : DragDelegate {
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: nil, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
     }
     
-    func startEditingSession(withExistingBlock block: ScheduleBlock, atIndex index: Int) {
+    func startEditingSession(withBlockAtIndex index: Int) {
+        let block = itinerary.schedule[index]
         var editingBlocks = itinerary.schedule
         editingBlocks.remove(at: index)
         editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
@@ -501,7 +507,7 @@ extension ItineraryViewController : DragDelegate {
         guard let block = blockFromObject(object) else { return }
 
         if draggableContentViewController is ItineraryViewController {
-            startEditingSession(withExistingBlock: block, atIndex: indexPath.item)
+            startEditingSession(withBlockAtIndex: indexPath.item)
         } else {
             startEditingSession(withNewBlock: block)
         }

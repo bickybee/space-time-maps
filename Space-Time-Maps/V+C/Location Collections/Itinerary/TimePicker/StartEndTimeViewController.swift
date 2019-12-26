@@ -1,46 +1,33 @@
 //
-//  TimePickerViewController.swift
+//  DualTimeViewController.swift
 //  Space-Time-Maps
 //
-//  Created by Vicky on 21/12/2019.
+//  Created by Vicky on 26/12/2019.
 //  Copyright © 2019 vicky. All rights reserved.
 //
 
 import UIKit
 
-class TimeEditViewController: UIViewController {
-    
+class StartEndTimeViewController: PopupViewController {
+
     var startPicker: TimePickerController!
     var endPicker: TimePickerController!
-    @IBOutlet weak var doneButton: UIButton!
     
-    var block : Schedulable?
-    var colour : UIColor!
+    var startDate : Date!
+    var endDate : Date!
     
-    var startDate : Date?
-    var endDate : Date?
-    
-    var onDoneBlock : (() -> Void)?
     var onUpdatedTimingBlock : ((Timing) -> Void)?
+    
+    convenience init(_ schedulable: Schedulable) {
+        self.init()
+        startDate = schedulable.timing.start.toDate()
+        endDate = schedulable.timing.end.toDate()
+        colour = colorFromSchedulable(schedulable)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-    }
-    
-    func setup() {
-        colour = colorFromSchedulable()
-        startDate = block?.timing.start.toDate()
-        endDate = block?.timing.end.toDate()
-        
         setupPickers()
-        setupBackground()
-        setupButton()
-    }
-    
-    func setupButton() {
-        doneButton.layer.cornerRadius = 5;
-        doneButton.backgroundColor = colour
     }
     
     func setupPickers() {
@@ -73,20 +60,9 @@ class TimeEditViewController: UIViewController {
         }
     }
     
-    func setupBackground() {
-        // border
-        view.layer.cornerRadius = 10;
-        view.layer.borderWidth = 5;
-        view.layer.borderColor = colour.cgColor
-    }
-    
     override func viewDidLayoutSubviews() {
         startPicker.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2.0)
         endPicker.view.frame = CGRect(x: 0, y: view.bounds.height / 2.0 - 5, width: view.bounds.width , height: view.bounds.height / 2.0)
-    }
-    
-    @IBAction func didTapDone(_ sender: Any) {
-        onDoneBlock?()
     }
     
     func timingFromPickers() -> Timing {
@@ -107,30 +83,23 @@ class TimeEditViewController: UIViewController {
         startPicker.picker.maximumDate = endDate?.addingTimeInterval(-TimeInterval.from(minutes: 15))
         endPicker.picker.minimumDate = startDate?.addingTimeInterval(TimeInterval.from(minutes: 15))
     }
-    
-    func colorFromSchedulable() -> UIColor {
-        
-        var colour : UIColor!
-        if let block = block as? SingleBlock {
-            colour = block.destination.place.color
-        } else {
-            colour = UIColor.gray
-        }
-        
-        return colour
-    }
 
 }
 
-extension TimeEditViewController : TimePickerDelegate {
+extension StartEndTimeViewController : TimePickerDelegate {
     
     func timePickerController(_ timePickerController: TimePickerController, didUpdateDateTo date: Date) {
         
         startDate = startPicker.picker.date
         endDate = endPicker.picker.date
         
-        onUpdatedTimingBlock?(timingFromPickers())
+        let newTiming = timingFromPickers()
+        onUpdatedTimingBlock?(newTiming)
         updatePickers()
+    }
+    
+    func timePickerController(_ timePickerController: TimePickerController, didUpdateTimeTo time: TimeInterval) {
+        // do nothing
     }
     
 }

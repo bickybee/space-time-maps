@@ -10,10 +10,11 @@
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
 		98138C142389957C00928590 /* GMSTimeMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98138C132389957C00928590 /* GMSTimeMarker.swift */; };
 		9816BC4D2394D8160085F706 /* TimeTickUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9816BC4C2394D8160085F706 /* TimeTickUtil.swift */; };
-		9825C75A23AEC032001F422F /* TimeEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C75923AEC032001F422F /* TimeEditViewController.swift */; };
-		9825C75C23AEC180001F422F /* TimeEditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9825C75B23AEC180001F422F /* TimeEditView.xib */; };
+		9825C75A23AEC032001F422F /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C75923AEC032001F422F /* PopupViewController.swift */; };
 		9825C76023B26444001F422F /* TimePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9825C75F23B26444001F422F /* TimePicker.xib */; };
 		9825C76223B2664E001F422F /* TimePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76123B2664E001F422F /* TimePickerController.swift */; };
+		9825C76423B50BAC001F422F /* StartEndTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */; };
+		9825C76623B5118E001F422F /* DurationTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76523B5118E001F422F /* DurationTimeViewController.swift */; };
 		982D5781231DEF8D00E183F3 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
@@ -78,10 +79,11 @@
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
 		98138C132389957C00928590 /* GMSTimeMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSTimeMarker.swift; sourceTree = "<group>"; };
 		9816BC4C2394D8160085F706 /* TimeTickUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTickUtil.swift; sourceTree = "<group>"; };
-		9825C75923AEC032001F422F /* TimeEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeEditViewController.swift; sourceTree = "<group>"; };
-		9825C75B23AEC180001F422F /* TimeEditView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimeEditView.xib; sourceTree = "<group>"; };
+		9825C75923AEC032001F422F /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		9825C75F23B26444001F422F /* TimePicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimePicker.xib; sourceTree = "<group>"; };
 		9825C76123B2664E001F422F /* TimePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerController.swift; sourceTree = "<group>"; };
+		9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartEndTimeViewController.swift; sourceTree = "<group>"; };
+		9825C76523B5118E001F422F /* DurationTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTimeViewController.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
@@ -165,10 +167,11 @@
 		9825C75823AEBF33001F422F /* TimePicker */ = {
 			isa = PBXGroup;
 			children = (
-				9825C75923AEC032001F422F /* TimeEditViewController.swift */,
-				9825C75B23AEC180001F422F /* TimeEditView.xib */,
 				9825C75F23B26444001F422F /* TimePicker.xib */,
 				9825C76123B2664E001F422F /* TimePickerController.swift */,
+				9825C75923AEC032001F422F /* PopupViewController.swift */,
+				9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */,
+				9825C76523B5118E001F422F /* DurationTimeViewController.swift */,
 			);
 			path = TimePicker;
 			sourceTree = "<group>";
@@ -463,7 +466,6 @@
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
 				98D0D1DF2322F0B8004DC6DE /* PlaceCell.xib in Resources */,
 				B6A625E422D7CFB40099D65C /* style.json in Resources */,
-				9825C75C23AEC180001F422F /* TimeEditView.xib in Resources */,
 				9855603123776D5100E969A7 /* GroupHeaderView.xib in Resources */,
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
@@ -541,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */,
+				9825C76423B50BAC001F422F /* StartEndTimeViewController.swift in Sources */,
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				982D5797232050C500E183F3 /* GroupCell.swift in Sources */,
@@ -562,7 +565,7 @@
 				98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */,
 				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
 				988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */,
-				9825C75A23AEC032001F422F /* TimeEditViewController.swift in Sources */,
+				9825C75A23AEC032001F422F /* PopupViewController.swift in Sources */,
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
 				982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
@@ -585,6 +588,7 @@
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
+				9825C76623B5118E001F422F /* DurationTimeViewController.swift in Sources */,
 				98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,

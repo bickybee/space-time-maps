@@ -108,7 +108,7 @@ class Scheduler {
             } else {
                 let originalPermLength = asManyOf.destinations.count
                 asManyOf.setPermutationsUsing(timeDict, travelMode)
-                let newPermLength = asManyOf.options[0].count //SO BAD!!!! FIXME
+                let newPermLength = asManyOf.options[safe: 0]?.count ?? 0 //SO BAD!!!! FIXME
                 scheduleOptionsForBlock(asManyOf, with: timeDict)
                 
                 needsRescheduling = true//originalPermLength != newPermLength

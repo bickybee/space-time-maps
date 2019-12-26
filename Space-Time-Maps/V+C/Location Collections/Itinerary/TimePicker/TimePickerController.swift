@@ -26,10 +26,24 @@ class TimePickerController: UIViewController {
     }
     
     @IBAction func didUpdatePicker(_ sender: Any) {
-        delegate?.timePickerController(self, didUpdateDateTo: picker.date)
+        if picker.datePickerMode == .time {
+            delegate?.timePickerController(self, didUpdateDateTo: picker.date)
+        } else if picker.datePickerMode == .countDownTimer {
+            delegate?.timePickerController(self, didUpdateTimeTo: picker.countDownDuration)
+        }
+        
     }
     
     @IBAction func didUpdateStepper(_ sender: Any) {
+        if picker.datePickerMode == .time {
+            stepDate()
+        } else if picker.datePickerMode == .countDownTimer {
+            stepTime()
+        }
+        stepper.value = 0
+    }
+    
+    func stepDate() {
         if #available(iOS 13.0, *) {
         
             let dir = stepper.value
@@ -53,11 +67,17 @@ class TimePickerController: UIViewController {
                 picker.setDate(date, animated: true)
                 delegate?.timePickerController(self, didUpdateDateTo: picker.date)
             }
-            
-            stepper.value = 0
-            
         }
-
+    }
+    
+    func stepTime() {
+        let dir = stepper.value
+        let dt = dir * TimeInterval.from(minutes: 15)
+        let time = picker.countDownDuration + dt
+        if time > 0 {
+            picker.countDownDuration = time
+            delegate?.timePickerController(self, didUpdateTimeTo: time)
+        }
     }
     
 }
@@ -66,5 +86,7 @@ class TimePickerController: UIViewController {
 protocol TimePickerDelegate : AnyObject {
     
     func timePickerController(_ timePickerController: TimePickerController, didUpdateDateTo date: Date)
+    
+    func timePickerController(_ timePickerController: TimePickerController, didUpdateTimeTo time: TimeInterval)
 
 }

@@ -19,7 +19,7 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
-    var timePickerController : TimeEditViewController?
+    var timePickerController : PopupViewController?
     
     @IBOutlet weak var paletteContainer: UIView!
     @IBOutlet weak var itineraryContainer: UIView!
@@ -152,25 +152,58 @@ class ParentViewController: UIViewController {
     
     @objc func onDidTapDestination(_ notification: Notification) {
         
-        guard let obj = notification.object as? (ScheduleBlock, Int) else { return }
+        guard let obj = notification.object as? (Schedulable, Int) else { return }
         
-        let block = obj.0
+        let schedulable = obj.0
         let index = obj.1
 
-        if let timePickerVC = timePickerController {
-            timePickerVC.onDoneBlock?()
-            timePickerController = nil
-        }
+        timePickerController?.dismiss(animated: false, completion: {})
+        timePickerController?.removeFromParent()
+        timePickerController?.view.removeFromSuperview()
 
-        showTimePickerForBlock(block, at: index)
+        showTimePickerForSchedulable(schedulable, at: index)
     
+    }
+    
+    func showTimePickerForSchedulable(_ schedulable: Schedulable, at index: Int) {
+        if let block = schedulable as? ScheduleBlock {
+            showTimePickerForBlock(block, at: index)
+        } else if let dest = schedulable as? Destination{
+            showTimePickerForDestination(dest, inBlockIndex: index)
+        }
+    }
+    
+    func showTimePickerForDestination(_ dest: Destination, inBlockIndex index: Int) {
+        let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
+        let timePickerVC = DurationTimeViewController(dest)
+        timePickerVC.view.frame = frame
+        timePickerVC.onUpdatedDurationBlock = { duration in
+            self.itineraryController.updateBlockPlaceDuration(index, duration)
+        }
+        timePickerVC.onDoneBlock = {
+            
+            UIView.animate(withDuration: 0.25, animations: {
+                timePickerVC.view.alpha = 0.0
+            }, completion: { success in
+                timePickerVC.dismiss(animated: false, completion: {
+                    self.timePickerController = nil
+                })
+            })
+            
+            self.itineraryController.endEditingSession()
+        }
+        
+        addChild(timePickerVC)
+        view.addSubview(timePickerVC.view)
+        timePickerVC.didMove(toParent: self)
+        
+        timePickerController = timePickerVC
     }
     
     func showTimePickerForBlock(_ block: ScheduleBlock, at index: Int) {
         
         let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
-        let timePickerVC = TimeEditViewController()
-        timePickerVC.block = block
+        let timePickerVC = StartEndTimeViewController(block)
         timePickerVC.view.frame = frame
         timePickerVC.onUpdatedTimingBlock = itineraryController.editBlockTiming
         timePickerVC.onDoneBlock = {
@@ -189,7 +222,6 @@ class ParentViewController: UIViewController {
         timePickerVC.didMove(toParent: self)
         
         timePickerController = timePickerVC
-        itineraryController.startEditingSession(withExistingBlock: block, atIndex: index)
     }
     
     // Package itinerary and place data to send to map for rendering
