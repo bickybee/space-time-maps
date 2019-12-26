@@ -495,6 +495,7 @@ extension ItineraryViewController : DragDelegate {
     
     func endEditingSession() {
         editingSession = nil
+        collectionView.reloadData()
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {

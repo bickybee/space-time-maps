@@ -81,6 +81,7 @@ class OptionsViewController: UIViewController {
 }
 
 extension OptionsViewController: UICollectionViewDelegate {
+    
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard !isPaddingCell(indexPath: indexPath) else { return }
@@ -91,10 +92,14 @@ extension OptionsViewController: UICollectionViewDelegate {
             delegate.shouldDismissOptionsViewController(self)
         } else {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            let optionIndex = indexPath.item - 1
-            selectedOption = optionIndex
-            delegate.optionsViewController(self, didSelectOptionIndex: optionIndex)
         }
+    }
+    
+    func selectOptionIndex(_ index: Int) {
+        
+        selectedOption = index
+        delegate.optionsViewController(self, didSelectOptionIndex: index)
+        
     }
     
 }
@@ -109,6 +114,11 @@ extension OptionsViewController: UIScrollViewDelegate {
         if !decelerate {
             self.collectionView.scrollToNearestVisibleCollectionViewCell()
         }
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        let centerIndex = collectionView.getCenterCellIndex()!
+        selectOptionIndex(centerIndex - 1)
     }
     
 }
