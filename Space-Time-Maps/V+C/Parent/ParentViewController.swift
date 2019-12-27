@@ -192,6 +192,7 @@ class ParentViewController: UIViewController {
                 })
             })
             
+            self.placePaletteController.collectionView.reloadData()
             self.itineraryController.endEditingSession()
         }
         
@@ -216,6 +217,7 @@ class ParentViewController: UIViewController {
                 timePickerVC.dismiss(animated: false, completion: {})
             })
             
+            self.placePaletteController.collectionView.reloadData()
             self.itineraryController.endEditingSession()
         }
         

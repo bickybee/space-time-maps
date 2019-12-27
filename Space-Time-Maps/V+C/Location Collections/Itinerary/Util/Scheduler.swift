@@ -293,7 +293,7 @@ private extension Scheduler {
         guard let dest = block.destinations.first, let priorDest = priorDest else { return nil }
         
         let travelTimeNeeded = timeDict[PlacePair(startID: priorDest.place.placeID, endID: dest.place.placeID, travelMode: travelMode)]!
-        let minStartTime = priorDest.timing.end + travelTimeNeeded
+        let minStartTime = Utils.ceilTime(priorDest.timing.end + travelTimeNeeded)
         if minStartTime > dest.timing.start {
             return Timing(start: minStartTime, duration: block.timing.duration)
         }
@@ -307,7 +307,7 @@ private extension Scheduler {
         guard let dest = block.destinations.last, let priorDest = priorDest else { return nil }
         
         let travelTimeNeeded = timeDict[PlacePair(startID: dest.place.placeID, endID: priorDest.place.placeID, travelMode: travelMode)]!
-        let maxEndTime = priorDest.timing.start - travelTimeNeeded
+        let maxEndTime = Utils.floorTime(priorDest.timing.start - travelTimeNeeded)
         if maxEndTime < dest.timing.end {
             return Timing(end: maxEndTime, duration: block.timing.duration)
         }
