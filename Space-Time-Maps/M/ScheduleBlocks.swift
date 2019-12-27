@@ -165,7 +165,11 @@ class AsManyOfBlock : OptionBlock {
     
     var selectedOption: Int?
     var destinations: [Destination] {
-        return selectedOption != nil && scheduledOptions != nil ? scheduledOptions![selectedOption!] : []
+        if let options = scheduledOptions, let selectedInd = selectedOption {
+            return options[safe: selectedInd] ?? []
+        } else {
+            return []
+        }
     }
     var optionCount: Int {
         return scheduledOptions?.count ?? 0
