@@ -162,15 +162,21 @@ class Scheduler {
     // Changing option in optionBlock
     func scheduleOptionChange(of blockIndex: Int, toOption newIndex: Int, in blocks: [ScheduleBlock], callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         
-        guard var block = blocks[blockIndex] as? OptionBlock,
+        guard var block = blocks[safe: blockIndex] as? OptionBlock,
               let index = block.selectedOption else {
             callback(blocks, Route()); return
         }
 
         block.selectedOption = newIndex
-        block.isFixed = true
+        let optionBlocks = blocks.compactMap({ $0 as? OptionBlock })
+        var nonFixed = optionBlocks.filter({ !$0.isFixed })
+        for i in nonFixed.indices {
+            nonFixed[i].isFixed = true
+        }
         reschedule(blocks: blocks, movingIndex: blockIndex, callback: callback)
-        block.isFixed = false
+        for i in nonFixed.indices {
+            nonFixed[i].isFixed = false
+        }
         
     }
     

@@ -33,12 +33,12 @@ class Itinerary {
         return schedule.filter({$0.self is OptionBlock.Type}).map({ $0 as! OptionBlock })
     }
     
-    var duration : TimeInterval {
-        var totalDuration = route.travelTime
-        destinations.forEach({dest in
-            totalDuration += dest.timing.duration
-        })
-        return totalDuration
+    var startTime : Date? {
+        return schedule.first?.timing.start.toDate()
+    }
+    
+    var endTime : Date? {
+        return schedule.last?.timing.end.toDate()
     }
     
     func blockIndexOfPlaceWithName(_ name: String) -> Int? {

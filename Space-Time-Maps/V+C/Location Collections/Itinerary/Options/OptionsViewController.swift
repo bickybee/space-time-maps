@@ -21,7 +21,7 @@ class OptionsViewController: UIViewController {
     
     var blockIndex: Int!
     var selectedOption: Int!
-    var itineraries: [Itinerary]? {
+    var itineraries: [(Itinerary, Int)]? {
         didSet {
             collectionView.reloadData()
         }
@@ -77,6 +77,10 @@ class OptionsViewController: UIViewController {
     func isPaddingCell(indexPath: IndexPath) -> Bool {
         return ((indexPath.item == 0) || (indexPath.item == itineraries!.count + 1))
     }
+    
+    func setSelectedOption(_ index: Int) {
+        selectedOption = itineraries!.firstIndex(where: {$0.1 == index})
+    }
 
 }
 
@@ -118,7 +122,8 @@ extension OptionsViewController: UIScrollViewDelegate {
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         let centerIndex = collectionView.getCenterCellIndex()!
-        selectOptionIndex(centerIndex - 1)
+        let optionForIndex = itineraries![centerIndex - 1].1
+        selectOptionIndex(optionForIndex)
     }
     
 }
@@ -141,9 +146,9 @@ extension OptionsViewController: UICollectionViewDataSource {
         } else {
             let whichOption = collectionView.tag
             if section == 0 { // dests
-                return itineraries[whichOption].schedule.count
+                return itineraries[whichOption].0.schedule.count
             } else { // legs! TODO!
-                return itineraries[whichOption].route.count
+                return itineraries[whichOption].0.route.count
             }
             
         }
@@ -160,6 +165,19 @@ extension OptionsViewController: UICollectionViewDataSource {
             cell.timelineView.dataSource = self
             cell.timelineView.tag = indexPath.item - 1 // Because of nil cell to start
             cell.timelineView.isUserInteractionEnabled = false
+            
+            let travelTime = itineraries![indexPath.item - 1].0.route.travelTime
+            cell.timeLabel.text = " " + Utils.secondsToRelativeTimeString(seconds: travelTime)
+            
+            if (indexPath.item == 0) {
+                cell.setColor(.flatLime())
+            } else {
+                if travelTime == itineraries![0].0.route.travelTime {
+                    cell.setColor(.flatLime())
+                } else {
+                    cell.setColor(.darkGray)
+                }
+            }
             
             let layout = cell.timelineView!.collectionViewLayout as! ItineraryLayout
             layout.delegate = self
@@ -184,7 +202,7 @@ extension OptionsViewController: UICollectionViewDataSource {
     func setupDestinationCell(with indexPath: IndexPath, for cv: UICollectionView) -> UICollectionViewCell {
         
         let index = indexPath.item
-        let destination = itineraries![cv.tag].destinations[index]
+        let destination = itineraries![cv.tag].0.destinations[index]
         let cell = cv.dequeueReusableCell(withReuseIdentifier: locationReuseIdentifier, for: indexPath) as! DestCell
         cell.configureWith(destination, false)
         cell.isUserInteractionEnabled = false
@@ -195,7 +213,7 @@ extension OptionsViewController: UICollectionViewDataSource {
     func setupLegCell(with indexPath: IndexPath, for cv: UICollectionView) -> UICollectionViewCell {
         
         let index = indexPath.item
-        let leg = itineraries![cv.tag].route.legs[index]
+        let leg = itineraries![cv.tag].0.route.legs[index]
         let cell = cv.dequeueReusableCell(withReuseIdentifier: legReuseIdentifier, for: indexPath) as! RouteCell
         let gradient = [leg.startPlace.color, leg.endPlace.color]
         
@@ -230,9 +248,9 @@ extension OptionsViewController: ItineraryLayoutDelegate {
         
         let optionIndex = collectionView.tag
         if indexPath.section == 0 {
-            return itineraries![optionIndex].schedule[indexPath.item].timing.offsetBy(timelineOffset)
+            return itineraries![optionIndex].0.schedule[indexPath.item].timing.offsetBy(timelineOffset)
         } else {
-            return itineraries![optionIndex].route.legs[indexPath.item].timing.offsetBy(timelineOffset)
+            return itineraries![optionIndex].0.route.legs[indexPath.item].timing.offsetBy(timelineOffset)
         }
         
     }
@@ -254,11 +272,14 @@ extension OptionsViewController {
 class MiniTimelineCell: UICollectionViewCell {
     
     var timelineView: UICollectionView!
+    var timeLabel: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.contentView.backgroundColor = .clear
+        layer.cornerRadius = 3
         setupTimelineView()
+        setupTimelineOutline()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -292,6 +313,30 @@ class MiniTimelineCell: UICollectionViewCell {
         collectionView.backgroundColor = .clear
         timelineView = collectionView
         
+    }
+    
+    func setupTimelineOutline() {
+        // HIGHLIGHTING EXPERIMENTING
+        layer.borderWidth = 2
+        layer.borderColor = UIColor.lightGray.cgColor
+        let label = UILabel()
+        label.textColor = .white
+        label.backgroundColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        NSLayoutConstraint.activate([
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            label.heightAnchor.constraint(equalToConstant: 20.0)
+        ])
+        label.layer.cornerRadius = 3
+        timeLabel = label
+    }
+    
+    func setColor(_ color: UIColor) {
+        layer.borderColor = color.cgColor
+        timeLabel.backgroundColor = color
     }
 
 }

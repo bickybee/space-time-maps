@@ -25,7 +25,9 @@ class ParentViewController: UIViewController {
     @IBOutlet weak var itineraryContainer: UIView!
     
     // UI outlets
-    @IBOutlet weak var totalTimeLabel: UILabel!
+    
+    @IBOutlet weak var endTimeLabel: UILabel!
+    @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var travelTimeLabel: UILabel!
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var paletteSmallWidth: NSLayoutConstraint!
@@ -244,15 +246,24 @@ class ParentViewController: UIViewController {
     }
     
     func updateTransportTimeLabel() {
-        let duration = itineraryController.itinerary.duration
+        let startTime = itineraryController.itinerary.startTime
+        let endTime = itineraryController.itinerary.endTime
         let travelTime = itineraryController.itinerary.route.travelTime
         
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .abbreviated
+        let formatter2 = DateFormatter()
+        formatter2.dateFormat = "hh:mma"
         
-        totalTimeLabel.text = formatter.string(from: TimeInterval(duration))!
-        travelTimeLabel.text = formatter.string(from: TimeInterval(travelTime))!
+        var startText = "00:00AM"
+        var endText = "00:00AM"
+        if let startTime = startTime {
+            startText = formatter2.string(from: startTime)
+        }
+        if let endTime = endTime {
+            endText = formatter2.string(from: endTime)
+        }
+        startTimeLabel.text = startText
+        endTimeLabel.text = endText
+        travelTimeLabel.text = Utils.secondsToRelativeTimeString(seconds: travelTime)
 
 
     }

@@ -68,7 +68,17 @@ class Utils {
         let formatter = DateComponentsFormatter()
         
         formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .short
+        formatter.unitsStyle = .brief
+        let formattedString = formatter.string(from: seconds) ?? "error"
+        
+        return formattedString
+    }
+    
+    static func secondsToAbrvRelativeTimeString(_ seconds: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .brief
         let formattedString = formatter.string(from: seconds) ?? "error"
         
         return formattedString

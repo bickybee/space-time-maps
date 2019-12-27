@@ -411,7 +411,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
         optionsVC.delegate = self
         optionsVC.blockIndex = blockIndex
-        optionsVC.selectedOption = block.selectedOption!
         optionsVC.hourHeight = timelineController.hourHeight
         optionsVC.timelineOffset = -(startTime)
         optionsVC.view.backgroundColor = .clear
@@ -421,6 +420,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             let itineraries = itinerariesFromOptionsBlockIndex(blockIndex)
             optionsVC.itineraries = itineraries
         }
+        optionsVC.setSelectedOption(block.selectedOption!)
         
         addChild(optionsVC)
         newOptionView.addSubview(optionsVC.view)
@@ -430,7 +430,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    func itinerariesFromOptionsBlockIndex(_ blockIndex: Int) -> [Itinerary] {
+    func itinerariesFromOptionsBlockIndex(_ blockIndex: Int) -> [(Itinerary, Int)] {
         guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return [] }
         var destinationOptions : [[Destination]]!
         if block is OneOfBlock {
@@ -438,10 +438,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         } else if let asManyOf = block as? AsManyOfBlock{
             destinationOptions = asManyOf.scheduledOptions!
         }
-        var itineraries = [Itinerary]()
+        var itinerariesIndices = [(Itinerary, Int)]()
         let dispatchGroup = DispatchGroup()
         
-        for o in destinationOptions {
+        for (i, o) in destinationOptions.enumerated() {
 
             dispatchGroup.enter()
             var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
@@ -465,13 +465,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                     itinerary.schedule = schedule
                 }
                 if let route = route { itinerary.route = route }
-                itineraries.append(itinerary)
+                itinerariesIndices.append((itinerary, i))
                 dispatchGroup.leave()
             }
         }
         
         dispatchGroup.wait()
-        return itineraries
+        itinerariesIndices.sort(by: {$0.0.route.travelTime < $1.0.route.travelTime} )
+        return itinerariesIndices
         
     }
 
