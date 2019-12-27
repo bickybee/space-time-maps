@@ -18,7 +18,7 @@ class Itinerary {
     
     var schedule = [ScheduleBlock]() {
         didSet {
-            schedule.sort(by: { $0.timing.start < $1.timing.start })
+            schedule.sort(by: { $0.timing.middle() < $1.timing.middle() })
             destinations = schedule.compactMap({ $0.destinations }).flatMap({$0})
         }
     }

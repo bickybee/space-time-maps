@@ -105,4 +105,9 @@ struct Timing {
         return intersection
     }
     
+    func middle() -> TimeInterval {
+        let mid = start + ((end - start) / 2.0)
+        return mid
+    }
+    
 }

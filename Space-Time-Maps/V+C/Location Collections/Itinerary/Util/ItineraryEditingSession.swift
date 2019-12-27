@@ -31,7 +31,7 @@ class ItineraryEditingSession: NSObject {
     init(scheduler: Scheduler, movingBlock block: ScheduleBlock, withIndex index: Int?, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         self.movingBlock = block
         self.baseBlocks = blocks
-        self.baseBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        self.baseBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
         self.originalBaseBlocks = self.baseBlocks.map{ $0.copy() }
         
         self.travelMode = travelMode
@@ -54,8 +54,9 @@ class ItineraryEditingSession: NSObject {
         var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
         var insertAt = modifiedBlocks.endIndex
         for (i, block) in modifiedBlocks.enumerated() {
-            
-            if block.timing.start >= movedBlock.timing.start {
+            let otherMiddle = block.timing.middle()
+            let movingMiddle = movedBlock.timing.middle()
+            if block.timing.middle() >= movedBlock.timing.middle() {
                 insertAt = i
                 break
             }
@@ -88,7 +89,7 @@ class ItineraryEditingSession: NSObject {
         
         var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
         modifiedBlocks.append(movingBlock)
-        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
         
         scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
     }
@@ -99,7 +100,7 @@ class ItineraryEditingSession: NSObject {
         
         var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
         modifiedBlocks.append(movingBlock)
-        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
         
         scheduler.reschedule(blocks: modifiedBlocks, movingIndex: lastPosition!, callback: callback)
     }
@@ -115,7 +116,7 @@ class ItineraryEditingSession: NSObject {
         
         var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
         modifiedBlocks.append(movingBlock)
-        modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
         
         scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
         

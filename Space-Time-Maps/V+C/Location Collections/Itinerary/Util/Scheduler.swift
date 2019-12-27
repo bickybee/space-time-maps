@@ -374,7 +374,7 @@ private extension Scheduler {
             i =  range.lowerBound - 1
         }
         
-        schedule.sort(by: { $0.timing.start < $1.timing.start })
+        schedule.sort(by: { $0.timing.middle() < $1.timing.middle() })
         return schedule
     }
     
@@ -436,7 +436,7 @@ private extension Scheduler {
             i =  range.upperBound + 1
         }
         
-        schedule.sort(by: { $0.timing.start < $1.timing.start })
+        schedule.sort(by: { $0.timing.middle() < $1.timing.middle() })
         return schedule
     }
     
@@ -446,6 +446,7 @@ private extension Scheduler {
        for i in (0...startIndex).reversed() {
            var block = blocks[i]
            if !block.isPusher {
+            print("backwards")
                if let newTiming = newTimingForPastBlock(block, priorDest) {
                    block.timing = newTiming
                    priorDest = block.destinations.first
@@ -458,10 +459,11 @@ private extension Scheduler {
     
     func pushBlocksForwards(_ blocks: [ScheduleBlock], from startIndex: Int) {
         var priorDest = blocks[startIndex].destinations.last
-        
+       
         for i in (startIndex..<blocks.count) {
             var block = blocks[i]
             if !block.isPusher {
+                 print("forwards")
                 if let newTiming = newTimingForFutureBlock(block, priorDest) {
                     block.timing = newTiming
                     priorDest = block.destinations.last
