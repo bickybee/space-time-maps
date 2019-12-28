@@ -88,7 +88,6 @@ class PlaceGroup {
     }
     
     func append(_ place: Place) {
-        print(place)
         places.append(place)
     }
     

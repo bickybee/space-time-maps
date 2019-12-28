@@ -130,7 +130,6 @@ class ItineraryViewController: DraggableContentViewController {
         
         switch gesture.state {
         case .began:
-            print(roundedY)
             let frame = CGRect(x: 0, y: y - 2, width: view.frame.width, height: 4)
             timeQueryLine = UIView(frame: frame)
             timeQueryLine!.backgroundColor = UIColor.darkGray.withAlphaComponent(0.25)
@@ -159,7 +158,8 @@ class ItineraryViewController: DraggableContentViewController {
     }
     
     func updateSchedulerWithPlace(_ place: Place, in places: [Place]) {
-        scheduler.updateTimeDictWithPlace(place, in: places)
+        let placesMinusPlace = places.filter({ $0.placeID != place.placeID })
+        scheduler.updateTimeDictWithPlace(place, in: placesMinusPlace)
     }
     
     func updateScheduler(_ travelMode: TravelMode) {
@@ -212,7 +212,6 @@ class ItineraryViewController: DraggableContentViewController {
     
     // not being used
     @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
-        print("tap")
         let index = sender.view!.tag
         let block = itinerary.schedule[index] // only works for dests rn
         NotificationCenter.default.post(name: .didTapDestination, object: (block, index))
@@ -248,7 +247,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         if indexPath.section == 0 {
             let blockIndex = indexOfBlockContainingDestination(at: indexPath.item)!
             let block = itinerary.schedule[blockIndex]
-            if block is SingleBlock {
+            if (block is SingleBlock) || (block is OneOfBlock) {
                 obj = (block, blockIndex)
             } else {
                 let dest = itinerary.destinations[indexPath.item]
@@ -311,6 +310,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     
+    
+    
 // MARK: - Cell setup
     func setupHoursCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let movingBlock = editingSession!.movingBlock
@@ -345,7 +346,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     @objc func didSwipeDestination(_ gesture: UISwipeGestureRecognizer) {
-        print("swipe!")
+        //do nothing
     }
     
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -500,7 +501,6 @@ extension ItineraryViewController : DragDelegate {
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {
-        print("boop")
     }
     
     
@@ -547,13 +547,13 @@ extension ItineraryViewController : DragDelegate {
         collectionView.layoutIfNeeded()
         var totalNumCells = 0
         // Excluding hours of op cells...
-        for i in 0..<collectionView.numberOfSections - 1 {
-            totalNumCells += collectionView.numberOfItems(inSection: i)
-        }
-        var visibleCells = collectionView.indexPathsForVisibleItems.filter{ $0.section != 4}
-        if visibleCells.count < totalNumCells {
-            print("should zoom")
-        }
+//        for i in 0..<collectionView.numberOfSections - 1 {
+//            totalNumCells += collectionView.numberOfItems(inSection: i)
+//        }
+//        var visibleCells = collectionView.indexPathsForVisibleItems.filter{ $0.section != 4}
+//        if visibleCells.count < totalNumCells {
+//            print("should zoom")
+//        }
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
@@ -563,8 +563,6 @@ extension ItineraryViewController : DragDelegate {
         previousTouchHour = nil
         collectionView.reloadData()
         
-        print("end press")
-
         endEditingSession()
         
       // lol testing time tick isochrone stuff
@@ -582,7 +580,6 @@ extension ItineraryViewController : DragDelegate {
                         return
                       }
                       self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
-                        print("done")
                     }
                   
               }

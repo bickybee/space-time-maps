@@ -36,6 +36,7 @@ class ParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        travelTimeLabel.adjustsFontSizeToFitWidth = true
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
         NotificationCenter.default.addObserver(self, selector: #selector(onDidStartContentDrag), name: .didStartContentDrag, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onDidEndContentDrag), name: .didEndContentDrag, object: nil)
@@ -308,20 +309,19 @@ class ParentViewController: UIViewController {
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup]) {
-        print("add place")
         updateMap()
         let places = groups.flatMap({ $0.places })
         itineraryController.updateSchedulerWithPlace(place, in: places)
     }
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup]) {
-        print("removed places")
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups groups: [PlaceGroup]) {
         updateMap()
+        let places = groups.flatMap({ $0.places })
+        itineraryController.updatePlaceGroups(groups)
     }
     
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
-        print("update places")
         let places = groups.flatMap({ $0.places })
         itineraryController.updatePlaceGroups(groups)
     }

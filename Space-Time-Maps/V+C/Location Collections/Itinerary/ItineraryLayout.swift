@@ -45,7 +45,7 @@ class ItineraryLayout: UICollectionViewLayout {
             
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             let hourHeight = delegate.hourHeight(of: collectionView)
-            attributes.frame = CGRect(x: 0, y: 0, width: contentWidth, height: 24.5 * hourHeight)
+            attributes.frame = CGRect(x: 0, y: 0, width: contentWidth - 1, height: 24.5 * hourHeight)
             attributes.zIndex = -10
             cache.append(attributes)
             contentHeight = 24.5 * hourHeight 
@@ -106,6 +106,10 @@ class ItineraryLayout: UICollectionViewLayout {
     
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return cache.first(where: { $0.indexPath == indexPath })
+    }
+    
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        true
     }
     
 }

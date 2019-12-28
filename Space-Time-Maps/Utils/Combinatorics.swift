@@ -15,7 +15,7 @@ class Combinatorics {
     // usage example: Utils.permute(indices, indices.count - 1, &permutations)
     static func permute<T>(_ a: [T], _ n: Int, _ result: inout [[T]]) {
         if n == 0 {
-            print(a)   // display the current permutation
+            //print(a)   // display the current permutation
             result.append(a)
         } else {
             var a = a

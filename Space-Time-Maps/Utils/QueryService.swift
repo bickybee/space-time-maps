@@ -47,16 +47,17 @@ class QueryService {
         dataTask.resume()
     }
     
-    func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping (TimeDict?) -> ()) {
+    func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping ([PlacePair : TimeInterval]?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
         guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
-        pingCount += 1
-        print("pings to distance matrix API: \(pingCount)")
+        pingCount += origins.count * destinations.count
+        print("elements for this call: \(origins.count * destinations.count)")
+        print("total elements to distance matrix API: \(pingCount)")
         runQuery(url: url) {data in
-//            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
-//            {
-//                print(JSONString)
-//            }
+            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
+            {
+                print(JSONString)
+            }
             let results = self.dataToTimeDict(data, origins, destinations, travelMode)
             callback(results)
         }
@@ -149,15 +150,15 @@ class QueryService {
         return lineStrings
     }
     
-    func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place], _ travelMode: TravelMode) -> TimeDict? {
+    func dataToTimeDict(_ data: Data, _ origins: [Place], _ destinations: [Place], _ travelMode: TravelMode) -> [PlacePair : TimeInterval]? {
         let decoder = JSONDecoder()
-        var dict : TimeDict?
+        var dict : [PlacePair : TimeInterval]?
         if let errorResponseObject = try? decoder.decode(ErrorResponseObject.self, from: data) {
             print(errorResponseObject.errorMessage)
             dict = nil
         } else if let matrixResponseObject = try? decoder.decode(MatrixResponseObject.self, from: data) {
             // Parse out data into Route object
-            dict = TimeDict()
+            dict = [PlacePair : TimeInterval]()
             let originIDs = origins.map( { $0.placeID })
             let destIDs = destinations.map( { $0.placeID })
             for (i, row) in matrixResponseObject.rows.enumerated() {

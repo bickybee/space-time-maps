@@ -56,7 +56,6 @@ class PopupViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         doneButton.frame = CGRect(x: view.frame.width - 30, y: 0, width: 30, height: 30)
-        print(doneButton.frame)
     }
     
     func colorFromSchedulable(_ schedulable: Schedulable) -> UIColor {

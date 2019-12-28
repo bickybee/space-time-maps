@@ -42,6 +42,7 @@ class GroupCell: UICollectionViewCell {
         lockButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
         lockButton.setTitle(String.fontAwesomeIcon(name: .lockOpen), for: .normal)
         lockButton.setTitle(String.fontAwesomeIcon(name: .lock), for: .selected)
+        lockButton.setTitleShadowColor(.clear, for: .selected)
     }
     
     func configureWith(_ block: OptionBlock, _ isCurrentlyDragging: Bool) {

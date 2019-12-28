@@ -15,11 +15,19 @@ class Scheduler {
     
     var qs : QueryService!
     private var legCache = [LegData]()
-    var timeDict = TimeDict()
+    var timeDict = TimeDict(times: [:])
     var travelMode : TravelMode = .driving
     
     init(_ queryService: QueryService) {
         qs = queryService
+    }
+    
+    func timeFrom(_ place1: Place, to place2: Place) -> TimeInterval {
+        return timeDict.timeFrom(place1, to: place2, travellingBy: travelMode)
+    }
+    
+    func timeFrom(_ place1ID: String, to place2ID: String) -> TimeInterval {
+        return timeDict.timeFrom(place1ID, to: place2ID, travellingBy: travelMode)
     }
     
     func reschedule(blocks: [ScheduleBlock], movingIndex: Int, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
@@ -106,11 +114,11 @@ class Scheduler {
             if asManyOf.scheduledOptions == nil {
                 needsRescheduling = true
             } else {
-                let originalPermLength = asManyOf.destinations.count
-                asManyOf.setPermutationsUsing(timeDict, travelMode)
-                let newPermLength = asManyOf.options[safe: 0]?.count ?? 0 //SO BAD!!!! FIXME
-                scheduleOptionsForBlock(asManyOf, with: timeDict)
-                
+//                let originalPermLength = asManyOf.destinations.count
+//                asManyOf.setPermutationsUsing(timeDict, travelMode)
+//                let newPermLength = asManyOf.options[safe: 0]?.count ?? 0 //SO BAD!!!! FIXME
+//                scheduleOptionsForBlock(asManyOf, with: timeDict)
+//                
                 needsRescheduling = true//originalPermLength != newPermLength
             }
         }
@@ -182,43 +190,54 @@ class Scheduler {
     
     func updateTimeDict(_ places: [Place], _ callback: (() -> ())?) {
         
+        var oldPlaces = [Place]()
         var newPlaces = [Place]()
         for place in places {
-            if !timeDict.keys.contains(where: { $0.startID == place.placeID && $0.travelMode == travelMode }) {
+            if !timeDict.times.keys.contains(where: { $0.startID == place.placeID && $0.travelMode == travelMode }) {
                 newPlaces.append(place)
+            } else {
+                oldPlaces.append(place)
             }
         }
         
-        let dg = DispatchGroup()
-        
-        dg.enter()
-        qs.getTimeDictFor(origins: newPlaces, destinations: places, travelMode: travelMode) { timeDict in
-            guard let dict = timeDict else { return }
-            self.timeDict.merge(dict) { (current, _) in current }
-            dg.leave()
+        if oldPlaces.count == 0 {
+            qs.getTimeDictFor(origins: newPlaces, destinations: newPlaces, travelMode: travelMode) { timeDict in
+                guard let dict = timeDict else { return }
+                self.timeDict.times.merge(dict) { (current, _) in current }
+                callback?()
+            }
+        } else {
+            let dg = DispatchGroup()
+                   
+           dg.enter()
+           qs.getTimeDictFor(origins: newPlaces, destinations: oldPlaces, travelMode: travelMode) { timeDict in
+               guard let dict = timeDict else { return }
+               self.timeDict.times.merge(dict) { (current, _) in current }
+               dg.leave()
+           }
+           
+           dg.enter()
+           qs.getTimeDictFor(origins: oldPlaces, destinations: newPlaces, travelMode: travelMode) { timeDict in
+               guard let dict = timeDict else { return }
+               self.timeDict.times.merge(dict) { (current, _) in current }
+               dg.leave()
+           }
+           
+           dg.wait()
+           callback?()
         }
-        
-        dg.enter()
-        qs.getTimeDictFor(origins: places, destinations: newPlaces, travelMode: travelMode) { timeDict in
-            guard let dict = timeDict else { return }
-            self.timeDict.merge(dict) { (current, _) in current }
-            dg.leave()
-        }
-        
-        dg.wait()
-        callback?()
     }
     
     func updateTimeDictWithPlace(_ place: Place, in places: [Place]) {
  
         qs.getTimeDictFor(origins: [place], destinations: places, travelMode: travelMode) { timeDict in
             guard let dict = timeDict else { return }
-            self.timeDict.merge(dict) { (current, _) in current }
+            self.timeDict.times.merge(dict) { (current, _) in current }
         }
         
         qs.getTimeDictFor(origins: places, destinations: [place], travelMode: travelMode) { timeDict in
             guard let dict = timeDict else { return }
-            self.timeDict.merge(dict) { (current, _) in current }
+            self.timeDict.times.merge(dict) { (current, _) in current }
         }
         
     }
@@ -291,8 +310,7 @@ private extension Scheduler {
     func newTimingForFutureBlock(_ block: ScheduleBlock, _ priorDest: Destination?) -> Timing? {
         // Depending on time between places, might need to change timing of scheduleBlock
         guard let dest = block.destinations.first, let priorDest = priorDest else { return nil }
-        
-        let travelTimeNeeded = timeDict[PlacePair(startID: priorDest.place.placeID, endID: dest.place.placeID, travelMode: travelMode)]!
+        let travelTimeNeeded = timeFrom(priorDest.place, to: dest.place)
         let minStartTime = Utils.ceilTime(priorDest.timing.end + travelTimeNeeded)
         if minStartTime > dest.timing.start {
             return Timing(start: minStartTime, duration: block.timing.duration)
@@ -306,7 +324,7 @@ private extension Scheduler {
         
         guard let dest = block.destinations.last, let priorDest = priorDest else { return nil }
         
-        let travelTimeNeeded = timeDict[PlacePair(startID: dest.place.placeID, endID: priorDest.place.placeID, travelMode: travelMode)]!
+        let travelTimeNeeded = timeFrom(dest.place, to: priorDest.place)
         let maxEndTime = Utils.floorTime(priorDest.timing.start - travelTimeNeeded)
         if maxEndTime < dest.timing.end {
             return Timing(end: maxEndTime, duration: block.timing.duration)
@@ -446,7 +464,6 @@ private extension Scheduler {
        for i in (0...startIndex).reversed() {
            var block = blocks[i]
            if !block.isPusher {
-            print("backwards")
                if let newTiming = newTimingForPastBlock(block, priorDest) {
                    block.timing = newTiming
                    priorDest = block.destinations.first
@@ -463,7 +480,6 @@ private extension Scheduler {
         for i in (startIndex..<blocks.count) {
             var block = blocks[i]
             if !block.isPusher {
-                 print("forwards")
                 if let newTiming = newTimingForFutureBlock(block, priorDest) {
                     block.timing = newTiming
                     priorDest = block.destinations.last
@@ -683,7 +699,7 @@ private extension Scheduler {
             currentTime = destTiming.end
             if i < (places.count - 1) {
                 let nextPlace = places[i + 1]
-                let legTime = timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                let legTime = timeFrom(place, to: nextPlace)
                 currentTime += legTime
             }
         }
@@ -722,7 +738,7 @@ private extension Scheduler {
             extraTime -= place.timeSpent
             if i < (places.count - 1) {
                 let nextPlace = places[i + 1]
-                let legTime = timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                let legTime = timeFrom(place, to: nextPlace)
                 extraTime -= legTime
             }
         }
@@ -741,7 +757,7 @@ private extension Scheduler {
             time = destTiming.end + timeBetweenDests
             if i < (places.count - 1) {
                 let nextPlace = places[i + 1]
-                let legTime = timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                let legTime = timeFrom(place, to: nextPlace)
                 time += legTime
             }
         }
@@ -869,7 +885,7 @@ private extension Scheduler {
             var score : Double = 0
             for i in c.indices.dropLast() {
                 let key = PlacePair(startID: c[i], endID: c[i+1], travelMode: travelMode)
-                score += timeDict[key]!
+                score += timeFrom(c[i], to: c[i+1]) // CRASHED HERE
             }
             scores.append(score)
         }

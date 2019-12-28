@@ -72,11 +72,9 @@ class ItineraryEditingSession: NSObject {
         lastPosition = insertAt
 
         if changedOrder {//|| changedClosedHoursIntersections {
-                print("reschedule")
                 scheduler.reschedule(blocks: modifiedBlocks, movingIndex: insertAt, callback: callback)
                 
             } else { // Otherwise just shift, no reschedule
-                print("shift")
                 scheduler.scheduleShift(blocks: modifiedBlocks, movingBlockIndex: insertAt, callback: callback)
             }
 //        }

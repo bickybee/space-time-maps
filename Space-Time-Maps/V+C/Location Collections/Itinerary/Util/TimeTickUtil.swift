@@ -84,7 +84,6 @@ class TimeTickService {
         for (i, t) in times.dropFirst().enumerated() {
             relativeTimes.append(t - (TimeInterval.from(minutes: 15) * Double(i)) - offset)
         }
-        print(relativeTimes)
         return relativeTimes
     }
     

@@ -8,7 +8,22 @@
 
 import UIKit
 
-typealias TimeDict = [ PlacePair : TimeInterval ]
+struct TimeDict {
+    var times : [ PlacePair : TimeInterval ]
+    
+    func timeFrom(_ place1ID: String, to place2ID: String, travellingBy travelMode: TravelMode) -> TimeInterval {
+        if place1ID == place2ID {
+            return 0.0
+        } else {
+            let key = PlacePair(startID: place1ID, endID: place2ID, travelMode: travelMode)
+            return times[key] ?? 0.0
+        }
+    }
+    
+    func timeFrom(_ place1: Place, to place2: Place, travellingBy travelMode: TravelMode) -> TimeInterval {
+        return timeFrom(place1.placeID, to: place2.placeID, travellingBy: travelMode)
+    }
+}
 
 struct PlacePair : Hashable {
     var startID : String

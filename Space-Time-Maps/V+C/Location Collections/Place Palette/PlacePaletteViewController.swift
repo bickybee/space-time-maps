@@ -84,8 +84,8 @@ class PlacePaletteViewController: DraggableContentViewController {
         
 //        groups.append(contentsOf: Utils.taskPlaceGroups)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
-        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
-//        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
+//        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
+        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
         
         
     }
@@ -135,6 +135,7 @@ extension PlacePaletteViewController: GroupCreationDelegate {
             editedGroup.name = name
             editedGroup.kind = kind
             collectionView.reloadData()
+            groupToEdit = nil
         } else {
             collectionView.performBatchUpdates({
                 
@@ -232,15 +233,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         let place = group[indexPath.item]
         return placeCellFrom(cell, place)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("select")
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("deselect")
-    }
-    
+
     func placeholderCellFrom(_ cell: PlaceCell) -> PlaceCell {
         cell.contentView.alpha = 0.0
         cell.backgroundColor = .clear
@@ -497,8 +490,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         
         // otherwise
         for period in periods {
-            print(period.openEvent.day)
-            print(period.openEvent.day.rawValue)
+
             if Int(period.openEvent.day.rawValue) == weekday {
                 let openTime = period.openEvent.time
                 startTime = TimeInterval.from(hours: Int(openTime.hour)) + TimeInterval.from(minutes: Int(openTime.minute))

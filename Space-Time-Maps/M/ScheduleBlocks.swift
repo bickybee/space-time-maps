@@ -134,11 +134,7 @@ class OneOfBlock : OptionBlock {
 
 class AsManyOfBlock : OptionBlock {
     
-    var placeGroup: PlaceGroup {
-        didSet {
-            print("didSet")
-        }
-    }
+    var placeGroup: PlaceGroup
     var places : [Place] {
         return placeGroup.places
     }
@@ -177,11 +173,7 @@ class AsManyOfBlock : OptionBlock {
     var name : String {
         return placeGroup.name
     }
-    var isFixed: Bool {
-        didSet {
-            print("fixed")
-        }
-    }
+    var isFixed: Bool
     
     init(placeGroup: PlaceGroup, timing: Timing) {
         self.placeGroup = placeGroup
@@ -269,7 +261,7 @@ class AsManyOfBlock : OptionBlock {
                     // Time spent getting from this place to the next
                     if (i < perm.count - 1) {
                         let nextPlace = placeGroup[perm[i + 1]]
-                        timeNeeded += timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                        timeNeeded += timeDict.timeFrom(place, to: nextPlace, travellingBy: travelMode) //CRASHES
                     }
                 }
                 
