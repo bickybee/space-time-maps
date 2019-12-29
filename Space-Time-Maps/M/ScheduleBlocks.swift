@@ -236,6 +236,7 @@ class AsManyOfBlock : OptionBlock {
     // Find out which combination of places actually fits in the overall timeblock
     func setPermutationsUsing(_ timeDict: TimeDict, _ travelMode: TravelMode) {
         
+        guard placeGroup.count > 0 else { return }
         // Keep track of valid terms and their total times
         
         // First try permutations that include ALL places, then decrease number of places (subset size) if none fit, etc.

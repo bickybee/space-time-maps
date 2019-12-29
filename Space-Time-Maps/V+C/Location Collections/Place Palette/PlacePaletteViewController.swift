@@ -82,15 +82,24 @@ class PlacePaletteViewController: DraggableContentViewController {
     func setupPlaces() {
 
         
-//        groups.append(contentsOf: Utils.taskPlaceGroups)
+        groups.append(contentsOf: Utils.taskPlaceGroups)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
-        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
+//        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
         
         
     }
     
     @IBAction func searchClicked(_ sender: Any) {
+        let numPlaces = groups.reduce(0, { x, y in
+            x + y.count
+        })
+        if numPlaces >= 20 {
+            let alert = UIAlertController()
+            alert.message = "You cannot add any more places unless you delete some. No more than 20 places are supported at once."
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         presentAutocompleteController()
     }
     
@@ -469,6 +478,26 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         groups[0].append(newPlace)
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didAddPlace: newPlace, toGroups: groups)
+        
+        let alert = UIAlertController(title: "Added!", message: "", preferredStyle: .actionSheet)
+        viewController.present(alert, animated: true, completion: nil)
+
+        // delays execution of code to dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+          alert.dismiss(animated: true, completion: nil)
+        })
+        
+        let numPlaces = groups.reduce(0, { x, y in
+            x + y.count
+        })
+        if numPlaces >= 20 {
+            viewController.dismiss(animated: true, completion: {
+                let alert = UIAlertController()
+                alert.message = "You cannot add any more places unless you delete some. No more than 20 places are supported at once."
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
     }
     
     func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {

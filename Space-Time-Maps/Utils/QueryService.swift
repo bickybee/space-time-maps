@@ -49,19 +49,42 @@ class QueryService {
     
     func getTimeDictFor(origins: [Place], destinations: [Place], travelMode: TravelMode, callback: @escaping ([PlacePair : TimeInterval]?) -> ()) {
         //dict [placeIDa + placeIDb] = time btwn them
-        guard let url = queryURLFor(origins: origins, destinations: destinations, travelMode: travelMode) else { callback(nil); return }
-        pingCount += origins.count * destinations.count
-        print("elements for this call: \(origins.count * destinations.count)")
-        print("total elements to distance matrix API: \(pingCount)")
-        runQuery(url: url) {data in
-            if let JSONString = String(data: data, encoding: String.Encoding.utf8)
-            {
-                print(JSONString)
+        //ensure elements per call are at most 25 //100
+        let dg = DispatchGroup()
+        var results = [PlacePair : TimeInterval]()
+        let len = 10
+        for i in stride(from: 0, to: origins.count, by: len) {
+            for j in stride(from: 0, to: destinations.count, by: len) {
+                dg.enter()
+                let endO = origins.count >= i + len ? i + len : origins.endIndex
+                let endD = destinations.count >= j + len ? j + len : destinations.endIndex
+                let someOrigins = Array(origins[i..<endO])
+                let someDestinations = Array(destinations[j..<endD])
+                print("origins: \(i) to \(endO)")
+                print("dests: \(j) to \(endD)")
+                guard let url = queryURLFor(origins: someOrigins, destinations: someDestinations, travelMode: travelMode) else { callback(nil); return }
+                pingCount += someOrigins.count * someDestinations.count
+                print("elements for this call: \(someOrigins.count * someDestinations.count)")
+                print("total elements to distance matrix API: \(pingCount)")
+                runQuery(url: url) {data in
+                    if let JSONString = String(data: data, encoding: String.Encoding.utf8)
+                    {
+                        print(JSONString)
+                    }
+                    print("did it!")
+                    if let res = self.dataToTimeDict(data, someOrigins, someDestinations, travelMode) {
+                        results.merge(res, uniquingKeysWith: {a, b in return a})
+                    }
+                    dg.leave()
+                    
+                }
             }
-            let results = self.dataToTimeDict(data, origins, destinations, travelMode)
+            dg.wait()
             callback(results)
         }
+        
     }
+    
 
     func getLegDataFor(start: Destination, end: Destination, travelMode: TravelMode, callback: @escaping (LegData?) -> ()) {
 
