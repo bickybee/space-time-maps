@@ -171,6 +171,7 @@ extension PlacePaletteViewController: GroupCreationDelegate {
    
             collectionView.deleteSections(IndexSet(integer: index))
             groups.remove(at: index)
+            delegate?.placePaletteViewController(self, didRemoveGroupfromGroups: groups)
             
         }, completion: { success in
             self.collectionView.reloadData()
@@ -565,6 +566,7 @@ protocol PlacePaletteViewControllerDelegate : AnyObject {
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemoveGroupfromGroups groups: [PlaceGroup])
     
 }
 

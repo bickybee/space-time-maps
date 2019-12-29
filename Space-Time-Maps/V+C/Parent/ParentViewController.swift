@@ -316,18 +316,21 @@ extension ParentViewController : PlacePaletteViewControllerDelegate {
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups groups: [PlaceGroup]) {
         updateMap()
-        let places = groups.flatMap({ $0.places })
-        itineraryController.updatePlaceGroups(groups)
+        itineraryController.removePlace(place, in: groups)
     }
     
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
-        let places = groups.flatMap({ $0.places })
         itineraryController.updatePlaceGroups(groups)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {
         swipeOutPalette(sender)
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemoveGroupfromGroups groups: [PlaceGroup]) {
+        updateMap()
+        itineraryController.removedGroupFrom(groups)
     }
     
 }

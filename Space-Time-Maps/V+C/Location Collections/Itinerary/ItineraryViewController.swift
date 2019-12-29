@@ -595,8 +595,63 @@ extension ItineraryViewController : DragDelegate {
         
     }
     
+    func removePlace(_ place: Place, in groups:[PlaceGroup]) {
+        // remove in singleblocks
+        itinerary.schedule.removeAll(where: { block in
+            if let single = block as? SingleBlock {
+                return single.place.placeID == place.placeID
+            }
+            return false
+        })
+        // remove in optionblocks
+        for group in groups {
+            if let i = itinerary.schedule.firstIndex(where: {
+                if let ob = $0 as? OptionBlock {
+                    return ob.placeGroup.id == group.id
+                }
+                return false
+            }) {
+                if let oob = itinerary.schedule[i] as? OneOfBlock {
+                    itinerary.schedule[i] = OneOfBlock(placeGroup: group, timing: oob.timing)
+                } else if let a = itinerary.schedule[i] as? AsManyOfBlock {
+                    itinerary.schedule[i] = AsManyOfBlock(placeGroup: group, timing: a.timing, timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                }
+            }
+        }
+        scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
+    }
+    
+    func removedGroupFrom(_ groups:[PlaceGroup]) {
+        
+        // remove deleted group
+        let groupIDs = groups.map({ $0.id })
+        if let removedGroupBlockInd = itinerary.schedule.firstIndex(where: { block in
+            if let ob = block as? OptionBlock {
+                return !groupIDs.contains(ob.placeGroup.id)
+            }
+            return false
+        }) {
+            let group = itinerary.schedule[removedGroupBlockInd] as! OptionBlock
+            itinerary.schedule.remove(at: removedGroupBlockInd)
+            // remove singleBlocks that came from group
+            for place in group.places {
+                itinerary.schedule.removeAll(where: { block in
+                    if let single = block as? SingleBlock {
+                        return single.place.placeID == place.placeID
+                    }
+                    return false
+                })
+            }
+            
+            scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
+        }
+        
+    }
+    
     func updatePlaceGroups(_ groups:[PlaceGroup]) {
-
+        
+        
+        
         for group in groups {
             if let i = itinerary.schedule.firstIndex(where: {
                 if let ob = $0 as? OptionBlock {
