@@ -53,7 +53,7 @@ extension GMSMapView {
             bounds = bounds.includingCoordinate(marker.position)
         }
         
-        let update = GMSCameraUpdate.fit(bounds, withPadding: 60)
+        let update = GMSCameraUpdate.fit(bounds, withPadding: 20)
         self.animate(with: update)
         
         return bounds

@@ -30,6 +30,7 @@
 		987704292326AB62009E1A63 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987704282326AB62009E1A63 /* Route.swift */; };
 		987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C1C1A234FA6B700FC3174 /* Combinatorics.swift */; };
 		988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */; };
+		98919F2C245CD0F30088C36C /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98919F2B245CD0F30088C36C /* ChameleonFramework.framework */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		98BC857A230C3A83001D14BE /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8579230C3A83001D14BE /* Timing.swift */; };
 		98CB07BC236F3E9500C7EC77 /* HoursCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB07BB236F3E9500C7EC77 /* HoursCell.swift */; };
@@ -99,6 +100,8 @@
 		987704282326AB62009E1A63 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		987C1C1A234FA6B700FC3174 /* Combinatorics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinatorics.swift; sourceTree = "<group>"; };
 		988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceEditingViewController.swift; sourceTree = "<group>"; };
+		988F560123FF06EA006BFD84 /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		98919F2B245CD0F30088C36C /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		98BC8579230C3A83001D14BE /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
 		98CB07BB236F3E9500C7EC77 /* HoursCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoursCell.swift; sourceTree = "<group>"; };
@@ -149,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98919F2C245CD0F30088C36C /* ChameleonFramework.framework in Frameworks */,
 				F69F7DD02504E3B472C7D600 /* Pods_Space_Time_Maps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -159,6 +163,8 @@
 		74535FECB825AF9AB1FE4B63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				98919F2B245CD0F30088C36C /* ChameleonFramework.framework */,
+				988F560123FF06EA006BFD84 /* ChameleonFramework.framework */,
 				CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */,
 			);
 			name = Frameworks;

@@ -82,10 +82,11 @@ class PlacePaletteViewController: DraggableContentViewController {
     func setupPlaces() {
 
         
-        groups.append(contentsOf: Utils.taskPlaceGroups)
+//        groups.append(contentsOf: Utils.taskPlaceGroups)
+//        groups.append(contentsOf: Utils.demoPlaces)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
 //        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
-//        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
+        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
         
         
     }
@@ -480,7 +481,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didAddPlace: newPlace, toGroups: groups)
         
-        let alert = UIAlertController(title: "Added!", message: "", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Added!", message: "", preferredStyle: .alert)
         viewController.present(alert, animated: true, completion: nil)
 
         // delays execution of code to dismiss

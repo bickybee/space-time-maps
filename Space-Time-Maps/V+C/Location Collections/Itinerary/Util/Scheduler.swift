@@ -856,7 +856,7 @@ private extension Scheduler {
         for combo in indexCombinations {
             var c = Combination<Permutation<String>>()
             for (iBlock, iPermutation) in combo.enumerated() {
-                c.append(blocks[iBlock].optionPlaceIDs[iPermutation])
+                c.append(blocks[iBlock].optionPlaceIDs[iPermutation]) // CRASHED out of range error
             }
             combinations.append(c)
         }

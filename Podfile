@@ -8,7 +8,7 @@ target 'Space-Time-Maps' do
   # Pods for Space-Time-Maps
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'ChameleonFramework/Swift', :git => 'https://github.com/wowansm/Chameleon.git', :branch => 'swift5'
+  pod 'ChameleonFramework/Swift'
   pod 'FontAwesome.swift'
 
 end

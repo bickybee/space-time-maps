@@ -22,6 +22,25 @@ class Utils {
         Place(name: "The Selby", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w")
     ]
     
+    static let demoPlaces : [PlaceGroup] = [
+        PlaceGroup(name: "", places:
+            [Place(name: "Work", coordinate: Coordinate(latitude: 43.6710771, longitude: -79.37722099999999), placeID: "ChIJZ2alrsfL1IkRXnxh_Pw8p0w"),
+        ],
+                   kind: .none, id: UUID()),
+        PlaceGroup(name: "dinner", places:
+            [Place(name: "Sushi", coordinate: Coordinate(latitude: 43.6645888, longitude: -79.4206809), placeID: "ChIJ8f_In4s0K4gRRK-KutieqXA"),
+            Place(name: "Pizza", coordinate: Coordinate(latitude: 43.6846206, longitude: -79.3654466), placeID: "ChIJsXBSVKTM1IkRtVcT_EMpDho")
+        ],
+                   kind: .oneOf, id: UUID()),
+        PlaceGroup(name: "drinks", places:
+            [Place(name: "Beer Hall", coordinate: Coordinate(latitude: 43.6536066, longitude: -79.39251229999999), placeID: "ChIJvRlT7cU0K4gRr0bg7VV3J9o"),
+            Place(name: "Shmoozy Cocktails", coordinate: Coordinate(latitude: 43.67803709999999, longitude: -79.4094439), placeID: "ChIJs6Elz500K4gRT1jWAsHIfGE"),
+            Place(name: "Arcade Bar", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI")
+            
+        ],
+                   kind: .asManyOf, id: UUID()),
+    ]
+    
     static let tutorialPlaceGroups1 : [PlaceGroup] = [
         PlaceGroup(name: "", places:
             [Place(name: "Gladstone Hotel", coordinate: Coordinate(latitude: 43.642698, longitude: -79.426906), placeID: "ChIJwScp6qo1K4gRcuheo9LY6ZI"),
