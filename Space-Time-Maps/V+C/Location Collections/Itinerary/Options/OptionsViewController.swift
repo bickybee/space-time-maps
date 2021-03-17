@@ -170,10 +170,10 @@ extension OptionsViewController: UICollectionViewDataSource {
             cell.timeLabel.text = " " + Utils.secondsToRelativeTimeString(seconds: travelTime)
             
             if (indexPath.item == 0) {
-                cell.setColor(.flatLime())
+                cell.setColor(.systemGreen)
             } else {
                 if travelTime == itineraries![0].0.route.travelTime {
-                    cell.setColor(.flatLime())
+                    cell.setColor(.systemGreen)
                 } else {
                     cell.setColor(.darkGray)
                 }

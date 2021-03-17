@@ -7,14 +7,13 @@
 //
 
 import UIKit
-import FontAwesome_swift
+//import FontAwesome_swift
 
 class GroupCell: UICollectionViewCell {
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var optionsButton: UIButton!
     @IBOutlet weak var lockButton: UIButton!
-    @IBOutlet weak var nextButton: UIButton!
     weak var delegate: GroupButtonsDelegate?
     
     override func awakeFromNib() {
@@ -33,16 +32,11 @@ class GroupCell: UICollectionViewCell {
     }
 
     func setup() {
-        nextButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        nextButton.setTitle(String.fontAwesomeIcon(name: .arrowRight), for: .normal)
-        
-        optionsButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        optionsButton.setTitle(String.fontAwesomeIcon(name: .ellipsisH), for: .normal)
-        
-        lockButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        lockButton.setTitle(String.fontAwesomeIcon(name: .lockOpen), for: .normal)
-        lockButton.setTitle(String.fontAwesomeIcon(name: .lock), for: .selected)
-        lockButton.setTitleColor(.darkText, for: .selected)
+        optionsButton.setImage(UIImage.init(named:"ellipsis-h"), for: .normal);
+        optionsButton.tintColor = UIColor.white;
+        lockButton.setImage(UIImage.init(named:"lock-open"), for: .normal);
+        lockButton.setImage(UIImage.init(named:"lock"), for: .selected);
+        lockButton.tintColor = UIColor.white;
     }
     
     func configureWith(_ block: OptionBlock, _ isCurrentlyDragging: Bool) {
@@ -54,10 +48,6 @@ class GroupCell: UICollectionViewCell {
 
     @IBAction func didPressLock(_ sender: Any) {
         delegate?.didPressLockOnGroupCell(self)
-    }
-    
-    @IBAction func didPressNext(_ sender: Any) {
-        delegate?.didPressNextOnGroupCell(self)
     }
     
     @IBAction func didPressOptions(_ sender: Any) {

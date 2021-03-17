@@ -32,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let iosKey = dict["iosKey"] as? String
             GMSServices.provideAPIKey(iosKey!)
             GMSPlacesClient.provideAPIKey(iosKey!)
-            print(iosKey)
         }
         
         // turn off autolayout warnings

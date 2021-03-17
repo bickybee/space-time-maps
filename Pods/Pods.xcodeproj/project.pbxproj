@@ -9,11 +9,11 @@
 /* Begin PBXAggregateTarget section */
 		0C1885900810601510E0C632060FAF26 /* GooglePlaces */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 2FC2AC47FDB0310285CE777F18CD1532 /* Build configuration list for PBXAggregateTarget "GooglePlaces" */;
+			buildConfigurationList = E215DFB4EAE26646AFED2C4861A55C32 /* Build configuration list for PBXAggregateTarget "GooglePlaces" */;
 			buildPhases = (
 			);
 			dependencies = (
-				D42315111F400C0605ACCD6B5CAF2178 /* PBXTargetDependency */,
+				CCDE3DF5458240F3259D88C46803DEC8 /* PBXTargetDependency */,
 			);
 			name = GooglePlaces;
 		};
@@ -29,522 +29,237 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		015A05B381E25C2FA80A0DA797179580 /* Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 787CAAB7798484943F621DDFA1E311A2 /* Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		07A0DFFBB0EA1EA20CE1C511B55C13B2 /* UIAppearance+Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = 5728571EF8E16023870AD2E6F18BF0D9 /* UIAppearance+Swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		07F4634E722082DB20A867BD271864CA /* UINavigationController+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 99C57BED7A8CD22A959337CFC9AA3B30 /* UINavigationController+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		08FA521531A6DFC1209732035429ED00 /* FontAwesomeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033F2027CE8713C296E5A5C3566D22D5 /* FontAwesomeImageView.swift */; };
-		0C66E72276B24115F4EE16246D0D11C0 /* UIView+ChameleonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 01C0AC8791FE582A283B55B86FDB14F8 /* UIView+ChameleonPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0FB5FF51B597E1E0312C5F1438BAB51B /* FontAwesome.swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB09E5B564C58FF82E7823AB3926094 /* FontAwesome.swift-dummy.m */; };
-		22CAB863C8E98C2BD1CEEA2381A46A34 /* FontAwesomeTextRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ACF3D8F6EF5B9716159B2E210C035D /* FontAwesomeTextRepresentable.swift */; };
-		26D86A5A6215B671C527751DFD6BFE1A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 819B7271C3CD9A9ABE55B51E85BF4E95 /* UIKit.framework */; };
-		275CF53070F9850F9CF142A83F29F9D2 /* UIAppearance+Swift.m in Sources */ = {isa = PBXBuildFile; fileRef = 87EE41CC783238278A37D067C8C5B121 /* UIAppearance+Swift.m */; };
-		308F7340774246933F6E0A70BE1963B0 /* Pods-Space-Time-Maps-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B837059C8F49AAEB55B0A763DFE0BBE /* Pods-Space-Time-Maps-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3C996FBEFFF38718E791135C621B8C59 /* UIButton+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4532E4A6B0C818C10D57DF6BA1A7B67C /* UIButton+Chameleon.m */; };
-		4DF43DB058D1638FE6E51EC9B5BA01B9 /* UIButton+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = ED16CF456FCBD5F366B3D979A6F08298 /* UIButton+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		506ACADC63134125FA6DF10CF06FD027 /* Font Awesome 5 Brands-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = E39F995EED40C0C1A12DAFA917F95732 /* Font Awesome 5 Brands-Regular-400.otf */; };
-		55286D2DEC1DB91F601519B9649B49C2 /* Font Awesome 5 Free-Regular-400.otf in Resources */ = {isa = PBXBuildFile; fileRef = A1761DC9E03820215705C556AC82C908 /* Font Awesome 5 Free-Regular-400.otf */; };
-		632EC0ADDD99413F1C10964C64CF72B6 /* FontAwesomeImageRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04672C8CFCB9994D949D4917D0ECA19 /* FontAwesomeImageRepresentable.swift */; };
-		63B7FAF3B3F4BA5A42B1F016BEE0FC47 /* UIImage+ChameleonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 150B944289CC86BFE00B5855901AE7C9 /* UIImage+ChameleonPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		693B98DE045C80265A735BD94C87953D /* ChameleonConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CA6896B07E1169A7451883F6BE5CA4F /* ChameleonConstants.m */; };
-		6B2DC678EA5CCC291354FE306DF0B28E /* Chameleon_.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3D9A26C9F2522A3BBD7E54171E40B8 /* Chameleon_.m */; };
-		6C87CCC7E974983BF3DDB7CDDD1CCC6A /* Chameleon_.h in Headers */ = {isa = PBXBuildFile; fileRef = F7B4B154049F50EE08D38802E43F2367 /* Chameleon_.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6CADCBC18CE422499677C423AB08B95A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28878D972C76B247E799208BDC94293F /* Foundation.framework */; };
-		769E73BAE26F14766F3D2F8CC2A295EF /* FontAwesome.swift.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3DA4F5DC4EB6E9DF6B4859D27EF8C9F5 /* FontAwesome.swift.bundle */; };
-		7BFE4CB72D9AD8D1781B864B5C1EE1B6 /* FontAwesomeBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCB1922AD97FC2699FBCFF3C9D13A /* FontAwesomeBarButtonItem.swift */; };
-		7C9E93D55FA61BE58D618F385193D640 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C05612148F0CFC26E65EED117FC6B3A /* CoreGraphics.framework */; };
-		81254017D2D4A97CBE1534E22E519329 /* FontAwesomeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D2CB5B20EFE2D892C743924E820C8F /* FontAwesomeExtension.swift */; };
-		8624349E44507A5863651CAB51E38F7F /* NSArray+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 9138CE5E6473FF94BCEE241E2F2B5C95 /* NSArray+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8659D5863A89A6F9539AE15D673C07C5 /* UIViewController+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 395BA875A64B0176D05DEEBBD18CCFE8 /* UIViewController+Chameleon.m */; };
-		866A210E47AEF4ABB16E6D6F5B6A6E51 /* UIView+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A767694F76F738C5346792B781CB87 /* UIView+ChameleonPrivate.m */; };
-		866B54511E7CBFADD1F78C285087AE8E /* ChameleonShorthand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED40ACB8701191C437A3EC64BF8CAE0 /* ChameleonShorthand.swift */; };
-		874D8A04ABF919CED20EB0E440C44101 /* NSArray+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D39F22DC6230D34680A4C861EF0794 /* NSArray+Chameleon.m */; };
-		88703EFA5F39A9C53799FB29E017AD42 /* Font Awesome 5 Free-Solid-900.otf in Resources */ = {isa = PBXBuildFile; fileRef = 470A83BB546C4A99E2A56E39E82F3862 /* Font Awesome 5 Free-Solid-900.otf */; };
-		88A569DC5FA4CEED7FCD51F8F762D4F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28878D972C76B247E799208BDC94293F /* Foundation.framework */; };
-		8DC785D0EC04427925ED3F93017DC624 /* FontAwesomeSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A115A43228D2DBDB157806E39853C8A7 /* FontAwesomeSegmentedControl.swift */; };
-		918885B90BECC18ABC5F58D92E34EF13 /* UIViewController+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 53A6BB927120CE7FD50774CFDE488A55 /* UIViewController+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9247AA02A534F1A201D929C39C057B50 /* UIColor+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = A56BE7AB9AC48C1146519CB70C23A7FC /* UIColor+Chameleon.m */; };
-		936F268AB9257A3435DD4BAAB5A4A135 /* ChameleonFramework-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB37D6087F7C94F99C69182BBCC01E7 /* ChameleonFramework-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9DE3360E24D9FE3ADA0C2162E8DBE1A5 /* FontAwesome.swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F8ED4B943CAF0CD3E0A16CB6836FA20 /* FontAwesome.swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A40FD679EA4164AAB96094D8AE90CD09 /* FontAwesomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F40A4621D850B75D023513B7550F8C /* FontAwesomeView.swift */; };
-		A68832C167B77BE09F6F3485A607A744 /* UILabel+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = A4391FDEE66A2E9D146DBC84E53148D7 /* UILabel+Chameleon.m */; };
-		B5A016EF854BECCCBA5FF11BBA529A85 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F1B38B2C2DAE624870E58E839CFA214 /* QuartzCore.framework */; };
-		BB8ADE41C116ED2F50BE43E1F1AB543B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 819B7271C3CD9A9ABE55B51E85BF4E95 /* UIKit.framework */; };
-		C472BF180CE883EE3D8D12C5D1BFDFA7 /* FontAwesomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5E08235D1C423701E0C5682CE8F632 /* FontAwesomeTabBarItem.swift */; };
-		C507CB75A6C350BBA842553BDAF8FEC3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28878D972C76B247E799208BDC94293F /* Foundation.framework */; };
-		C7BA1B3FC4C025CAF4C156B2912BF3F8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E6AAFBD80C7A9D907744AABA281526B /* CoreText.framework */; };
-		CAF49E2A54F794D5F6DD10F1FE77F321 /* ChameleonMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 72F3F914F2CA63542DF9C47853F4A35D /* ChameleonMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D71293F143E62C33E8676E4E6CC8DA6F /* FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCD2984182A4FCBBD4AC8469FDA50E5 /* FontAwesome.swift */; };
-		DA97A7E5793FADE5749D21002AB10B57 /* UIImage+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 70C895DA6F02CBA2B61A032688091434 /* UIImage+ChameleonPrivate.m */; };
-		DC7A22B339CA1049C19D06C7A93DF302 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5256B1DB83179534252F04D66B823667 /* Enum.swift */; };
-		DD7B1A58C5C68491723265E6D763B26E /* ChameleonFramework-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BD429ED88A233CE8FBC63A360D6065B3 /* ChameleonFramework-dummy.m */; };
-		DDBC762ABE86F3917C6553A64E722A70 /* UIColor+ChameleonPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 73B4FA4FD660A66E3F8D00C0DBF5F8CF /* UIColor+ChameleonPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E0DBD978FE1FBA3923D9A482352252D4 /* UIColor+ChameleonPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D026A3CF93269FD371B0FF674A87E73 /* UIColor+ChameleonPrivate.m */; };
-		E7D344059042D076A5C61D13018BA0D8 /* ChameleonEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = F2467D829966EC57990EF32BE0C202CA /* ChameleonEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E82EF3AFD38848BAC02735643F4FBF6C /* UILabel+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 11EF332CDFAD89BE76434D03DDE03945 /* UILabel+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EEF22A1455C96635E480D1DCCE664913 /* UIColor+Chameleon.h in Headers */ = {isa = PBXBuildFile; fileRef = 23BB1C6CB5844E9A8EFAA1C9BF1746AB /* UIColor+Chameleon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F3A827830B6B867C44EDD13EB89A0054 /* Pods-Space-Time-Maps-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D28BBAE666478DDD886149E238995E1C /* Pods-Space-Time-Maps-dummy.m */; };
-		FA49618EEDBE490B9BF56CAD65ABF8EA /* ChameleonConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 59A1973149217FC2AE46ACEB34DC00C7 /* ChameleonConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FE3A4BBC89893220B5590FC8A65C0233 /* UINavigationController+Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C2C1315D81C6AA8146A97F430B2D01 /* UINavigationController+Chameleon.m */; };
-		FE49B0792565E3DBA62187EBEB4E1E58 /* FontAwesomeStateRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2938DF005BD588287D2F608CF1DEA14 /* FontAwesomeStateRequirement.swift */; };
+		805EDD5D4D932962EDD5AD78A856D2F7 /* Pods-Space-Time-Maps-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A2B2448158BB9ADF7754BCEF157FB993 /* Pods-Space-Time-Maps-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D7DC17FAD75114AD6580B165EA09665C /* Pods-Space-Time-Maps-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FE154B9C274FC4A0C3E52BFB14C56AF6 /* Pods-Space-Time-Maps-dummy.m */; };
+		E5E9B54B001532D75F9C887978D0E92B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2438D1954098E8D5242B5B08066FD52C /* PBXContainerItemProxy */ = {
+		108F9196136F85067DA2F6284C12312A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E5B4BBC6DD552AC8943C7E22772FC1D3;
+			remoteInfo = GoogleMaps;
+		};
+		22EB293C33F1B979759D5EBE39F27486 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0C1885900810601510E0C632060FAF26;
 			remoteInfo = GooglePlaces;
 		};
-		5C02A77524A5542C5F6D9FE5559F6291 /* PBXContainerItemProxy */ = {
+		AC476F97F0D90863332AF9D77A0115EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E5B4BBC6DD552AC8943C7E22772FC1D3;
 			remoteInfo = GoogleMaps;
-		};
-		6C49711EBCB612E46433CCC31A82E8D5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 28BFDC89BA4363F4F3576DEC70EE10AE;
-			remoteInfo = ChameleonFramework;
-		};
-		6EB1C2DD30E6564FC3135C9E8002D8F7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E5B4BBC6DD552AC8943C7E22772FC1D3;
-			remoteInfo = GoogleMaps;
-		};
-		D06B65A6786DC2E10084C7B8E08BEF0B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4DC20DD2E50259D674257304EC016C93;
-			remoteInfo = "FontAwesome.swift-FontAwesome.swift";
-		};
-		E7A3AEE9750442B5247A0F305E25912C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BB240150692F32EC312F3CF346C8B9D1;
-			remoteInfo = FontAwesome.swift;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		01C0AC8791FE582A283B55B86FDB14F8 /* UIView+ChameleonPrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ChameleonPrivate.h"; path = "Pod/Classes/Objective-C/UIView+ChameleonPrivate.h"; sourceTree = "<group>"; };
-		033F2027CE8713C296E5A5C3566D22D5 /* FontAwesomeImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeImageView.swift; path = FontAwesome/FontAwesomeImageView.swift; sourceTree = "<group>"; };
-		0383903D05EDD5C442C682C1F7A1752D /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ChameleonFramework.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FontAwesome.swift.xcconfig; sourceTree = "<group>"; };
-		0B0464371E0D416DAFD5739574E10CCD /* ChameleonFramework-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ChameleonFramework-Info.plist"; sourceTree = "<group>"; };
-		0ED40ACB8701191C437A3EC64BF8CAE0 /* ChameleonShorthand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChameleonShorthand.swift; path = Pod/Classes/Swift/ChameleonShorthand.swift; sourceTree = "<group>"; };
-		0FD207E6B4586B303EFB86F6903427EB /* Pods-Space-Time-Maps-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Space-Time-Maps-frameworks.sh"; sourceTree = "<group>"; };
-		11EF332CDFAD89BE76434D03DDE03945 /* UILabel+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UILabel+Chameleon.h"; path = "Pod/Classes/Objective-C/UILabel+Chameleon.h"; sourceTree = "<group>"; };
-		150B944289CC86BFE00B5855901AE7C9 /* UIImage+ChameleonPrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+ChameleonPrivate.h"; path = "Pod/Classes/Objective-C/UIImage+ChameleonPrivate.h"; sourceTree = "<group>"; };
-		211BCD5B65571C2A5F68343E9E0247F3 /* GoogleMaps.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GoogleMaps.xcconfig; sourceTree = "<group>"; };
-		22CE3FAE2AF41F070B8E7517506EEFF2 /* ChameleonFramework.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ChameleonFramework.xcconfig; sourceTree = "<group>"; };
-		23BB1C6CB5844E9A8EFAA1C9BF1746AB /* UIColor+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+Chameleon.h"; path = "Pod/Classes/Objective-C/UIColor+Chameleon.h"; sourceTree = "<group>"; };
-		25285D17498CE87E5F562B9E000315CE /* GoogleMapsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsCore.framework; path = Maps/Frameworks/GoogleMapsCore.framework; sourceTree = "<group>"; };
-		257A2A033D5CA002D0F07AF428D5D083 /* FontAwesome.swift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = FontAwesome.swift.modulemap; sourceTree = "<group>"; };
-		26BD7D382FA59278B609712C216CECE7 /* GooglePlaces.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = GooglePlaces.bundle; path = Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle; sourceTree = "<group>"; };
-		2731E3EE2A619610FF5C8B812B83C123 /* Pods-Space-Time-Maps-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Space-Time-Maps-acknowledgements.markdown"; sourceTree = "<group>"; };
-		28878D972C76B247E799208BDC94293F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		28A3CCFDC77829170B0B12EB9E3391CF /* FontAwesome_swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FontAwesome_swift.framework; path = FontAwesome.swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B5E08235D1C423701E0C5682CE8F632 /* FontAwesomeTabBarItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeTabBarItem.swift; path = FontAwesome/FontAwesomeTabBarItem.swift; sourceTree = "<group>"; };
-		2C05612148F0CFC26E65EED117FC6B3A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		2E6AAFBD80C7A9D907744AABA281526B /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
-		2E8CFADA61AA0B517FB8FD6BB8A0FC4A /* GooglePlaces.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GooglePlaces.xcconfig; sourceTree = "<group>"; };
-		35A2DE5800BFCC4AF75C888E332FC31D /* GooglePlaces.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlaces.framework; path = Frameworks/GooglePlaces.framework; sourceTree = "<group>"; };
-		35A767694F76F738C5346792B781CB87 /* UIView+ChameleonPrivate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ChameleonPrivate.m"; path = "Pod/Classes/Objective-C/UIView+ChameleonPrivate.m"; sourceTree = "<group>"; };
-		395BA875A64B0176D05DEEBBD18CCFE8 /* UIViewController+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+Chameleon.m"; path = "Pod/Classes/Objective-C/UIViewController+Chameleon.m"; sourceTree = "<group>"; };
-		3DA4F5DC4EB6E9DF6B4859D27EF8C9F5 /* FontAwesome.swift.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = FontAwesome.swift.bundle; path = "FontAwesome.swift-FontAwesome.swift.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3F1B38B2C2DAE624870E58E839CFA214 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		42F40A4621D850B75D023513B7550F8C /* FontAwesomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeView.swift; path = FontAwesome/FontAwesomeView.swift; sourceTree = "<group>"; };
-		4532E4A6B0C818C10D57DF6BA1A7B67C /* UIButton+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+Chameleon.m"; path = "Pod/Classes/Objective-C/UIButton+Chameleon.m"; sourceTree = "<group>"; };
-		470A83BB546C4A99E2A56E39E82F3862 /* Font Awesome 5 Free-Solid-900.otf */ = {isa = PBXFileReference; includeInIndex = 1; name = "Font Awesome 5 Free-Solid-900.otf"; path = "FontAwesome/Font Awesome 5 Free-Solid-900.otf"; sourceTree = "<group>"; };
-		4B14A0DEBB0738F23208FD975D09FC2E /* GoogleMapsBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsBase.framework; path = Base/Frameworks/GoogleMapsBase.framework; sourceTree = "<group>"; };
-		4CB09E5B564C58FF82E7823AB3926094 /* FontAwesome.swift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FontAwesome.swift-dummy.m"; sourceTree = "<group>"; };
-		5256B1DB83179534252F04D66B823667 /* Enum.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Enum.swift; path = FontAwesome/Enum.swift; sourceTree = "<group>"; };
-		52DFAF0A90003282A0CF5E5970BD6C46 /* Pods-Space-Time-Maps-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Space-Time-Maps-resources.sh"; sourceTree = "<group>"; };
-		536CA23A1DDD9D9D19C02A794768EB26 /* GoogleMaps.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
-		53A6BB927120CE7FD50774CFDE488A55 /* UIViewController+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+Chameleon.h"; path = "Pod/Classes/Objective-C/UIViewController+Chameleon.h"; sourceTree = "<group>"; };
-		5728571EF8E16023870AD2E6F18BF0D9 /* UIAppearance+Swift.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIAppearance+Swift.h"; path = "Pod/Classes/Objective-C/UIAppearance+Swift.h"; sourceTree = "<group>"; };
-		57E894D0F47C52EF5FDE196830806C36 /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
-		59A1973149217FC2AE46ACEB34DC00C7 /* ChameleonConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ChameleonConstants.h; path = "Pod/Classes/Objective-C/ChameleonConstants.h"; sourceTree = "<group>"; };
-		5B837059C8F49AAEB55B0A763DFE0BBE /* Pods-Space-Time-Maps-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Space-Time-Maps-umbrella.h"; sourceTree = "<group>"; };
-		5CA6896B07E1169A7451883F6BE5CA4F /* ChameleonConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ChameleonConstants.m; path = "Pod/Classes/Objective-C/ChameleonConstants.m"; sourceTree = "<group>"; };
-		61798BBBA57374F173E418244C6843C9 /* ChameleonFramework.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ChameleonFramework.modulemap; sourceTree = "<group>"; };
-		6402DBD692E026303750811452FC7020 /* FontAwesome.swift-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FontAwesome.swift-prefix.pch"; sourceTree = "<group>"; };
-		70C895DA6F02CBA2B61A032688091434 /* UIImage+ChameleonPrivate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ChameleonPrivate.m"; path = "Pod/Classes/Objective-C/UIImage+ChameleonPrivate.m"; sourceTree = "<group>"; };
-		72F3F914F2CA63542DF9C47853F4A35D /* ChameleonMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ChameleonMacros.h; path = "Pod/Classes/Objective-C/ChameleonMacros.h"; sourceTree = "<group>"; };
-		73B4FA4FD660A66E3F8D00C0DBF5F8CF /* UIColor+ChameleonPrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ChameleonPrivate.h"; path = "Pod/Classes/Objective-C/UIColor+ChameleonPrivate.h"; sourceTree = "<group>"; };
-		75D14CA161FD7D77CF04100A9FB386A1 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMaps.framework; path = Maps/Frameworks/GoogleMaps.framework; sourceTree = "<group>"; };
-		77C2C1315D81C6AA8146A97F430B2D01 /* UINavigationController+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UINavigationController+Chameleon.m"; path = "Pod/Classes/Objective-C/UINavigationController+Chameleon.m"; sourceTree = "<group>"; };
-		787CAAB7798484943F621DDFA1E311A2 /* Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Chameleon.h; path = "Pod/Classes/Objective-C/Chameleon.h"; sourceTree = "<group>"; };
-		78D39F22DC6230D34680A4C861EF0794 /* NSArray+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Chameleon.m"; path = "Pod/Classes/Objective-C/NSArray+Chameleon.m"; sourceTree = "<group>"; };
-		7BCD2984182A4FCBBD4AC8469FDA50E5 /* FontAwesome.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesome.swift; path = FontAwesome/FontAwesome.swift; sourceTree = "<group>"; };
-		7DE1C0ABA18D970AA5D9762F32848312 /* Pods-Space-Time-Maps-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Space-Time-Maps-acknowledgements.plist"; sourceTree = "<group>"; };
-		819B7271C3CD9A9ABE55B51E85BF4E95 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		87EE41CC783238278A37D067C8C5B121 /* UIAppearance+Swift.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIAppearance+Swift.m"; path = "Pod/Classes/Objective-C/UIAppearance+Swift.m"; sourceTree = "<group>"; };
-		8D026A3CF93269FD371B0FF674A87E73 /* UIColor+ChameleonPrivate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ChameleonPrivate.m"; path = "Pod/Classes/Objective-C/UIColor+ChameleonPrivate.m"; sourceTree = "<group>"; };
-		9138CE5E6473FF94BCEE241E2F2B5C95 /* NSArray+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+Chameleon.h"; path = "Pod/Classes/Objective-C/NSArray+Chameleon.h"; sourceTree = "<group>"; };
-		99C57BED7A8CD22A959337CFC9AA3B30 /* UINavigationController+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+Chameleon.h"; path = "Pod/Classes/Objective-C/UINavigationController+Chameleon.h"; sourceTree = "<group>"; };
+		23F651581A8A5A322B46718DD384709B /* GoogleMapsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsCore.framework; path = Maps/Frameworks/GoogleMapsCore.framework; sourceTree = "<group>"; };
+		4E256CB72E069B4C851E32F3924687B3 /* GooglePlaces.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = GooglePlaces.bundle; path = Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle; sourceTree = "<group>"; };
+		6FBA0C6A5E8E2BE4761DEC7FFDC3DD56 /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		76BB91081B4830DA42F253C7B7161C00 /* Pods-Space-Time-Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Space-Time-Maps.debug.xcconfig"; sourceTree = "<group>"; };
+		8704E7734F2D03B8EF86CFC319C943BC /* GooglePlaces.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlaces.framework; path = Frameworks/GooglePlaces.framework; sourceTree = "<group>"; };
+		897760CCFD5873DAE0792D35CDF105E1 /* Pods-Space-Time-Maps-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Space-Time-Maps-Info.plist"; sourceTree = "<group>"; };
+		8EBF4D65DD3B0EDCC39AF1C317B7FF1D /* GoogleMapsBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsBase.framework; path = Base/Frameworks/GoogleMapsBase.framework; sourceTree = "<group>"; };
+		977E2BA856F010C2CE067B6068D096B9 /* Pods-Space-Time-Maps.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Space-Time-Maps.modulemap"; sourceTree = "<group>"; };
+		9C729F3714998C7C3F3D788777A06264 /* GooglePlaces.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GooglePlaces.debug.xcconfig; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9DB37D6087F7C94F99C69182BBCC01E7 /* ChameleonFramework-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ChameleonFramework-umbrella.h"; sourceTree = "<group>"; };
-		9F8ED4B943CAF0CD3E0A16CB6836FA20 /* FontAwesome.swift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FontAwesome.swift-umbrella.h"; sourceTree = "<group>"; };
-		A115A43228D2DBDB157806E39853C8A7 /* FontAwesomeSegmentedControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeSegmentedControl.swift; path = FontAwesome/FontAwesomeSegmentedControl.swift; sourceTree = "<group>"; };
-		A11C9FEF6B1123795E5CB5E3CF44B52A /* Pods-Space-Time-Maps.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Space-Time-Maps.modulemap"; sourceTree = "<group>"; };
-		A1761DC9E03820215705C556AC82C908 /* Font Awesome 5 Free-Regular-400.otf */ = {isa = PBXFileReference; includeInIndex = 1; name = "Font Awesome 5 Free-Regular-400.otf"; path = "FontAwesome/Font Awesome 5 Free-Regular-400.otf"; sourceTree = "<group>"; };
-		A2938DF005BD588287D2F608CF1DEA14 /* FontAwesomeStateRequirement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeStateRequirement.swift; path = FontAwesome/FontAwesomeStateRequirement.swift; sourceTree = "<group>"; };
-		A4391FDEE66A2E9D146DBC84E53148D7 /* UILabel+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UILabel+Chameleon.m"; path = "Pod/Classes/Objective-C/UILabel+Chameleon.m"; sourceTree = "<group>"; };
-		A56BE7AB9AC48C1146519CB70C23A7FC /* UIColor+Chameleon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Chameleon.m"; path = "Pod/Classes/Objective-C/UIColor+Chameleon.m"; sourceTree = "<group>"; };
-		B04672C8CFCB9994D949D4917D0ECA19 /* FontAwesomeImageRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeImageRepresentable.swift; path = FontAwesome/FontAwesomeImageRepresentable.swift; sourceTree = "<group>"; };
-		B179B15F8C68CF24097D504986EAFF0E /* FontAwesome.swift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "FontAwesome.swift-Info.plist"; sourceTree = "<group>"; };
-		BB3D9A26C9F2522A3BBD7E54171E40B8 /* Chameleon_.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = Chameleon_.m; path = "Pod/Classes/Objective-C/Chameleon_.m"; sourceTree = "<group>"; };
-		BD429ED88A233CE8FBC63A360D6065B3 /* ChameleonFramework-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ChameleonFramework-dummy.m"; sourceTree = "<group>"; };
-		C04F6BE2D2A1626CAA3C2E649344E06E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
+		9E830DD9530F13E283DEC78352A2F03D /* GoogleMaps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GoogleMaps.release.xcconfig; sourceTree = "<group>"; };
+		A2B2448158BB9ADF7754BCEF157FB993 /* Pods-Space-Time-Maps-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Space-Time-Maps-umbrella.h"; sourceTree = "<group>"; };
+		A4658982FD89F2A77A672D9AFC716B28 /* GooglePlaces.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GooglePlaces.release.xcconfig; sourceTree = "<group>"; };
+		AE3632FA99A49EBDBE182949C07507A5 /* Pods-Space-Time-Maps-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Space-Time-Maps-acknowledgements.markdown"; sourceTree = "<group>"; };
+		BEAF7A5B79F4AB27B859746EAE60EF6F /* Pods-Space-Time-Maps-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Space-Time-Maps-resources.sh"; sourceTree = "<group>"; };
+		BEB9929607E99707F5CA11295F55363E /* Pods-Space-Time-Maps-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Space-Time-Maps-acknowledgements.plist"; sourceTree = "<group>"; };
 		C7D9C10AA7C242C9091DF74325B3685C /* Pods_Space_Time_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Space_Time_Maps.framework; path = "Pods-Space-Time-Maps.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCD23BFDA1B68ACF65192B07AE530360 /* Pods-Space-Time-Maps-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Space-Time-Maps-Info.plist"; sourceTree = "<group>"; };
-		D28BBAE666478DDD886149E238995E1C /* Pods-Space-Time-Maps-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Space-Time-Maps-dummy.m"; sourceTree = "<group>"; };
-		D6A3862E74AD38154A0E60B804006546 /* ChameleonFramework-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ChameleonFramework-prefix.pch"; sourceTree = "<group>"; };
-		E0ACF3D8F6EF5B9716159B2E210C035D /* FontAwesomeTextRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeTextRepresentable.swift; path = FontAwesome/FontAwesomeTextRepresentable.swift; sourceTree = "<group>"; };
-		E39F995EED40C0C1A12DAFA917F95732 /* Font Awesome 5 Brands-Regular-400.otf */ = {isa = PBXFileReference; includeInIndex = 1; name = "Font Awesome 5 Brands-Regular-400.otf"; path = "FontAwesome/Font Awesome 5 Brands-Regular-400.otf"; sourceTree = "<group>"; };
-		E73C7C63E24A5702639410FF8803C2BA /* ResourceBundle-FontAwesome.swift-FontAwesome.swift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-FontAwesome.swift-FontAwesome.swift-Info.plist"; sourceTree = "<group>"; };
-		ECFDCB1922AD97FC2699FBCFF3C9D13A /* FontAwesomeBarButtonItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeBarButtonItem.swift; path = FontAwesome/FontAwesomeBarButtonItem.swift; sourceTree = "<group>"; };
-		ED16CF456FCBD5F366B3D979A6F08298 /* UIButton+Chameleon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+Chameleon.h"; path = "Pod/Classes/Objective-C/UIButton+Chameleon.h"; sourceTree = "<group>"; };
-		F2467D829966EC57990EF32BE0C202CA /* ChameleonEnums.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ChameleonEnums.h; path = "Pod/Classes/Objective-C/ChameleonEnums.h"; sourceTree = "<group>"; };
-		F2D2CB5B20EFE2D892C743924E820C8F /* FontAwesomeExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FontAwesomeExtension.swift; path = FontAwesome/FontAwesomeExtension.swift; sourceTree = "<group>"; };
-		F7B4B154049F50EE08D38802E43F2367 /* Chameleon_.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Chameleon_.h; path = "Pod/Classes/Objective-C/Chameleon_.h"; sourceTree = "<group>"; };
+		E74A4A5FDDD4F90A8A55EB206C7681BC /* GoogleMaps.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
+		F8C3BB261D41EB0A05EAE541E50E3DAB /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMaps.framework; path = Maps/Frameworks/GoogleMaps.framework; sourceTree = "<group>"; };
+		FA12A18F12A10F6BE94B10C390987756 /* GoogleMaps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GoogleMaps.debug.xcconfig; sourceTree = "<group>"; };
+		FE154B9C274FC4A0C3E52BFB14C56AF6 /* Pods-Space-Time-Maps-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Space-Time-Maps-dummy.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4CA9F9BA69EF1483F47ACBA4A155C6CE /* Frameworks */ = {
+		97F1DD570665355746D7E51386FC9E40 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C507CB75A6C350BBA842553BDAF8FEC3 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		72FCBED230C996317A485724760EB018 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7C9E93D55FA61BE58D618F385193D640 /* CoreGraphics.framework in Frameworks */,
-				88A569DC5FA4CEED7FCD51F8F762D4F9 /* Foundation.framework in Frameworks */,
-				B5A016EF854BECCCBA5FF11BBA529A85 /* QuartzCore.framework in Frameworks */,
-				BB8ADE41C116ED2F50BE43E1F1AB543B /* UIKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		889FC90E007AF2C9DE5C84516B57F606 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C7BA1B3FC4C025CAF4C156B2912BF3F8 /* CoreText.framework in Frameworks */,
-				6CADCBC18CE422499677C423AB08B95A /* Foundation.framework in Frameworks */,
-				26D86A5A6215B671C527751DFD6BFE1A /* UIKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B2E461109F7C8F6856E2B401CB6EBC27 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				E5E9B54B001532D75F9C887978D0E92B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		20A8F360B71CC4AC5611D7F3ABDD49BE /* FontAwesome.swift */ = {
+		01178CDE9E7F5E928EDC642D6B628FE0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5256B1DB83179534252F04D66B823667 /* Enum.swift */,
-				7BCD2984182A4FCBBD4AC8469FDA50E5 /* FontAwesome.swift */,
-				ECFDCB1922AD97FC2699FBCFF3C9D13A /* FontAwesomeBarButtonItem.swift */,
-				F2D2CB5B20EFE2D892C743924E820C8F /* FontAwesomeExtension.swift */,
-				B04672C8CFCB9994D949D4917D0ECA19 /* FontAwesomeImageRepresentable.swift */,
-				033F2027CE8713C296E5A5C3566D22D5 /* FontAwesomeImageView.swift */,
-				A115A43228D2DBDB157806E39853C8A7 /* FontAwesomeSegmentedControl.swift */,
-				A2938DF005BD588287D2F608CF1DEA14 /* FontAwesomeStateRequirement.swift */,
-				2B5E08235D1C423701E0C5682CE8F632 /* FontAwesomeTabBarItem.swift */,
-				E0ACF3D8F6EF5B9716159B2E210C035D /* FontAwesomeTextRepresentable.swift */,
-				42F40A4621D850B75D023513B7550F8C /* FontAwesomeView.swift */,
-				DF8DA2FCE6D377BF144271C0E38CDA98 /* Resources */,
-				E20F7BFB55EE01A6DF205CECD45740F7 /* Support Files */,
-			);
-			name = FontAwesome.swift;
-			path = FontAwesome.swift;
-			sourceTree = "<group>";
-		};
-		2259FA4694E3C6307D29323DEAAE5A36 /* Swift */ = {
-			isa = PBXGroup;
-			children = (
-				0ED40ACB8701191C437A3EC64BF8CAE0 /* ChameleonShorthand.swift */,
-			);
-			name = Swift;
-			sourceTree = "<group>";
-		};
-		242FDA5B4984BA76050032AE221ACA5B /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				211BCD5B65571C2A5F68343E9E0247F3 /* GoogleMaps.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/GoogleMaps";
-			sourceTree = "<group>";
-		};
-		4D303211A66168789C5E3ACB56B6A291 /* Default */ = {
-			isa = PBXGroup;
-			children = (
-				787CAAB7798484943F621DDFA1E311A2 /* Chameleon.h */,
-				F7B4B154049F50EE08D38802E43F2367 /* Chameleon_.h */,
-				BB3D9A26C9F2522A3BBD7E54171E40B8 /* Chameleon_.m */,
-				59A1973149217FC2AE46ACEB34DC00C7 /* ChameleonConstants.h */,
-				5CA6896B07E1169A7451883F6BE5CA4F /* ChameleonConstants.m */,
-				F2467D829966EC57990EF32BE0C202CA /* ChameleonEnums.h */,
-				72F3F914F2CA63542DF9C47853F4A35D /* ChameleonMacros.h */,
-				9138CE5E6473FF94BCEE241E2F2B5C95 /* NSArray+Chameleon.h */,
-				78D39F22DC6230D34680A4C861EF0794 /* NSArray+Chameleon.m */,
-				5728571EF8E16023870AD2E6F18BF0D9 /* UIAppearance+Swift.h */,
-				87EE41CC783238278A37D067C8C5B121 /* UIAppearance+Swift.m */,
-				ED16CF456FCBD5F366B3D979A6F08298 /* UIButton+Chameleon.h */,
-				4532E4A6B0C818C10D57DF6BA1A7B67C /* UIButton+Chameleon.m */,
-				23BB1C6CB5844E9A8EFAA1C9BF1746AB /* UIColor+Chameleon.h */,
-				A56BE7AB9AC48C1146519CB70C23A7FC /* UIColor+Chameleon.m */,
-				73B4FA4FD660A66E3F8D00C0DBF5F8CF /* UIColor+ChameleonPrivate.h */,
-				8D026A3CF93269FD371B0FF674A87E73 /* UIColor+ChameleonPrivate.m */,
-				150B944289CC86BFE00B5855901AE7C9 /* UIImage+ChameleonPrivate.h */,
-				70C895DA6F02CBA2B61A032688091434 /* UIImage+ChameleonPrivate.m */,
-				11EF332CDFAD89BE76434D03DDE03945 /* UILabel+Chameleon.h */,
-				A4391FDEE66A2E9D146DBC84E53148D7 /* UILabel+Chameleon.m */,
-				99C57BED7A8CD22A959337CFC9AA3B30 /* UINavigationController+Chameleon.h */,
-				77C2C1315D81C6AA8146A97F430B2D01 /* UINavigationController+Chameleon.m */,
-				01C0AC8791FE582A283B55B86FDB14F8 /* UIView+ChameleonPrivate.h */,
-				35A767694F76F738C5346792B781CB87 /* UIView+ChameleonPrivate.m */,
-				53A6BB927120CE7FD50774CFDE488A55 /* UIViewController+Chameleon.h */,
-				395BA875A64B0176D05DEEBBD18CCFE8 /* UIViewController+Chameleon.m */,
-			);
-			name = Default;
-			sourceTree = "<group>";
-		};
-		50B83A66F59D7CC806D3F9B6C26D3872 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				35A2DE5800BFCC4AF75C888E332FC31D /* GooglePlaces.framework */,
+				8EBF4D65DD3B0EDCC39AF1C317B7FF1D /* GoogleMapsBase.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6B34ADA34D0E07A558AB3DB5B5C302D0 /* GoogleMaps */ = {
+		0883B537F1FDF67277437486C4066E63 /* GoogleMaps */ = {
 			isa = PBXGroup;
 			children = (
-				8A99D5F24CAB809520C12EB0458F0241 /* Base */,
-				83F4F88AD29024841D1F96E7997AA3BF /* Maps */,
-				242FDA5B4984BA76050032AE221ACA5B /* Support Files */,
+				E86A34344FF943F078B6064D778D230A /* Base */,
+				A38D68C78C032F2CEEEEED36818D37F0 /* Maps */,
+				6C8EBDD6FEE473D639E9FF7A802869C0 /* Support Files */,
 			);
 			name = GoogleMaps;
 			path = GoogleMaps;
 			sourceTree = "<group>";
 		};
-		83F4F88AD29024841D1F96E7997AA3BF /* Maps */ = {
+		3582EF5F85D78C1DB07F01BC0BFA167E /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				B7621A15E7363010C1683892E4AF46DF /* Frameworks */,
-				E44C56A6B1990D2F074B6ED0F1C97F62 /* Resources */,
-			);
-			name = Maps;
-			sourceTree = "<group>";
-		};
-		8440C6C68F8ED00B27D5FE7F785163DF /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				2E8CFADA61AA0B517FB8FD6BB8A0FC4A /* GooglePlaces.xcconfig */,
+				9C729F3714998C7C3F3D788777A06264 /* GooglePlaces.debug.xcconfig */,
+				A4658982FD89F2A77A672D9AFC716B28 /* GooglePlaces.release.xcconfig */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/GooglePlaces";
 			sourceTree = "<group>";
 		};
-		8A99D5F24CAB809520C12EB0458F0241 /* Base */ = {
+		3FE4CC4B7B0241873FFF96886667937D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C3F8A804FE9F394220D8F0FCD720B1A5 /* Frameworks */,
-			);
-			name = Base;
-			sourceTree = "<group>";
-		};
-		9DB75190CF029780F6E8C5A1E0CFFB6F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0383903D05EDD5C442C682C1F7A1752D /* ChameleonFramework.framework */,
-				3DA4F5DC4EB6E9DF6B4859D27EF8C9F5 /* FontAwesome.swift.bundle */,
-				28A3CCFDC77829170B0B12EB9E3391CF /* FontAwesome_swift.framework */,
-				C7D9C10AA7C242C9091DF74325B3685C /* Pods_Space_Time_Maps.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		ABA24FB3A9B23D8A4F2B0C0081097B5B /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				2C05612148F0CFC26E65EED117FC6B3A /* CoreGraphics.framework */,
-				2E6AAFBD80C7A9D907744AABA281526B /* CoreText.framework */,
-				28878D972C76B247E799208BDC94293F /* Foundation.framework */,
-				3F1B38B2C2DAE624870E58E839CFA214 /* QuartzCore.framework */,
-				819B7271C3CD9A9ABE55B51E85BF4E95 /* UIKit.framework */,
-			);
-			name = iOS;
-			sourceTree = "<group>";
-		};
-		AC45C5253C33F6284BC17FE95CEF83E9 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CCD4D2AE08952B33D01009EDD5AE77D8 /* ChameleonFramework */,
-				20A8F360B71CC4AC5611D7F3ABDD49BE /* FontAwesome.swift */,
-				6B34ADA34D0E07A558AB3DB5B5C302D0 /* GoogleMaps */,
-				CA808A328D16674FC49A873B88E53FA6 /* GooglePlaces */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		AD693E6ECE31874EFF48845F1E8247F8 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				26BD7D382FA59278B609712C216CECE7 /* GooglePlaces.bundle */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		B7621A15E7363010C1683892E4AF46DF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				75D14CA161FD7D77CF04100A9FB386A1 /* GoogleMaps.framework */,
-				25285D17498CE87E5F562B9E000315CE /* GoogleMapsCore.framework */,
+				8704E7734F2D03B8EF86CFC319C943BC /* GooglePlaces.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B8CDDA1BDAF1C5FA5BD25889CF3C3E25 /* Targets Support Files */ = {
+		446F55954A1B4F44697D4CD53ABC566B /* GooglePlaces */ = {
 			isa = PBXGroup;
 			children = (
-				DA294C5538C83BA0CE418994CD32D7DC /* Pods-Space-Time-Maps */,
-			);
-			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		B94D7768568A9992200DB461E8CF687F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				ABA24FB3A9B23D8A4F2B0C0081097B5B /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C3F8A804FE9F394220D8F0FCD720B1A5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				4B14A0DEBB0738F23208FD975D09FC2E /* GoogleMapsBase.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		CA808A328D16674FC49A873B88E53FA6 /* GooglePlaces */ = {
-			isa = PBXGroup;
-			children = (
-				50B83A66F59D7CC806D3F9B6C26D3872 /* Frameworks */,
-				AD693E6ECE31874EFF48845F1E8247F8 /* Resources */,
-				8440C6C68F8ED00B27D5FE7F785163DF /* Support Files */,
+				3FE4CC4B7B0241873FFF96886667937D /* Frameworks */,
+				7DDA47E3D8C82ADCB64F7C6FC9641D65 /* Resources */,
+				3582EF5F85D78C1DB07F01BC0BFA167E /* Support Files */,
 			);
 			name = GooglePlaces;
 			path = GooglePlaces;
 			sourceTree = "<group>";
 		};
-		CCD4D2AE08952B33D01009EDD5AE77D8 /* ChameleonFramework */ = {
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				4D303211A66168789C5E3ACB56B6A291 /* Default */,
-				CDEC3D063B22DF5A753AA2B96EEC87F8 /* Support Files */,
-				2259FA4694E3C6307D29323DEAAE5A36 /* Swift */,
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
 			);
-			name = ChameleonFramework;
-			path = ChameleonFramework;
+			name = iOS;
 			sourceTree = "<group>";
 		};
-		CDEC3D063B22DF5A753AA2B96EEC87F8 /* Support Files */ = {
+		57E9668F206F90945862EB603821A554 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				61798BBBA57374F173E418244C6843C9 /* ChameleonFramework.modulemap */,
-				22CE3FAE2AF41F070B8E7517506EEFF2 /* ChameleonFramework.xcconfig */,
-				BD429ED88A233CE8FBC63A360D6065B3 /* ChameleonFramework-dummy.m */,
-				0B0464371E0D416DAFD5739574E10CCD /* ChameleonFramework-Info.plist */,
-				D6A3862E74AD38154A0E60B804006546 /* ChameleonFramework-prefix.pch */,
-				9DB37D6087F7C94F99C69182BBCC01E7 /* ChameleonFramework-umbrella.h */,
+				C7D9C10AA7C242C9091DF74325B3685C /* Pods_Space_Time_Maps.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6C8EBDD6FEE473D639E9FF7A802869C0 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				FA12A18F12A10F6BE94B10C390987756 /* GoogleMaps.debug.xcconfig */,
+				9E830DD9530F13E283DEC78352A2F03D /* GoogleMaps.release.xcconfig */,
 			);
 			name = "Support Files";
-			path = "../Target Support Files/ChameleonFramework";
+			path = "../Target Support Files/GoogleMaps";
+			sourceTree = "<group>";
+		};
+		7DDA47E3D8C82ADCB64F7C6FC9641D65 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4E256CB72E069B4C851E32F3924687B3 /* GooglePlaces.bundle */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		91F51D9C1AF496A97BDAF6676A370A28 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E78CD31E9E439CE26DE1D95CA00A1B76 /* Pods-Space-Time-Maps */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		A38D68C78C032F2CEEEEED36818D37F0 /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				E435AD63DBCE250679648002DC9F8442 /* Frameworks */,
+				FAF4CAFF608973234241B6D824C4FC0F /* Resources */,
+			);
+			name = Maps;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				B94D7768568A9992200DB461E8CF687F /* Frameworks */,
-				AC45C5253C33F6284BC17FE95CEF83E9 /* Pods */,
-				9DB75190CF029780F6E8C5A1E0CFFB6F /* Products */,
-				B8CDDA1BDAF1C5FA5BD25889CF3C3E25 /* Targets Support Files */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				E858A99A3564099E88E4CF05F26A517D /* Pods */,
+				57E9668F206F90945862EB603821A554 /* Products */,
+				91F51D9C1AF496A97BDAF6676A370A28 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		DA294C5538C83BA0CE418994CD32D7DC /* Pods-Space-Time-Maps */ = {
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A11C9FEF6B1123795E5CB5E3CF44B52A /* Pods-Space-Time-Maps.modulemap */,
-				2731E3EE2A619610FF5C8B812B83C123 /* Pods-Space-Time-Maps-acknowledgements.markdown */,
-				7DE1C0ABA18D970AA5D9762F32848312 /* Pods-Space-Time-Maps-acknowledgements.plist */,
-				D28BBAE666478DDD886149E238995E1C /* Pods-Space-Time-Maps-dummy.m */,
-				0FD207E6B4586B303EFB86F6903427EB /* Pods-Space-Time-Maps-frameworks.sh */,
-				CCD23BFDA1B68ACF65192B07AE530360 /* Pods-Space-Time-Maps-Info.plist */,
-				52DFAF0A90003282A0CF5E5970BD6C46 /* Pods-Space-Time-Maps-resources.sh */,
-				5B837059C8F49AAEB55B0A763DFE0BBE /* Pods-Space-Time-Maps-umbrella.h */,
-				57E894D0F47C52EF5FDE196830806C36 /* Pods-Space-Time-Maps.debug.xcconfig */,
-				C04F6BE2D2A1626CAA3C2E649344E06E /* Pods-Space-Time-Maps.release.xcconfig */,
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E435AD63DBCE250679648002DC9F8442 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F8C3BB261D41EB0A05EAE541E50E3DAB /* GoogleMaps.framework */,
+				23F651581A8A5A322B46718DD384709B /* GoogleMapsCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E78CD31E9E439CE26DE1D95CA00A1B76 /* Pods-Space-Time-Maps */ = {
+			isa = PBXGroup;
+			children = (
+				977E2BA856F010C2CE067B6068D096B9 /* Pods-Space-Time-Maps.modulemap */,
+				AE3632FA99A49EBDBE182949C07507A5 /* Pods-Space-Time-Maps-acknowledgements.markdown */,
+				BEB9929607E99707F5CA11295F55363E /* Pods-Space-Time-Maps-acknowledgements.plist */,
+				FE154B9C274FC4A0C3E52BFB14C56AF6 /* Pods-Space-Time-Maps-dummy.m */,
+				897760CCFD5873DAE0792D35CDF105E1 /* Pods-Space-Time-Maps-Info.plist */,
+				BEAF7A5B79F4AB27B859746EAE60EF6F /* Pods-Space-Time-Maps-resources.sh */,
+				A2B2448158BB9ADF7754BCEF157FB993 /* Pods-Space-Time-Maps-umbrella.h */,
+				76BB91081B4830DA42F253C7B7161C00 /* Pods-Space-Time-Maps.debug.xcconfig */,
+				6FBA0C6A5E8E2BE4761DEC7FFDC3DD56 /* Pods-Space-Time-Maps.release.xcconfig */,
 			);
 			name = "Pods-Space-Time-Maps";
 			path = "Target Support Files/Pods-Space-Time-Maps";
 			sourceTree = "<group>";
 		};
-		DF8DA2FCE6D377BF144271C0E38CDA98 /* Resources */ = {
+		E858A99A3564099E88E4CF05F26A517D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E39F995EED40C0C1A12DAFA917F95732 /* Font Awesome 5 Brands-Regular-400.otf */,
-				A1761DC9E03820215705C556AC82C908 /* Font Awesome 5 Free-Regular-400.otf */,
-				470A83BB546C4A99E2A56E39E82F3862 /* Font Awesome 5 Free-Solid-900.otf */,
+				0883B537F1FDF67277437486C4066E63 /* GoogleMaps */,
+				446F55954A1B4F44697D4CD53ABC566B /* GooglePlaces */,
 			);
-			name = Resources;
+			name = Pods;
 			sourceTree = "<group>";
 		};
-		E20F7BFB55EE01A6DF205CECD45740F7 /* Support Files */ = {
+		E86A34344FF943F078B6064D778D230A /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				257A2A033D5CA002D0F07AF428D5D083 /* FontAwesome.swift.modulemap */,
-				07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */,
-				4CB09E5B564C58FF82E7823AB3926094 /* FontAwesome.swift-dummy.m */,
-				B179B15F8C68CF24097D504986EAFF0E /* FontAwesome.swift-Info.plist */,
-				6402DBD692E026303750811452FC7020 /* FontAwesome.swift-prefix.pch */,
-				9F8ED4B943CAF0CD3E0A16CB6836FA20 /* FontAwesome.swift-umbrella.h */,
-				E73C7C63E24A5702639410FF8803C2BA /* ResourceBundle-FontAwesome.swift-FontAwesome.swift-Info.plist */,
+				01178CDE9E7F5E928EDC642D6B628FE0 /* Frameworks */,
 			);
-			name = "Support Files";
-			path = "../Target Support Files/FontAwesome.swift";
+			name = Base;
 			sourceTree = "<group>";
 		};
-		E44C56A6B1990D2F074B6ED0F1C97F62 /* Resources */ = {
+		FAF4CAFF608973234241B6D824C4FC0F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				536CA23A1DDD9D9D19C02A794768EB26 /* GoogleMaps.bundle */,
+				E74A4A5FDDD4F90A8A55EB206C7681BC /* GoogleMaps.bundle */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -552,118 +267,31 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		80C66671584EC649F15BCCEB6D07E387 /* Headers */ = {
+		3995E8E6C82C11C9DED46ADE810FE1E7 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				015A05B381E25C2FA80A0DA797179580 /* Chameleon.h in Headers */,
-				6C87CCC7E974983BF3DDB7CDDD1CCC6A /* Chameleon_.h in Headers */,
-				FA49618EEDBE490B9BF56CAD65ABF8EA /* ChameleonConstants.h in Headers */,
-				E7D344059042D076A5C61D13018BA0D8 /* ChameleonEnums.h in Headers */,
-				936F268AB9257A3435DD4BAAB5A4A135 /* ChameleonFramework-umbrella.h in Headers */,
-				CAF49E2A54F794D5F6DD10F1FE77F321 /* ChameleonMacros.h in Headers */,
-				8624349E44507A5863651CAB51E38F7F /* NSArray+Chameleon.h in Headers */,
-				07A0DFFBB0EA1EA20CE1C511B55C13B2 /* UIAppearance+Swift.h in Headers */,
-				4DF43DB058D1638FE6E51EC9B5BA01B9 /* UIButton+Chameleon.h in Headers */,
-				EEF22A1455C96635E480D1DCCE664913 /* UIColor+Chameleon.h in Headers */,
-				DDBC762ABE86F3917C6553A64E722A70 /* UIColor+ChameleonPrivate.h in Headers */,
-				63B7FAF3B3F4BA5A42B1F016BEE0FC47 /* UIImage+ChameleonPrivate.h in Headers */,
-				E82EF3AFD38848BAC02735643F4FBF6C /* UILabel+Chameleon.h in Headers */,
-				07F4634E722082DB20A867BD271864CA /* UINavigationController+Chameleon.h in Headers */,
-				0C66E72276B24115F4EE16246D0D11C0 /* UIView+ChameleonPrivate.h in Headers */,
-				918885B90BECC18ABC5F58D92E34EF13 /* UIViewController+Chameleon.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		85FB4E0400EA355978429A2274B67177 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				308F7340774246933F6E0A70BE1963B0 /* Pods-Space-Time-Maps-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ECE4C7F4345CDC22DFD0DA8533F5F57B /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9DE3360E24D9FE3ADA0C2162E8DBE1A5 /* FontAwesome.swift-umbrella.h in Headers */,
+				805EDD5D4D932962EDD5AD78A856D2F7 /* Pods-Space-Time-Maps-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		28BFDC89BA4363F4F3576DEC70EE10AE /* ChameleonFramework */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 911E8CAE5BC7C27912E3245FC75091FA /* Build configuration list for PBXNativeTarget "ChameleonFramework" */;
-			buildPhases = (
-				80C66671584EC649F15BCCEB6D07E387 /* Headers */,
-				C932BB4B41211AEB55BB8902A20BC875 /* Sources */,
-				72FCBED230C996317A485724760EB018 /* Frameworks */,
-				1D826F16ECC69FA6D6365B89430D4D32 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = ChameleonFramework;
-			productName = ChameleonFramework;
-			productReference = 0383903D05EDD5C442C682C1F7A1752D /* ChameleonFramework.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		4DC20DD2E50259D674257304EC016C93 /* FontAwesome.swift-FontAwesome.swift */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 162CE2CC222588C47F9D8623AC2D740C /* Build configuration list for PBXNativeTarget "FontAwesome.swift-FontAwesome.swift" */;
-			buildPhases = (
-				A8047C3FFDA6444FE7150EE130F76CD6 /* Sources */,
-				B2E461109F7C8F6856E2B401CB6EBC27 /* Frameworks */,
-				894D7CAAA9B98700AF38B4C59C0C0BA6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "FontAwesome.swift-FontAwesome.swift";
-			productName = "FontAwesome.swift-FontAwesome.swift";
-			productReference = 3DA4F5DC4EB6E9DF6B4859D27EF8C9F5 /* FontAwesome.swift.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
-		BB240150692F32EC312F3CF346C8B9D1 /* FontAwesome.swift */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E72A36E6CAEEEF1BFE244B0DF658E365 /* Build configuration list for PBXNativeTarget "FontAwesome.swift" */;
-			buildPhases = (
-				ECE4C7F4345CDC22DFD0DA8533F5F57B /* Headers */,
-				A8925681EB2BF025BB55530B5E2900D4 /* Sources */,
-				889FC90E007AF2C9DE5C84516B57F606 /* Frameworks */,
-				F52DAFB0ECDBC2C21F9A22F311FDFDE5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				46DD140710EF752CE3A5897A912AAAA0 /* PBXTargetDependency */,
-			);
-			name = FontAwesome.swift;
-			productName = FontAwesome.swift;
-			productReference = 28A3CCFDC77829170B0B12EB9E3391CF /* FontAwesome_swift.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		EA02367407F0A0AFEF581965E870C188 /* Pods-Space-Time-Maps */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 574881AD3DF9BED79C6EEF26333E016A /* Build configuration list for PBXNativeTarget "Pods-Space-Time-Maps" */;
+			buildConfigurationList = A2FD8B1443EC46C325E4CCB3D52710A9 /* Build configuration list for PBXNativeTarget "Pods-Space-Time-Maps" */;
 			buildPhases = (
-				85FB4E0400EA355978429A2274B67177 /* Headers */,
-				4FA80D4AAFB38912A29BFA9A70AA16E9 /* Sources */,
-				4CA9F9BA69EF1483F47ACBA4A155C6CE /* Frameworks */,
-				1D0E7894C160A8FF43E05A2002DBE8FF /* Resources */,
+				3995E8E6C82C11C9DED46ADE810FE1E7 /* Headers */,
+				E569CECD6F79DC29B8DFEDF5F3D1F41C /* Sources */,
+				97F1DD570665355746D7E51386FC9E40 /* Frameworks */,
+				FB3B33178C64ACC940715DCBB4F93FBD /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				9B4728FBA02586742077429F74C780E1 /* PBXTargetDependency */,
-				3B7AE17EC6CDEC7806D47ACA27D094C2 /* PBXTargetDependency */,
-				D77E0B70363F51157F15E00865926590 /* PBXTargetDependency */,
-				872809043A6B83E0288400178A465BA8 /* PBXTargetDependency */,
+				64A3BC2E157A2B6DBF8BFC1DA4905769 /* PBXTargetDependency */,
+				6576FEA1CC11D6C6E2A26B9FDF15BBD6 /* PBXTargetDependency */,
 			);
 			name = "Pods-Space-Time-Maps";
 			productName = "Pods-Space-Time-Maps";
@@ -688,13 +316,10 @@
 				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 9DB75190CF029780F6E8C5A1E0CFFB6F /* Products */;
+			productRefGroup = 57E9668F206F90945862EB603821A554 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				28BFDC89BA4363F4F3576DEC70EE10AE /* ChameleonFramework */,
-				BB240150692F32EC312F3CF346C8B9D1 /* FontAwesome.swift */,
-				4DC20DD2E50259D674257304EC016C93 /* FontAwesome.swift-FontAwesome.swift */,
 				E5B4BBC6DD552AC8943C7E22772FC1D3 /* GoogleMaps */,
 				0C1885900810601510E0C632060FAF26 /* GooglePlaces */,
 				EA02367407F0A0AFEF581965E870C188 /* Pods-Space-Time-Maps */,
@@ -703,158 +328,55 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1D0E7894C160A8FF43E05A2002DBE8FF /* Resources */ = {
+		FB3B33178C64ACC940715DCBB4F93FBD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1D826F16ECC69FA6D6365B89430D4D32 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		894D7CAAA9B98700AF38B4C59C0C0BA6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				506ACADC63134125FA6DF10CF06FD027 /* Font Awesome 5 Brands-Regular-400.otf in Resources */,
-				55286D2DEC1DB91F601519B9649B49C2 /* Font Awesome 5 Free-Regular-400.otf in Resources */,
-				88703EFA5F39A9C53799FB29E017AD42 /* Font Awesome 5 Free-Solid-900.otf in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F52DAFB0ECDBC2C21F9A22F311FDFDE5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				769E73BAE26F14766F3D2F8CC2A295EF /* FontAwesome.swift.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4FA80D4AAFB38912A29BFA9A70AA16E9 /* Sources */ = {
+		E569CECD6F79DC29B8DFEDF5F3D1F41C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3A827830B6B867C44EDD13EB89A0054 /* Pods-Space-Time-Maps-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A8047C3FFDA6444FE7150EE130F76CD6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A8925681EB2BF025BB55530B5E2900D4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DC7A22B339CA1049C19D06C7A93DF302 /* Enum.swift in Sources */,
-				D71293F143E62C33E8676E4E6CC8DA6F /* FontAwesome.swift in Sources */,
-				0FB5FF51B597E1E0312C5F1438BAB51B /* FontAwesome.swift-dummy.m in Sources */,
-				7BFE4CB72D9AD8D1781B864B5C1EE1B6 /* FontAwesomeBarButtonItem.swift in Sources */,
-				81254017D2D4A97CBE1534E22E519329 /* FontAwesomeExtension.swift in Sources */,
-				632EC0ADDD99413F1C10964C64CF72B6 /* FontAwesomeImageRepresentable.swift in Sources */,
-				08FA521531A6DFC1209732035429ED00 /* FontAwesomeImageView.swift in Sources */,
-				8DC785D0EC04427925ED3F93017DC624 /* FontAwesomeSegmentedControl.swift in Sources */,
-				FE49B0792565E3DBA62187EBEB4E1E58 /* FontAwesomeStateRequirement.swift in Sources */,
-				C472BF180CE883EE3D8D12C5D1BFDFA7 /* FontAwesomeTabBarItem.swift in Sources */,
-				22CAB863C8E98C2BD1CEEA2381A46A34 /* FontAwesomeTextRepresentable.swift in Sources */,
-				A40FD679EA4164AAB96094D8AE90CD09 /* FontAwesomeView.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C932BB4B41211AEB55BB8902A20BC875 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6B2DC678EA5CCC291354FE306DF0B28E /* Chameleon_.m in Sources */,
-				693B98DE045C80265A735BD94C87953D /* ChameleonConstants.m in Sources */,
-				DD7B1A58C5C68491723265E6D763B26E /* ChameleonFramework-dummy.m in Sources */,
-				866B54511E7CBFADD1F78C285087AE8E /* ChameleonShorthand.swift in Sources */,
-				874D8A04ABF919CED20EB0E440C44101 /* NSArray+Chameleon.m in Sources */,
-				275CF53070F9850F9CF142A83F29F9D2 /* UIAppearance+Swift.m in Sources */,
-				3C996FBEFFF38718E791135C621B8C59 /* UIButton+Chameleon.m in Sources */,
-				9247AA02A534F1A201D929C39C057B50 /* UIColor+Chameleon.m in Sources */,
-				E0DBD978FE1FBA3923D9A482352252D4 /* UIColor+ChameleonPrivate.m in Sources */,
-				DA97A7E5793FADE5749D21002AB10B57 /* UIImage+ChameleonPrivate.m in Sources */,
-				A68832C167B77BE09F6F3485A607A744 /* UILabel+Chameleon.m in Sources */,
-				FE3A4BBC89893220B5590FC8A65C0233 /* UINavigationController+Chameleon.m in Sources */,
-				866A210E47AEF4ABB16E6D6F5B6A6E51 /* UIView+ChameleonPrivate.m in Sources */,
-				8659D5863A89A6F9539AE15D673C07C5 /* UIViewController+Chameleon.m in Sources */,
+				D7DC17FAD75114AD6580B165EA09665C /* Pods-Space-Time-Maps-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3B7AE17EC6CDEC7806D47ACA27D094C2 /* PBXTargetDependency */ = {
+		64A3BC2E157A2B6DBF8BFC1DA4905769 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FontAwesome.swift;
-			target = BB240150692F32EC312F3CF346C8B9D1 /* FontAwesome.swift */;
-			targetProxy = E7A3AEE9750442B5247A0F305E25912C /* PBXContainerItemProxy */;
+			name = GoogleMaps;
+			target = E5B4BBC6DD552AC8943C7E22772FC1D3 /* GoogleMaps */;
+			targetProxy = AC476F97F0D90863332AF9D77A0115EA /* PBXContainerItemProxy */;
 		};
-		46DD140710EF752CE3A5897A912AAAA0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "FontAwesome.swift-FontAwesome.swift";
-			target = 4DC20DD2E50259D674257304EC016C93 /* FontAwesome.swift-FontAwesome.swift */;
-			targetProxy = D06B65A6786DC2E10084C7B8E08BEF0B /* PBXContainerItemProxy */;
-		};
-		872809043A6B83E0288400178A465BA8 /* PBXTargetDependency */ = {
+		6576FEA1CC11D6C6E2A26B9FDF15BBD6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GooglePlaces;
 			target = 0C1885900810601510E0C632060FAF26 /* GooglePlaces */;
-			targetProxy = 2438D1954098E8D5242B5B08066FD52C /* PBXContainerItemProxy */;
+			targetProxy = 22EB293C33F1B979759D5EBE39F27486 /* PBXContainerItemProxy */;
 		};
-		9B4728FBA02586742077429F74C780E1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ChameleonFramework;
-			target = 28BFDC89BA4363F4F3576DEC70EE10AE /* ChameleonFramework */;
-			targetProxy = 6C49711EBCB612E46433CCC31A82E8D5 /* PBXContainerItemProxy */;
-		};
-		D42315111F400C0605ACCD6B5CAF2178 /* PBXTargetDependency */ = {
+		CCDE3DF5458240F3259D88C46803DEC8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GoogleMaps;
 			target = E5B4BBC6DD552AC8943C7E22772FC1D3 /* GoogleMaps */;
-			targetProxy = 6EB1C2DD30E6564FC3135C9E8002D8F7 /* PBXContainerItemProxy */;
-		};
-		D77E0B70363F51157F15E00865926590 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GoogleMaps;
-			target = E5B4BBC6DD552AC8943C7E22772FC1D3 /* GoogleMaps */;
-			targetProxy = 5C02A77524A5542C5F6D9FE5559F6291 /* PBXContainerItemProxy */;
+			targetProxy = 108F9196136F85067DA2F6284C12312A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0BB58E9841897E95E9ED3C2AC915C765 /* Debug */ = {
+		1A2CEA2DEE2F6FF8A8396C8C7C7698AE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E8CFADA61AA0B517FB8FD6BB8A0FC4A /* GooglePlaces.xcconfig */;
+			baseConfigurationReference = 6FBA0C6A5E8E2BE4761DEC7FFDC3DD56 /* Pods-Space-Time-Maps.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		17D257E033728424BEF4DCBF50B1D057 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -863,45 +385,59 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/FontAwesome.swift/FontAwesome.swift-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/FontAwesome.swift/FontAwesome.swift-Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/FontAwesome.swift/FontAwesome.swift.modulemap";
-				PRODUCT_MODULE_NAME = FontAwesome_swift;
-				PRODUCT_NAME = FontAwesome_swift;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
-		438109E1802BB2291C9A0BB8FE9DC07D /* Debug */ = {
+		329AB0B82DF049F81B97075904F1D132 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */;
+			baseConfigurationReference = FA12A18F12A10F6BE94B10C390987756 /* GoogleMaps.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/FontAwesome.swift";
-				IBSC_MODULE = FontAwesome_swift;
-				INFOPLIST_FILE = "Target Support Files/FontAwesome.swift/ResourceBundle-FontAwesome.swift-FontAwesome.swift-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				PRODUCT_NAME = FontAwesome.swift;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
-		6410F571BA8C1AEC6A19403F1B61B0B5 /* Debug */ = {
+		6078B06A25C4D852B60ACF738AF81345 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C729F3714998C7C3F3D788777A06264 /* GooglePlaces.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6C98B09FF5CCB107837D1A84E8F3A4F1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -924,6 +460,69 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		8E6A8FF58D100B7F9B1943F455C00F02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -962,46 +561,13 @@
 			};
 			name = Debug;
 		};
-		7A0E1475C73579E1A16F592656021AEF /* Release */ = {
+		ABA76AA6B3854E20C8B50AA676840842 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22CE3FAE2AF41F070B8E7517506EEFF2 /* ChameleonFramework.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/ChameleonFramework/ChameleonFramework-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ChameleonFramework/ChameleonFramework-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ChameleonFramework/ChameleonFramework.modulemap";
-				PRODUCT_MODULE_NAME = ChameleonFramework;
-				PRODUCT_NAME = ChameleonFramework;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		9F08F0D7848614CEA65F8088036DC5EA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 211BCD5B65571C2A5F68343E9E0247F3 /* GoogleMaps.xcconfig */;
+			baseConfigurationReference = A4658982FD89F2A77A672D9AFC716B28 /* GooglePlaces.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SDKROOT = iphoneos;
@@ -1010,110 +576,13 @@
 			};
 			name = Release;
 		};
-		A27713CB74E99AF202AADC23200A32F4 /* Release */ = {
+		F69010A4BFB857EA3E05D380C9DE16B2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Release;
-		};
-		A64F345E862536FBB0818B4F8F1535E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C04F6BE2D2A1626CAA3C2E649344E06E /* Pods-Space-Time-Maps.release.xcconfig */;
+			baseConfigurationReference = 76BB91081B4830DA42F253C7B7161C00 /* Pods-Space-Time-Maps.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		B4256842BAD522426828C6727907212B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57E894D0F47C52EF5FDE196830806C36 /* Pods-Space-Time-Maps.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
@@ -1141,95 +610,13 @@
 			};
 			name = Debug;
 		};
-		BA3F2CBF062C9C35598FAB6B98ABAC1D /* Debug */ = {
+		F8B5ADFFA1610BC35D28D730D561558C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22CE3FAE2AF41F070B8E7517506EEFF2 /* ChameleonFramework.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/ChameleonFramework/ChameleonFramework-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ChameleonFramework/ChameleonFramework-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ChameleonFramework/ChameleonFramework.modulemap";
-				PRODUCT_MODULE_NAME = ChameleonFramework;
-				PRODUCT_NAME = ChameleonFramework;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		C80B1A63875DEBE4BE6EF6385F2086F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/FontAwesome.swift/FontAwesome.swift-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/FontAwesome.swift/FontAwesome.swift-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/FontAwesome.swift/FontAwesome.swift.modulemap";
-				PRODUCT_MODULE_NAME = FontAwesome_swift;
-				PRODUCT_NAME = FontAwesome_swift;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		D9BA2525D3A5887E6378C9733563CB55 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 07506CF0F0BDF0E8BA026F627A5DA382 /* FontAwesome.swift.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/FontAwesome.swift";
-				IBSC_MODULE = FontAwesome_swift;
-				INFOPLIST_FILE = "Target Support Files/FontAwesome.swift/ResourceBundle-FontAwesome.swift-FontAwesome.swift-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				PRODUCT_NAME = FontAwesome.swift;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
-		E3DCBAEED832780C2AB9A6932A8C1920 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2E8CFADA61AA0B517FB8FD6BB8A0FC4A /* GooglePlaces.xcconfig */;
+			baseConfigurationReference = 9E830DD9530F13E283DEC78352A2F03D /* GoogleMaps.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SDKROOT = iphoneos;
@@ -1237,47 +624,15 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		E8B2EF8F7C20810D7BF02815414C6FB2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 211BCD5B65571C2A5F68343E9E0247F3 /* GoogleMaps.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		162CE2CC222588C47F9D8623AC2D740C /* Build configuration list for PBXNativeTarget "FontAwesome.swift-FontAwesome.swift" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				438109E1802BB2291C9A0BB8FE9DC07D /* Debug */,
-				D9BA2525D3A5887E6378C9733563CB55 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2FC2AC47FDB0310285CE777F18CD1532 /* Build configuration list for PBXAggregateTarget "GooglePlaces" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0BB58E9841897E95E9ED3C2AC915C765 /* Debug */,
-				E3DCBAEED832780C2AB9A6932A8C1920 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		46921981F609C5BA3CB72EC4EA41299D /* Build configuration list for PBXAggregateTarget "GoogleMaps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E8B2EF8F7C20810D7BF02815414C6FB2 /* Debug */,
-				9F08F0D7848614CEA65F8088036DC5EA /* Release */,
+				329AB0B82DF049F81B97075904F1D132 /* Debug */,
+				F8B5ADFFA1610BC35D28D730D561558C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1285,35 +640,26 @@
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6410F571BA8C1AEC6A19403F1B61B0B5 /* Debug */,
-				A27713CB74E99AF202AADC23200A32F4 /* Release */,
+				8E6A8FF58D100B7F9B1943F455C00F02 /* Debug */,
+				6C98B09FF5CCB107837D1A84E8F3A4F1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		574881AD3DF9BED79C6EEF26333E016A /* Build configuration list for PBXNativeTarget "Pods-Space-Time-Maps" */ = {
+		A2FD8B1443EC46C325E4CCB3D52710A9 /* Build configuration list for PBXNativeTarget "Pods-Space-Time-Maps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B4256842BAD522426828C6727907212B /* Debug */,
-				A64F345E862536FBB0818B4F8F1535E8 /* Release */,
+				F69010A4BFB857EA3E05D380C9DE16B2 /* Debug */,
+				1A2CEA2DEE2F6FF8A8396C8C7C7698AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		911E8CAE5BC7C27912E3245FC75091FA /* Build configuration list for PBXNativeTarget "ChameleonFramework" */ = {
+		E215DFB4EAE26646AFED2C4861A55C32 /* Build configuration list for PBXAggregateTarget "GooglePlaces" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BA3F2CBF062C9C35598FAB6B98ABAC1D /* Debug */,
-				7A0E1475C73579E1A16F592656021AEF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E72A36E6CAEEEF1BFE244B0DF658E365 /* Build configuration list for PBXNativeTarget "FontAwesome.swift" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				17D257E033728424BEF4DCBF50B1D057 /* Debug */,
-				C80B1A63875DEBE4BE6EF6385F2086F8 /* Release */,
+				6078B06A25C4D852B60ACF738AF81345 /* Debug */,
+				ABA76AA6B3854E20C8B50AA676840842 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

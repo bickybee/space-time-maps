@@ -37,19 +37,16 @@ class PlaceCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
     
-    
-    
     private func setup() {
         containerView.layer.cornerRadius = 5;
         containerView.layer.shadowOpacity = 0.5;
         containerView.layer.masksToBounds = true
         self.layer.masksToBounds = true
         
-        editBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        editBtn.setTitle(String.fontAwesomeIcon(name: .edit), for: .normal)
-        
-        deleteBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        deleteBtn.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
+        editBtn.setImage(UIImage.init(named:"edit"), for: .normal);
+        editBtn.tintColor = UIColor.white;
+        deleteBtn.setImage(UIImage.init(named:"trash"), for: .normal);
+        deleteBtn.tintColor = UIColor.white;
     }
     
     func configureWith(name: String, duration: TimeInterval) {

@@ -81,6 +81,14 @@ class Utils {
                    kind: .none, id: UUID())
     ]
     
+    static let amsterdamPlaceGroups : [PlaceGroup] = [
+           PlaceGroup(name: "", places:
+            [Place(name: "Hostel Utopia", coordinate: Coordinate(latitude: 52.375125, longitude: 4.891581999999999), placeID: "ChIJjTtuWcYJxkcRCvTNNBo57VM"),
+                Place(name: "OBA library of Amsterdam", coordinate: Coordinate(latitude: 52.3756917, longitude: 4.908188900000001), placeID: "ChIJT0cNwNcJxkcRlLTs5pP2l2s", openHours: Timing(start: TimeInterval.from(hours: 10), end: TimeInterval.from(hours: 17))),
+           ],
+                      kind: .none, id: UUID())
+       ]
+    
 
     
     static func secondsToRelativeTimeString(seconds: TimeInterval) -> String {
@@ -115,7 +123,7 @@ class Utils {
             }
             midday = "PM"
         } else {
-            midday = "PM"
+            midday = "AM"
         }
         
         let hourString = "\(Int(hour))"

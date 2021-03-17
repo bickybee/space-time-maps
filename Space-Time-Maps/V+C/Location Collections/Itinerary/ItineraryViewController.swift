@@ -233,7 +233,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     func shouldShowHoursOfOperation() -> Bool {
-        return false//editingSession != nil
+        return editingSession != nil //false
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -19,6 +19,7 @@ class MapViewController: UIViewController {
     var overlays = [GMSOverlay]()
     
     var markers = [GMSMarker]()
+    var polylines = [GMSPolyline]()
     var timeQueryMarker : GMSTimeMarker?
     
     var currentDraggingPlaces = [Place]()
@@ -41,7 +42,7 @@ class MapViewController: UIViewController {
         
         //Style map w/ json file
         do {
-            if let styleURL = Bundle.main.url(forResource: "style", withExtension: "json") {
+            if let styleURL = Bundle.main.url(forResource: "style2", withExtension: "json") {
                 mapView.mapStyle = try GMSMapStyle(contentsOfFileURL: styleURL)
             }
         } catch {
@@ -76,12 +77,15 @@ class MapViewController: UIViewController {
         mapView.clear()
         // Wrap map to markers
         markers = MapUtils.markersForPlacesIn(placeGroups, itinerary, currentDraggingPlaces)
+        let routeLegs = itinerary.route.legs
+        polylines = MapUtils.polylinesForRouteLegs(routeLegs)
+        //        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
+        overlays = markers + polylines// + ticks
+        
         mapView.wrapBoundsToInclude(markers: markers.filter({ $0.zIndex == 2 }))
         
-        let routeLegs = itinerary.route.legs
-        let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
-//        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
-        overlays = markers + polylines// + ticks
+        
+
         mapView.add(overlays: overlays)
     }
     
@@ -110,7 +114,7 @@ class MapViewController: UIViewController {
 extension MapViewController : TimeQueryDelegate {
     func didMakeTimeQuery(time: TimeInterval, schedulable: Schedulable?) {
         if let dest = schedulable as? Destination {
-            // Update marker
+            // Update markerdeleg
             if let marker = timeQueryMarker {
                 marker.pos = dest.place.coordinate
                 marker.time = time

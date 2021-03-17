@@ -8,38 +8,27 @@
 
 import Foundation
 import UIKit.UIColor
-import ChameleonFramework
 
 typealias UIColorGradient = (UIColor, UIColor)
 
-
 class ColorUtils {
     
-    static private var usedColors = [UIColor]()
-    static private let excludeColors = [
-        UIColor.flatBlack(),
-        UIColor.flatWhite(),
-        UIColor.flatPowderBlue(),
-        UIColor.flatWatermelon(),
-        UIColor.flatPurple(),
-        UIColor.flatMint(),
-        UIColor.flatSand()
+    static private var usedColors = 0;
+    static private let colors = [
+        UIColor(red: 0.72, green: 0.00, blue: 0.00, alpha: 1.00),
+        UIColor(red: 0.86, green: 0.50, blue: 0.00, alpha: 1.00),
+        UIColor(red: 0.99, green: 0.80, blue: 0.00, alpha: 1.00),
+        UIColor(red: 0.59, green: 0.59, blue: 0.27, alpha: 1.00),
+        UIColor(red: 0.00, green: 0.55, blue: 0.01, alpha: 1.00),
+        UIColor(red: 0.00, green: 0.42, blue: 0.46, alpha: 1.00),
+        UIColor(red: 0.07, green: 0.45, blue: 0.87, alpha: 1.00),
+        UIColor(red: 0.00, green: 0.30, blue: 0.81, alpha: 1.00),
+        UIColor(red: 0.33, green: 0.00, blue: 0.92, alpha: 1.00)
     ]
     
     static func randomColor() -> UIColor {
-        let color = RandomFlatColorWithShade(.dark)
-        
-        if usedColors.contains(color) {
-            return randomColor()
-        }
-        
-        usedColors.append(color)
-        
-        // Used up all the colors? allow repeats now...
-        if usedColors.count == 12 {
-            usedColors = [UIColor]()
-        }
-        
+        let color = colors[usedColors % colors.count]
+        usedColors += 1
         return color
     }
 
@@ -73,6 +62,25 @@ class ColorUtils {
                        blue: CGFloat(b1 + (b2 - b1) * fraction),
                        alpha: CGFloat(a1 + (a2 - a1) * fraction))
 
+    }
+    
+    static func colorWithGradient(frame: CGRect, colors: [UIColor]) -> UIColor? {
+        
+        // create the background layer that will hold the gradient
+        let backgroundGradientLayer = CAGradientLayer()
+        backgroundGradientLayer.frame = frame
+         
+        // we create an array of CG colors from out UIColor array
+        let cgColors = colors.map({$0.cgColor})
+        
+        backgroundGradientLayer.colors = cgColors
+        
+        UIGraphicsBeginImageContext(backgroundGradientLayer.bounds.size)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        backgroundGradientLayer.render(in: context)
+        guard let backgroundColorImage = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return UIColor(patternImage: backgroundColorImage)
     }
 
 }

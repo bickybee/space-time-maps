@@ -1,8 +1,4 @@
 PODS:
-  - ChameleonFramework/Default (2.1.0)
-  - ChameleonFramework/Swift (2.1.0):
-    - ChameleonFramework/Default
-  - FontAwesome.swift (1.8.3)
   - GoogleMaps (3.8.0):
     - GoogleMaps/Maps (= 3.8.0)
   - GoogleMaps/Base (3.8.0)
@@ -12,24 +8,18 @@ PODS:
     - GoogleMaps/Base (= 3.8.0)
 
 DEPENDENCIES:
-  - ChameleonFramework/Swift
-  - FontAwesome.swift
   - GoogleMaps
   - GooglePlaces
 
 SPEC REPOS:
   trunk:
-    - ChameleonFramework
-    - FontAwesome.swift
     - GoogleMaps
     - GooglePlaces
 
 SPEC CHECKSUMS:
-  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
-  FontAwesome.swift: 2a3235131a6caffc6b2ccba318e94d793b2fd342
   GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
   GooglePlaces: d5f70c3e9e427964fdeca1301a665d276ccd8754
 
-PODFILE CHECKSUM: 134634fa156fb760f3b99ce0d5361b1b4c9b3e60
+PODFILE CHECKSUM: 5cf125c075ff47f8cd8904cd17b6194d831e05ad
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1

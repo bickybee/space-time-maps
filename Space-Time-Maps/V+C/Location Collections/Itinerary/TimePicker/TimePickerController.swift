@@ -21,7 +21,7 @@ class TimePickerController: UIViewController {
 
         // format picker
         picker.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        picker.subviews[0].subviews[2].isHidden = true
+        //picker.subviews[0].subviews[2].isHidden = true
         
     }
     

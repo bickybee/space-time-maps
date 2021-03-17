@@ -4,11 +4,10 @@ platform :ios, '12.4'
 target 'Space-Time-Maps' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+#  use_modular_headers!
 
   # Pods for Space-Time-Maps
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'ChameleonFramework/Swift'
-  pod 'FontAwesome.swift'
 
 end

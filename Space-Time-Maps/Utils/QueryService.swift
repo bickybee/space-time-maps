@@ -8,7 +8,6 @@
 
 import Foundation
 import GoogleMaps.GMSMutablePath
-import ChameleonFramework
 
 class QueryService {
         

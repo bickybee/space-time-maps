@@ -28,19 +28,7 @@ class MapUtils {
         NSAttributedString.Key.paragraphStyle: paragraphStyle,
         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20.0),
         NSAttributedString.Key.foregroundColor: UIColor.white
-    ]
-    
-    private static let markerStringAttr = [
-        NSAttributedString.Key.paragraphStyle: paragraphStyle,
-        NSAttributedString.Key.font: UIFont.fontAwesome(ofSize: 30.0, style: .solid),
-    ]
-    
-    private static let bgMarkerStringAttr = [
-        NSAttributedString.Key.paragraphStyle: paragraphStyle,
-        NSAttributedString.Key.font: UIFont.fontAwesome(ofSize: 40.0, style: .solid),
-    ]
-
-    
+    ]    
     // Weirdly separated dest vs. non-dest functions cuz of weird dumb implementation decisions elsewhere lol
     
     public static func markersForPlacesIn(_ placeGroups : [PlaceGroup], _ itinerary: Itinerary, _ dragging: [Place]) -> [GMSMarker] {
@@ -94,13 +82,11 @@ class MapUtils {
         let size = CGSize(width: 32, height: 32)
         UIGraphicsBeginImageContext(size)
         
-        
-        let attr = MapUtils.markerStringAttr.merging([NSAttributedString.Key.foregroundColor: color], uniquingKeysWith: {a, b in return a})
-        let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
+        let markerImg = UIImage.init(named: "map-marker")?.withTintColor(color)
         let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        markerStr.draw(in: rect)
-        numStr.draw(in: rect)
+        let rect = markerImg?.rectToMaintainAspectRatio(for: size)
+        markerImg?.draw(in:rect!)
+        numStr.draw(in: rect!)
         
         let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
@@ -110,19 +96,19 @@ class MapUtils {
     
     private static func numberedShadowedIcon(with color: UIColor, number: Int) -> UIImage {
         
-        let size = CGSize(width: 40, height: 40)
-        UIGraphicsBeginImageContext(size)
+        let outerSize = CGSize(width: 40, height: 40)
+        let innerSize = CGSize(width: 32, height: 32)
+        UIGraphicsBeginImageContext(outerSize)
         
-        let bgAttr = MapUtils.bgMarkerStringAttr.merging([NSAttributedString.Key.foregroundColor: color.withAlphaComponent(0.5)], uniquingKeysWith: {a, b in return a})
-        let attr = MapUtils.markerStringAttr.merging([NSAttributedString.Key.foregroundColor: color], uniquingKeysWith: {a, b in return a})
-        let bgMarkerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: bgAttr)
-        let markerStr = NSAttributedString(string:String.fontAwesomeIcon(name: .mapMarker), attributes: attr)
+        let bgMarkerImg = UIImage.init(named:"map-marker")?.withTintColor(color.withAlphaComponent(0.5));
+        let markerImg = UIImage.init(named: "map-marker")?.withTintColor(color)
         let numStr = NSAttributedString(string:(number).description, attributes: MapUtils.numStringAttr)
-        let bgRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let rect = CGRect(x: 4, y: 4, width: 32, height: 32)
-        bgMarkerStr.draw(in: bgRect)
-        markerStr.draw(in: rect)
-        numStr.draw(in: rect)
+        let bgRect = bgMarkerImg?.rectToMaintainAspectRatio(for: outerSize)
+        let rect = markerImg?.rectToMaintainAspectRatio(for: innerSize, offset: CGPoint(x: 4, y: 4))
+
+        bgMarkerImg?.draw(in: bgRect!)
+        markerImg?.draw(in: rect!)
+        numStr.draw(in: rect!)
         
         let newImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
