@@ -19,7 +19,10 @@ class MapViewController: UIViewController {
     var overlays = [GMSOverlay]()
     
     var markers = [GMSMarker]()
+    var polylines = [GMSPolyline]()
     var timeQueryMarker : GMSTimeMarker?
+    
+    var currentDraggingPlaces = [Place]()
     
     weak var delegate : MapViewControllerDelegate?
 
@@ -31,15 +34,15 @@ class MapViewController: UIViewController {
                                               longitude: defaultLocation.coordinate.longitude,
                                               zoom: defaultZoom)
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
-        mapView.settings.myLocationButton = true
+        mapView.settings.myLocationButton = false
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.isMyLocationEnabled = true
+        mapView.isMyLocationEnabled = false
         mapView.delegate = self
         mapView.setMinZoom(mapView.minZoom, maxZoom: Float(16.0))
         
         //Style map w/ json file
         do {
-            if let styleURL = Bundle.main.url(forResource: "style", withExtension: "json") {
+            if let styleURL = Bundle.main.url(forResource: "style2", withExtension: "json") {
                 mapView.mapStyle = try GMSMapStyle(contentsOfFileURL: styleURL)
             }
         } catch {
@@ -47,8 +50,9 @@ class MapViewController: UIViewController {
         }
         
         // Subscribe to location updates
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(onDidUpdateLocation(_:)), name: .didUpdateLocation, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDest), name: .didTapMarker, object: nil)
+        
         
         // Set our view to be the map
         view = mapView
@@ -72,14 +76,27 @@ class MapViewController: UIViewController {
         // Setup fresh map
         mapView.clear()
         // Wrap map to markers
-        markers = MapUtils.markersForPlacesIn(placeGroups, itinerary)
-        mapView.wrapBoundsTo(markers: markers)
-        
+        markers = MapUtils.markersForPlacesIn(placeGroups, itinerary, currentDraggingPlaces)
         let routeLegs = itinerary.route.legs
-        let polylines = MapUtils.polylinesForRouteLegs(routeLegs)
-//        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
+        polylines = MapUtils.polylinesForRouteLegs(routeLegs)
+        //        let ticks = MapUtils.ticksForRouteLegs(routeLegs)
         overlays = markers + polylines// + ticks
+        
+        mapView.wrapBoundsToInclude(markers: markers.filter({ $0.zIndex == 2 }))
+        
+        
+
         mapView.add(overlays: overlays)
+    }
+    
+    func fitToAllMarkers() {
+        fitTo(markers: markers)
+    }
+    
+    func fitTo(markers: [GMSMarker]) {
+        if let mapView = mapView {
+            mapView.wrapBoundsToInclude(markers: markers)
+        }
     }
     
     // Respond to notification updates by displaying current location on the map
@@ -97,7 +114,7 @@ class MapViewController: UIViewController {
 extension MapViewController : TimeQueryDelegate {
     func didMakeTimeQuery(time: TimeInterval, schedulable: Schedulable?) {
         if let dest = schedulable as? Destination {
-            // Update marker
+            // Update markerdeleg
             if let marker = timeQueryMarker {
                 marker.pos = dest.place.coordinate
                 marker.time = time

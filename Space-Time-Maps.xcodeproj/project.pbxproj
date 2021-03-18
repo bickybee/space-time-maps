@@ -9,7 +9,14 @@
 /* Begin PBXBuildFile section */
 		98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98127E6D23199DCD0030C44B /* OldGroupCell.swift */; };
 		98138C142389957C00928590 /* GMSTimeMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98138C132389957C00928590 /* GMSTimeMarker.swift */; };
+		9814765525F2B7F800E68711 /* colours.json in Resources */ = {isa = PBXBuildFile; fileRef = 9814765425F2B7F800E68711 /* colours.json */; };
+		9814765B25F2C77000E68711 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9814765A25F2C77000E68711 /* UIImageExtensions.swift */; };
 		9816BC4D2394D8160085F706 /* TimeTickUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9816BC4C2394D8160085F706 /* TimeTickUtil.swift */; };
+		9825C75A23AEC032001F422F /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C75923AEC032001F422F /* PopupViewController.swift */; };
+		9825C76023B26444001F422F /* TimePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9825C75F23B26444001F422F /* TimePicker.xib */; };
+		9825C76223B2664E001F422F /* TimePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76123B2664E001F422F /* TimePickerController.swift */; };
+		9825C76423B50BAC001F422F /* StartEndTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */; };
+		9825C76623B5118E001F422F /* DurationTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9825C76523B5118E001F422F /* DurationTimeViewController.swift */; };
 		982D5781231DEF8D00E183F3 /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */; };
 		982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D5786231EE5DE00E183F3 /* OneOfCell.swift */; };
 		982D579323203F8300E183F3 /* DestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982D579123203F8300E183F3 /* DestCell.swift */; };
@@ -25,6 +32,7 @@
 		987704292326AB62009E1A63 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987704282326AB62009E1A63 /* Route.swift */; };
 		987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987C1C1A234FA6B700FC3174 /* Combinatorics.swift */; };
 		988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */; };
+		98856743246136AF00F94146 /* style2.json in Resources */ = {isa = PBXBuildFile; fileRef = 98856742246136AF00F94146 /* style2.json */; };
 		989AF2B222F9BB65002CCFDD /* CollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */; };
 		98BC857A230C3A83001D14BE /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BC8579230C3A83001D14BE /* Timing.swift */; };
 		98CB07BC236F3E9500C7EC77 /* HoursCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CB07BB236F3E9500C7EC77 /* HoursCell.swift */; };
@@ -65,7 +73,6 @@
 		B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B222C7CB3200CE4301 /* Main.storyboard */; };
 		B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */; };
 		B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6B5A5B722C7CB3200CE4301 /* LaunchScreen.storyboard */; };
-		F69F7DD02504E3B472C7D600 /* Pods_Space_Time_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,7 +80,14 @@
 		5FB985707B28F33D9320070E /* Pods-Space-Time-Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space-Time-Maps.release.xcconfig"; path = "Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps.release.xcconfig"; sourceTree = "<group>"; };
 		98127E6D23199DCD0030C44B /* OldGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldGroupCell.swift; sourceTree = "<group>"; };
 		98138C132389957C00928590 /* GMSTimeMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSTimeMarker.swift; sourceTree = "<group>"; };
+		9814765425F2B7F800E68711 /* colours.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = colours.json; sourceTree = "<group>"; };
+		9814765A25F2C77000E68711 /* UIImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		9816BC4C2394D8160085F706 /* TimeTickUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTickUtil.swift; sourceTree = "<group>"; };
+		9825C75923AEC032001F422F /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
+		9825C75F23B26444001F422F /* TimePicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimePicker.xib; sourceTree = "<group>"; };
+		9825C76123B2664E001F422F /* TimePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerController.swift; sourceTree = "<group>"; };
+		9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartEndTimeViewController.swift; sourceTree = "<group>"; };
+		9825C76523B5118E001F422F /* DurationTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTimeViewController.swift; sourceTree = "<group>"; };
 		982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		982D5786231EE5DE00E183F3 /* OneOfCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneOfCell.swift; sourceTree = "<group>"; };
 		982D579123203F8300E183F3 /* DestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestCell.swift; sourceTree = "<group>"; };
@@ -89,6 +103,7 @@
 		987704282326AB62009E1A63 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		987C1C1A234FA6B700FC3174 /* Combinatorics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinatorics.swift; sourceTree = "<group>"; };
 		988530B6234E3A3E00B22888 /* PlaceEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceEditingViewController.swift; sourceTree = "<group>"; };
+		98856742246136AF00F94146 /* style2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = style2.json; sourceTree = "<group>"; };
 		989AF2B122F9BB65002CCFDD /* CollectionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtensions.swift; sourceTree = "<group>"; };
 		98BC8579230C3A83001D14BE /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
 		98CB07BB236F3E9500C7EC77 /* HoursCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoursCell.swift; sourceTree = "<group>"; };
@@ -131,7 +146,6 @@
 		B6B5A5B522C7CB3200CE4301 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6B5A5B822C7CB3200CE4301 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6B5A5BA22C7CB3200CE4301 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Space_Time_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,7 +153,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F69F7DD02504E3B472C7D600 /* Pods_Space_Time_Maps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,9 +162,20 @@
 		74535FECB825AF9AB1FE4B63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CBF0001802C5E60BDE065B49 /* Pods_Space_Time_Maps.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9825C75823AEBF33001F422F /* TimePicker */ = {
+			isa = PBXGroup;
+			children = (
+				9825C75F23B26444001F422F /* TimePicker.xib */,
+				9825C76123B2664E001F422F /* TimePickerController.swift */,
+				9825C75923AEC032001F422F /* PopupViewController.swift */,
+				9825C76323B50BAC001F422F /* StartEndTimeViewController.swift */,
+				9825C76523B5118E001F422F /* DurationTimeViewController.swift */,
+			);
+			path = TimePicker;
 			sourceTree = "<group>";
 		};
 		982D578A231EE5E300E183F3 /* Cells */ = {
@@ -197,6 +221,7 @@
 				98DEF0D22306405D003DE1CB /* TimeIntervalExtensions.swift */,
 				98DEF0C02305F6E9003DE1CB /* GMSMapViewExtensions.swift */,
 				982D5780231DEF8D00E183F3 /* UIKitExtensions.swift */,
+				9814765A25F2C77000E68711 /* UIImageExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -204,6 +229,7 @@
 		98BC856F230B71DC001D14BE /* Itinerary */ = {
 			isa = PBXGroup;
 			children = (
+				9825C75823AEBF33001F422F /* TimePicker */,
 				98ECFCC62361FEC80005046D /* Util */,
 				98ECFCC52361FEB20005046D /* Timeline */,
 				98ECFCC42361FEA60005046D /* Options */,
@@ -272,6 +298,8 @@
 			children = (
 				B6A625E322D7CFB40099D65C /* style.json */,
 				983F22C522EF87420012EF5C /* Keys.plist */,
+				98856742246136AF00F94146 /* style2.json */,
+				9814765425F2B7F800E68711 /* colours.json */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -387,7 +415,6 @@
 				B6B5A5A822C7CB3200CE4301 /* Frameworks */,
 				B6B5A5A922C7CB3200CE4301 /* Resources */,
 				908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */,
-				410D1C73C5FAB447C4B906D5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -405,7 +432,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = vicky;
 				TargetAttributes = {
 					B6B5A5AA22C7CB3200CE4301 = {
@@ -437,6 +464,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9814765525F2B7F800E68711 /* colours.json in Resources */,
+				9825C76023B26444001F422F /* TimePicker.xib in Resources */,
 				B6B5A5B922C7CB3200CE4301 /* LaunchScreen.storyboard in Resources */,
 				982D579423203F8300E183F3 /* DestCell.xib in Resources */,
 				B6B5A5B622C7CB3200CE4301 /* Assets.xcassets in Resources */,
@@ -446,6 +475,7 @@
 				982D579C2320AB3C00E183F3 /* RouteCell.xib in Resources */,
 				B6B5A5B422C7CB3200CE4301 /* Main.storyboard in Resources */,
 				983F22C622EF87420012EF5C /* Keys.plist in Resources */,
+				98856743246136AF00F94146 /* style2.json in Resources */,
 				982D5798232050C500E183F3 /* GroupCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,26 +483,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		410D1C73C5FAB447C4B906D5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
-				"${BUILT_PRODUCTS_DIR}/FontAwesome.swift/FontAwesome_swift.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FontAwesome_swift.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Space-Time-Maps/Pods-Space-Time-Maps-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		908F89946CE13221EFC34679 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -519,6 +529,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98D0D1DE2322F0B8004DC6DE /* PlaceCell.swift in Sources */,
+				9825C76423B50BAC001F422F /* StartEndTimeViewController.swift in Sources */,
 				98DEF0B423039788003DE1CB /* Utils.swift in Sources */,
 				98E9B9482308D1800032FBB7 /* Scheduler.swift in Sources */,
 				982D5797232050C500E183F3 /* GroupCell.swift in Sources */,
@@ -540,6 +551,7 @@
 				98DEBA6F230F69B600769BB5 /* GroupCreationViewController.swift in Sources */,
 				982D5788231EE5DE00E183F3 /* OneOfCell.swift in Sources */,
 				988530B7234E3A3E00B22888 /* PlaceEditingViewController.swift in Sources */,
+				9825C75A23AEC032001F422F /* PopupViewController.swift in Sources */,
 				98BC857A230C3A83001D14BE /* Timing.swift in Sources */,
 				982D579B2320AB3C00E183F3 /* RouteCell.swift in Sources */,
 				B62AFCBD22E5051400B7D2CD /* ParentViewController.swift in Sources */,
@@ -549,6 +561,7 @@
 				98DEF0A322FCA6C3003DE1CB /* TimelineView.swift in Sources */,
 				98ECFCBB2360BBE30005046D /* OptionsViewController.swift in Sources */,
 				98DEF0A122FC904B003DE1CB /* TimeConstraints.swift in Sources */,
+				9814765B25F2C77000E68711 /* UIImageExtensions.swift in Sources */,
 				B6B5A5AF22C7CB3200CE4301 /* AppDelegate.swift in Sources */,
 				987C1C1B234FA6B700FC3174 /* Combinatorics.swift in Sources */,
 				98E9B96C230B0B0E0032FBB7 /* PassThroughViews.swift in Sources */,
@@ -556,11 +569,13 @@
 				98DEF0BF2305F3E5003DE1CB /* MapUtils.swift in Sources */,
 				B62AFCB622E4D16400B7D2CD /* MapViewController.swift in Sources */,
 				98127E6E23199DCD0030C44B /* OldGroupCell.swift in Sources */,
+				9825C76223B2664E001F422F /* TimePickerController.swift in Sources */,
 				987704292326AB62009E1A63 /* Route.swift in Sources */,
 				98DEF0D72306661B003DE1CB /* ColorUtils.swift in Sources */,
 				98DEF0D32306405D003DE1CB /* TimeIntervalExtensions.swift in Sources */,
 				B6A625EC22DF93F20099D65C /* APIResponses.swift in Sources */,
 				98DEF0D523066372003DE1CB /* OldLegCell.swift in Sources */,
+				9825C76623B5118E001F422F /* DurationTimeViewController.swift in Sources */,
 				98ECFCC12361FCE40005046D /* TimelineUtils.swift in Sources */,
 				98E9B96A230AFE720032FBB7 /* TimelineViewController.swift in Sources */,
 				98DEF0B923046371003DE1CB /* DraggableCollectionViewController.swift in Sources */,
@@ -616,6 +631,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -641,7 +657,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -675,6 +691,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -694,7 +711,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -710,7 +727,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M72S49Y7HC;
 				INFOPLIST_FILE = "Space-Time-Maps/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vicky.Space-Time-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -727,7 +744,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M72S49Y7HC;
 				INFOPLIST_FILE = "Space-Time-Maps/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vicky.Space-Time-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -30,6 +30,7 @@ class ItineraryViewController: DraggableContentViewController {
     var optionView : UIView?
     var optionsVC = OptionsViewController()
 
+
     // Itinerary editing
     var editingSession : ItineraryEditingSession?
     var previousTouchHour : Double?
@@ -49,13 +50,18 @@ class ItineraryViewController: DraggableContentViewController {
         super.viewDidLoad()
         self.dragDelegate = self as DragDelegate
         self.dragDataDelegate = self as DragDataDelegate
-        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollToPlaceWithName), name: .didTapMarker, object: nil)
         
         setupServices()
         setupCollectionView()
         setupTimeline()
         setupTimeQuerySidebar()
     
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        // default start time
+        collectionView.setContentOffset(CGPoint(x: 0, y: 380.0), animated: false)
     }
     
     func setupServices() {
@@ -124,7 +130,6 @@ class ItineraryViewController: DraggableContentViewController {
         
         switch gesture.state {
         case .began:
-            print(roundedY)
             let frame = CGRect(x: 0, y: y - 2, width: view.frame.width, height: 4)
             timeQueryLine = UIView(frame: frame)
             timeQueryLine!.backgroundColor = UIColor.darkGray.withAlphaComponent(0.25)
@@ -153,7 +158,8 @@ class ItineraryViewController: DraggableContentViewController {
     }
     
     func updateSchedulerWithPlace(_ place: Place, in places: [Place]) {
-        scheduler.updateTimeDictWithPlace(place, in: places)
+        let placesMinusPlace = places.filter({ $0.placeID != place.placeID })
+        scheduler.updateTimeDictWithPlace(place, in: placesMinusPlace)
     }
     
     func updateScheduler(_ travelMode: TravelMode) {
@@ -194,9 +200,21 @@ class ItineraryViewController: DraggableContentViewController {
         
     }
     
+    func editBlockTiming(_ timing: Timing) {
+        guard let editingSession = editingSession else { return }
+        editingSession.changeBlockTiming(timing)
+    }
+    
+    func updateBlockPlaceDuration(_ placeIndex: Int, _ duration: TimeInterval) {
+        guard let editingSession = editingSession else { return }
+        editingSession.changeBlockPlaceDuration(placeIndex, duration)
+    }
+    
+    // not being used
     @objc func didTapDestination(_ sender: UITapGestureRecognizer) {
-        let placeName = itinerary.destinations[sender.view!.tag].place.name
-        NotificationCenter.default.post(name: .didTapDestination, object: placeName)
+        let index = sender.view!.tag
+        let block = itinerary.schedule[index] // only works for dests rn
+        NotificationCenter.default.post(name: .didTapDestination, object: (block, index))
     }
     
     @objc func scrollToPlaceWithName(_ notification: Notification) {
@@ -215,11 +233,33 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     func shouldShowHoursOfOperation() -> Bool {
-        return editingSession != nil
+        return editingSession != nil //false
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         timelineController.offset = collectionView.contentOffset.y
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        var obj : Any!
+        
+        if indexPath.section == 0 {
+            let blockIndex = indexOfBlockContainingDestination(at: indexPath.item)!
+            let block = itinerary.schedule[blockIndex]
+            if (block is SingleBlock) || (block is OneOfBlock) {
+                obj = (block, blockIndex)
+            } else {
+                let dest = itinerary.destinations[indexPath.item]
+                let placeIndex = block.places.firstIndex(where: {$0.name == dest.place.name})!
+                obj = (dest, placeIndex)
+            }
+            startEditingSession(withBlockAtIndex: blockIndex)
+        } else if indexPath.section == 2 {
+            obj = (itinerary.schedule[indexPath.item], indexPath.item)
+            startEditingSession(withBlockAtIndex: indexPath.item)
+        }
+        NotificationCenter.default.post(name: .didTapDestination, object: obj)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -270,6 +310,8 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     
+    
+    
 // MARK: - Cell setup
     func setupHoursCell(with indexPath: IndexPath) -> UICollectionViewCell {
         let movingBlock = editingSession!.movingBlock
@@ -290,18 +332,11 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             }
         }
         if (cell.gestureRecognizers == nil || cell.gestureRecognizers?.count == 0) {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDestination))
-            tapGesture.numberOfTapsRequired = 1
-            tapGesture.delegate = self
-            cell.addGestureRecognizer(tapGesture)
+//            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDestination))
+//            tapGesture.numberOfTapsRequired = 1
+//            tapGesture.delegate = self
+//            cell.addGestureRecognizer(tapGesture)
             let dragRecognizer = addDragRecognizerTo(draggable: cell)
-            
-            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDestination))
-            swipeGesture.direction = .up
-            swipeGesture.numberOfTouchesRequired = 1
-            swipeGesture.delegate = self
-            swipeGesture.require(toFail: dragRecognizer)
-            cell.addGestureRecognizer(swipeGesture)
             
         }
         cell.tag = index
@@ -311,7 +346,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     
     @objc func didSwipeDestination(_ gesture: UISwipeGestureRecognizer) {
-        print("swipe!")
+        //do nothing
     }
     
     func setupLegCell(with indexPath: IndexPath) -> UICollectionViewCell {
@@ -377,7 +412,6 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         optionsVC.view.frame = CGRect(x: 0, y: 0, width: newOptionView.frame.width, height: newOptionView.frame.height)
         optionsVC.delegate = self
         optionsVC.blockIndex = blockIndex
-        optionsVC.selectedOption = block.selectedOption!
         optionsVC.hourHeight = timelineController.hourHeight
         optionsVC.timelineOffset = -(startTime)
         optionsVC.view.backgroundColor = .clear
@@ -387,6 +421,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
             let itineraries = itinerariesFromOptionsBlockIndex(blockIndex)
             optionsVC.itineraries = itineraries
         }
+        optionsVC.setSelectedOption(block.selectedOption!)
         
         addChild(optionsVC)
         newOptionView.addSubview(optionsVC.view)
@@ -396,7 +431,7 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         
     }
     
-    func itinerariesFromOptionsBlockIndex(_ blockIndex: Int) -> [Itinerary] {
+    func itinerariesFromOptionsBlockIndex(_ blockIndex: Int) -> [(Itinerary, Int)] {
         guard let block = itinerary.schedule[blockIndex] as? OptionBlock else { return [] }
         var destinationOptions : [[Destination]]!
         if block is OneOfBlock {
@@ -404,10 +439,10 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
         } else if let asManyOf = block as? AsManyOfBlock{
             destinationOptions = asManyOf.scheduledOptions!
         }
-        var itineraries = [Itinerary]()
+        var itinerariesIndices = [(Itinerary, Int)]()
         let dispatchGroup = DispatchGroup()
         
-        for o in destinationOptions {
+        for (i, o) in destinationOptions.enumerated() {
 
             dispatchGroup.enter()
             var newItineraryBlocks: [ScheduleBlock] = o.map({ SingleBlock(timing: $0.timing, place: $0.place) })
@@ -431,13 +466,14 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
                     itinerary.schedule = schedule
                 }
                 if let route = route { itinerary.route = route }
-                itineraries.append(itinerary)
+                itinerariesIndices.append((itinerary, i))
                 dispatchGroup.leave()
             }
         }
         
         dispatchGroup.wait()
-        return itineraries
+        itinerariesIndices.sort(by: {$0.0.route.travelTime < $1.0.route.travelTime} )
+        return itinerariesIndices
         
     }
 
@@ -446,31 +482,44 @@ extension ItineraryViewController : UICollectionViewDelegateFlowLayout, UICollec
 // MARK: - PlacePalette Drag Delegate
 // Coordinates dragging/dropping from the place palette to the itinerary
 extension ItineraryViewController : DragDelegate {
+    
+    func startEditingSession(withNewBlock block: ScheduleBlock) {
+        let editingBlocks = itinerary.schedule
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: nil, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+    
+    func startEditingSession(withBlockAtIndex index: Int) {
+        let block = itinerary.schedule[index]
+        var editingBlocks = itinerary.schedule
+        editingBlocks.remove(at: index)
+        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
+    }
+    
+    func endEditingSession() {
+        editingSession = nil
+        collectionView.reloadData()
+    }
+    
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, shouldScrollInDirection direction: Int) {
-        print("boop")
     }
     
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didBeginDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         guard let block = blockFromObject(object) else { return }
-        var editingBlocks = itinerary.schedule
-        var index : Int?
-        
+
         if draggableContentViewController is ItineraryViewController {
-            print(indexPath.item)
-            index = indexPath.item
-            editingBlocks.remove(at: indexPath.item)
-            //FIX: crashing when moving singleblocks among other kinds of blocks
-            
+            startEditingSession(withBlockAtIndex: indexPath.item)
+        } else {
+            startEditingSession(withNewBlock: block)
         }
         
-        editingSession = ItineraryEditingSession(scheduler: scheduler, movingBlock: block, withIndex: index, inBlocks: editingBlocks, travelMode: itinerary.travelMode, callback: didEditItinerary)
-        timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: collectionView.frame, afterScreenUpdates: true)))
+        let snapshotFrame = CGRect(x: 0, y: collectionView.contentOffset.y, width: collectionView.frame.width, height: collectionView.frame.height)
+        timelineController.addShadowView(from: UIColor.init(patternImage: collectionView.snapshot(of: snapshotFrame, afterScreenUpdates: true)), withFrame: snapshotFrame)
         collectionView.reloadData()
     }
     
-    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
+    func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer, andDiff diff: CGPoint) {
 
         // Get place for corresponding time of touch
         guard let editingSession = editingSession else { return }
@@ -486,7 +535,8 @@ extension ItineraryViewController : DragDelegate {
         } else {
             // Or move cell
             let y = gesture.location(in: view).y
-            let hour = timelineController.roundedHourInTimeline(forY: y)
+            let dy = y + diff.y
+            let hour = timelineController.roundedHourInTimeline(forY: dy)
             if hour != previousTouchHour {
                 editingSession.moveBlock(toTime: TimeInterval.from(hours: hour))
                 previousTouchHour = hour
@@ -497,23 +547,23 @@ extension ItineraryViewController : DragDelegate {
         collectionView.layoutIfNeeded()
         var totalNumCells = 0
         // Excluding hours of op cells...
-        for i in 0..<collectionView.numberOfSections - 1 {
-            totalNumCells += collectionView.numberOfItems(inSection: i)
-        }
-        var visibleCells = collectionView.indexPathsForVisibleItems.filter{ $0.section != 4}
-        if visibleCells.count < totalNumCells {
-            print("should zoom")
-        }
+//        for i in 0..<collectionView.numberOfSections - 1 {
+//            totalNumCells += collectionView.numberOfItems(inSection: i)
+//        }
+//        var visibleCells = collectionView.indexPathsForVisibleItems.filter{ $0.section != 4}
+//        if visibleCells.count < totalNumCells {
+//            print("should zoom")
+//        }
     }
     
     func draggableContentViewController(_ draggableContentViewController: DraggableContentViewController, didEndDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
         
         timelineController.removeShadow()
         timelineController.view.layoutIfNeeded()
-        editingSession = nil
         previousTouchHour = nil
         collectionView.reloadData()
-
+        
+        endEditingSession()
         
       // lol testing time tick isochrone stuff
         for leg in itinerary.route.legs {
@@ -530,7 +580,6 @@ extension ItineraryViewController : DragDelegate {
                         return
                       }
                       self.delegate?.itineraryViewController(self, didUpdateItinerary: self.itinerary)
-                        print("done")
                     }
                   
               }
@@ -544,6 +593,80 @@ extension ItineraryViewController : DragDelegate {
         
         return collectionView.cellForItem(at: indexPath)
         
+    }
+    
+    func removePlace(_ place: Place, in groups:[PlaceGroup]) {
+        // remove in singleblocks
+        itinerary.schedule.removeAll(where: { block in
+            if let single = block as? SingleBlock {
+                return single.place.placeID == place.placeID
+            }
+            return false
+        })
+        // remove in optionblocks
+        for group in groups {
+            if let i = itinerary.schedule.firstIndex(where: {
+                if let ob = $0 as? OptionBlock {
+                    return ob.placeGroup.id == group.id
+                }
+                return false
+            }) {
+                if let oob = itinerary.schedule[i] as? OneOfBlock {
+                    itinerary.schedule[i] = OneOfBlock(placeGroup: group, timing: oob.timing)
+                } else if let a = itinerary.schedule[i] as? AsManyOfBlock {
+                    itinerary.schedule[i] = AsManyOfBlock(placeGroup: group, timing: a.timing, timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                }
+            }
+        }
+        scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
+    }
+    
+    func removedGroupFrom(_ groups:[PlaceGroup]) {
+        
+        // remove deleted group
+        let groupIDs = groups.map({ $0.id })
+        if let removedGroupBlockInd = itinerary.schedule.firstIndex(where: { block in
+            if let ob = block as? OptionBlock {
+                return !groupIDs.contains(ob.placeGroup.id)
+            }
+            return false
+        }) {
+            let group = itinerary.schedule[removedGroupBlockInd] as! OptionBlock
+            itinerary.schedule.remove(at: removedGroupBlockInd)
+            // remove singleBlocks that came from group
+            for place in group.places {
+                itinerary.schedule.removeAll(where: { block in
+                    if let single = block as? SingleBlock {
+                        return single.place.placeID == place.placeID
+                    }
+                    return false
+                })
+            }
+            
+            scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
+        }
+        
+    }
+    
+    func updatePlaceGroups(_ groups:[PlaceGroup]) {
+        
+        
+        
+        for group in groups {
+            if let i = itinerary.schedule.firstIndex(where: {
+                if let ob = $0 as? OptionBlock {
+                    return ob.placeGroup.id == group.id
+                }
+                return false
+            }) {
+                if let oob = itinerary.schedule[i] as? OneOfBlock {
+                    itinerary.schedule[i] = OneOfBlock(placeGroup: group, timing: oob.timing)
+                } else if let a = itinerary.schedule[i] as? AsManyOfBlock {
+                    itinerary.schedule[i] = AsManyOfBlock(placeGroup: group, timing: a.timing, timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                }
+            }
+        }
+        scheduler.reschedule(blocks: itinerary.schedule, movingIndex: 0, callback: didEditItinerary(blocks:route:))
     }
     
     func didEditItinerary(blocks: [ScheduleBlock]?, route: Route?) {
@@ -575,7 +698,7 @@ extension ItineraryViewController : DragDelegate {
             } else if let group = object as? PlaceGroup {
                 switch group.kind {
                 case .asManyOf:
-                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2)), timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
+                    return AsManyOfBlock(placeGroup: group, timing: Timing(start: 0, duration: TimeInterval.from(hours: 2.5)), timeDict: scheduler.timeDict, travelMode: scheduler.travelMode)
                 case .oneOf,
                      .none:
                     return  OneOfBlock(placeGroup: group, timing: Timing(start: 0, duration: defaultDuration))
@@ -747,6 +870,9 @@ extension ItineraryViewController: GroupButtonsDelegate {
     
     func didPressOptionsOnGroupCell(_ cell: GroupCell) {
         let blockIndex = cell.tag
+        if optionView != nil {
+            shouldDismissOptionsViewController(optionsVC)
+        }
         guard let newView = setupOptionViewForBlockIndex(blockIndex) else { return }
         collectionView.addSubview(newView)
         optionView = newView

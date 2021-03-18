@@ -34,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             GMSPlacesClient.provideAPIKey(iosKey!)
         }
         
+        // turn off autolayout warnings
+        UserDefaults.standard.setValue(false, forKey:"UICollectionViewFlowLayoutBreakForInvalidSizes")
+
         return true
     }
     

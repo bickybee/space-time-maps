@@ -34,11 +34,10 @@ class GroupHeaderView: UICollectionReusableView {
         self.layer.shadowRadius = 0;
         self.layer.shadowOpacity = 0.5;
         
-        editBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        editBtn.setTitle(String.fontAwesomeIcon(name: .edit), for: .normal)
-        
-        deleteBtn.titleLabel?.font = UIFont.fontAwesome(ofSize: 15.0, style: .solid)
-        deleteBtn.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
+        editBtn.setImage(UIImage.init(named:"edit"), for: .normal);
+        editBtn.tintColor = UIColor.gray;
+        deleteBtn.setImage(UIImage.init(named:"trash"), for: .normal);
+        deleteBtn.tintColor = UIColor.gray;
     }
     
     override func layoutSubviews() {

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ChameleonFramework
 
 class RouteCell: UICollectionViewCell {
 
@@ -68,12 +67,12 @@ class RouteCell: UICollectionViewCell {
         let x : CGFloat = 0
         let y = (CGFloat(timing.duration.inHours()) * hourHeight - height) / 2.0
         let frame = CGRect(x: x, y: y, width: width, height: height)
-        let colors = GradientColor(.topToBottom, frame: frame, colors: gradient)
+        let colors = ColorUtils.colorWithGradient(frame: frame, colors: gradient)
         
 //        topBorder.frame = CGRect(x: x, y: y, width: width, height: 2.0)
 //        bottomBorder.frame = CGRect(x: x, y: y + height, width: width, height: 2.0)
         durationLine.frame = frame
-        durationLine.backgroundColor = colors
+        durationLine.backgroundColor = colors ?? gradient[0]
         
         let timeString = Utils.secondsToRelativeTimeString(seconds: duration)
         timeLabel.text = timeString

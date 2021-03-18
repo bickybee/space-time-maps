@@ -80,14 +80,27 @@ class PlacePaletteViewController: DraggableContentViewController {
     }
     
     func setupPlaces() {
+
+        //groups.append(contentsOf: Utils.taskPlaceGroups)
+//        groups.append(contentsOf: Utils.demoPlaces)
+//        groups.append(contentsOf: Utils.tutorialPlaceGroups1)
+        groups.append(contentsOf: Utils.tutorialPlaceGroups2)
+        //groups.append(contentsOf: Utils.amsterdamPlaceGroups)
+//        groups.append(PlaceGroup(name:"default", places: [], kind: .none, id: UUID()))
         
-//        let defaultPlaceGroups = Utils.defaultPlacesGroups()//[PlaceGroup(name: "places", places: [], kind: .none)]
-//        groups.append(contentsOf: defaultPlaceGroups)
-        groups.append(PlaceGroup(name:"default", places: [], kind: .none))
         
     }
     
     @IBAction func searchClicked(_ sender: Any) {
+        let numPlaces = groups.reduce(0, { x, y in
+            x + y.count
+        })
+        if numPlaces >= 20 {
+            let alert = UIAlertController()
+            alert.message = "You cannot add any more places unless you delete some. No more than 20 places are supported at once."
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         presentAutocompleteController()
     }
     
@@ -113,6 +126,11 @@ class PlacePaletteViewController: DraggableContentViewController {
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+    }
+    
     @objc func enlargePressed(_ sender: Any) {
         delegate?.placePaletteViewController(self, didPressEdit: sender)
     }
@@ -127,10 +145,11 @@ extension PlacePaletteViewController: GroupCreationDelegate {
             editedGroup.name = name
             editedGroup.kind = kind
             collectionView.reloadData()
+            groupToEdit = nil
         } else {
             collectionView.performBatchUpdates({
                 
-                let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind)
+                let newGroup = PlaceGroup(name: name, places: [Place](), kind: kind, id: UUID())
                 collectionView.insertSections(IndexSet(integer: groups.endIndex))
                 groups.append(newGroup)
                 
@@ -153,6 +172,7 @@ extension PlacePaletteViewController: GroupCreationDelegate {
    
             collectionView.deleteSections(IndexSet(integer: index))
             groups.remove(at: index)
+            delegate?.placePaletteViewController(self, didRemoveGroupfromGroups: groups)
             
         }, completion: { success in
             self.collectionView.reloadData()
@@ -224,15 +244,7 @@ extension PlacePaletteViewController : UICollectionViewDelegateFlowLayout, UICol
         let place = group[indexPath.item]
         return placeCellFrom(cell, place)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("select")
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("deselect")
-    }
-    
+
     func placeholderCellFrom(_ cell: PlaceCell) -> PlaceCell {
         cell.contentView.alpha = 0.0
         cell.backgroundColor = .clear
@@ -387,7 +399,7 @@ extension PlacePaletteViewController: DragDelegate {
         collectionView.reloadData()
     }
     
-    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer) {
+    func draggableContentViewController( _ draggableContentViewController: DraggableContentViewController, didContinueDragging object: Any, at indexPath: IndexPath, withGesture gesture: UILongPressGestureRecognizer, andDiff diff: CGPoint) {
         
         guard let place = object as? Place else { return }
         guard var insertAt = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { return }
@@ -412,6 +424,7 @@ extension PlacePaletteViewController: DragDelegate {
         let reloadIndexPath = draggingIndexPath!
         draggingIndexPath = nil
         collectionView.reloadItems(at: [reloadIndexPath])
+        delegate?.placePaletteViewController(self, didUpdatePlaces: groups)
         
     }
     
@@ -467,6 +480,28 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         groups[0].append(newPlace)
         collectionView.reloadData()
         delegate?.placePaletteViewController(self, didAddPlace: newPlace, toGroups: groups)
+        
+        print(newPlace)
+        
+        let alert = UIAlertController(title: "Added!", message: "", preferredStyle: .alert)
+        viewController.present(alert, animated: true, completion: nil)
+
+        // delays execution of code to dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+          alert.dismiss(animated: true, completion: nil)
+        })
+        
+        let numPlaces = groups.reduce(0, { x, y in
+            x + y.count
+        })
+        if numPlaces >= 20 {
+            viewController.dismiss(animated: true, completion: {
+                let alert = UIAlertController()
+                alert.message = "You cannot add any more places unless you delete some. No more than 20 places are supported at once."
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
     }
     
     func openHoursTimingFromGMSOpeningHours(_ hours: GMSOpeningHours?) -> Timing? {
@@ -488,8 +523,7 @@ extension PlacePaletteViewController: GMSAutocompleteViewControllerDelegate {
         
         // otherwise
         for period in periods {
-            print(period.openEvent.day)
-            print(period.openEvent.day.rawValue)
+
             if Int(period.openEvent.day.rawValue) == weekday {
                 let openTime = period.openEvent.time
                 startTime = TimeInterval.from(hours: Int(openTime.hour)) + TimeInterval.from(minutes: Int(openTime.minute))
@@ -535,6 +569,7 @@ protocol PlacePaletteViewControllerDelegate : AnyObject {
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup])
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any)
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemoveGroupfromGroups groups: [PlaceGroup])
     
 }
 

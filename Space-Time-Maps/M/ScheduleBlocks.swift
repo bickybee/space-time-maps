@@ -161,7 +161,11 @@ class AsManyOfBlock : OptionBlock {
     
     var selectedOption: Int?
     var destinations: [Destination] {
-        return selectedOption != nil && scheduledOptions != nil ? scheduledOptions![selectedOption!] : []
+        if let options = scheduledOptions, let selectedInd = selectedOption {
+            return options[safe: selectedInd] ?? []
+        } else {
+            return []
+        }
     }
     var optionCount: Int {
         return scheduledOptions?.count ?? 0
@@ -232,6 +236,7 @@ class AsManyOfBlock : OptionBlock {
     // Find out which combination of places actually fits in the overall timeblock
     func setPermutationsUsing(_ timeDict: TimeDict, _ travelMode: TravelMode) {
         
+        guard placeGroup.count > 0 else { return }
         // Keep track of valid terms and their total times
         
         // First try permutations that include ALL places, then decrease number of places (subset size) if none fit, etc.
@@ -257,7 +262,7 @@ class AsManyOfBlock : OptionBlock {
                     // Time spent getting from this place to the next
                     if (i < perm.count - 1) {
                         let nextPlace = placeGroup[perm[i + 1]]
-                        timeNeeded += timeDict[PlacePair(startID: place.placeID, endID: nextPlace.placeID, travelMode: travelMode)]!
+                        timeNeeded += timeDict.timeFrom(place, to: nextPlace, travellingBy: travelMode) //CRASHES
                     }
                 }
                 

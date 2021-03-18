@@ -17,6 +17,7 @@ extension GMSMapView {
         overlays.forEach( { $0.map = self } )
     }
     
+    // wraps exactly
     func wrapBoundsTo(markers: [GMSMarker]) -> GMSCoordinateBounds {
         
         var bounds = GMSCoordinateBounds()
@@ -24,6 +25,35 @@ extension GMSMapView {
             bounds = bounds.includingCoordinate(marker.position)
         }
         let update = GMSCameraUpdate.fit(bounds, withPadding: 60)
+        self.animate(with: update)
+        
+        return bounds
+        
+    }
+    
+    // only wraps if markers are not already all visible
+    func wrapBoundsToInclude(markers: [GMSMarker]) -> GMSCoordinateBounds {
+        
+        let currentBounds = GMSCoordinateBounds(region: self.projection.visibleRegion())
+        
+        var containsMarkers = true
+        for marker in markers {
+            if !currentBounds.contains(marker.position) {
+                containsMarkers = false
+                break
+            }
+        }
+        
+        if containsMarkers {
+            return currentBounds
+        }
+        
+        var bounds = GMSCoordinateBounds()
+        for marker in markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        
+        let update = GMSCameraUpdate.fit(bounds, withPadding: 20)
         self.animate(with: update)
         
         return bounds

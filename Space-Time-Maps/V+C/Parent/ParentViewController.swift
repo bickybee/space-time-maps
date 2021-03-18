@@ -19,29 +19,62 @@ class ParentViewController: UIViewController {
     var itineraryController : ItineraryViewController!
     var mapController : MapViewController!
     
+    var timePickerController : PopupViewController?
+    
     @IBOutlet weak var paletteContainer: UIView!
     @IBOutlet weak var itineraryContainer: UIView!
     
     // UI outlets
-    @IBOutlet weak var totalTimeLabel: UILabel!
+    
+    @IBOutlet weak var endTimeLabel: UILabel!
+    @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var travelTimeLabel: UILabel!
     @IBOutlet weak var transportModePicker: UISegmentedControl!
     @IBOutlet weak var paletteSmallWidth: NSLayoutConstraint!
     @IBOutlet weak var paletteBigWidth: NSLayoutConstraint!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        travelTimeLabel.adjustsFontSizeToFitWidth = true
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchObject)))
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidStartContentDrag), name: .didStartContentDrag, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidEndContentDrag), name: .didEndContentDrag, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidTapDestination), name: .didTapDestination, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(onDidContinueContentDrag), name: .didContinueContentDrag, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
-        updateMap()
-        print("layout subviews")
         if !initialPlacesLoaded {
             itineraryController.updateScheduler(placePaletteController.groups.flatMap({$0.places}), nil)
+            updateMap()
+            fitMapToAllMarkers()
             initialPlacesLoaded = true
         }
     }
+    
+    @objc func onDidStartContentDrag(_ notification: Notification) {
+        var places = [Place]()
+        if let block = notification.object as? ScheduleBlock {
+            places = block.places
+        } else if let place = notification.object as? Place {
+            places = [place]
+        } else if let placeGroup = notification.object as? PlaceGroup {
+            places = placeGroup.places
+        }
+        
+        mapController!.currentDraggingPlaces = places
+        updateMap()
+    }
+    
+    @objc func onDidEndContentDrag(_ notification: Notification) {
+        mapController!.currentDraggingPlaces = []
+        updateMap()
+    }
+    
+//    @objc func onDidContinueContentDrag(_ notification: Notification) {
+//        mapController!.currentDraggingPlaces = []
+//    }
     
     // Pass pinches down to itinerary
     @objc func pinchObject(_ gesture: UIPinchGestureRecognizer) {
@@ -90,6 +123,7 @@ class ParentViewController: UIViewController {
                 self.paletteBigWidth.priority = .defaultHigh + 1
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
+                palette.enlargeButton.setTitle("done", for: .normal)
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
                 
@@ -107,6 +141,7 @@ class ParentViewController: UIViewController {
                 self.paletteBigWidth.priority = .defaultHigh - 1
                 palette.groupButton.toggle()
                 palette.searchButton.toggle()
+                palette.enlargeButton.setTitle("edit ", for: .normal)
                 self.view.layoutIfNeeded()
                 palette.collectionView.reloadData()
                 
@@ -116,6 +151,82 @@ class ParentViewController: UIViewController {
             palette.dragDelegate = self.itineraryController
         }
     
+    }
+    
+    @objc func onDidTapDestination(_ notification: Notification) {
+        
+        guard let obj = notification.object as? (Schedulable, Int) else { return }
+        
+        let schedulable = obj.0
+        let index = obj.1
+
+        timePickerController?.dismiss(animated: false, completion: {})
+        timePickerController?.removeFromParent()
+        timePickerController?.view.removeFromSuperview()
+
+        showTimePickerForSchedulable(schedulable, at: index)
+    
+    }
+    
+    func showTimePickerForSchedulable(_ schedulable: Schedulable, at index: Int) {
+        if let block = schedulable as? ScheduleBlock {
+            showTimePickerForBlock(block, at: index)
+        } else if let dest = schedulable as? Destination{
+            showTimePickerForDestination(dest, inBlockIndex: index)
+        }
+    }
+    
+    func showTimePickerForDestination(_ dest: Destination, inBlockIndex index: Int) {
+        let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
+        let timePickerVC = DurationTimeViewController(dest)
+        timePickerVC.view.frame = frame
+        timePickerVC.onUpdatedDurationBlock = { duration in
+            self.itineraryController.updateBlockPlaceDuration(index, duration)
+        }
+        timePickerVC.onDoneBlock = {
+            
+            UIView.animate(withDuration: 0.25, animations: {
+                timePickerVC.view.alpha = 0.0
+            }, completion: { success in
+                timePickerVC.dismiss(animated: false, completion: {
+                    self.timePickerController = nil
+                })
+            })
+            
+            self.placePaletteController.collectionView.reloadData()
+            self.itineraryController.endEditingSession()
+        }
+        
+        addChild(timePickerVC)
+        view.addSubview(timePickerVC.view)
+        timePickerVC.didMove(toParent: self)
+        
+        timePickerController = timePickerVC
+    }
+    
+    func showTimePickerForBlock(_ block: ScheduleBlock, at index: Int) {
+        
+        let frame = mapController.mapView.frame.insetBy(dx: 50, dy: 20).offsetBy(dx: 0, dy: 80)
+        let timePickerVC = StartEndTimeViewController(block)
+        timePickerVC.view.frame = frame
+        timePickerVC.onUpdatedTimingBlock = itineraryController.editBlockTiming
+        timePickerVC.onDoneBlock = {
+            
+            UIView.animate(withDuration: 0.25, animations: {
+                timePickerVC.view.alpha = 0.0
+            }, completion: { success in
+                timePickerVC.dismiss(animated: false, completion: {})
+            })
+            
+            self.placePaletteController.collectionView.reloadData()
+            self.itineraryController.endEditingSession()
+        }
+        
+        addChild(timePickerVC)
+        view.addSubview(timePickerVC.view)
+        timePickerVC.didMove(toParent: self)
+        
+        timePickerController = timePickerVC
     }
     
     // Package itinerary and place data to send to map for rendering
@@ -133,16 +244,29 @@ class ParentViewController: UIViewController {
 
     }
     
+    func fitMapToAllMarkers() {
+        mapController.fitToAllMarkers()
+    }
+    
     func updateTransportTimeLabel() {
-        let duration = itineraryController.itinerary.duration
+        let startTime = itineraryController.itinerary.startTime
+        let endTime = itineraryController.itinerary.endTime
         let travelTime = itineraryController.itinerary.route.travelTime
         
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .abbreviated
+        let formatter2 = DateFormatter()
+        formatter2.dateFormat = "hh:mma"
         
-        totalTimeLabel.text = formatter.string(from: TimeInterval(duration))!
-        travelTimeLabel.text = formatter.string(from: TimeInterval(travelTime))!
+        var startText = "00:00AM"
+        var endText = "00:00AM"
+        if let startTime = startTime {
+            startText = formatter2.string(from: startTime)
+        }
+        if let endTime = endTime {
+            endText = formatter2.string(from: endTime)
+        }
+        startTimeLabel.text = startText
+        endTimeLabel.text = endText
+        travelTimeLabel.text = Utils.secondsToRelativeTimeString(seconds: travelTime)
 
 
     }
@@ -175,6 +299,7 @@ class ParentViewController: UIViewController {
             mapVC.delegate = self
             mapController = mapVC
             updateMap()
+            fitMapToAllMarkers()
             
         }
     }
@@ -184,27 +309,28 @@ class ParentViewController: UIViewController {
 
 extension ParentViewController : PlacePaletteViewControllerDelegate {
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didAddPlace place: Place, toGroups groups: [PlaceGroup]) {
-        print("add place")
         updateMap()
         let places = groups.flatMap({ $0.places })
         itineraryController.updateSchedulerWithPlace(place, in: places)
     }
     
-    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups: [PlaceGroup]) {
-        print("removed places")
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemovePlace place: Place, fromGroups groups: [PlaceGroup]) {
         updateMap()
+        itineraryController.removePlace(place, in: groups)
     }
     
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didUpdatePlaces groups: [PlaceGroup]) {
-        print("update places")
-        updateMap()
-        let places = groups.flatMap({ $0.places })
-        itineraryController.updateScheduler(places, nil)
+        itineraryController.updatePlaceGroups(groups)
     }
     
     func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didPressEdit sender: Any) {
         swipeOutPalette(sender)
+    }
+    
+    func placePaletteViewController(_ placePaletteViewController: PlacePaletteViewController, didRemoveGroupfromGroups groups: [PlaceGroup]) {
+        updateMap()
+        itineraryController.removedGroupFrom(groups)
     }
     
 }

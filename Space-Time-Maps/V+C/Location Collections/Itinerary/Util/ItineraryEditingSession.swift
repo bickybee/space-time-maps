@@ -31,7 +31,7 @@ class ItineraryEditingSession: NSObject {
     init(scheduler: Scheduler, movingBlock block: ScheduleBlock, withIndex index: Int?, inBlocks blocks: [ScheduleBlock], travelMode: TravelMode, callback: @escaping ([ScheduleBlock]?, Route?) -> ()) {
         self.movingBlock = block
         self.baseBlocks = blocks
-        self.baseBlocks.sort(by: { $0.timing.start <= $1.timing.start })
+        self.baseBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
         self.originalBaseBlocks = self.baseBlocks.map{ $0.copy() }
         
         self.travelMode = travelMode
@@ -49,65 +49,58 @@ class ItineraryEditingSession: NSObject {
         var movedBlock = movingBlock.copy()
         movedBlock.timing.start = time - movedBlock.timing.duration / 2
         movedBlock.timing.end = time + movedBlock.timing.duration / 2
-        let closedHoursIntersections = intersectsClosedHours(movedBlock)
-        
-        // If we're about to hit another block or hit closed hours for a singleBlock, just stay put...
-//        if intersectsOtherBlocks(movedBlock) || (movedBlock is SingleBlock && closedHoursIntersections[0] > 0) {
-//            if let position = lastPosition {
-//                var modifiedBlocks = baseBlocks
-//                modifiedBlocks.insert(movingBlock, at: position)
-//                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
-//            } else {
-//                removeBlock()
-//            }
-//
-//        } else {
-        
-            // Create new schedule
-            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
-            var insertAt = modifiedBlocks.endIndex
-            for (i, block) in modifiedBlocks.enumerated() {
-                
-                if block.timing.start >= movedBlock.timing.start {
-                    insertAt = i
-                    break
-                }
-                
+
+        // Create new schedule
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        var insertAt = modifiedBlocks.endIndex
+        for (i, block) in modifiedBlocks.enumerated() {
+            let otherMiddle = block.timing.middle()
+            let movingMiddle = movedBlock.timing.middle()
+            if block.timing.middle() >= movedBlock.timing.middle() {
+                insertAt = i
+                break
             }
             
-            // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
-            let changedOrder = true//(insertAt != lastPosition)
-            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
-            overlapsClosedHoursOfPlaces = closedHoursIntersections
-            modifiedBlocks.insert(movedBlock, at: insertAt)
-            movingBlock = movedBlock
-            lastPosition = insertAt
-            
-            // Callback to check intersections with route legs after new route is created lol
-//            let theCallback : ([ScheduleBlock]?, Route?) -> () = { blocks, route in
-//                if let route = route {
-//                    if self.intersectsLegs(movedBlock, in: route), let lastPosition = self.lastPosition {
-//                        var modifiedBlocks = self.baseBlocks
-//                        modifiedBlocks.insert(self.movingBlock, at: lastPosition)
-//                        self.callback(modifiedBlocks, route)
-//                    } else {
-//                        self.movingBlock = movedBlock
-//                        self.lastPosition = insertAt
-//                        self.callback(blocks, route)
-//                    }
-//                }
-//            }
+        }
+        
+        // A changed block order /or/ a change in overlaps with closed hours requires a full reschedule.
+        let changedOrder = true//(insertAt != lastPosition)
+//            let changedClosedHoursIntersections = closedHoursIntersections != overlapsClosedHoursOfPlaces
+//            overlapsClosedHoursOfPlaces = closedHoursIntersections
+        modifiedBlocks.insert(movedBlock, at: insertAt)
+        movingBlock = movedBlock
+        lastPosition = insertAt
 
-            if changedOrder || changedClosedHoursIntersections {
-                print("reschedule")
+        if changedOrder {//|| changedClosedHoursIntersections {
                 scheduler.reschedule(blocks: modifiedBlocks, movingIndex: insertAt, callback: callback)
+                
             } else { // Otherwise just shift, no reschedule
-                print("shift")
-                scheduler.scheduleShift(blocks: modifiedBlocks, callback: callback)
+                scheduler.scheduleShift(blocks: modifiedBlocks, movingBlockIndex: insertAt, callback: callback)
             }
 //        }
         
         
+    }
+    
+    func changeBlockTiming(_ timing: Timing) {
+        movingBlock.timing = timing
+        
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
+        
+        scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
+    }
+    
+    func changeBlockPlaceDuration(_ placeIndex: Int, _ duration: TimeInterval) {
+        
+        movingBlock.places[placeIndex].timeSpent = duration
+        
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
+        
+        scheduler.reschedule(blocks: modifiedBlocks, movingIndex: lastPosition!, callback: callback)
     }
     
     
@@ -119,16 +112,11 @@ class ItineraryEditingSession: NSObject {
         movingBlock.timing.duration = duration
         movingBlock.timing.end = movingBlock.timing.start + movingBlock.timing.duration
         
-        if intersectsOtherBlocks(movingBlock) {
-            removeBlock()
-        } else {
-            // Compute new route with modifications
-            var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
-            modifiedBlocks.append(movingBlock)
-            modifiedBlocks.sort(by: { $0.timing.start <= $1.timing.start })
-            
-            scheduler.schedulePinch(of: movingBlock, in: modifiedBlocks, callback: callback)
-        }
+        var modifiedBlocks = originalBaseBlocks.map{ $0.copy() }
+        modifiedBlocks.append(movingBlock)
+        modifiedBlocks.sort(by: { $0.timing.middle() <= $1.timing.middle() })
+        
+        scheduler.schedulePinch(of: movingBlock, withIndex: lastPosition!, in: modifiedBlocks, callback: callback)
         
     }
     
@@ -141,20 +129,9 @@ class ItineraryEditingSession: NSObject {
         moveBlock(toTime: movingBlock.timing.start)
     }
     
-    func intersectsOtherBlocks(_ block: ScheduleBlock) -> Bool {
+    func intersectsBlocks(_ block: ScheduleBlock) -> Bool {
         
         guard block.destinations.count > 0 else { return false }
-        
-//        for dest in block.destinations {
-//            for b in baseBlocks {
-//                guard b.destinations.count > 0 else { continue }
-//                for d in b.destinations {
-//                    if d.timing.intersects(dest.timing) {
-//                        return true
-//                    }
-//                }
-//            }
-//        }
         
         for b in originalBaseBlocks {
             guard b.destinations.count > 0 else { continue }
